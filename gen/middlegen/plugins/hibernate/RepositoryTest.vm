@@ -1,0 +1,33 @@
+package ${table.package}#if($plugin.hibernateManager.dir).${plugin.daoImplDir}#end;
+import java.io.Serializable;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.klwork.test.base.BaseTxWebTests;
+import com.klwork.common.dao.QueryParameter;
+import com.klwork.common.dto.vo.ViewPage;
+import ${table.package}.domain.model.${table.destinationClassName};
+import ${table.package}.domain.repository.${table.destinationClassName}Repository;
+
+/**
+ * ${table.classDescription}
+#if($table.comment)
+ * ${table.comment}
+#end
+ * @version ${plugin.hibernateManager.version}
+ * @created ${plugin.now}
+ * @author ${plugin.author}
+ */
+ 
+public class ${table.destinationClassName}RepositoryTest extends BaseTxWebTests {
+	@Autowired
+	private ${table.destinationClassName}Repository rep;
+
+	@Test
+	public void testCrud() {
+		
+	}
+
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:aop="http://www.springframework.org/schema/aop"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xmlns:jee="http://www.springframework.org/schema/jee"
+xsi:schemaLocation=
+"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+ http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+ http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
+
+	<!-- ${table.classDescription}(${table.sqlName}) :${table.comment} -->
+	<!-- dao IOC beanId -->
+	<bean id="${table.variableName}${plugin.daoSuffix}" class="${table.package}.${plugin.daoImplDir}.${table.destinationClassName}${plugin.daoImplSuffix}" parent="baseDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- service IOC beanId -->
+	<bean id="${table.variableName}Service" class="${table.package}.service.impl.${table.destinationClassName}ServiceImpl">
+		<property name="${table.variableName}${plugin.daoSuffix}" ref="${table.variableName}${plugin.daoSuffix}" />
+	</bean>
+
+	<!-- action  -->
+	<bean id="${table.variableName}Action" class="${table.package}.action.${table.destinationClassName}Action" scope="prototype">
+		<property name="${table.variableName}Service" ref="${table.variableName}Service" />
+	</bean>
+	
+	<!-- struts.xml -->
+	<action name="create*" class="${table.variableName}Action">
+		<result name="success"></result>
+	</action>
+	
+	<action name="delete*" class="${table.variableName}Action">
+		<result name="success"></result>
+	</action>
+	
+	<action name="update*" class="${table.variableName}Action">
+		<result name="success"></result>
+	</action>
+	
+	<action name="find*" class="${table.variableName}Action">
+		<result name="success"></result>
+	</action>
+	
+</beans>

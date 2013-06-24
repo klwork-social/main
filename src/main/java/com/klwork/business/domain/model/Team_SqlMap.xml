@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	(team) :${table.comment}
+字段:
+	id_(varchar)	:
+	own_user_(varchar)	:
+	name_(varchar)	:
+sqlMapConfig:
+	<typeAlias alias="Team" type="com.klwork.business.domain/model.Team" />
+	<mapper resource="com/klwork/business/domain/model/Team_SqlMap.xml" />
+-->
+<mapper namespace="com.klwork.business.domain.model.Team">
+
+  <!-- INSERT -->
+  <insert id="insertTeam" parameterType="com.klwork.business.domain.model.Team">
+    insert into team (
+    	id_,
+	own_user_,
+	name_
+	)
+    values (
+      		#{id,jdbcType=VARCHAR},
+ 		#{ownUser,jdbcType=VARCHAR},
+    	#{name,jdbcType=VARCHAR}
+    	)
+  </insert>
+  
+  <!-- UPDATE -->
+  <update id="updateTeam" parameterType="com.klwork.business.domain.model.Team">
+    update team set
+    	<if test="ownUser != null">
+ own_user_ = #{ownUser,jdbcType=VARCHAR},
+</if>
+<if test="name != null">
+ name_ = #{name,jdbcType=VARCHAR},
+</if>
+ where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- SELECT -->
+  <select id="selectTeamById" parameterType="string" resultMap="TeamMap">
+    select * from team where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectTeamByQueryCriteria" parameterType="com.klwork.business.domain.model.TeamQuery" resultMap="TeamMap">
+    select U.*
+    <include refid="selectTeamByQueryCriteriaSql" />
+    <if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+	</if>
+    <!--if test="orderBy != null">
+      order by ${orderBy}
+    </if> -->
+  </select>
+  
+   <select id="selectTeamCountByQueryCriteria" parameterType="com.klwork.business.domain.model.TeamQuery" resultType="int">
+    select count(U.id_)
+    <include refid="selectTeamByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="selectTeamByQueryCriteriaSql">
+    from team U
+    <where>
+        <if test="ownUser != null">
+        AND U.own_user_ = #{ownUser}
+    </if>
+    <if test="name != null">
+        AND U.name_ = #{name}
+    </if>
+    </where>
+  </sql>
+  
+	<resultMap id="TeamMap" type="com.klwork.business.domain.model.Team">
+	<result property="id" column="id_" />
+	<result property="ownUser" column="own_user_" />
+	<result property="name" column="name_" />
+</resultMap>
+</mapper>

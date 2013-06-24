@@ -1,0 +1,50 @@
+package ${table.package}#if($plugin.hibernateManager.dir).${plugin.daoImplDir}#end;
+import java.io.Serializable;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.klwork.common.dao.QueryParameter;
+import com.klwork.common.domain.repository.MbDomainRepositoryImp;
+import com.klwork.common.dto.vo.ViewPage;
+import ${table.package}.domain.model.${table.destinationClassName};
+
+/**
+ * ${table.classDescription}
+#if($table.comment)
+ * ${table.comment}
+#end
+ * @version ${plugin.hibernateManager.version}
+ * @created ${plugin.now}
+ * @author ${plugin.author}
+ */
+ 
+@Repository(value = "${table.firstLowerClassName}Repository")
+public class ${table.destinationClassName}Repository extends
+		MbDomainRepositoryImp<${table.destinationClassName}, Serializable> {
+
+	@SuppressWarnings("unchecked")
+	public <T extends QueryParameter> List<${table.destinationClassName}> find${table.destinationClassName}ByQueryCriteria(T query,
+			ViewPage page) {
+		List<${table.destinationClassName}> list = getDao().selectList(
+				"select${table.destinationClassName}ByQueryCriteria", query, page);
+		if (page != null) {
+			int count = find${table.destinationClassName}CountByQueryCriteria(query);
+			page.setTotalSize(count);
+			// 总数
+			page.setPageDataList(list);
+		}
+		return list;
+	}
+
+	/**
+	 * 查询总数
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public Integer find${table.destinationClassName}CountByQueryCriteria(Object query) {
+		return (Integer) getDao().selectOne(
+				"select${table.destinationClassName}CountByQueryCriteria", query);
+	}
+}

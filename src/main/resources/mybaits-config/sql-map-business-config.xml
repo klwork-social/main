@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="lazyLoadingEnabled" value="false" />
+	</settings>
+	<mappers>
+		<mapper resource="com/klwork/business/domain/model/Project_SqlMap.xml" />
+		<mapper resource="com/klwork/business/domain/model/Team_SqlMap.xml" />
+		<mapper resource="com/klwork/business/domain/model/TeamMembership_SqlMap.xml" />
+		<mapper resource="com/klwork/business/domain/model/Todo_SqlMap.xml" />
+		<mapper resource="com/klwork/business/domain/model/MyCalendarEvent_SqlMap.xml" />
+		<mapper resource="com/klwork/business/domain/model/OutsourcingProject_SqlMap.xml" />
+		<mapper resource="com/klwork/business/domain/model/ProjectParticipant_SqlMap.xml" />
+	</mappers>
+</configuration>

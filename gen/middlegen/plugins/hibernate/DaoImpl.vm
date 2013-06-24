@@ -1,0 +1,104 @@
+package ${table.package}#if($plugin.hibernateManager.dir).${plugin.daoImplDir}#end;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.log4j.Logger;
+import ${table.package}.domain.${table.destinationClassName};
+import ${table.package}.${plugin.daoDir}.${table.destinationClassName}${plugin.daoSuffix};
+import ${plugin.ibatisExt};
+
+/**
+ * ${table.classDescription}
+#if($table.comment)
+ * ${table.comment}
+#end
+ * @version ${plugin.hibernateManager.version}
+ * @created ${plugin.now}
+ * @author ${plugin.author}
+ */
+
+public class ${table.destinationClassName}${plugin.daoImplSuffix} extends BaseDao implements ${table.destinationClassName}${plugin.daoSuffix} {
+	private static Logger logger = Logger.getLogger(${table.destinationClassName}${plugin.daoImplSuffix}.class);
+
+	/**
+	 * 取得当前${table.classDescription}的 id
+	 * @return
+	 */
+	public Long create${table.destinationClassName}Id() {
+		return (Long) getSqlMapClientTemplate().queryForObject("${table.destinationClassName}.create${table.destinationClassName}Id", null);
+	}
+
+	/**
+	 * 添加${table.classDescription}
+	 * 
+	 * @param ${table.variableName}   对象实体参数
+	 * @return
+	 */
+	public ${table.destinationClassName} create${table.destinationClassName}(${table.destinationClassName} ${table.variableName}) {
+		Object primaryKey = getSqlMapClientTemplate().insert("${table.destinationClassName}.create${table.destinationClassName}", ${table.variableName});
+		if (primaryKey != null) {
+			try {
+				${table.variableName}.setId(Long.parseLong(primaryKey.toString()));
+			} catch (NumberFormatException e) {
+				logger.error("insert后取得primary key出错", e);
+			}
+		}
+		return ${table.variableName};
+	}
+
+	/**
+	 * 修改${table.classDescription}
+	 * @return int
+	 */
+	public int update${table.destinationClassName}(${table.destinationClassName} ${table.variableName}) {
+		return getSqlMapClientTemplate().update("${table.destinationClassName}.update${table.destinationClassName}", ${table.variableName});
+	}
+
+	/**
+	 * 删除${table.classDescription}
+	 * 
+	 * @param ${table.variableName}
+	 */
+	public void delete${table.destinationClassName}(${table.destinationClassName} ${table.variableName}) {
+		getSqlMapClientTemplate().delete("${table.destinationClassName}.delete${table.destinationClassName}", ${table.variableName});
+	}
+
+	/**
+	 * 通过ID查询${table.classDescription}
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public ${table.destinationClassName} find${table.destinationClassName}ById(long id) {
+		HashMap parameterMap = new HashMap();
+		parameterMap.put("id", new Long(id));
+		List<${table.destinationClassName}> ${table.variableName}List = find${table.destinationClassName}ByObject(parameterMap);
+		if (${table.variableName}List != null && ${table.variableName}List.size() > 0) {
+			return ${table.variableName}List.get(0);
+		}
+		return null;
+	}
+	
+	/**
+	 * 通过查询参数列表查询${table.classDescription}
+	 * @param parameterMap 查询参数，key为property名字
+	 * @return
+	 */
+	public List<${table.destinationClassName}> find${table.destinationClassName}ByObject(Map parameterMap) {
+		return (List<${table.destinationClassName}>) getSqlMapClientTemplate().queryForList("${table.destinationClassName}.find${table.destinationClassName}ByObject", parameterMap);
+	}
+	
+	/**
+	 * 分页查询${table.classDescription}
+	 * @param parameterMap 查询参数，key为property名字
+	 * @param start 起始分页行数
+	 * @param pageSize 每页显示的行数
+	 * @return List<${table.destinationClassName}>
+	 */
+	public List<${table.destinationClassName}> find${table.destinationClassName}ByObject(Map parameterMap,int start,int pageSize) {
+		return (List<${table.destinationClassName}>)this.getSqlMapClientTemplate().queryForList("${table.destinationClassName}.find${table.destinationClassName}ByObject", parameterMap, start, pageSize);
+	}
+
+}

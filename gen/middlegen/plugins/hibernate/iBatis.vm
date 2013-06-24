@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	${table.classDescription}(${table.sqlName}) :${table.comment}
+字段:
+#foreach ($column in $table.columns )
+	${column.sqlName}(${column.sqlTypeName})	:${column.fieldDescription}#if(${column.enumId})[${column.enumId}]#end#if($column.fieldDescription!=$column.comment)(${column.comment})#end
+
+#end
+sqlMapConfig:
+	<typeAlias alias="${table.destinationClassName}" type="${table.package}#if(${plugin.hibernateDomainObject.dir}).${plugin.hibernateDomainObject.dir}#end.${table.destinationClassName}" />
+	<mapper resource="${table.subDirPath}#if($plugin.hibernateDomainObject.dir)/${plugin.hibernateDomainObject.dir}#end/${table.destinationClassName}_SqlMap.xml" />
+-->
+<mapper namespace="${table.package}#if($plugin.hibernateDomainObject.dir).${plugin.hibernateDomainObject.classDir}#end.${table.destinationClassName}">
+
+  <!-- INSERT -->
+  <insert id="insert${table.destinationClassName}" parameterType="${table.package}#if($plugin.hibernateDomainObject.dir).${plugin.hibernateDomainObject.classDir}#end.${table.destinationClassName}">
+    insert into ${table.sqlName} (
+    #set ( $count = 1 )
+#foreach ($column in $table.columns )
+#if($count==$table.columns.size())
+	${column.sqlName}
+#else
+	${column.sqlName},
+#end
+#set ( $count = $count + 1 )
+#end
+	)
+    values (
+     #set ( $count = 1 )
+#foreach ($column in $table.columns )
+#if($count==$table.columns.size())
+    	#{${column.variableName},jdbcType=${column.sqlTypeNameShort}}
+    #else
+ 		#{${column.variableName},jdbcType=${column.sqlTypeNameShort}},
+#end
+#set ( $count = $count + 1 )
+#end
+	)
+  </insert>
+  
+  <!-- UPDATE -->
+  <update id="update${table.destinationClassName}" parameterType="${table.package}#if($plugin.hibernateDomainObject.dir).${plugin.hibernateDomainObject.classDir}#end.${table.destinationClassName}">
+    update ${table.sqlName} set
+    	#set ( $count = 1 )
+#foreach ($column in $table.columns )
+#if(${column.variableName} != 'id')
+<if test="${column.variableName} != null">
+#if($count==$table.columns.size())
+ ${column.sqlName} = #{${column.variableName},jdbcType=${column.sqlTypeNameShort}}
+#else
+ ${column.sqlName} = #{${column.variableName},jdbcType=${column.sqlTypeNameShort}},
+#end
+#set ( $count = $count + 1 )
+</if>
+#end
+#end
+ where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- SELECT -->
+  <select id="select${table.destinationClassName}ById" parameterType="string" resultMap="${table.destinationClassName}Map">
+    select * from ${table.sqlName} where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="select${table.destinationClassName}ByQueryCriteria" parameterType="${table.package}#if($plugin.hibernateDomainObject.dir).${plugin.hibernateDomainObject.classDir}#end.${table.destinationClassName}Query" resultMap="${table.destinationClassName}Map">
+    select U.*
+    <include refid="select${table.destinationClassName}ByQueryCriteriaSql" />
+    <if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+	</if>
+    <!--if test="orderBy != null">
+      order by ${orderBy}
+    </if> -->
+  </select>
+  
+   <select id="select${table.destinationClassName}CountByQueryCriteria" parameterType="${table.package}#if($plugin.hibernateDomainObject.dir).${plugin.hibernateDomainObject.classDir}#end.${table.destinationClassName}Query" resultType="int">
+    select count(U.id_)
+    <include refid="select${table.destinationClassName}ByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="select${table.destinationClassName}ByQueryCriteriaSql">
+    from ${table.sqlName} U
+    <where>
+    #foreach ($column in $table.columns )
+#foreach ($q in $plugin.queryObjectList )
+#if($q == $column.sqlName)
+    <if test="${column.variableName} != null">
+        AND U.${column.sqlName} = #{${column.variableName}}
+    </if>
+#end
+#end
+#end
+    </where>
+  </sql>
+  
+	<resultMap id="${table.destinationClassName}Map" type="${table.package}#if($plugin.hibernateDomainObject.dir).${plugin.hibernateDomainObject.classDir}#end.${table.destinationClassName}">
+#set ( $count = 1 )
+#foreach ($column in $table.columns )
+#if($count==$table.columns.size())
+	<result property="${column.variableName}" column="${column.sqlName}" />
+#else
+#if($column.sqlName == 'ID')
+ ${column.sqlName},
+#else
+	<result property="${column.variableName}" column="${column.sqlName}" />
+#end
+#end
+#set ( $count = $count + 1 )
+#end
+</resultMap>
+</mapper>

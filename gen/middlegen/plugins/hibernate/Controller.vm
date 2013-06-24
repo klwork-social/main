@@ -1,0 +1,107 @@
+package ${table.package}#if($plugin.hibernateController.dir).${plugin.hibernateController.dir}#end;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import com.klwork.common.controller.BaseController;
+
+import ${table.package}.domain.service.${table.destinationClassName}Service;
+
+/**
+ * ${table.classDescription}
+#if($table.comment)
+ * ${table.comment}
+#end
+ * @version ${plugin.hibernateController.version}
+ * @created ${plugin.now}
+ * @author ${plugin.author}
+ */
+@Controller
+@RequestMapping("/${table.firstLowerClassName}/*")
+public class ${table.destinationClassName}Controller  extends BaseController{
+	private final static Logger log = Logger
+			.getLogger(${table.destinationClassName}Controller.class);
+
+	/** The user service. */
+	@Autowired
+	${table.destinationClassName}Service ${table.firstLowerClassName}Service;
+
+	@RequestMapping(value = "main")
+	public ModelAndView goMainPage(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		return new ModelAndView("${table.firstLowerClassName}/main");
+	}
+
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public String create${table.destinationClassName}() throws Exception {
+		log.info("=====create${table.destinationClassName}()");
+
+		return "success";
+	}
+
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public String delete${table.destinationClassName}() throws Exception {
+		log.info("=====delete${table.destinationClassName}()");
+
+		return "success";
+	}
+
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public String update${table.destinationClassName}() throws Exception {
+		log.info("=====update${table.destinationClassName}()");
+
+		return "success";
+	}
+
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public String find${table.destinationClassName}() throws Exception {
+		log.info("=====find${table.destinationClassName}()");
+
+		return "success";
+	}
+
+	/**
+	 * springMVC转换页面上传来String类型的日期为Date,需要前台确认传输的日期格式，否则报错.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param binder
+	 *            the binder
+	 * @throws Exception
+	 *             the exception
+	 */
+	@InitBinder
+	protected void initBinder(HttpServletRequest request,
+			ServletRequestDataBinder binder) throws Exception {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // 可以設定任意的日期格式
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(
+				dateFormat, true));// 格式化时间
+		binder.registerCustomEditor(String.class,
+				new StringTrimmerEditor(false));// 去掉空格
+	}
+}

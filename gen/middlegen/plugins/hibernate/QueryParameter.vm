@@ -1,0 +1,57 @@
+package ${table.package}#if($plugin.hibernateDomainObject.dir).${plugin.hibernateDomainObject.classDir}#end;
+
+import com.klwork.common.dao.QueryParameter;
+
+/**
+ * 
+ * @version ${plugin.hibernateDomainObject.version}
+ * @created ${plugin.now}
+ * @author ${plugin.author}
+ * ${plugin.implements}
+ */
+public class ${table.destinationClassName}Query extends QueryParameter{
+ 	private static final long serialVersionUID = 1L;
+ 	
+ 	public ${table.destinationClassName}Query() {
+ 	
+ 	}
+ 	
+ #foreach ($column in $table.columns )
+#foreach ($q in $plugin.queryObjectList )
+#if($q == $column.sqlName)
+	/**
+	 *  ${column.fieldDescription}
+	 */
+	private ${column.javaType} ${column.variableName};
+	
+#end
+#end
+#end
+
+#foreach ($column in $table.columns )
+#foreach ($q in $plugin.queryObjectList )
+#if($q == $column.sqlName)
+	/**
+	 * ${column.fieldDescription}
+	 *
+	 * @param ${column.variableName}
+	 */
+	public ${table.destinationClassName}Query ${column.setterName}(${column.javaType} ${column.variableName}){
+		this.${column.variableName} = ${column.variableName};
+		return this;
+	}
+	
+	/**
+	 * ${column.fieldDescription}
+	 *
+	 * @return
+	 */	
+	public ${column.javaType} ${column.getterName}(){
+		return ${column.variableName};
+	}
+	
+#end
+#end
+#end
+
+}

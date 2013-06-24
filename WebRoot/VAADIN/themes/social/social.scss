@@ -1,0 +1,896 @@
+/* Import the reindeer theme.*/
+/* This only allows us to use the mixins defined in it and does not add any styles by itself. */
+@import "../reindeer/reindeer.scss";
+
+/* This contains all of your theme.*/
+/* If somebody wants to extend the theme she will include this mixin. */
+@mixin social {
+  /* Include all the styles from the reindeer theme */
+  @include reindeer;
+
+
+  
+  
+  /* ------
+   Header
+   ------ */
+.header {
+	padding:0 12px 0 10px;
+	height:1%;
+	position:relative;
+	background:#007dc3 url(img/bg-header.gif) repeat-x;
+}
+
+.header .v-button .v-button-wrap {
+	display: block;
+	height: 100%;
+	width: 100%;	
+	background:url(img/separator-1.gif) no-repeat 100% 50%;	
+}
+
+.header .v-button:hover, .header .v-button.active {
+	background:url(img/bg-nav-hover.gif) no-repeat 50% 0;
+	text-decoration:none;
+}
+
+
+.logo {
+	margin:12px 0;
+	background:url(img/logo.png) no-repeat;
+	text-indent:-9999px;
+	width:207px;
+	height:30px;
+	float:left;
+}
+
+/* ------------
+   Main content
+   ------------ */
+.main {
+	background-color: #fff;	
+}
+
+.main-content {
+	background-color: #fff;	
+}
+
+/* ------
+   Footer
+   ------ */
+.footer {
+	background:#f9f9f9;
+	border-top:1px solid #ababab;
+	font:bold 11px Arial, Helvetica, sans-serif;
+	color:#666;
+	padding:10px 0;
+}
+
+.footer .v-label {
+	text-align: center;	
+}
+  
+  /* -----------------
+   Header, Main menu
+   ----------------- */
+   .main-menu-button .v-button-wrap {
+	text-align: center;
+}
+
+.main-menu-button .v-button-wrap .v-button-caption {
+	display: block;	
+	width: 100%;
+	text-align: center;
+	font-size:12px;
+	color:#fff;
+	padding-top: 5px;
+	outline: 0;
+}
+
+.main-menu-button span img {
+	padding-top: 2px;
+	margin: 0px;
+}
+ 
+/* ---------------------
+   Header - Profile link
+   --------------------- */
+.person {
+	float:right;
+	margin:18px 0 0;
+	position:relative;
+	background: none;
+	border: none;
+}
+
+.person .v-menubar-menuitem.v-menubar-menuitem-person-menu, .v-menubar-menuitem-person-menu.v-menubar-menuitem-selected {
+	float:left;
+	background:url(img/bullet-1.gif) no-repeat 100% 50%;
+	padding:0 13px 0 0;
+	color:#fff;
+}
+
+.v-menubar-popup .v-menubar-submenu-person {
+   background-color: #005eab;
+   color: #fff;
+}
+ 
+.v-menubar-popup .v-menubar-submenu-person .v-menubar-menuitem-selected {
+ 	background: #1B7EC3;
+}
+
+/* -------
+   Toolbar
+   ------- */
+.toolbar {
+	width:100%;
+	background:#fff url(img/bg-toolbar.gif) repeat-x 0 100%;
+}
+
+.v-horizontallayout-toolbar .v-horizontallayout-margin-left {
+	padding-left: 10px;
+}
+
+.v-horizontallayout-toolbar .v-horizontallayout-margin-right {
+	padding-right: 10px;
+}
+
+.v-horizontallayout-toolbar .v-horizontallayout-spacing-on {
+	padding-right: 15px;	
+}
+
+.toolbar .v-button-toolbar-count.link.v-button-link {
+	color:#fff;
+	background:url(img/bg-number.gif) no-repeat;
+	padding:0 0 0 4px;
+	margin:0 0 0;
+	outline: 0;
+}
+
+.toolbar .v-button-toolbar-count.link.v-button-link.active {
+	background:url(img/bg-number-active.gif) no-repeat;
+}
+
+.toolbar .toolbar-count .v-button-wrap  {
+	background:url(img/bg-number.gif) no-repeat 100% 0;
+	padding:0 0 1px 0;
+	margin:0 0 0 0;
+}
+
+.toolbar .v-button-toolbar-count.link.v-button-link.active .v-button-wrap  {
+	background:url(img/bg-number-active.gif) no-repeat 100% 0;
+}
+
+.toolbar .v-button-toolbar-count.link.v-button-link.active .v-button-wrap .v-button-caption {
+	color: #fff;
+}
+
+.toolbar .v-button-wrap .v-button-caption {
+	font:16px/18px Arial, Helvetica, sans-serif;
+	padding:0 5px 0 0;	
+	text-decoration: none;
+	color: #8e8e8e;
+}
+
+.toolbar .toolbar-button .v-button-wrap .v-button-caption {
+	font:11px Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color:#464646;
+}
+
+.toolbar .v-button-wrap .v-button-caption:hover {
+	color:#464646;
+}
+
+.toolbar .v-button-link.active .v-button-wrap .v-button-caption {
+	color:#007dc3;
+}
+
+.toolbar .toolbar-count .v-button-wrap  {
+	background:url(img/bg-number.gif) no-repeat 100% 0;
+	padding:0 0 1px 0;
+	margin:0 0 0 0;
+}
+
+.toolbar .toolbar-count.active .v-button-wrap {
+	background:url(img/bg-number-active.gif) no-repeat 100% 0;
+}
+
+.toolbar .toolbar-count .v-button-wrap .v-button-caption {
+	font:10px/12px Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	color:#fff;
+}
+
+.toolbar .v-menubar {
+	background: none;	
+	border: none;
+	font:16px/18px Arial, Helvetica, sans-serif;
+	padding: 0px;	
+	text-decoration: none;
+	color: #8e8e8e;
+}
+
+.toolbar .v-menubar .v-menubar-menuitem-selected {
+	color: #464646;
+	background: none;
+}
+
+.toolbar .v-menubar .v-menubar-menuitem-selected .v-menubar-menuitem-caption {
+	text-shadow: none;
+}
+
+.toolbar .v-menubar .v-menubar-menuitem:hover {
+	color: #464646;
+}
+
+.toolbar .v-menubar.active {
+	color:#007dc3;
+}
+
+/* Toolbar popup */
+.v-menubar-popup .v-menubar-submenu-toolbar-popup {
+   font:14px Arial, Helvetica, sans-serif;
+   background-color: #fff;
+   color: #464646;
+}
+
+.v-menubar-toolbar-popup .v-menubar-menuitem .v-menubar-menuitem-caption {
+	text-shadow: none;	
+}
+ 
+div.v-menubar-toolbar-popup {
+	padding-left: 0px;	
+}
+
+.v-menubar-toolbar-popup .v-menubar-menuitem {
+	 padding-left: 0px;
+	 padding-right: 5px;
+}
+.v-menubar-popup .v-menubar-submenu-toolbar-popup .v-menubar-menuitem-selected {
+ 	background: #eaeaea;
+ 	color: #464646;
+}
+
+.v-menubar-popup .v-menubar-submenu-toolbar-popup .v-menubar-menuitem-selected .v-menubar-menuitem-caption {
+	text-shadow: none;	
+}
+
+/* -------
+   Generic
+   ------- */
+
+.v-label-red {
+  color: red;
+}
+
+.v-panel-nocaption.v-panel-nocaption-light {  
+  border: none;
+}
+
+.v-label-bold {
+  font-weight: bold;
+}
+
+.v-label-caption,
+.v-button-caption {
+	text-shadow: none;	
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.v-button-link .v-button-caption, .v-link a:link span, .v-link a:visited span  {
+  color:#3c3c3c;
+}
+
+.noResizeTextArea{
+  resize: none;
+}
+
+.error {
+    background: url("img/warning.png") no-repeat scroll 0 0 transparent;
+    color: red;
+    padding-left: 20px;
+}
+
+/* -------------
+   Popup windows
+   ------------- */
+.v-window-light .v-window-header {
+	color:#007dc3;
+	font:18px Arial, Helvetica, sans-serif;
+}
+ 
+/* ---------------
+   Form Properties
+   --------------- */
+.formprops .h4 {
+	color:#3c3c3c;
+	font:bold 12px Arial, Helvetica, sans-serif;
+}
+
+.formprop-user-selected {
+	font-weight: bold;	
+	padding-left: 20px;
+	background: url(img/user-16.png) no-repeat;
+}
+
+.formprop-no-user-selected {
+	color: #848484;
+}
+
+/* -----------------------
+   Buttons - Normal button
+   ----------------------- */
+ 
+.v-button:focus {
+    background-position: 0 0;
+    background-image: url(img/button-bg-left-active.gif);
+}
+
+.v-button:focus .v-button-wrap {
+    background-position: right 0;
+    background-image: url(img/button-bg-right-active.gif);
+}
+
+.v-button:active,
+.v-button.v-pressed {
+    background-position: 0 0;
+    background-image: url(img/button-bg-left-down.gif);
+}
+
+.v-button:active .v-button-wrap,
+.v-button.v-pressed .v-button-wrap {
+    background-position: right 0;
+    background-image: url(img/button-bg-right-down.gif);
+}
+
+.v-button,
+.v-disabled.v-button {
+    height: 24px;
+    padding: 0 0 0 5px;
+    background: transparent url(img/button-bg-left.gif) repeat-x 0 0;
+    cursor: pointer;
+}
+
+.v-button-wrap,
+.v-disabled.v-button .v-button-wrap {
+    height: 24px;
+    padding: 4px 10px 0 4px;
+    background: transparent url(img/button-bg-right.gif) repeat-x right 0;
+    cursor: pointer;
+}
+
+.v-button-caption {
+    color: #464646;
+}
+
+.v-button.v-disabled .v-button-wrap .v-button-caption {
+	color: #646464;	
+	cursor: default;
+}
+/* ----------------------
+   Buttons - Small button
+   ---------------------- */
+.v-button-small,
+.v-disabled.v-button-small,
+.v-button-small:active,
+.v-pressed.v-button-small,
+.v-button-small:focus {
+    height: 17px;
+    padding: 0 0 0 6px;
+    background: transparent url(img/button-bg-small-left.gif) repeat-x 0 0;
+    font:bold 10px/12px Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
+.v-button-small .v-button-wrap,
+.v-button-small.v-disabled .v-button-wrap,
+.v-button-small:active .v-button-wrap,
+.v-button-small.v-pressed .v-button-wrap {
+    height: 17px;
+    padding: 1px 12px 0 6px;
+    background: transparent url(img/button-bg-small-right.gif) repeat-x right 0;
+    font:bold 10px/12px Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
+.v-button-small:focus .v-button-wrap {
+	background: transparent url(img/button-bg-small-right-focus.gif) repeat-x right 0;	
+}
+
+.v-button-small:focus {
+	background: transparent url(img/button-bg-small-left-focus.gif) repeat-x 0 0;	
+}
+
+.v-button-small .v-button-wrap .v-button-caption {
+	font:bold 10px/12px Arial, Helvetica, sans-serif;
+}
+
+/* --------------------
+   Buttons - Add button
+   -------------------- */
+ .v-button-add,
+.v-disabled.v-button-add,
+.v-button-add:active,
+.v-pressed.v-button-add,
+.v-button-add:focus
+{
+    height: 25px;
+    width:  26px;
+    background: transparent url(img/ico-8.gif) no-repeat 0 0;
+    cursor: pointer;
+}
+
+.v-button-add .v-button-wrap,
+.v-button-add.v-disabled .v-button-wrap,
+.v-button-add:active .v-button-wrap,
+.v-button-add.v-pressed .v-button-wrap,
+.v-button-add:focus .v-button-wrap {
+    background: none;
+}
+
+/* ---------------------
+   Table - default style
+   --------------------- */
+.v-table-row-odd, .v-table-row {
+ 	background-color: #fff;
+	overflow:hidden;
+	font:12px/14px Arial, Helvetica, sans-serif;
+}
+
+.v-table-row-odd.v-selected, .v-table-row.v-selected {
+	background: #dff5ff;
+	color: #000000;
+	font-weight: bold;
+	text-shadow: none;
+}
+ 
+.v-table-row-odd .v-table-cell-content, .v-table-row .v-table-cell-content {
+	border: none;
+	height: 35px;
+	border-bottom: 1px solid #c5c5c5;	
+}
+
+.v-table-cell-content {
+    vertical-align: middle;
+}
+
+.v-table-body {
+	border: 1px solid #c5c5c5;
+}
+.v-table-body.focused {
+	border: 1px solid #c5c5c5;
+}
+
+.v-table .v-table-caption-container {
+	padding-right: 0px;
+	text-shadow: none;
+}
+
+.v-table .v-table-header-wrap {
+	background:#fff url(img/bg-table.png) repeat-x 0 100%;
+}
+
+/* -----
+   Login
+   ----- */
+   
+/* General backrgound and font settings */
+.login-general {
+  color: white; /* color of text */
+  font-family:  Helvetica, Arial, sans-serif;
+  background: #1b7ec3; /* non-white part of page */
+  font-size: 14px;
+  font-weight: bold;
+   min-width:20px;
+}
+
+#login-content {
+  height: 200px;
+}
+      
+/* white part of background */
+#login-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: white;
+  height: 250px;
+  width: 100%;
+  border-bottom: solid 3px #a9b3ba; /* gray-blueish horitzontal line in the middle */
+}
+
+#login-central-components {
+  margin: 0 auto;
+  width: 360px;
+  padding-top: 300px;
+  text-align: center;
+  z-index: 1;
+}
+      
+#login-logo {
+  margin: 0 auto;
+  height: 130px;
+  padding-top: 110px;
+  text-align: center;
+}
+
+/* Text fields of input form */     
+input.login-field {
+  font-size: 16px;
+  height:30px;
+  width: 250px;
+  margin-left: 10px;
+  padding-left: 7px; /* To start the typing of the text a bit to the right */
+  float: right;
+  background: white;
+  border: solid 1px transparent;
+  margin-bottom: 5px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.login-field-caption {
+  line-height: 200%
+}
+      
+/* 'Log in' Button */
+.login-button {
+  text-align: center;
+  line-height: 200%;
+  float: right;
+  width: 150px;
+  height: 30px;
+  margin-top: 5px;
+  margin-right: 3px;
+  color: white;
+  font-size: 14px;
+  background-color: #55ba49;
+  border: solid 1px transparent;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+      
+.login-button:hover {
+  background-color: #86e379;
+}
+
+.v-button-user .v-button-caption{
+  color: white;
+  line-height: 18px;
+  margin-right: 0.5em;
+  text-decoration: none;
+}
+
+.v-button-logout .v-button-caption {
+  color: white;
+  line-height: 18px;
+  margin-right: 0.5em;
+  text-decoration: none;
+}
+
+/* ----------------------
+   Search box - Textfield
+   ---------------------- */
+div.searchbox {
+	border-right: 1px solid #c5c5c5;
+	margin-left: -1px;
+	background: none;	
+}
+
+.v-textfield.v-textfield-searchbox.searchbox, .v-textfield-focus.v-textfield-searchbox.searchbox  {
+	margin:0;
+	padding:3px 0 3px;
+	height:19px;
+	color:#666;
+	font:11px/14px Arial, Helvetica, sans-serif;
+	background:none;
+	border:0;
+}
+
+.searchbox .v-csslayout-margin {
+	background:url(img/bg-input-l-1.gif) no-repeat;
+	padding-left: 13px;
+}
+.searchbox .v-csslayout-container {
+	background:url(img/bg-input-r-1.gif) 100% 0 no-repeat;
+}
+
+.searchbox .v-csslayout {
+	background:url(img/bg-input-c-1.gif) repeat-x;	
+}
+
+/* ----------------------
+   Search box - Sort menu
+   ---------------------- */
+.searchbox-sortmenu {
+	background:url(img/bullet-2.gif) no-repeat 100% 50%;
+	border: none;
+	color:#3c3c3c;
+}
+
+.v-menubar-searchbox-sortmenu .v-menubar-menuitem,
+.v-menubar-searchbox-sortmenu .v-menubar-menuitem:hover,
+.v-menubar-searchbox-sortmenu .v-menubar-menuitem-selected {
+	color:#3c3c3c;
+	background: none;
+	text-shadow: none;
+}
+
+.v-menubar-popup .v-menubar-submenu-searchbox-sortmenu {
+   background-color: #fff;
+   color:#3c3c3c;
+   text-shadow: none;
+}
+ 
+.v-menubar-popup .v-menubar-submenu-searchbox-sortmenu .v-menubar-menuitem-selected {
+ 	background: #eaeaea;
+ 	color: #464646;
+ 	text-shadow: none;
+}
+
+/* ---------
+   Event box
+   --------- */
+
+.v-panel-task-event-panel .v-panel-content > div {
+	background:#f2f2f2 url(img/bg-sidebar.gif) repeat-y;
+}
+
+.v-panel-task-event-panel .v-label-h2 {
+	color:#007dc3;
+	font:18px Arial, Helvetica, sans-serif;
+}
+
+.v-panel-task-event-panel .v-verticallayout .v-verticallayout-margin-top {
+	padding-top: 5px; 
+}
+
+.v-gridlayout-event-grid .v-gridlayout-spacing-on {
+	padding-top: 15px;
+    padding-left: 8px;
+}
+
+.v-gridlayout-event-grid .v-gridlayout-margin-top {
+	padding-top: 10px;	
+}
+
+.task-event-author {
+  color:#3c3c3c;
+  font-weight: bold;
+}
+
+.task-event-time {
+  display:block;
+  font:10px Arial, Helvetica, sans-serif;
+  color:#8c8c8c;
+}
+
+/* ---------------------
+   Detail - Detail panel
+   ---------------------  */
+.v-csslayout-detail-panel >.v-csslayout-margin {
+	background:#f2f2f2 url(img/bg-c.gif) repeat-x;
+	padding-top: 1px;
+	padding-left: 1px;
+	border: 1px solid #cecece;
+	-moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -khtml-border-radius: 6px;
+    border-radius: 6px;
+}
+
+/* --------------------
+   Detail - Title block
+   -------------------- */
+ .title-block .v-gridlayout-spacing-on {
+ 	padding-top: 5px;
+}
+ 
+.title-block .v-gridlayout-margin-bottom {
+ 	padding-bottom: 5px;
+}
+
+.title-block .v-horizontallayout-margin-bottom {
+ 	padding-bottom: 5px;
+}
+
+.title-block .h2 {
+	color:#007dc3;
+	font:24px/26px Arial, Helvetica, sans-serif;
+}
+
+.title-block .task-duedate, .title-block .job-duedate {
+	padding-left: 20px;
+	background: transparent url(img/duedate-16.png) no-repeat 0 0; 	
+}
+
+.title-block .task-priority-low {
+	padding-left: 20px;
+	background: transparent url(img/priority-low-16.png) no-repeat 0 0; 	
+}
+.title-block .task-priority-medium {
+	padding-left: 20px;
+	background: transparent url(img/priority-medium-16.png) no-repeat 0 0; 	
+}
+.title-block .task-priority-high {
+	padding-left: 20px;
+	background: transparent url(img/priority-high-16.png) no-repeat 0 0; 	
+}
+
+.title-block .task-create-time, .title-block .process-deploy-time,
+.title-block .process-start-time, .title-block .deployment-deploy-time {
+	padding-left: 20px;
+	background: transparent url(img/create-time-16.png) no-repeat 0 0; 	
+}
+
+.title-block .process-version {
+	padding-left: 20px;
+	background: transparent url(img/version-16.png) no-repeat 0 0; 	
+}
+
+/* --------------------
+   Detail - Block
+   -------------------- */
+.block-holder {
+	overflow:hidden;
+	margin:0 0 8px;
+	padding-top:10px;
+	border-top:1px solid #dcdcdc;
+}
+
+.block-holder .h3, .block-holder.h3  {
+	margin:0;
+	color:#007dc3;
+	font:16px Arial, Helvetica, sans-serif;
+}
+
+.block-holder.no-line  {
+  border: none;
+}
+
+.block-holder .add {
+	float:right;
+	background:url(img/ico-8.gif) no-repeat;
+	text-indent:-9999px;
+	width:26px;
+	height:25px;
+	overflow:hidden;
+}
+
+/* -------------
+   Task - Detail
+   ------------- */	
+.involve-people .v-gridlayout .v-gridlayout-margin-top {
+	padding-top: 5px;	
+}
+
+.subtasks .v-gridlayout-spacing-on {
+	padding-top: 3px;
+	padding-left: 5px;
+}
+
+/* ------------
+   Profile page
+   ------------ */
+
+.profile-picture {
+  margin-top: 6px;
+  padding: 1px;
+  border: 1px solid #021a40;
+}
+
+.profile-layout .v-gridlayout-margin-bottom {
+	padding-bottom: 20px;
+}
+
+.profile-layout .v-gridlayout-margin-top {
+	padding-top: 5px;
+}
+
+/* ------------
+   Profile link
+   ------------ */
+.profile-link .v-button-link .v-button-caption {
+  color:#3c3c3c;
+  font-weight: bold;
+}
+
+/* ------------
+   calendar custom
+   ------------ */
+
+/**
+ * Green 
+ */
+
+/* For month view */
+.v-calendar .v-calendar-event-color1 {
+	color: #4f8324;
+	}
+.v-calendar .v-calendar-event-color1-all-day {
+	background-color: #61c114;
+	}
+
+/* For week/day view */
+.v-calendar .v-calendar-event-color1 .v-calendar-event-caption {
+	color: #4f8324;
+	}
+.v-calendar .v-calendar-event-color1 .v-calendar-event-content {
+	border-color: #61c114;
+	background-color: #daff70;
+	}
+
+
+/**
+ * Blue 
+ */
+
+/* For month view */
+.v-calendar .v-calendar-event-color2 {
+	color: #1c4b8b;
+	}
+.v-calendar .v-calendar-event-color2-all-day {
+	background-color: #0a56bc;
+	}
+
+/* For week/day view */
+.v-calendar .v-calendar-event-color2 .v-calendar-event-caption {
+	color: #1c4b8b;
+	}
+.v-calendar .v-calendar-event-color2 .v-calendar-event-content {
+	border-color: #0a56bc;
+	background-color: #529bff;
+	}
+
+
+/**
+ * Red 
+ */
+
+/* For month view */
+.v-calendar .v-calendar-event-color3 {
+	color: #831d1d;
+	}
+.v-calendar .v-calendar-event-color3-all-day {
+	background-color: #bd1a1a;
+	}
+
+/* For week/day view */
+.v-calendar .v-calendar-event-color3 .v-calendar-event-caption {
+	color: #831d1d;
+	}
+.v-calendar .v-calendar-event-color3 .v-calendar-event-content {
+	border-color: #bd1a1a;
+	background-color: #ff9d9d;
+	}
+
+
+/**
+ * Orange 
+ */
+
+/* For month view */
+.v-calendar .v-calendar-event-color4 {
+	color: #8b5923;
+	}
+.v-calendar .v-calendar-event-color4-all-day {
+	background-color: #cd6a00;
+	}
+
+/* For week/day view */
+.v-calendar .v-calendar-event-color4 .v-calendar-event-caption {
+	color: #8b5923;
+	}
+.v-calendar .v-calendar-event-color4 .v-calendar-event-content {
+	border-color: #cd6a00;
+	background-color: #faa345;
+	}
+}

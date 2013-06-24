@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	(my_calendar_event) :${table.comment}
+字段:
+	id_(varchar)	:
+	own_user_(varchar)	:
+	creation_date_(timestamp)	:
+	last_update_(timestamp)	:
+	start_date_(timestamp)	:
+	end_date_(timestamp)	:
+	caption_(varchar)	:
+	description_(varchar)	:
+	style_name_(varchar)	:
+	all_day_(bool)	:
+	related_todo_(varchar)	:
+sqlMapConfig:
+	<typeAlias alias="MyCalendarEvent" type="com.klwork.business.domain/model.MyCalendarEvent" />
+	<mapper resource="com/klwork/business/domain/model/MyCalendarEvent_SqlMap.xml" />
+-->
+<mapper namespace="com.klwork.business.domain.model.MyCalendarEvent">
+
+  <!-- INSERT -->
+  <insert id="insertMyCalendarEvent" parameterType="com.klwork.business.domain.model.MyCalendarEvent">
+    insert into my_calendar_event (
+    	id_,
+	own_user_,
+	creation_date_,
+	last_update_,
+	start_date_,
+	end_date_,
+	caption_,
+	description_,
+	style_name_,
+	all_day_,
+	related_todo_
+	)
+    values (
+      		#{id,jdbcType=VARCHAR},
+ 		#{ownUser,jdbcType=VARCHAR},
+ 		#{creationDate,jdbcType=TIMESTAMP},
+ 		#{lastUpdate,jdbcType=TIMESTAMP},
+ 		#{startDate,jdbcType=TIMESTAMP},
+ 		#{endDate,jdbcType=TIMESTAMP},
+ 		#{caption,jdbcType=VARCHAR},
+ 		#{description,jdbcType=VARCHAR},
+ 		#{styleName,jdbcType=VARCHAR},
+ 		#{allDay,jdbcType=BOOLEAN},
+    	#{relatedTodo,jdbcType=VARCHAR}
+    	)
+  </insert>
+  
+  <!-- UPDATE -->
+  <update id="updateMyCalendarEvent" parameterType="com.klwork.business.domain.model.MyCalendarEvent">
+    update my_calendar_event set
+    	<if test="ownUser != null">
+ own_user_ = #{ownUser,jdbcType=VARCHAR},
+</if>
+<if test="creationDate != null">
+ creation_date_ = #{creationDate,jdbcType=TIMESTAMP},
+</if>
+<if test="startDate != null">
+ start_date_ = #{startDate,jdbcType=TIMESTAMP},
+</if>
+<if test="endDate != null">
+ end_date_ = #{endDate,jdbcType=TIMESTAMP},
+</if>
+<if test="caption != null">
+ caption_ = #{caption,jdbcType=VARCHAR},
+</if>
+<if test="description != null">
+ description_ = #{description,jdbcType=VARCHAR},
+</if>
+<if test="styleName != null">
+ style_name_ = #{styleName,jdbcType=VARCHAR},
+</if>
+<if test="allDay != null">
+ all_day_ = #{allDay,jdbcType=BOOLEAN},
+</if>
+<if test="relatedTodo != null">
+ related_todo_ = #{relatedTodo,jdbcType=VARCHAR},
+</if>
+<if test="lastUpdate != null">
+ last_update_ = #{lastUpdate,jdbcType=TIMESTAMP}
+</if>
+ where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <delete id="deleteMyCalendarEvent" parameterType="string">
+    delete from my_calendar_event where ID_ = #{id} 
+  </delete>
+  
+  <!-- SELECT -->
+  <select id="selectMyCalendarEventById" parameterType="string" resultMap="MyCalendarEventMap">
+    select * from my_calendar_event where id_ = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectMyCalendarEventByQueryCriteria" parameterType="com.klwork.business.domain.model.MyCalendarEventQuery" resultMap="MyCalendarEventMap">
+    select U.*
+    <include refid="selectMyCalendarEventByQueryCriteriaSql" />
+    <if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+	</if>
+    <!--if test="orderBy != null">
+      order by ${orderBy}
+    </if> -->
+  </select>
+  
+   <select id="selectMyCalendarEventCountByQueryCriteria" parameterType="com.klwork.business.domain.model.MyCalendarEventQuery" resultType="int">
+    select count(U.id_)
+    <include refid="selectMyCalendarEventByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="selectMyCalendarEventByQueryCriteriaSql">
+    from my_calendar_event U
+    <where>
+        <if test="ownUser != null">
+        AND U.own_user_ = #{ownUser}
+    </if>
+    <if test="relatedTodo != null">
+        AND U.related_todo_ = #{relatedTodo}
+    </if>
+    </where>
+  </sql>
+  
+	<resultMap id="MyCalendarEventMap" type="com.klwork.business.domain.model.MyCalendarEvent">
+	<result property="id" column="id_" />
+	<result property="ownUser" column="own_user_" />
+	<result property="creationDate" column="creation_date_" />
+	<result property="lastUpdate" column="last_update_" />
+	<result property="startDate" column="start_date_" />
+	<result property="endDate" column="end_date_" />
+	<result property="caption" column="caption_" />
+	<result property="description" column="description_" />
+	<result property="styleName" column="style_name_" />
+	<result property="allDay" column="all_day_" />
+	<result property="relatedTodo" column="related_todo_" />
+</resultMap>
+</mapper>

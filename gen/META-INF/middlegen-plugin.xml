@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+<!DOCTYPE middlegen-plugin PUBLIC "-//BEKK Consulting//DTD Middlegen Plugin 1.0//EN" "http://boss.bekk.no/midldegen/dtd/middlegen-plugin_1_0.dtd">
+-->
+
+<middlegen>
+   <plugin name="hibernate" class-name="middlegen.plugins.hibernate.HibernatePlugin"/>
+</middlegen>

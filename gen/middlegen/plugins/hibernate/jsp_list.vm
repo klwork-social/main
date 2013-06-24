@@ -1,0 +1,124 @@
+<%@ page contentType="text/html;charset=GBK"%>
+<%@ taglib prefix="bass" uri="http://bass.sh.cmcc/framework"%>
+<jsp:useBean id="message" class="java.lang.String" scope="request" />
+<jsp:useBean id="folderID" class="java.lang.String" scope="request"/>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<title>${table.classDescription}列表</title>
+		<meta http-equiv="content-type" content="text/html; charset=GBK">
+		<script src="<%=request.getContextPath()%>/res/calendar.js" type="text/javascript"></script>
+		<script src="<%=request.getContextPath()%>/res/common.js" type="text/javascript"></script>
+		<script src="<%=request.getContextPath()%>/res/prototype.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="<bass:skinPath/>/frame.css" type="text/css"/>
+		<link rel="stylesheet" href="<bass:skinPath/>/calender.css" type="text/css"/>
+	</head>
+
+	<body marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
+		<TABLE cellSpacing=0 cellPadding=0 align=center width=780 border=0>
+			<TBODY>
+			<TR>
+				<TD align="left" valign="top">
+		
+		<div class="pageTitle">
+			${table.classDescription}管理
+		</div>
+
+		<div style="text-align: left;">
+			<bass:form bean="request">
+				<form name="searchform" method="post" action="list${table.destinationClassName}.html">
+					<table class="border" width=90% cellSpacing=0 cellPadding=2 align="center">
+					<tr>
+#set ( $count = -3 )
+#foreach ($column in $table.columns )
+#if($count==1)
+					<tr>
+#end
+#if($column.sqlName!='ID' && $column.sqlName!='CREATE_DATE' && $column.sqlName!='CREATE_OPID' && $column.sqlName!='CREATE_BUSICODE' && $column.sqlName!='DISABLE_DATE' && $column.sqlName!='DISABLE_OPID' && $column.sqlName!='DISABLE_BUSICODE'&& $column.sqlName!='REC_STATUS')
+#if($column.javaType == 'java.util.Date')
+#set ( $v1 = "search_${column.variableName}After" )
+#set ( $v2 = "search_${column.variableName}Befor" )
+						<td class="left">${column.fieldDescription}</td>
+						<td class="right"><input class="text" type="text" name="${v1}" size="10"><IMG src="<%=request.getContextPath()%>/images/show-calendar.gif" onclick="return showCalendar('${v1}', 'y-mm-dd');">至<input class="text" type="text" name="${v2}" size="10"><IMG src="<%=request.getContextPath()%>/images/show-calendar.gif" onclick="return showCalendar('${v2}', 'y-mm-dd');"></td>
+#set ( $count = $count + 1 )
+#elseif($column.javaType == 'String')
+						<td class="left">${column.fieldDescription}</td>
+						<td class="right"><input class="text" type="text" name="search_${column.variableName}" size="12"></td>
+#set ( $count = $count + 1 )
+#else
+#if($column.enumId)
+						<td class="left">${column.fieldDescription}</td>
+						<td class="right">
+							<select name="search_${column.variableName}">
+								<option value=""></option>
+								<bass:selectOption enumId="${column.enumId}"/>
+							</select>
+						</td>
+#set ( $count = $count + 1 )
+#else
+						<td class="left">${column.fieldDescription}</td>
+						<td class="right"><input class="text" type="text" name="search_${column.variableName}" size="12"></td>
+#set ( $count = $count + 1 )
+#end
+#end
+#end
+#if($count==1)
+#set($tr=1)
+					</tr>
+#else
+#set($tr=0)
+#end
+#if($count==4)#set($count=0)#end
+#end
+#if($tr==0)
+					</tr>
+#end
+					<tr>
+						<td class="bottom" colspan="4"><input type="checkbox" name="search_matcheAll">模糊查询</td>
+						<td class="bottom" colspan="4"><input type="submit" value="查询"></td>
+					</tr>
+					</table>
+				</form>
+			</bass:form>
+		</div>
+
+		<div>
+			<span class="message" id="Messages" style="float: left;"><%=message%></span>
+			<span style="float:right;width:70%;text-align: right;padding-right:30px"> <A href="create${table.destinationClassName}.html">增加</A></span>
+		</div>
+		<div id="tableDiv">
+			<bass:table items="${table.variableName}List" var="${table.variableName}" action="list${table.destinationClassName}.html">
+				<bass:export view="csv" fileName="${table.classDescription}列表.csv" tooltip="导出CSV" imageName="csv" />
+				<bass:export view="xls" fileName="${table.classDescription}列表.xls" tooltip="导出EXCEL" imageName="xls" />
+				<bass:row>
+#set ( $count = 1 )
+#foreach ($column in $table.columns )
+#if($column.sqlName!='CREATE_DATE' && $column.sqlName!='CREATE_OPID' && $column.sqlName!='CREATE_BUSICODE' && $column.sqlName!='DISABLE_DATE' && $column.sqlName!='DISABLE_OPID' && $column.sqlName!='DISABLE_BUSICODE' && $column.sqlName!='REC_STATUS')
+#if($column.javaType == 'java.util.Date')
+					<bass:column property="${column.variableName}" title="${column.fieldDescription}" style="width: 100px" cell="date"/>
+#elseif($column.javaType == 'String')
+					<bass:column property="${column.variableName}" title="${column.fieldDescription}" style="width: 100px" />
+#else
+#if(${column.enumId})
+					<bass:column property="${column.variableName}" title="${column.fieldDescription}" style="width: 100px">
+						<bass:columnValue enumId="${column.enumId}" enumValue="${${table.variableName}.${column.variableName}}"/>
+					</bass:column>
+#else
+					<bass:column property="${column.variableName}" title="${column.fieldDescription}" style="width: 100px" />
+#end
+#end
+#end			
+#set ( $count = $count + 1 )
+#end
+					<bass:column property="edit" title="操作" sortable="false" viewsAllowed="html" style="width: 70px">
+						<A href="edit${table.destinationClassName}.html?id=${${table.variableName}.id}">修改</A>
+					</bass:column>
+				</bass:row>
+			</bass:table>
+		</div>
+				</TD>
+			</TR>
+			</TBODY>
+		</TABLE>		
+	</body>
+</html>

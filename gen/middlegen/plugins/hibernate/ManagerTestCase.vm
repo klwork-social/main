@@ -1,0 +1,129 @@
+package ${table.package}#if($plugin.hibernateManager.dir).${plugin.hibernateManager.dir}#end;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import junit.framework.Assert;
+
+import org.apache.commons.beanutils.locale.LogLocalConverter;
+
+import ${table.package}.domain.*;
+
+/**
+ * ${table.classDescription}
+#if($table.comment)
+ * ${table.comment}
+#end
+ * @version ${plugin.hibernateManager.version}
+ * @created ${plugin.now}
+ * @author ${plugin.author}
+ */
+
+public class ${table.destinationClassName}${plugin.hibernateManager.suffix}TestCase extends BaseManagerTestCase {
+
+	/**
+	 * 缺省生成业务代码的总体CURD测试
+	 * @throws Exception
+	 */
+	public void testDefault${table.destinationClassName}() throws Exception {
+
+		${table.destinationClassName}Manager ${table.variableName}Manager = (${table.destinationClassName}Manager) ctx
+				.getBean("${table.variableName}Manager");
+		Long newID = ${table.variableName}Manager.create${table.destinationClassName}ID();
+		Assert.assertNotNull(newID);
+		System.out.print("step0: createNewID测试通过:" + newID);
+
+		${table.destinationClassName} ${table.variableName} = new ${table.destinationClassName}();
+#set ( $count = 0 )
+#foreach ($column in $table.columns )
+#set ( $count = $count + 1 )
+#if($column.javaType == 'java.util.Date')
+		${table.variableName}.${column.setterName}(new Date());
+#elseif($column.javaType == 'String')
+		${table.variableName}.${column.setterName}("${column.fieldDescription}");
+#else
+		${table.variableName}.${column.setterName}(new ${column.javaType}($count));
+#end
+#end
+		${table.variableName}.setRecStatus(1);
+		${table.destinationClassName} ${table.variableName}2 = ${table.variableName}Manager.create${table.destinationClassName}(${table.variableName});
+		Assert.assertNotNull(${table.variableName}2);
+#foreach ($column in $table.columns )
+		Assert.assertEquals(${table.variableName}2.${column.getterName}(), ${table.variableName}.${column.getterName}());
+#end
+		Assert.assertNotNull(${table.variableName}2.getId());
+		Assert.assertTrue(${table.variableName}2.getId() != 0);
+		System.out.print("step1: createBoard测试通过:");
+		System.out.println(new LogLocalConverter().convert(${table.variableName}2));
+
+		${table.destinationClassName} ${table.variableName}4 = ${table.variableName}Manager.search${table.destinationClassName}ById(${table.variableName}2.getId());
+		Assert.assertNotNull(${table.variableName}4);
+		Assert.assertNotNull(${table.variableName}4.getId());
+		Assert.assertTrue(${table.variableName}4.getId() != 0);
+#foreach ($column in $table.columns )
+		Assert.assertEquals(${table.variableName}4.${column.getterName}(), ${table.variableName}2.${column.getterName}());
+#end
+		System.out.print("step2:search${table.destinationClassName}ById测试通过:");
+		System.out.println(new LogLocalConverter().convert(${table.variableName}4));
+
+		HashMap parameterMap = new HashMap();
+		parameterMap.put("orderBy", "id");
+		parameterMap.put("orderType", "desc");
+#foreach ($column in $table.columns )
+		parameterMap.put("${column.variableName}", ${table.variableName}2.${column.getterName}());
+#end
+		List ${table.variableName}s1 = ${table.variableName}Manager.search${table.destinationClassName}ByParams(parameterMap);
+		Assert.assertNotNull(${table.variableName}s1);
+		Assert.assertEquals(${table.variableName}s1.size(), 1);
+		${table.destinationClassName} ${table.variableName}5 = (${table.destinationClassName}) ${table.variableName}s1.get(0);
+		Assert.assertNotNull(${table.variableName}5);
+		Assert.assertNotNull(${table.variableName}5.getId());
+#foreach ($column in $table.columns )
+		Assert.assertEquals(${table.variableName}5.${column.getterName}(), ${table.variableName}2.${column.getterName}());
+#end
+		System.out.print("step3:search${table.destinationClassName}ByParams1:测试通过:");
+		System.out.println(new LogLocalConverter().convert(${table.variableName}5));
+
+		parameterMap.remove("id");
+		parameterMap.put("createDateAfter", new Date(System.currentTimeMillis()-3600000));
+		parameterMap.put("createDateBefor", new Date());
+		List ${table.variableName}s2 = ${table.variableName}Manager.search${table.destinationClassName}ByParams(parameterMap);
+		Assert.assertNotNull(${table.variableName}s2);
+		Assert.assertTrue(${table.variableName}s2.size()>=1);
+		System.out.print("step4:search${table.destinationClassName}ByParams2:测试通过:size="+${table.variableName}s2.size());
+		System.out.println(new LogLocalConverter().convert(${table.variableName}s2.get(0)));
+
+		long ${table.variableName}2_id = ${table.variableName}2.getId();
+#foreach ($column in $table.columns )
+#set ( $count = $count + 1 )
+#if($column.javaType == 'java.util.Date')
+		${table.variableName}2.${column.setterName}(new Date());
+#elseif($column.javaType == 'String')
+		${table.variableName}2.${column.setterName}("${column.variableName}");
+#else
+		${table.variableName}2.${column.setterName}(new ${column.javaType}($count));
+#end
+#end
+		${table.variableName}2.setRecStatus(1);
+		${table.variableName}2.setId(${table.variableName}2_id);
+		${table.destinationClassName} ${table.variableName}3 = ${table.variableName}Manager.update${table.destinationClassName}(${table.variableName}2);
+		Assert.assertNotNull(${table.variableName}3);
+		Assert.assertNotNull(${table.variableName}3.getId());
+		Assert.assertTrue(${table.variableName}3.getId() != 0);
+		Assert.assertTrue(${table.variableName}3.getId() != ${table.variableName}2_id);
+#foreach ($column in $table.columns )
+		Assert.assertEquals(${table.variableName}3.${column.getterName}(), ${table.variableName}2.${column.getterName}());
+#end
+		System.out.print("step5:update${table.destinationClassName}测试通过:");
+		System.out.println(new LogLocalConverter().convert(${table.variableName}3));
+
+		${table.variableName}3.setDisableBusicode("8889");
+		${table.variableName}3.setDisableDate(new Date());
+		${table.variableName}3.setDisableOpid("test");
+		${table.variableName}Manager.delete${table.destinationClassName}(${table.variableName}3);
+		${table.destinationClassName} ${table.variableName}6 = ${table.variableName}Manager.search${table.destinationClassName}ById(${table.variableName}2.getId());
+		Assert.assertNull(${table.variableName}6);
+		System.out.print("step5:delete${table.destinationClassName}测试通过:");
+	}
+}

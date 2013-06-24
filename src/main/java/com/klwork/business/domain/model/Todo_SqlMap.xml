@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	(todo) :${table.comment}
+字段:
+	id_(varchar)	:
+	pid_(varchar)	:
+	is_container_(int4)	:
+	creation_date_(timestamp)	:
+	description_(varchar)	:
+	priority_(int4)	:
+	completed_(int4)	:
+	completion_date_(timestamp)	:
+	pro_id_(varchar)	:
+	due_date_(timestamp)	:
+	assigned_user_(varchar)	:
+	last_update_(timestamp)	:
+	useup_(numeric)	:
+	status_(int4)	:
+	type_(int4)	:
+	tags_(varchar)	:
+	related_task_id_(varchar)	:
+	related_task_(bool)	:
+	name_(varchar)	:
+	start_date_(timestamp)	:
+	estimate_(numeric)	:
+	estimate_unit_(int4)	:
+	related_calendar_(bool)	:
+sqlMapConfig:
+	<typeAlias alias="Todo" type="com.klwork.business.domain/model.Todo" />
+	<mapper resource="com/klwork/business/domain/model/Todo_SqlMap.xml" />
+-->
+<mapper namespace="com.klwork.business.domain.model.Todo">
+
+  <!-- INSERT -->
+  <insert id="insertTodo" parameterType="com.klwork.business.domain.model.Todo">
+    insert into todo (
+    	id_,
+	pid_,
+	is_container_,
+	creation_date_,
+	description_,
+	priority_,
+	completed_,
+	completion_date_,
+	pro_id_,
+	due_date_,
+	assigned_user_,
+	last_update_,
+	useup_,
+	status_,
+	type_,
+	tags_,
+	related_task_id_,
+	related_task_,
+	name_,
+	start_date_,
+	estimate_,
+	estimate_unit_,
+	related_calendar_
+	)
+    values (
+      		#{id,jdbcType=VARCHAR},
+ 		#{pid,jdbcType=VARCHAR},
+ 		#{isContainer,jdbcType=INTEGER},
+ 		#{creationDate,jdbcType=TIMESTAMP},
+ 		#{description,jdbcType=VARCHAR},
+ 		#{priority,jdbcType=INTEGER},
+ 		#{completed,jdbcType=INTEGER},
+ 		#{completionDate,jdbcType=TIMESTAMP},
+ 		#{proId,jdbcType=VARCHAR},
+ 		#{dueDate,jdbcType=TIMESTAMP},
+ 		#{assignedUser,jdbcType=VARCHAR},
+ 		#{lastUpdate,jdbcType=TIMESTAMP},
+ 		#{useup,jdbcType=NUMERIC},
+ 		#{status,jdbcType=INTEGER},
+ 		#{type,jdbcType=INTEGER},
+ 		#{tags,jdbcType=VARCHAR},
+ 		#{relatedTaskId,jdbcType=VARCHAR},
+ 		#{relatedTask,jdbcType=BOOLEAN},
+ 		#{name,jdbcType=VARCHAR},
+ 		#{startDate,jdbcType=TIMESTAMP},
+ 		#{estimate,jdbcType=NUMERIC},
+ 		#{estimateUnit,jdbcType=INTEGER},
+    	#{relatedCalendar,jdbcType=BOOLEAN}
+    	)
+  </insert>
+  
+  <!-- UPDATE -->
+  <update id="updateTodo" parameterType="com.klwork.business.domain.model.Todo">
+    update todo set
+    	<if test="pid != null">
+ pid_ = #{pid,jdbcType=VARCHAR},
+</if>
+<if test="isContainer != null">
+ is_container_ = #{isContainer,jdbcType=INTEGER},
+</if>
+<if test="creationDate != null">
+ creation_date_ = #{creationDate,jdbcType=TIMESTAMP},
+</if>
+<if test="description != null">
+ description_ = #{description,jdbcType=VARCHAR},
+</if>
+<if test="priority != null">
+ priority_ = #{priority,jdbcType=INTEGER},
+</if>
+<if test="completed != null">
+ completed_ = #{completed,jdbcType=INTEGER},
+</if>
+<if test="completionDate != null">
+ completion_date_ = #{completionDate,jdbcType=TIMESTAMP},
+</if>
+<if test="proId != null">
+ pro_id_ = #{proId,jdbcType=VARCHAR},
+</if>
+<if test="dueDate != null">
+ due_date_ = #{dueDate,jdbcType=TIMESTAMP},
+</if>
+<if test="assignedUser != null">
+ assigned_user_ = #{assignedUser,jdbcType=VARCHAR},
+</if>
+<if test="useup != null">
+ useup_ = #{useup,jdbcType=NUMERIC},
+</if>
+<if test="status != null">
+ status_ = #{status,jdbcType=INTEGER},
+</if>
+<if test="type != null">
+ type_ = #{type,jdbcType=INTEGER},
+</if>
+<if test="tags != null">
+ tags_ = #{tags,jdbcType=VARCHAR},
+</if>
+<if test="relatedTaskId != null">
+ related_task_id_ = #{relatedTaskId,jdbcType=VARCHAR},
+</if>
+<if test="relatedTask != null">
+ related_task_ = #{relatedTask,jdbcType=BOOLEAN},
+</if>
+<if test="name != null">
+ name_ = #{name,jdbcType=VARCHAR},
+</if>
+<if test="startDate != null">
+ start_date_ = #{startDate,jdbcType=TIMESTAMP},
+</if>
+<if test="estimate != null">
+ estimate_ = #{estimate,jdbcType=NUMERIC},
+</if>
+<if test="estimateUnit != null">
+ estimate_unit_ = #{estimateUnit,jdbcType=INTEGER},
+</if>
+<if test="relatedCalendar != null">
+ related_calendar_ = #{relatedCalendar,jdbcType=BOOLEAN},
+</if>
+<if test="lastUpdate != null">
+ last_update_ = #{lastUpdate,jdbcType=TIMESTAMP}
+</if>
+ where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+    <!-- Delete -->	
+  <delete id="deleteTodo" parameterType="string">
+    delete from todo where id_ = #{id}
+  </delete>
+  
+  <!-- SELECT -->
+  <select id="selectTodoById" parameterType="string" resultMap="TodoMap">
+    select * from todo where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectTodoByQueryCriteria" parameterType="com.klwork.business.domain.model.TodoQuery" resultMap="TodoMap">
+    select U.*
+    <include refid="selectTodoByQueryCriteriaSql" />
+    <if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+	</if>
+    <!--if test="orderBy != null">
+      order by ${orderBy}
+    </if> -->
+  </select>
+  
+   <select id="selectTodoCountByQueryCriteria" parameterType="com.klwork.business.domain.model.TodoQuery" resultType="int">
+    select count(U.id_)
+    <include refid="selectTodoByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="selectTodoByQueryCriteriaSql">
+    from todo U
+    <where>
+        <if test="pid != null">
+        AND U.pid_ = #{pid}
+    </if>
+    <if test="isContainer != null">
+        AND U.is_container_ = #{isContainer}
+    </if>
+    <if test="priority != null">
+        AND U.priority_ = #{priority}
+    </if>
+    <if test="proId != null">
+        AND U.pro_id_ = #{proId}
+    </if>
+    <if test="assignedUser != null">
+        AND U.assigned_user_ = #{assignedUser}
+    </if>
+    <if test="status != null">
+        AND U.status_ = #{status}
+    </if>
+    <if test="type != null">
+        AND U.type_ = #{type}
+    </if>
+    <if test="relatedTask != null">
+        AND U.related_task_ = #{relatedTask}
+    </if>
+    <if test="relatedCalendar != null">
+        AND U.related_calendar_ = #{relatedCalendar}
+    </if>
+    </where>
+  </sql>
+  
+	<resultMap id="TodoMap" type="com.klwork.business.domain.model.Todo">
+	<result property="id" column="id_" />
+	<result property="pid" column="pid_" />
+	<result property="isContainer" column="is_container_" />
+	<result property="creationDate" column="creation_date_" />
+	<result property="description" column="description_" />
+	<result property="priority" column="priority_" />
+	<result property="completed" column="completed_" />
+	<result property="completionDate" column="completion_date_" />
+	<result property="proId" column="pro_id_" />
+	<result property="dueDate" column="due_date_" />
+	<result property="assignedUser" column="assigned_user_" />
+	<result property="lastUpdate" column="last_update_" />
+	<result property="useup" column="useup_" />
+	<result property="status" column="status_" />
+	<result property="type" column="type_" />
+	<result property="tags" column="tags_" />
+	<result property="relatedTaskId" column="related_task_id_" />
+	<result property="relatedTask" column="related_task_" />
+	<result property="name" column="name_" />
+	<result property="startDate" column="start_date_" />
+	<result property="estimate" column="estimate_" />
+	<result property="estimateUnit" column="estimate_unit_" />
+	<result property="relatedCalendar" column="related_calendar_" />
+</resultMap>
+</mapper>

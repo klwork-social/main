@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	(project_participants) :${table.comment}
+字段:
+	id_(varchar)	:
+	user_id_(varchar)	:
+	out_prg_id_(varchar)	:
+	participants_type_(bpchar)	:
+	current_task_id_(varchar)	:
+	score_(numeric)	:
+	score_user_id_(varchar)	:
+	is_winner_(bool)	:
+	winning_amount(numeric)	:
+	handle_status_(bpchar)	:
+	work_attachment(varchar)	:
+	proc_inst_id_(varchar)	:
+	last_update_(timestamp)	:
+	work_comment_(varchar)	:
+	win_reson_(varchar)	:
+	assessed_task_id_(varchar)	:
+sqlMapConfig:
+	<typeAlias alias="ProjectParticipant" type="com.klwork.business.domain/model.ProjectParticipant" />
+	<mapper resource="com/klwork/business/domain/model/ProjectParticipant_SqlMap.xml" />
+-->
+<mapper namespace="com.klwork.business.domain.model.ProjectParticipant">
+
+  <!-- INSERT -->
+  <insert id="insertProjectParticipant" parameterType="com.klwork.business.domain.model.ProjectParticipant">
+    insert into project_participants (
+    	id_,
+	user_id_,
+	out_prg_id_,
+	participants_type_,
+	current_task_id_,
+	score_,
+	score_user_id_,
+	is_winner_,
+	winning_amount,
+	handle_status_,
+	work_attachment,
+	proc_inst_id_,
+	last_update_,
+	work_comment_,
+	win_reson_,
+	assessed_task_id_
+	)
+    values (
+      		#{id,jdbcType=VARCHAR},
+ 		#{userId,jdbcType=VARCHAR},
+ 		#{outPrgId,jdbcType=VARCHAR},
+ 		#{participantsType,jdbcType=CHAR},
+ 		#{currentTaskId,jdbcType=VARCHAR},
+ 		#{score,jdbcType=NUMERIC},
+ 		#{scoreUserId,jdbcType=VARCHAR},
+ 		#{isWinner,jdbcType=BOOLEAN},
+ 		#{winningAmount,jdbcType=NUMERIC},
+ 		#{handleStatus,jdbcType=CHAR},
+ 		#{workAttachment,jdbcType=VARCHAR},
+ 		#{procInstId,jdbcType=VARCHAR},
+ 		#{lastUpdate,jdbcType=TIMESTAMP},
+ 		#{workComment,jdbcType=VARCHAR},
+ 		#{winReson,jdbcType=VARCHAR},
+    	#{assessedTaskId,jdbcType=VARCHAR}
+    	)
+  </insert>
+  
+  <!-- UPDATE -->
+  <update id="updateProjectParticipant" parameterType="com.klwork.business.domain.model.ProjectParticipant">
+    update project_participants set
+    	<if test="userId != null">
+ user_id_ = #{userId,jdbcType=VARCHAR},
+</if>
+<if test="outPrgId != null">
+ out_prg_id_ = #{outPrgId,jdbcType=VARCHAR},
+</if>
+<if test="participantsType != null">
+ participants_type_ = #{participantsType,jdbcType=CHAR},
+</if>
+<if test="currentTaskId != null">
+ current_task_id_ = #{currentTaskId,jdbcType=VARCHAR},
+</if>
+<if test="score != null">
+ score_ = #{score,jdbcType=NUMERIC},
+</if>
+<if test="scoreUserId != null">
+ score_user_id_ = #{scoreUserId,jdbcType=VARCHAR},
+</if>
+<if test="isWinner != null">
+ is_winner_ = #{isWinner,jdbcType=BOOLEAN},
+</if>
+<if test="winningAmount != null">
+ winning_amount = #{winningAmount,jdbcType=NUMERIC},
+</if>
+<if test="handleStatus != null">
+ handle_status_ = #{handleStatus,jdbcType=CHAR},
+</if>
+<if test="workAttachment != null">
+ work_attachment = #{workAttachment,jdbcType=VARCHAR},
+</if>
+<if test="procInstId != null">
+ proc_inst_id_ = #{procInstId,jdbcType=VARCHAR},
+</if>
+<if test="workComment != null">
+ work_comment_ = #{workComment,jdbcType=VARCHAR},
+</if>
+<if test="winReson != null">
+ win_reson_ = #{winReson,jdbcType=VARCHAR},
+</if>
+<if test="assessedTaskId != null">
+ assessed_task_id_ = #{assessedTaskId,jdbcType=VARCHAR},
+</if>
+<if test="lastUpdate != null">
+ last_update_ = #{lastUpdate,jdbcType=TIMESTAMP}
+</if>
+ where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- SELECT -->
+  <select id="selectProjectParticipantById" parameterType="string" resultMap="ProjectParticipantMap">
+    select * from project_participants where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectProjectParticipantByQueryCriteria" parameterType="com.klwork.business.domain.model.ProjectParticipantQuery" resultMap="ProjectParticipantMap">
+    select U.*
+    <include refid="selectProjectParticipantByQueryCriteriaSql" />
+    <if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+	</if>
+    <!--if test="orderBy != null">
+      order by ${orderBy}
+    </if> -->
+  </select>
+  
+   <select id="selectProjectParticipantCountByQueryCriteria" parameterType="com.klwork.business.domain.model.ProjectParticipantQuery" resultType="int">
+    select count(U.id_)
+    <include refid="selectProjectParticipantByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="selectProjectParticipantByQueryCriteriaSql">
+    from project_participants U
+    <where>
+        <if test="userId != null">
+        AND U.user_id_ = #{userId}
+    </if>
+    <if test="outPrgId != null">
+        AND U.out_prg_id_ = #{outPrgId}
+    </if>
+    <if test="participantsType != null">
+        AND U.participants_type_ = #{participantsType}
+    </if>
+    <if test="scoreUserId != null">
+        AND U.score_user_id_ = #{scoreUserId}
+    </if>
+    <if test="isWinner != null">
+        AND U.is_winner_ = #{isWinner}
+    </if>
+    <if test="handleStatus != null">
+        AND U.handle_status_ = #{handleStatus}
+    </if>
+    <if test="procInstId != null">
+        AND U.proc_inst_id_ = #{procInstId}
+    </if>
+    <if test="assessedTaskId != null">
+        AND U.assessed_task_id_ = #{assessedTaskId}
+    </if>
+    </where>
+  </sql>
+  
+	<resultMap id="ProjectParticipantMap" type="com.klwork.business.domain.model.ProjectParticipant">
+	<result property="id" column="id_" />
+	<result property="userId" column="user_id_" />
+	<result property="outPrgId" column="out_prg_id_" />
+	<result property="participantsType" column="participants_type_" />
+	<result property="currentTaskId" column="current_task_id_" />
+	<result property="score" column="score_" />
+	<result property="scoreUserId" column="score_user_id_" />
+	<result property="isWinner" column="is_winner_" />
+	<result property="winningAmount" column="winning_amount" />
+	<result property="handleStatus" column="handle_status_" />
+	<result property="workAttachment" column="work_attachment" />
+	<result property="procInstId" column="proc_inst_id_" />
+	<result property="lastUpdate" column="last_update_" />
+	<result property="workComment" column="work_comment_" />
+	<result property="winReson" column="win_reson_" />
+	<result property="assessedTaskId" column="assessed_task_id_" />
+</resultMap>
+</mapper>

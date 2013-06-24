@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="checkstyle" basedir=".">
+    <property name="project.home" value="${basedir}/.." />
+	<property name="src" value="${project.home}/src/common/main/java" />
+	  <property name="checkstyle.suppressions.file"
+                value="config/suppressions.xml"/>
+    <taskdef resource="checkstyletask.properties"
+         classpath="./spec-lib/checkstyle-all-5.1.jar"/>
+    <target name="my_check">
+        <checkstyle config="config/my_check.xml">
+            <fileset dir="${src}" includes="**/*.java"/>
+            <formatter type="plain" toFile="ant_build/checkstyle_errors.txt"/>
+    		<formatter type="xml" toFile="ant_build/checkstyle_errors.xml"/>
+        </checkstyle>
+    </target>
+</project>

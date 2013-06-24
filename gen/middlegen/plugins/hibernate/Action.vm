@@ -1,0 +1,90 @@
+package ${table.package}#if($plugin.hibernateController.dir).${plugin.hibernateController.dir}#end;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import ${table.package}.domain.*;
+import ${table.package}.service.*;
+import org.apache.log4j.Logger;
+import com.opensymphony.xwork2.ActionSupport;
+
+/**
+ * ${table.classDescription}
+#if($table.comment)
+ * ${table.comment}
+#end
+ * @version ${plugin.hibernateController.version}
+ * @created ${plugin.now}
+ * @author ${plugin.author}
+ */
+
+public class ${table.destinationClassName}${plugin.hibernateController.suffix} extends ActionSupport{
+	
+	private final static Logger log = Logger.getLogger(${table.destinationClassName}${plugin.hibernateController.suffix}.class); 
+	
+	/**
+	 * ${table.destinationClassName}${table.classDescription}业务对象
+	 */
+	private ${table.destinationClassName}Service ${table.variableName}Service;
+
+	/**
+	 * 设置${table.destinationClassName}${table.classDescription}业务对象
+	 * 
+	 * @param ${table.variableName}Manager
+	 */
+	public void set${table.destinationClassName}Service(${table.destinationClassName}Service ${table.variableName}Service) {
+		this.${table.variableName}Service = ${table.variableName}Service;
+	}
+
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public String execute() throws Exception {
+		log.info("=====execute()");
+		
+		return "success";
+	}
+
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public String create${table.destinationClassName}() throws Exception {
+		log.info("=====create${table.destinationClassName}()");
+		
+		return "success";
+	}
+	
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public String delete${table.destinationClassName}() throws Exception {
+		log.info("=====delete${table.destinationClassName}()");
+		
+		return "success";
+	}
+	
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public String update${table.destinationClassName}() throws Exception {
+		log.info("=====update${table.destinationClassName}()");
+		
+		return "success";
+	}
+	
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public String find${table.destinationClassName}() throws Exception {
+		log.info("=====find${table.destinationClassName}()");
+		
+		return "success";
+	}
+}

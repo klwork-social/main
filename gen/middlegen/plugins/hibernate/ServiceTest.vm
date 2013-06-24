@@ -1,0 +1,33 @@
+package ${table.package}#if($plugin.hibernateManager.dir).${plugin.hibernateManager.classInterFaceDir}#end;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.klwork.test.base.BaseTxWebTests;
+import com.klwork.common.dao.QueryParameter;
+import com.klwork.common.dto.vo.ViewPage;
+import ${table.package}.domain.model.${table.destinationClassName};
+import ${table.package}.domain.repository.${table.destinationClassName}Repository;
+import ${table.package}.domain.service.${table.destinationClassName}Service;
+
+/**
+ * ${table.classDescription}
+#if($table.comment)
+ * ${table.comment}
+#end
+ * @version ${plugin.hibernateManager.version}
+ * @created ${plugin.now}
+ * @author ${plugin.author}
+ */
+ 
+public class ${table.destinationClassName}ServiceTest extends BaseTxWebTests {
+	@Autowired
+	${table.destinationClassName}Service ${table.firstLowerClassName}Service;
+
+	@Test
+	public void testService() {
+	
+	}
+
+}

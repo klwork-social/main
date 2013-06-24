@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	(project) :${table.comment}
+字段:
+	id(varchar)	:
+	creationdate(timestamp)	:
+	ownuser(varchar)	:
+	lastupdate(timestamp)	:
+	description(varchar)	:
+sqlMapConfig:
+	<typeAlias alias="Project" type="com.klwork.business.domain/model.Project" />
+	<mapper resource="com/klwork/business/domain/model/Project_SqlMap.xml" />
+-->
+<mapper namespace="com.klwork.business.domain.model.Project">
+
+	<!-- INSERT -->
+	<insert id="insertProject" parameterType="com.klwork.business.domain.model.Project">
+    insert into project (
+    	id,
+	creationdate,
+	ownuser,
+	lastupdate,
+	description,
+	name
+	)
+    values (
+      		#{id,jdbcType=VARCHAR},
+ 		#{creationdate,jdbcType=TIMESTAMP},
+ 		#{ownuser,jdbcType=VARCHAR},
+ 		#{lastupdate,jdbcType=TIMESTAMP},
+    	#{description,jdbcType=VARCHAR},
+    	#{name,jdbcType=VARCHAR}
+    	)
+	</insert>
+  
+	<!-- UPDATE -->
+	<update id="updateProject" parameterType="com.klwork.business.domain.model.Project">
+    update project set
+ creationdate = #{creationdate,jdbcType=TIMESTAMP},
+ ownuser = #{ownuser,jdbcType=VARCHAR},
+ lastupdate = #{lastupdate,jdbcType=TIMESTAMP},
+ description = #{description,jdbcType=VARCHAR},
+ name = #{name,jdbcType=VARCHAR}
+ where id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+  <!-- Delete -->	
+  <delete id="deleteProject" parameterType="string">
+    delete from project where id = #{id}
+  </delete>
+  
+	<!-- SELECT -->
+	<select id="selectProjectById" parameterType="string" resultMap="ProjectMap">
+    select * from project where id = #{id,jdbcType=VARCHAR}
+	</select>
+  
+	<select id="selectProjectByQueryCriteria" parameterType="com.klwork.business.domain.model.ProjectQuery" resultMap="ProjectMap">
+    select U.*
+		<include refid="selectProjectByQueryCriteriaSql" />
+		<if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+		</if>
+		<!--if test="orderBy != null">
+			  order by ${orderBy}
+			</if> -->
+	</select>
+  
+	<select id="selectProjectCountByQueryCriteria" parameterType="com.klwork.business.domain.model.ProjectQuery" resultType="int">
+    select count(U.id)
+		<include refid="selectProjectByQueryCriteriaSql" />
+	</select>
+  
+	<sql id="selectProjectByQueryCriteriaSql">
+    from project U
+		<where>
+			<if test="id != null">
+        AND U.id = #{id}
+			</if>
+			<if test="creationdate != null">
+        AND U.creationdate = #{creationdate}
+			</if>
+			<if test="ownuser != null">
+        AND U.ownuser = #{ownuser}
+			</if>
+			<if test="lastupdate != null">
+        AND U.lastupdate = #{lastupdate}
+			</if>
+			<if test="description != null">
+        AND U.description = #{description}
+			</if>
+			<if test="name != null">
+        AND U.name = #{name}
+			</if>
+		</where>
+	</sql>
+  
+	<resultMap id="ProjectMap" type="com.klwork.business.domain.model.Project">
+		<result property="id" column="id" />
+		<result property="creationdate" column="creationdate" />
+		<result property="ownuser" column="ownuser" />
+		<result property="lastupdate" column="lastupdate" />
+		<result property="description" column="description" />
+		<result property="name" column="name" />
+	</resultMap>
+</mapper>

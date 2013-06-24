@@ -1,0 +1,58 @@
+package ${table.package}#if($plugin.hibernateDomainObject.dir).${plugin.hibernateDomainObject.classDir}#end;
+
+
+import java.io.Serializable;
+
+/**
+ * ${table.classDescription}
+#if($table.comment)
+ * ${table.comment}
+#end
+ * @version ${plugin.hibernateDomainObject.version}
+ * @created ${plugin.now}
+ * @author ${plugin.author}
+ * ${plugin.implements}
+ */
+public class ${table.destinationClassName} implements Serializable 
+ {
+ 	private static final long serialVersionUID = 1L;
+ 	public ${table.destinationClassName}() {
+ 	}
+ 
+#foreach ($column in $table.columns )
+#if(${column.enumCodeList})
+#foreach ($enumCode in $column.enumCodeList )
+	/**
+	 * ${enumCode.get(2)}(${enumCode.get(3)})
+	 */
+	public static final Integer ${enumCode.get(1)} = new Integer(${enumCode.get(0)});
+#end
+#end
+#end
+
+#foreach ($column in $table.columns )
+	/**
+	 *  ${column.fieldDescription}
+	 */
+	private ${column.javaType} ${column.variableName};
+#end
+
+#foreach ($column in $table.columns )
+	/**
+	 * ${column.fieldDescription}
+	 *
+	 * @param ${column.variableName}
+	 */
+	public void ${column.setterName}(${column.javaType} ${column.variableName}){
+		this.${column.variableName} = ${column.variableName};
+	}
+	/**
+	 * ${column.fieldDescription}
+	 *
+	 * @return
+	 */	
+	public ${column.javaType} ${column.getterName}(){
+		return ${column.variableName};
+	}
+#end
+}

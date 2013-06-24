@@ -1,0 +1,54 @@
+package ${table.package}#if($plugin.hibernateManager.dir).${plugin.hibernateManager.classInterFaceDir}#end;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.klwork.common.dto.vo.ViewPage;
+import ${table.package}.domain.model.${table.destinationClassName};
+import ${table.package}.domain.model.${table.destinationClassName}Query;
+import ${table.package}.domain.repository.${table.destinationClassName}Repository;
+
+
+/**
+ * ${table.classDescription}
+#if($table.comment)
+ * ${table.comment}
+#end
+ * @version ${plugin.hibernateManager.version}
+ * @created ${plugin.now}
+ * @author ${plugin.author}
+ */
+
+@Service
+public class ${table.destinationClassName}Service {
+	@Autowired
+	private ${table.destinationClassName}Repository rep;
+
+	public void create${table.destinationClassName}(${table.destinationClassName} ${table.firstLowerClassName}) {
+		${table.firstLowerClassName}.setId(rep.getNextId());
+		rep.insert(${table.firstLowerClassName});
+	}
+
+	public void delete${table.destinationClassName}(${table.destinationClassName} ${table.firstLowerClassName}) {
+	}
+
+	public int update${table.destinationClassName}(${table.destinationClassName} ${table.firstLowerClassName}) {
+		return 0;
+	}
+
+	public List<${table.destinationClassName}> find${table.destinationClassName}ByQueryCriteria(${table.destinationClassName}Query query,
+			ViewPage<${table.destinationClassName}> page) {
+		return rep.find${table.destinationClassName}ByQueryCriteria(query, page);
+	}
+
+	public ${table.destinationClassName} find${table.destinationClassName}ById(String id) {
+		return rep.find(id);
+	}
+	
+	public int count(${table.destinationClassName}Query query) {
+		return rep.find${table.destinationClassName}CountByQueryCriteria(query);
+	}
+}

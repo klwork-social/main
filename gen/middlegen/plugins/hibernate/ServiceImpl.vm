@@ -1,0 +1,72 @@
+package ${table.package}#if($plugin.hibernateManager.dir).${plugin.hibernateManager.interFaceDir}.impl#end;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.log4j.Logger;
+import ${table.package}.domain.${table.destinationClassName};
+import ${table.package}.${plugin.hibernateManager.interFaceDir}.${table.destinationClassName}${plugin.hibernateManager.interFaceSuffix};
+import ${table.package}.${plugin.daoDir}.${table.destinationClassName}${plugin.daoSuffix};
+
+/**
+ * ${table.classDescription}
+#if($table.comment)
+ * ${table.comment}
+#end
+ * @version ${plugin.hibernateManager.version}
+ * @created ${plugin.now}
+ * @author ${plugin.author}
+ */
+
+public class ${table.destinationClassName}${plugin.hibernateManager.suffix} implements ${table.destinationClassName}${plugin.hibernateManager.interFaceSuffix} {
+	private static Logger logger = Logger.getLogger(${table.destinationClassName}${plugin.hibernateManager.suffix}.class);
+	
+	private ${table.destinationClassName}${plugin.daoSuffix} ${table.variableName}${plugin.daoSuffix};
+
+	public void set${table.destinationClassName}${plugin.daoSuffix}(${table.destinationClassName}${plugin.daoSuffix} ${table.variableName}${plugin.daoSuffix}) {
+		this.${table.variableName}${plugin.daoSuffix} = ${table.variableName}${plugin.daoSuffix};
+	}
+
+	/**
+	 * @return
+	 */
+	public ${table.destinationClassName} create${table.destinationClassName}(${table.destinationClassName} ${table.variableName}) {
+		return this.${table.variableName}${plugin.daoSuffix}.create${table.destinationClassName}(${table.variableName});
+	}
+
+	/**
+	 * @
+	 */
+	public void delete${table.destinationClassName}(${table.destinationClassName} ${table.variableName}) {
+		this.${table.variableName}${plugin.daoSuffix}.delete${table.destinationClassName}(${table.variableName});
+	}
+
+	/**
+	 * @return
+	 */
+	public int update${table.destinationClassName}(${table.destinationClassName} ${table.variableName}) {
+		return this.${table.variableName}${plugin.daoSuffix}.update${table.destinationClassName}(${table.variableName});
+	}
+
+	/**
+	 * @return
+	 */
+	public List<${table.destinationClassName}> find${table.destinationClassName}ByObject(Map parameterMap) {
+		return this.${table.variableName}${plugin.daoSuffix}.find${table.destinationClassName}ByObject(parameterMap);
+	}
+
+	/**
+	 * @return
+	 */
+	public ${table.destinationClassName} find${table.destinationClassName}ById(long id) {
+		return this.${table.variableName}${plugin.daoSuffix}.find${table.destinationClassName}ById(id);
+	}
+	
+	/**
+	 * @return
+	 */
+	public List<${table.destinationClassName}> find${table.destinationClassName}ByObject(Map parameterMap, int start, int pageSize) {
+		return this.${table.variableName}${plugin.daoSuffix}.find${table.destinationClassName}ByObject(parameterMap, start, pageSize);
+	}
+}

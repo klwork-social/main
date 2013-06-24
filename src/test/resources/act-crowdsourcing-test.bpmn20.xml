@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn"
+	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema"
+	expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/klwork">
+	<process id="klwork-crowdsourcing-act" name="klwork-crowdsourcing-act"
+		isExecutable="true">
+		<startEvent id="start1" activiti:initiator="applyUserId"></startEvent>
+		<sequenceFlow id="flow1" sourceRef="start1" targetRef="publishNeed"></sequenceFlow>
+
+		<userTask id="publishNeed" name="发布需求" activiti:assignee="${applyUserId}"
+			activiti:formKey="crowdsourcing-publishNeed-form" activiti:inType="out">
+		</userTask>
+		<sequenceFlow id="publishNeed-createApplication"
+			sourceRef="publishNeed" targetRef="createApplication"></sequenceFlow>
+
+		<serviceTask id="createApplication"
+			activiti:class="com.klwork.flow.act.CreateApplicationTask" />
+		<sequenceFlow id="createApplication-preAudit" sourceRef="createApplication"
+			targetRef="preAudit">
+			<conditionExpression xsi:type="tFormalExpression"><![CDATA[${goPreAudit == true}]]></conditionExpression>
+		</sequenceFlow>
+
+		<userTask id="preAudit" name="初步审核" activiti:assignee="${checker}" activiti:formKey="crowdsourcing-needCheck-form" activiti:inType="out">
+		</userTask>
+		<sequenceFlow id="preAudit-preAudit" sourceRef="preAudit"
+			targetRef="preCheckGateway"></sequenceFlow>
+
+
+		<exclusiveGateway id="preCheckGateway"></exclusiveGateway>
+		<sequenceFlow id="preCheckGateway-publishNeed" name="不通过"
+			sourceRef="preCheckGateway" targetRef="publishNeed">
+			<conditionExpression xsi:type="tFormalExpression"><![CDATA[${needPreChecked == false}]]></conditionExpression>
+		</sequenceFlow>
+		<sequenceFlow id="preCheckGateway-postedNeedAct" name="审核通过"
+			sourceRef="preCheckGateway" targetRef="uploadWork">
+			<conditionExpression xsi:type="tFormalExpression"><![CDATA[${needPreChecked == true}]]></conditionExpression>
+		</sequenceFlow>
+
+		<subProcess id="uploadWork" name="作品上传流程"
+			activiti:candidateGroups="user">
+			<multiInstanceLoopCharacteristics
+				isSequential="false">
+				<loopCardinality>1</loopCardinality>
+				<completionCondition>
+					${nrOfCompletedInstances/nrOfInstances>=0.75}
+				</completionCondition>
+			</multiInstanceLoopCharacteristics>
+			<startEvent id="uploadWorkStart"></startEvent>
+			<sequenceFlow id="uploadWorkStart-claimTask" sourceRef="uploadWorkStart"
+				targetRef="claimTask"></sequenceFlow>
+
+			<scriptTask id="claimTask" name="认领任务确认" scriptFormat="groovy">
+				<script>
+					out:println "任务处理人:";
+				</script>
+			</scriptTask>
+			<sequenceFlow id="claimTask-uploadOwnWork" sourceRef="claimTask"
+				targetRef="uploadOwnWork"></sequenceFlow>
+
+			<userTask id="uploadOwnWork" name="上传作品" activiti:formKey="crowdsourcing-uploadWork-form" activiti:inType="out">
+				<extensionElements>
+					<activiti:taskListener event="create"
+						class="com.klwork.flow.act.ActTaskAssignmentListener" />
+				</extensionElements>
+			</userTask>
+			<sequenceFlow id="uploadOwnWork-checkWork" sourceRef="uploadOwnWork"
+				targetRef="checkWork"></sequenceFlow>
+
+			<serviceTask id="checkWork" name="系统检查作品"
+				activiti:class="com.klwork.flow.act.WorkCheckService"></serviceTask>
+			<sequenceFlow id="checkWork-checkValidGateway"
+				sourceRef="checkWork" targetRef="checkValidGateway"></sequenceFlow>
+
+			<exclusiveGateway id="checkValidGateway"></exclusiveGateway>
+			<sequenceFlow id="checkValidGateway-uploadOwnWork" name="不通过"
+				sourceRef="checkValidGateway" targetRef="uploadOwnWork">
+				<conditionExpression xsi:type="tFormalExpression"><![CDATA[${workChecked == false}]]></conditionExpression>
+			</sequenceFlow>
+			<sequenceFlow id="checkValidGateway-uploadWorkEnd" name="通过"
+				sourceRef="checkValidGateway" targetRef="uploadWorkEnd">
+				<conditionExpression xsi:type="tFormalExpression"><![CDATA[${workChecked == true}]]></conditionExpression>
+			</sequenceFlow>
+
+			<serviceTask id="currentReviewWork" name="生成评审任务"
+				activiti:class="com.klwork.flow.act.CurrentReviewService"></serviceTask>
+			<sequenceFlow id="currentReviewWork-gradeWorks"
+				sourceRef="currentReviewWork" targetRef="gradeWorks"></sequenceFlow>
+
+			<userTask id="gradeWorks" name="评审人进行推荐和评分"
+				activiti:assignee="${reviewer}" activiti:formKey="crowdsourcing-gradeWork-form" activiti:inType="out">
+			</userTask>
+
+			<sequenceFlow id="gradeWorks-uploadWorkEnd" sourceRef="gradeWorks"
+				targetRef="uploadWorkEnd"></sequenceFlow>
+			<endEvent id="uploadWorkEnd"></endEvent>
+		</subProcess>
+		<sequenceFlow id="uploadWork-pubWinningList" sourceRef="uploadWork"
+			targetRef="pubWinningList"></sequenceFlow>
+
+		<userTask id="pubWinningList" name="公布获奖名单"
+			activiti:candidateGroups="management" activiti:formKey="crowdsourcing-determineVictor-form" activiti:inType="out"></userTask>
+		<sequenceFlow id="pubWinningList-messageVictor"
+			sourceRef="pubWinningList" targetRef="messageVictor"></sequenceFlow>
+
+		<serviceTask id="messageVictor" name="通知用户领奖"
+			activiti:class="com.klwork.flow.act.MessageVictorTask"></serviceTask>
+		<sequenceFlow id="messageVictor-end" sourceRef="messageVictor"
+			targetRef="end"></sequenceFlow>
+		<endEvent id="end"></endEvent>
+
+		<serviceTask id="dealWithOverdue" name="系统处理时间到期"
+			activiti:class="com.klwork.flow.act.DateOverService"></serviceTask>
+		<sequenceFlow id="dealWithOverdue-gradeWorks" sourceRef="dealWithOverdue"
+			targetRef="pubWinningList"></sequenceFlow>
+	</process>
+</definitions>
