@@ -84,7 +84,7 @@ public class BaseMybaitsDao extends SqlSessionDaoSupport {
 
 	// delete
 	// ///////////////////////////////////////////////////////////////////
-	public int delete(String deleteStatement, Serializable persistentObjectId) {
+	public int delete(String deleteStatement, Object persistentObjectId) {
 		return getSqlSession().delete(deleteStatement, persistentObjectId);
 	}
 

@@ -60,7 +60,7 @@ public class TeamMemberQuery extends AbstractLazyLoadingQuery {
 
 	@Override
 	public List<Item> loadItems(int start, int count) {
-		UserQuery query = identityService.createUserQuery().memberOfGroup(
+		UserQuery query = identityService.createUserQuery().memberOfTeam(
 				teamId);
 
 		if (sortby == null || "id".equals(sortby)) {

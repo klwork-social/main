@@ -29,6 +29,14 @@ public class Team implements Serializable
 	 *  
 	 */
 	private String name;
+	/**
+	 *  
+	 */
+	private java.util.Date lastUpdate;
+	/**
+	 *  
+	 */
+	private String type;
 
 	/**
 	 * 
@@ -77,5 +85,37 @@ public class Team implements Serializable
 	 */	
 	public String getName(){
 		return name;
+	}
+	/**
+	 * 
+	 *
+	 * @param lastUpdate
+	 */
+	public void setLastUpdate(java.util.Date lastUpdate){
+		this.lastUpdate = lastUpdate;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public java.util.Date getLastUpdate(){
+		return lastUpdate;
+	}
+	/**
+	 * 
+	 *
+	 * @param type
+	 */
+	public void setType(String type){
+		this.type = type;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getType(){
+		return type;
 	}
 }

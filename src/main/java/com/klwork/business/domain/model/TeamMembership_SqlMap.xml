@@ -4,8 +4,8 @@
 <!--
 	(team_membership) :${table.comment}
 字段:
-	user_id(varchar)	:
-	team_id(varchar)	:
+	user_id_(varchar)	:
+	team_id_(varchar)	:
 sqlMapConfig:
 	<typeAlias alias="TeamMembership" type="com.klwork.business.domain/model.TeamMembership" />
 	<mapper resource="com/klwork/business/domain/model/TeamMembership_SqlMap.xml" />
@@ -15,8 +15,8 @@ sqlMapConfig:
   <!-- INSERT -->
   <insert id="insertTeamMembership" parameterType="com.klwork.business.domain.model.TeamMembership">
     insert into team_membership (
-    	user_id,
-	team_id
+    	user_id_,
+	team_id_
 	)
     values (
       		#{userId,jdbcType=VARCHAR},
@@ -24,24 +24,26 @@ sqlMapConfig:
     	)
   </insert>
   
-  <!-- UPDATE -->
-  <update id="updateTeamMembership" parameterType="com.klwork.business.domain.model.TeamMembership">
-    update team_membership set
-    	 user_id = #{userId,jdbcType=VARCHAR},
- team_id = #{teamId,jdbcType=VARCHAR}
- where 0 > 1
-  </update>
+    <!-- Delete -->	
+  <delete id="deleteTeamMembership" parameterType="com.klwork.business.domain.model.TeamMembership">
+    delete from team_membership where user_id_ = #{userId} and team_id_ = #{teamId}
+  </delete>
+  
+  <!-- Delete -->	
+  <delete id="deleteTeamMembershipByTeamId" parameterType="string">
+    delete from team_membership where team_id_ = #{teamId}
+  </delete>
 
   <!-- SELECT -->
   <select id="selectTeamMembershipById" parameterType="string" resultMap="TeamMembershipMap">
-    select * from team_membership where ID_ = #{id,jdbcType=VARCHAR}
+    select * from team_membership where id_ = #{id,jdbcType=VARCHAR}
   </select>
   
   <select id="selectTeamMembershipByQueryCriteria" parameterType="com.klwork.business.domain.model.TeamMembershipQuery" resultMap="TeamMembershipMap">
     select U.*
     <include refid="selectTeamMembershipByQueryCriteriaSql" />
     <if test="start !=0 or limit!=0">
-    limit #{start},#{limit}
+    limit #{limit} offset #{start}
 	</if>
     <!--if test="orderBy != null">
       order by ${orderBy}
@@ -49,7 +51,7 @@ sqlMapConfig:
   </select>
   
    <select id="selectTeamMembershipCountByQueryCriteria" parameterType="com.klwork.business.domain.model.TeamMembershipQuery" resultType="int">
-    select count(U.ID_)
+    select count(U.id_)
     <include refid="selectTeamMembershipByQueryCriteriaSql" />
   </select>
   
@@ -57,16 +59,16 @@ sqlMapConfig:
     from team_membership U
     <where>
         <if test="userId != null">
-        AND U.user_id = #{userId}
+        AND U.user_id_ = #{userId}
     </if>
-          <if test="teamId != null">
-        AND U.team_id = #{teamId}
+    <if test="teamId != null">
+        AND U.team_id_ = #{teamId}
     </if>
-          </where>
+    </where>
   </sql>
   
 	<resultMap id="TeamMembershipMap" type="com.klwork.business.domain.model.TeamMembership">
-	<result property="userId" column="user_id" />
-	<result property="teamId" column="team_id" />
+	<result property="userId" column="user_id_" />
+	<result property="teamId" column="team_id_" />
 </resultMap>
 </mapper>

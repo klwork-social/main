@@ -24,6 +24,9 @@ public class TeamQuery extends QueryParameter{
 	/**
 	 *  
 	 */
+	private String type;
+	
+	
 	private String name;
 	
 
@@ -49,10 +52,10 @@ public class TeamQuery extends QueryParameter{
 	/**
 	 * 
 	 *
-	 * @param name
+	 * @param type
 	 */
-	public TeamQuery setName(String name){
-		this.name = name;
+	public TeamQuery setType(String type){
+		this.type = type;
 		return this;
 	}
 	
@@ -61,9 +64,18 @@ public class TeamQuery extends QueryParameter{
 	 *
 	 * @return
 	 */	
-	public String getName(){
+	public String getType(){
+		return type;
+	}
+
+	public String getName() {
 		return name;
 	}
-	
 
+	public TeamQuery setName(String name) {
+		this.name = name;
+		return this;
+	}
+	
+	
 }

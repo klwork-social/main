@@ -233,7 +233,7 @@ public class MainMenuBar extends HorizontalLayout {
 				});
 		rootItem.addSeparator();
 		// 邀请好友
-		rootItem.addItem("邀请好友", new Command() {
+		rootItem.addItem(i18nManager.getMessage(Messages.EXPAND_MENU_INVITE), new Command() {
 			public void menuSelected(MenuItem selectedItem) {
 				// xx.close();
 				// ViewToolManager.logout();

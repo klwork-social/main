@@ -39,6 +39,7 @@ public class UserQueryImpl extends AbstractQuery<UserQuery, User> implements
 	protected String procDefId;
 
 	protected String teamId;
+	protected String teamType;
 
 	public UserQueryImpl() {
 	}
@@ -199,6 +200,11 @@ public class UserQueryImpl extends AbstractQuery<UserQuery, User> implements
 
 	public UserQuery memberOfTeam(String teamId) {
 		this.teamId = teamId;
+		return this;
+	}
+
+	public UserQuery teamType(String type) {
+		this.teamType = type;
 		return this;
 	}
 }

@@ -71,4 +71,6 @@ public interface UserQuery extends Query<UserQuery, User> {
   UserQuery orderByUserEmail();
   //虚拟组
   UserQuery memberOfTeam(String temId);
+  
+  //UserQuery teamType(String type);
 }

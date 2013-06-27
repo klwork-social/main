@@ -24,24 +24,37 @@ public class TeamMembershipService {
 	@Autowired
 	private TeamMembershipRepository rep;
 
-	public TeamMembership createTeamMembership(TeamMembership teamMembership) {
-		return null;
+	public void createTeamMembership(String userId, String teamId) {
+		TeamMembership ship = new TeamMembership();
+		ship.setUserId(userId);
+		ship.setTeamId(teamId);
+		rep.insert(ship);
 	}
 
-	public void deleteTeamMembership(TeamMembership teamMembership) {
-	}
-
-	public int updateTeamMembership(TeamMembership teamMembership) {
-		return 0;
-	}
 
 	public List<TeamMembership> findTeamMembershipByQueryCriteria(TeamMembershipQuery query,
 			ViewPage<TeamMembership> page) {
 		return rep.findTeamMembershipByQueryCriteria(query, page);
 	}
 
-	public TeamMembership findTeamMembershipById(long id) {
-		return null;
+	public TeamMembership findTeamMembershipById(String id) {
+		return rep.find(id);
+	}
+	
+	public int count(TeamMembershipQuery query) {
+		return rep.findTeamMembershipCountByQueryCriteria(query);
 	}
 
+
+	public void deleteTeamMembership(String userId, String teamId) {
+		TeamMembership ship = new TeamMembership();
+		ship.setUserId(userId);
+		ship.setTeamId(teamId);
+		rep.delete(ship);
+	}
+
+
+	public void deleteTeamMembershipByTeamId(String teamId) {
+		rep.deleteTeamMembershipByTeamId(teamId);
+	}
 }

@@ -11,12 +11,38 @@ public  class TableHandler {
 	 * @param index
 	 */
 	public static void selectElement(Table table, int index) {
-		if (table.getContainerDataSource().size() > index) {
+		if (table.getContainerDataSource().size() >= index) {
 			table.select(index);
 			table.setCurrentPageFirstItemId(index);
 		}
 	}
 	
+	/**
+	 * 选择table的下一个元素
+	 * @param table
+	 */
+	public static void refreshSelectNext(Table table) {
+	    Integer pageIndex = (Integer) table.getCurrentPageFirstItemId();
+	    Integer selectedIndex = (Integer) table.getValue();
+	    table.removeAllItems();
+	    
+	    // Remove all items
+	    table.getContainerDataSource().removeAllItems();
+	    
+	    // Try to select the next one in the list
+	    Integer max = table.getContainerDataSource().size();
+	    if (max != 0) {
+	      if(pageIndex > max) {
+	        pageIndex = max -1;
+	      }
+	      if(selectedIndex > max) {
+	        selectedIndex = max -1;
+	      }
+	      
+	      table.setCurrentPageFirstItemIndex(pageIndex);
+	      selectElement(table,pageIndex);
+	    }
+	  }
 	
 	/**
 	 * 设置一个table没有表头，不可编辑等一些常用的参数

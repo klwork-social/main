@@ -1,14 +1,19 @@
 package com.klwork.business.domain.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.klwork.common.dao.QueryParameter;
 import com.klwork.common.dto.vo.ViewPage;
+import com.klwork.common.utils.StringDateUtil;
+import com.klwork.business.domain.model.ProjectParticipant;
 import com.klwork.business.domain.model.Team;
 import com.klwork.business.domain.model.TeamQuery;
+import com.klwork.business.domain.repository.TeamMembershipRepository;
 import com.klwork.business.domain.repository.TeamRepository;
 
 
@@ -23,17 +28,26 @@ import com.klwork.business.domain.repository.TeamRepository;
 public class TeamService {
 	@Autowired
 	private TeamRepository rep;
+	
+	@Autowired
+	private TeamMembershipRepository teamMembershipRepositoryep;
 
 	public void createTeam(Team team) {
+		Date now = StringDateUtil.now();
+		team.setLastUpdate(now);
 		team.setId(rep.getNextId());
 		rep.insert(team);
 	}
 
 	public void deleteTeam(Team team) {
+		teamMembershipRepositoryep.deleteTeamMembershipByTeamId(team.getId());
+		rep.deleteById(team.getId());
 	}
 
 	public int updateTeam(Team team) {
-		return 0;
+		Date now = StringDateUtil.now();
+		team.setLastUpdate(now);
+		return rep.update(team);
 	}
 
 	public List<Team> findTeamByQueryCriteria(TeamQuery query,
@@ -41,11 +55,53 @@ public class TeamService {
 		return rep.findTeamByQueryCriteria(query, page);
 	}
 
+	
+	public Team findTeamByUserAndType(String userId, String type) {
+		TeamQuery query = new TeamQuery();
+		query.setOwnUser(userId);
+		query.setType(type);
+		List<Team> list = rep.findTeamByQueryCriteria(query , null);
+		if (list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
+	
+	
+	public Team createTeamByUserAndType(String userId, String type,String teamName) {
+		TeamQuery query = new TeamQuery();
+		query.setOwnUser(userId);
+		query.setType(type);
+		List<Team> list = rep.findTeamByQueryCriteria(query , null);
+		if (list.size() > 0) {
+			return list.get(0);
+		}else {
+			Team team = new Team();
+			team.setType(type);
+			team.setName(teamName);
+			team.setOwnUser(userId);
+			createTeam(team);
+			return team;
+		}
+	}
+	
 	public Team findTeamById(String id) {
 		return rep.find(id);
 	}
 	
 	public int count(TeamQuery query) {
 		return rep.findTeamCountByQueryCriteria(query);
+	}
+
+	public boolean checkExistName(String userId, String name) {
+		TeamQuery query = new TeamQuery();
+		query.setOwnUser(userId);
+		query.setName(name);
+		//query.setType(type);
+		List<Team> list = rep.findTeamByQueryCriteria(query , null);
+		if (list.size() > 0) {
+			return true;
+		}
+		return false;
 	}
 }

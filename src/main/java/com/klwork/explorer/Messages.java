@@ -56,6 +56,9 @@ public interface Messages {
   String MAIN_MENU_MANAGEMENT = "main.menu.management";
   String MAIN_MENU_REPORTS = "main.menu.reports";
   
+  //expand menu
+  String EXPAND_MENU_INVITE = "expand.menu.invite";
+  
   // Password
   String PASSWORD_CHANGE = "password.change";
   String PASSWORD_CHANGE_INPUT_REQUIRED = "password.change.input.required";
@@ -481,5 +484,10 @@ public interface Messages {
   String TIME_UNIT_JUST_NOW = "time.unit.just.now";
   
   String MONTH_PREFIX = "month.";
-
+  
+//Time Organization
+  String ORGANIZATION_TEAM_MANAGER = "organization.team.manager";
+  String ORGANIZATION_TEAM_MEMBER = "organization.team.member";
+  String TEAM_NO_ONES = "team.no.ones";
+  String TEAM_NEW_CREATE = "team.new.create";
 }

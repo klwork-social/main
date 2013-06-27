@@ -10,7 +10,6 @@ import org.activiti.engine.identity.User;
 import org.activiti.engine.impl.persistence.entity.UserEntity;
 
 import com.klwork.business.domain.model.Team;
-import com.klwork.business.domain.model.TeamMembership;
 import com.klwork.business.domain.service.TeamMembershipService;
 import com.klwork.business.domain.service.TeamService;
 import com.klwork.common.utils.spring.SpringApplicationContextUtil;
@@ -19,7 +18,9 @@ import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.data.LazyLoadingContainer;
 import com.klwork.explorer.data.LazyLoadingQuery;
+import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
+import com.klwork.explorer.ui.business.organization.OrganMemberLeft.MemberType;
 import com.klwork.explorer.ui.business.query.TeamMemberQuery;
 import com.klwork.explorer.ui.custom.ConfirmationDialogPopupWindow;
 import com.klwork.explorer.ui.custom.DetailPanel;
@@ -46,7 +47,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-public class GroupListRight extends DetailPanel {
+public class OrganMemberRight extends DetailPanel {
 
 	protected Team team;
 	protected TeamService teamService;
@@ -62,20 +63,30 @@ public class GroupListRight extends DetailPanel {
 	protected HorizontalLayout membersLayout;
 	protected Table membersTable;
 	protected Label noMembersTable;
-	protected OrganizationMainPage mainPage;
+	protected OrganizationMemberMainPage mainPage;
 
-	public GroupListRight(OrganizationMainPage organizationMainPage,Object leftParameter) {
+	public OrganMemberRight(OrganizationMemberMainPage page,Object leftParameter) {
 		teamService = (TeamService) SpringApplicationContextUtil.getContext()
 				.getBean("teamService");
 		teamMembershipService = (TeamMembershipService) SpringApplicationContextUtil
 				.getContext().getBean("teamMembershipService");
 		if(leftParameter != null){
-			team = teamService.findTeamById(leftParameter + "");
+			String userId = LoginHandler.getLoggedInUser().getId();
+			MemberType menberType = (MemberType)leftParameter;
+			team = teamService.findTeamByUserAndType( userId,menberType.getCode());
+			if(team == null){//没有，新增一个
+				team = new Team();
+				team.setType(menberType.getCode());
+				team.setName(menberType.getName());
+				team.setOwnUser(userId);
+				teamService.createTeam(team);
+			}
+			team.setName(menberType.getName());
 		}
 		identityService = ProcessEngines.getDefaultProcessEngine()
 				.getIdentityService();
 		i18nManager = ViewToolManager.getI18nManager();
-		mainPage = organizationMainPage;
+		mainPage = page;
 	}
 
 	@Override
@@ -89,8 +100,6 @@ public class GroupListRight extends DetailPanel {
 		addStyleName(Reindeer.PANEL_LIGHT);
 		// 组名称显示
 		initPageTitle();
-		// 显示组的详细信息
-		initGroupDetails();
 		// 成员
 		initMembers();
 	}
@@ -200,7 +209,7 @@ public class GroupListRight extends DetailPanel {
 
 		addButton.addClickListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
-				final SelectMyMemberPopupWindow selectUsersPopup = new SelectMyMemberPopupWindow(
+				final SelectUsersPopupWindow selectUsersPopup = new SelectUsersPopupWindow(
 						i18nManager.getMessage(Messages.GROUP_SELECT_MEMBERS,
 								team.getName()), true, false, getCurrentMembers());
 				ViewToolManager.showPopupWindow(selectUsersPopup);
@@ -245,29 +254,6 @@ public class GroupListRight extends DetailPanel {
 		layout.setExpandRatio(groupName, 1.0f);
 	}
 
-	protected void initGroupDetails() {
-		Label groupDetailsHeader = new Label(
-				i18nManager.getMessage(Messages.GROUP_HEADER_DETAILS));
-		groupDetailsHeader.addStyleName(ExplorerLayout.STYLE_H3);
-		groupDetailsHeader.addStyleName(ExplorerLayout.STYLE_DETAIL_BLOCK);
-
-		addDetailComponent(groupDetailsHeader);
-
-		detailLayout = new HorizontalLayout();
-		detailLayout.setSpacing(true);
-		detailLayout.setMargin(new MarginInfo(true, false, true, false));
-		addDetailComponent(detailLayout);
-
-		populateGroupDetails();
-	}
-
-	protected void populateGroupDetails() {
-		// 组的详细信息
-		initGroupProperties();
-		// 编辑和删除
-		initGroupDetailsActions();
-	}
-
 	protected void initGroupProperties() {
 		detailsGrid = new GridLayout(2, 2);
 		detailsGrid.setSpacing(true);
@@ -296,21 +282,7 @@ public class GroupListRight extends DetailPanel {
 		}
 	}
 	
-	/**
-	 * 组详细中按钮操作
-	 */
-	protected void initGroupDetailsActions() {
-		VerticalLayout actionsLayout = new VerticalLayout();
-		actionsLayout.setSpacing(true);
-		actionsLayout.setMargin(new MarginInfo(false, false, false, true));
-		detailLayout.addComponent(actionsLayout);
-		if (editingDetails) {
-			initSaveButton(actionsLayout);
-		} else {
-			initEditButton(actionsLayout);
-			initDeleteButton(actionsLayout);
-		}
-	}
+
 
 	protected void initSaveButton(VerticalLayout actionsLayout) {
 		Button saveButton = new Button(
@@ -340,7 +312,7 @@ public class GroupListRight extends DetailPanel {
 					      }
 					      protected void confirmed(ConfirmationEvent event) {
 					    	  teamService.deleteTeam(team);
-					    	  mainPage.refreshSelectNext();
+					    	  //mainPage.refreshSelectNext();
 					      }
 					    });
 					    ViewToolManager.showPopupWindow(confirmationPopup);
@@ -348,20 +320,7 @@ public class GroupListRight extends DetailPanel {
 		});
 	}
 
-	protected void initEditButton(VerticalLayout actionsLayout) {
-		Button editButton = new Button(
-				i18nManager.getMessage(Messages.USER_EDIT));
-		editButton.addStyleName(Reindeer.BUTTON_SMALL);
-		actionsLayout.addComponent(editButton);
 
-		editButton.addClickListener(new ClickListener() {
-			public void buttonClick(ClickEvent event) {
-				editingDetails = true;
-				detailLayout.removeAllComponents();
-				populateGroupDetails();
-			}
-		});
-	}
 
 	public void notifyMembershipChanged() {
 		membersLayout.removeAllComponents();

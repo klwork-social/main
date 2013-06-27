@@ -59,6 +59,11 @@ sqlMapConfig:
  where id_ = #{id,jdbcType=VARCHAR}
   </update>
 
+  <!-- Delete -->	
+  <!--delete id="delete${table.destinationClassName}" parameterType="string">
+    delete from ${table.sqlName} where id = #{id}
+  </delete-->
+  
   <!-- SELECT -->
   <select id="select${table.destinationClassName}ById" parameterType="string" resultMap="${table.destinationClassName}Map">
     select * from ${table.sqlName} where id_ = #{id,jdbcType=VARCHAR}

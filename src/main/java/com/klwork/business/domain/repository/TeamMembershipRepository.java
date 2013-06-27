@@ -44,4 +44,8 @@ public class TeamMembershipRepository extends
 		return (Integer) getDao().selectOne(
 				"selectTeamMembershipCountByQueryCriteria", query);
 	}
+
+	public void deleteTeamMembershipByTeamId(String teamId) {
+		getDao().update("deleteTeamMembershipByTeamId", teamId);
+	}
 }

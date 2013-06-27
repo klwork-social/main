@@ -13,7 +13,6 @@
 
 package com.klwork.explorer.ui.custom;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -30,11 +29,9 @@ import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.event.SubmitEventListener;
 import com.klwork.explorer.ui.util.ThemeImageColumnGenerator;
-
 import com.vaadin.data.Item;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
-import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -43,6 +40,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnHeaderMode;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
@@ -129,8 +127,14 @@ public class SelectUsersPopupWindow extends PopupWindow {
 		initUserSelection();
 		// done按钮
 		initDoneButton();
+		
+		initEnd();
 	}
 
+	protected void initEnd() {
+		
+	}
+	
 	protected void initSearchField() {
 		HorizontalLayout searchLayout = new HorizontalLayout();
 		searchLayout.setSpacing(true);
@@ -187,19 +191,27 @@ public class SelectUsersPopupWindow extends PopupWindow {
 	}
 
 	protected void searchPeople(String searchText) {
-		if (searchText.length() >= 2) {
+		if (searchText != null && searchText.length() >= 2) {
 			matchingUsersTable.removeAllItems();
 			List<User> results =
 					ViewToolManager.getUserCache().findMatchingUsers(searchText);
 			//List<User> results = new ArrayList<User>();
-			for (User user : results) {
-				if (!multiSelect
-						|| !selectedUsersTable.containsId(user.getId())) {
-					if (ignoredUserIds == null
-							|| !ignoredUserIds.contains(user.getId())) {
-						addMatchingUser(user.getId(), user.getFirstName() + " "
-								+ user.getLastName());
-					}
+			handleQueryUserList(results);
+		}
+	}
+	
+	
+
+
+
+	public void handleQueryUserList(List<User> results) {
+		for (User user : results) {
+			if (!multiSelect
+					|| !selectedUsersTable.containsId(user.getId())) {
+				if (ignoredUserIds == null
+						|| !ignoredUserIds.contains(user.getId())) {
+					addMatchingUser(user.getId(), user.getFirstName() + " "
+							+ user.getLastName());
 				}
 			}
 		}
@@ -223,7 +235,7 @@ public class SelectUsersPopupWindow extends PopupWindow {
 		// non-multi select: only one table
 		if (multiSelect) {
 			// ">" 按钮
-			initSelectUserButton();
+			initSelectUserButton();//中间的
 			// 右边的已经选择的table
 			initSelectedUsersTable();
 		}
@@ -232,12 +244,12 @@ public class SelectUsersPopupWindow extends PopupWindow {
 	protected void initMatchingUsersTable() {
 		matchingUsersTable = new Table();
 		// 行head隐藏
-		matchingUsersTable.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+		matchingUsersTable.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
 		matchingUsersTable.setSelectable(true);
 		matchingUsersTable.setEditable(false);
 		matchingUsersTable.setImmediate(true);
 		matchingUsersTable.setNullSelectionAllowed(false);
-		matchingUsersTable.setSortDisabled(true);
+		matchingUsersTable.setSortEnabled(false);
 
 		if (multiSelect) {// 可以进行多选
 			matchingUsersTable.setMultiSelect(true);
@@ -249,15 +261,17 @@ public class SelectUsersPopupWindow extends PopupWindow {
 		// ?
 		matchingUsersTable.addContainerProperty("userName", String.class, null);
 
-		matchingUsersTable.setWidth(300, UNITS_PIXELS);
-		matchingUsersTable.setHeight(200, UNITS_PIXELS);
+		matchingUsersTable.setWidth(300, Unit.PIXELS);
+		matchingUsersTable.setHeight(200, Unit.PIXELS);
 		userSelectionLayout.addComponent(matchingUsersTable);
 	}
 
 	protected void initSelectUserButton() {
 		selectUserButton = new Button(">");
 
-		selectUserButton.addListener(new ClickListener() {
+		selectUserButton.addClickListener(new ClickListener() {
+			private static final long serialVersionUID = -1152268040356479685L;
+
 			public void buttonClick(ClickEvent event) {
 				for (String selectedItemId : (Set<String>) matchingUsersTable
 						.getValue()) {
@@ -284,9 +298,9 @@ public class SelectUsersPopupWindow extends PopupWindow {
 
 	protected void initSelectedUsersTable() {
 		selectedUsersTable = new Table();
-		selectedUsersTable.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+		selectedUsersTable.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
 		selectedUsersTable.setEditable(false);
-		selectedUsersTable.setSortDisabled(true);
+		selectedUsersTable.setSortEnabled(false);
 
 		// Icon column
 		selectedUsersTable.addGeneratedColumn("icon",
@@ -335,11 +349,11 @@ public class SelectUsersPopupWindow extends PopupWindow {
 		selectedUsersTable.setColumnWidth("icon", 16);
 
 		if (showRoles) {
-			selectedUsersTable.setWidth(420, UNITS_PIXELS);
+			selectedUsersTable.setWidth(420, Unit.PIXELS);
 		} else {
-			selectedUsersTable.setWidth(300, UNITS_PIXELS);
+			selectedUsersTable.setWidth(300, Unit.PIXELS);
 		}
-		selectedUsersTable.setHeight(200, UNITS_PIXELS);
+		selectedUsersTable.setHeight(200, Unit.PIXELS);
 		userSelectionLayout.addComponent(selectedUsersTable);
 	}
 

@@ -23,6 +23,7 @@ import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.ViewManager;
 import com.klwork.explorer.ui.base.AbstractPage;
 import com.klwork.explorer.ui.business.organization.OrganizationMainPage;
+import com.klwork.explorer.ui.business.organization.OrganizationMemberMainPage;
 import com.klwork.explorer.ui.business.project.MyCalendarView;
 import com.klwork.explorer.ui.business.project.ProjectMain;
 import com.klwork.explorer.ui.business.project.PublicProjectListPage;
@@ -171,6 +172,10 @@ public class MainView extends Panel implements View {
 	public void showOrganizationMain() {
 		switchMainContent(new OrganizationMainPage());
 		
+	}
+
+	public void showOrganMemberMain() {
+		switchMainContent(new OrganizationMemberMainPage());
 	}
 
 

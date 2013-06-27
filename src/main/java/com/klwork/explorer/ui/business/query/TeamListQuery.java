@@ -32,11 +32,13 @@ public class TeamListQuery extends AbstractLazyLoadingQuery {
 	private static final long serialVersionUID = -1647959665934595909L;
 	TeamService teamService;
 	private String ownUser;
+	private String type;
 
-	public TeamListQuery(String userId) {
+	public TeamListQuery(String userId,String type) {
 		teamService = (TeamService) SpringApplicationContextUtil
 				.getContext().getBean("teamService");
 		this.ownUser = userId;
+		this.type = type;
 	}
 
 	@Override
@@ -49,6 +51,7 @@ public class TeamListQuery extends AbstractLazyLoadingQuery {
 		TeamQuery q = new TeamQuery();
 		//需求发布中
 		q.setOwnUser(ownUser);
+		q.setType(type);
 		return q;
 	}
 

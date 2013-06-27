@@ -96,7 +96,7 @@ public class MbDomainRepositoryImp<T, PK extends Serializable> implements
 	@Override
 	public int delete(final T persistentObject) {
 		String deleteStatement = getDeleteStatement(persistentObject.getClass());
-		return dao.delete(deleteStatement, null);
+		return dao.delete(deleteStatement, persistentObject);
 	}
 
 	@Override
