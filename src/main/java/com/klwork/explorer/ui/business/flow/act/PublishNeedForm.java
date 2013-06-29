@@ -83,6 +83,21 @@ public class PublishNeedForm extends com.klwork.explorer.ui.task.TaskForm {
 				.getBean("projectManagerService");
 	}
 	
+	
+	
+	public OutsourcingProject getRelateOutSourceingProject() {
+		return relateOutSourceingProject;
+	}
+
+
+
+	public void setRelateOutSourceingProject(
+			OutsourcingProject relateOutSourceingProject) {
+		this.relateOutSourceingProject = relateOutSourceingProject;
+	}
+
+
+
 	@Override
 	protected void initUi() {
 		addStyleName(ExplorerLayout.STYLE_DETAIL_BLOCK);

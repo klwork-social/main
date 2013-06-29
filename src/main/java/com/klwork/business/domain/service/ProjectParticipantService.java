@@ -103,7 +103,10 @@ public class ProjectParticipantService {
 		OutsourcingProject p = outsourcingProjectService.findOutsourcingProjectById(outsourcingProjectId);
 		this.addProjectParticipantByParam(p, userId, participantsTypeScorer,taskId);
 	}
-
+	
+	public double queryDistributeBonusTotal(String outsourcingProjectId) {
+		return rep.distributeBonusTotal(outsourcingProjectId);
+	}
 
 	public int count(OutsourcingProjectQuery q) {
 		return rep.findProjectParticipantCountByQueryCriteria(q);

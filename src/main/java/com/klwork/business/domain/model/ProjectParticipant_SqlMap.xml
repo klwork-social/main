@@ -168,6 +168,11 @@ sqlMapConfig:
     </where>
   </sql>
   
+  
+   <select id="selectDistributeBonusTotal" parameterType="String" resultType="double">
+    select sum(winning_amount) from project_participants where out_prg_id_ = #{outPrgId} and is_winner_ = 'true' and (winning_amount is not null)
+  </select>
+  
 	<resultMap id="ProjectParticipantMap" type="com.klwork.business.domain.model.ProjectParticipant">
 	<result property="id" column="id_" />
 	<result property="userId" column="user_id_" />

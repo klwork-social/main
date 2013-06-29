@@ -44,4 +44,13 @@ public class ProjectParticipantRepository extends
 		return (Integer) getDao().selectOne(
 				"selectProjectParticipantCountByQueryCriteria", query);
 	}
+
+	public Double distributeBonusTotal(String outsourcingProjectId) {
+		Object ret =  getDao().selectOne(
+				"selectDistributeBonusTotal", outsourcingProjectId);
+		if(ret == null)
+			return 0.0;
+		else
+			return (Double)ret;
+	}
 }

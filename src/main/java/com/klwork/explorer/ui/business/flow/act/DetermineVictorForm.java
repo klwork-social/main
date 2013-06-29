@@ -8,6 +8,7 @@ import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.task.Task;
 
+import com.klwork.business.domain.model.OutsourcingProject;
 import com.klwork.business.domain.model.ProjectParticipant;
 import com.klwork.business.domain.service.ProjectParticipantService;
 import com.klwork.explorer.Messages;
@@ -19,17 +20,27 @@ import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.form.FormPropertiesEvent;
 import com.klwork.explorer.ui.handler.BinderHandler;
 import com.klwork.explorer.ui.handler.CommonFieldHandler;
+import com.klwork.explorer.ui.handler.TableFieldCache;
 import com.klwork.explorer.ui.handler.TableHandler;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.klwork.explorer.ui.util.ThemeImageColumnGenerator;
+import com.vaadin.data.Container;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.ui.TableFieldFactory;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 public class DetermineVictorForm extends PublishNeedForm {
@@ -41,8 +52,17 @@ public class DetermineVictorForm extends PublishNeedForm {
 	protected  ProjectParticipantService projectParticipantService;
 	protected  RuntimeService runtimeService;
 	
-	protected Table winTable;
-	protected Table candidateTable;
+	private TableFieldCache fieldCache = new TableFieldCache();
+	
+	//获胜者
+	VerticalLayout winTableLayout;
+	
+	//候选者
+	VerticalLayout candidateTableLayout;
+	
+	// 奖金分配
+	Label distributeLable;
+	Label noDistributeLable;
 	
 	protected UploadWorkTaskContentComponent uploadContent;
 	
@@ -97,29 +117,40 @@ public class DetermineVictorForm extends PublishNeedForm {
 		initDescription(true);
 		
 		//获胜者table
-		initWinTable();
+		initWin();
 		
 		//候选者table
-		initCandidateTable();
+		initCandidate();
 	}
 
 	
 	/**
 	 * 
 	 */
-	private void initCandidateTable() {
+	private void initCandidate() {
 		addComponent(CommonFieldHandler.getSpacer());
-		
 		addTableTitle("候选者名单");
-		candidateTable = new Table();
+		candidateTableLayout = new VerticalLayout();
+		candidateTableLayout.setSizeFull();
+		candidateTableLayout.setSpacing(true);
+		addComponent(candidateTableLayout);
+		
+		initCandidateTable(candidateTableLayout);
+		
+		
+	}
+
+
+	public void initCandidateTable(VerticalLayout tableLayout) {
+		Table candidateTable = new Table();
 		candidateTable.addStyleName(ExplorerLayout.STYLE_TASK_LIST);
 		candidateTable.addStyleName(ExplorerLayout.STYLE_SCROLLABLE);
 		candidateTable.setWidth(100, Unit.PERCENTAGE);
 		candidateTable.setHeight(100, Unit.PERCENTAGE);
-		addComponent(candidateTable);
+		
 		//setExpandRatio(listTable, 1);
 		
-		initCandidateTableData();
+		initCandidateTableData(candidateTable);
 	
 
 		// Create column header
@@ -143,10 +174,11 @@ public class DetermineVictorForm extends PublishNeedForm {
 		
 		TableHandler.setTableHasHead(candidateTable);
 		candidateTable.setImmediate(false);
+		tableLayout.addComponent(candidateTable);
 	}
 
 
-	public void initCandidateTableData() {
+	public void initCandidateTableData(Table candidateTable) {
 		LazyLoadingQuery lazyLoadingQuery = new ParticipantListQuery(relateOutSourceingProject,false);
 		LazyLoadingContainer listContainer = new LazyLoadingContainer(
 				lazyLoadingQuery, 10);
@@ -168,6 +200,7 @@ public class DetermineVictorForm extends PublishNeedForm {
 		public Object generateCell(final Table source, final Object itemId, Object columnId) {
 			final ProjectParticipant participant = BinderHandler.getTableBean(
 					source, itemId);
+			//删去win
 			com.vaadin.ui.Embedded deleteButton = new com.vaadin.ui.Embedded(null, Images.DELETE);
 			deleteButton.addStyleName(ExplorerLayout.STYLE_CLICKABLE);
 
@@ -179,9 +212,11 @@ public class DetermineVictorForm extends PublishNeedForm {
 					ProjectParticipant newPart = new ProjectParticipant();
 					newPart.setId(participant.getId());
 					newPart.setIsWinner(false);
+					//奖金为0
+					newPart.setWinningAmount(0d);
 					projectParticipantService.updateProjectParticipant(newPart);
-					source.removeItem(itemId);
-					//重新加载winTable
+					//source.removeItem(itemId);
+					//重新加载
 					refreshAllTable();
 				}
 
@@ -211,7 +246,7 @@ public class DetermineVictorForm extends PublishNeedForm {
 					newPart.setId(participant.getId());
 					newPart.setIsWinner(true);
 					projectParticipantService.updateProjectParticipant(newPart);
-					source.removeItem(itemId);
+					//source.removeItem(itemId);
 					//重新加载winTable
 					refreshAllTable();
 				}
@@ -222,12 +257,58 @@ public class DetermineVictorForm extends PublishNeedForm {
 
 	}
 	
-	private void initWinTable() {
+	private void initWin() {
 		addComponent(CommonFieldHandler.getSpacer());
 		
-		addTableTitle("获胜者名单");
+		HorizontalLayout winHeader = new HorizontalLayout();
+		winHeader.setSpacing(true);
+		winHeader.setWidth(100, Unit.PERCENTAGE);
+		winHeader.addStyleName(ExplorerLayout.STYLE_DETAIL_BLOCK);
+		addComponent(winHeader);
 		
-		winTable = new Table();
+		Label winLabel = currentLabel();
+		winLabel.setValue("获胜者名单");
+		winHeader.addComponent(winLabel);
+		
+		
+		distributeLable = currentLabel();
+		winHeader.addComponent(distributeLable);
+		noDistributeLable = currentLabel();
+		winHeader.addComponent(noDistributeLable);
+		//重新计算分配的金额
+		initDistributeData();
+		
+		winTableLayout = new VerticalLayout();
+		winTableLayout.setSizeFull();
+		winTableLayout.setSpacing(true);
+		addComponent(winTableLayout);
+		initWinTable(winTableLayout);
+		
+	}
+
+	
+	/**
+	 * 计算奖金
+	 */
+	public void initDistributeData() {
+		OutsourcingProject p = getRelateOutSourceingProject();
+		double sumDistribute = projectParticipantService.queryDistributeBonusTotal(p.getId());
+		double noDistribute = p.getBounty() - sumDistribute;
+		noDistributeLable.setValue("未分配:" + noDistribute + "元");
+		distributeLable.setValue("奖金分配:" + sumDistribute + "元");
+	}
+
+
+	public Label currentLabel() {
+		Label winLabel = new Label();
+		winLabel.addStyleName(ExplorerLayout.STYLE_H4);
+		winLabel.setVisible(true);
+		return winLabel;
+	}
+
+
+	public void initWinTable(VerticalLayout tableLayOut) {
+		final Table  winTable = new Table();
 		winTable.addStyleName(ExplorerLayout.STYLE_TASK_LIST);
 		winTable.addStyleName(ExplorerLayout.STYLE_SCROLLABLE);
 		winTable.setWidth(100, Unit.PERCENTAGE);
@@ -235,10 +316,10 @@ public class DetermineVictorForm extends PublishNeedForm {
 		addComponent(winTable);
 		//setExpandRatio(listTable, 1);
 		
-		initWinTableData();
+		initWinTableData(winTable);
 		
 		
-
+		
 		// Create column header
 		winTable.addGeneratedColumn("icon", new ThemeImageColumnGenerator(
 				Images.TASK_22));
@@ -257,13 +338,55 @@ public class DetermineVictorForm extends PublishNeedForm {
 		visibleColumnLabels.add("操作");
 			
 		winTable.setColumnHeaders(visibleColumnLabels.toArray(new String[0]));
+		winTable.setEditable(true);//只有设置上面的factory才生效
+		winTable.setTableFieldFactory(new TableFieldFactory() {
+			private static final long serialVersionUID = -5741977060384915110L;
+			public Field createField(Container container, final Object itemId,
+					final Object propertyId, Component uiContext) {
+				TextField tf = null;
+				
+				if ("winningAmount".equals(propertyId)) {
+					if (fieldCache.getPropertyFieldFromCache(itemId, propertyId) != null) {
+						tf = fieldCache.getPropertyFieldFromCache(itemId, propertyId);
+						tf.setReadOnly(false);
+						return tf;
+					}
+					tf = new TextField((String) propertyId);
+					tf.setImmediate(true);
+					tf.setReadOnly(false);
+					tf.setWidth("100%");
+					tf.addBlurListener(new BlurListener() {
+						private static final long serialVersionUID = -4497552765206819985L;
+						public void blur(BlurEvent event) {
+							//fieldCache.setFieldReadOnly(itemId, true);
+							ProjectParticipant c = BinderHandler.getTableBean(winTable, itemId);
+							ProjectParticipant newEntity = new ProjectParticipant();
+							newEntity.setId(c.getId());
+							newEntity.setWinningAmount(c.getWinningAmount());
+							projectParticipantService.updateProjectParticipant(newEntity);
+							//重新计算奖金额
+							initDistributeData();
+							//System.out.println("ggg:" + c.getWinningAmount());
+						}
+					});
+					fieldCache.savePrppertyFieldToCache(itemId, propertyId, tf);
+				}else {
+					tf = new TextField((String) propertyId);
+					tf.setData(itemId);
+					tf.setImmediate(true);
+					tf.setReadOnly(true);
+				}
+				return tf;
+			}
+		});
 		
 		TableHandler.setTableHasHead(winTable);
-		winTable.setImmediate(false);
+		//winTable.setImmediate(false);
+		tableLayOut.addComponent(winTable);
 	}
 
 
-	public void initWinTableData() {
+	public void initWinTableData(Table  winTable) {
 		LazyLoadingQuery lazyLoadingQuery = new ParticipantListQuery(relateOutSourceingProject,true);
 		LazyLoadingContainer listContainer = new LazyLoadingContainer(
 				lazyLoadingQuery, 10);
@@ -276,12 +399,13 @@ public class DetermineVictorForm extends PublishNeedForm {
 	}
 
 
-	public void addTableTitle(String vale) {
+	public Label addTableTitle(String vale) {
 		Label formTitle = new Label();
 		formTitle.setValue(vale);
 		formTitle.addStyleName(ExplorerLayout.STYLE_H4);
 		formTitle.setVisible(true);
 		addComponent(formTitle);
+		return formTitle;
 	}
 
 
@@ -329,8 +453,15 @@ public class DetermineVictorForm extends PublishNeedForm {
 
 
 	public void refreshAllTable() {
-		initCandidateTableData();
-		initWinTableData();
+		fieldCache = new TableFieldCache();
+		winTableLayout.removeAllComponents();
+		initWinTable(winTableLayout);
+		
+		candidateTableLayout.removeAllComponents();
+		initCandidateTable(candidateTableLayout);
+		
+		//重新计算奖金
+		initDistributeData();
 	}
 	
 }
