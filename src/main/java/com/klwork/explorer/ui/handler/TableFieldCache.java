@@ -46,6 +46,7 @@ public class TableFieldCache {
 		if(propertyMap == null)
 			return;
 		for (Field f : propertyMap.values()) {
+			f.setReadOnly(false);
 			f.focus();
 		}
 	}

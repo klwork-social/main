@@ -26,7 +26,9 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -35,7 +37,9 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
@@ -51,6 +55,8 @@ public class ProjectList extends CustomComponent {
 	private TableFieldCache fieldCache = new TableFieldCache();
 	//当前table id
 	private String currentProjectId;
+	private Object currentItemId;
+	
 	ProjectMain projectMain;
 	ProjectService projectService;
 
@@ -81,11 +87,18 @@ public class ProjectList extends CustomComponent {
 	
 
 	private void initProjectList(VerticalLayout layout) {
+		Panel panel = new Panel();
+		panel.addActionHandler(new KbdHandler());
+		layout.addComponent(panel);
+		layout.setExpandRatio(panel, 1);
+		
+		
 		final Table listTable = new Table();
 		listTable.addStyleName(ExplorerLayout.STYLE_TASK_LIST);
 		listTable.addStyleName(ExplorerLayout.STYLE_SCROLLABLE);
-		layout.addComponent(listTable);
-		layout.setExpandRatio(listTable, 1);
+		panel.setContent(listTable);
+		/*layout.addComponent(listTable);
+		layout.setExpandRatio(listTable, 1);*/
 		// Listener to change right panel when clicked on a task
 		
 		listTable.addItemClickListener(new ItemClickEvent.ItemClickListener() {
@@ -120,7 +133,6 @@ public class ProjectList extends CustomComponent {
 					}
 					
 					tf = new TextField((String) propertyId);
-					//tf.setPropertyDataSource(c.getItemProperty(propertyId));
 					tf.setImmediate(true);
 					tf.setReadOnly(true);
 					tf.setWidth("100%");
@@ -143,13 +155,6 @@ public class ProjectList extends CustomComponent {
 							if(!oldNameValue.equals(c.getName())){
 								projectService.updateProjectName(c.getId(),c.getName());
 							}
-							/*for (Field f : itemMap.values()) {// 所有字段只读
-								f.setReadOnly(true);
-								String oldNameValue = projectNames.get(f);
-								if(!oldNameValue.equals(f.getValue())){
-									projectService.updateProjectName(c.getItemProperty("id").toString(),f.getValue().toString());
-								}
-							}*/
 						}
 					});
 					// 把name设置到cache中
@@ -246,8 +251,11 @@ public class ProjectList extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void valueChange(ValueChangeEvent event) {
-				Item item = listTable.getItem(event.getProperty().getValue());
+				Object itemId = event.getProperty().getValue();
+				Item item = listTable.getItem(itemId);
+				
 				if (item != null) {
+					currentItemId = itemId;
 					String id = (String) item.getItemProperty("id").getValue();
 					//保存当前项目id
 					currentProjectId = id;
@@ -293,5 +301,29 @@ public class ProjectList extends CustomComponent {
 				ViewToolManager.showPopupWindow(newProjectWindow);
 			}
 		});
+	}
+	
+	public void openEdit() {
+		fieldCache.setFieldReadOnly(currentItemId, false);
+	}
+
+	// Keyboard navigation
+	class KbdHandler implements com.vaadin.event.Action.Handler {
+		private static final long serialVersionUID = -2993496725114954915L;
+		Action f2 = new ShortcutAction("F2", ShortcutAction.KeyCode.F2, null);
+
+		@Override
+		public Action[] getActions(Object target, Object sender) {
+			return new Action[] { f2 };
+		}
+
+		@Override
+		public void handleAction(Action action, Object sender, Object target) {
+			if (target instanceof Table) {
+				Table t = (Table)target;
+				Integer selectedIndex = (Integer) t.getValue();
+				openEdit();
+			}
+		}
 	}
 }
