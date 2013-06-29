@@ -112,6 +112,7 @@ public class CreateAttachmentPopupWindow extends PopupWindow {
 	public void attach() {
 		super.attach();
 		if (attachmentTypes.size() > 0) {// 选择第一个
+		
 			attachmentTypes.select(attachmentTypes.firstItemId());
 		}
 	}

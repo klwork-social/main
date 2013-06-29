@@ -16,20 +16,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.activiti.engine.HistoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.klwork.business.domain.model.Project;
 import com.klwork.business.domain.model.ProjectQuery;
 import com.klwork.business.domain.service.ProjectService;
 import com.klwork.common.dto.vo.ViewPage;
 import com.klwork.common.utils.spring.SpringApplicationContextUtil;
-import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.data.AbstractLazyLoadingQuery;
-import com.klwork.explorer.data.LazyLoadingQuery;
 import com.klwork.explorer.security.LoginHandler;
-import com.klwork.explorer.ui.task.data.TaskListItem;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.BeanItem;
 
 public class ProjectListQuery extends AbstractLazyLoadingQuery {
 
@@ -63,14 +58,15 @@ public class ProjectListQuery extends AbstractLazyLoadingQuery {
 		List<Project> ps = projectService.findByQueryCriteria(q, page);
 		for (Iterator iterator = ps.iterator(); iterator.hasNext();) {
 			Project project = (Project) iterator.next();
-			items.add(new ProjectListItem(project));
+			BeanItem<Project> pItem = new BeanItem<Project>(project);
+			items.add(pItem);
 		}
 		return items;
 	}
 
 	@Override
 	public Item loadSingleResult(String id) {
-		return new ProjectListItem(projectService.findProjectById(id));
+		return  new BeanItem<Project>(projectService.findProjectById(id));
 	}
 
 	@Override

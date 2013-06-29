@@ -2,18 +2,18 @@ package com.klwork.explorer.ui.business.project;
 
 import java.util.HashMap;
 
-import com.klwork.business.domain.model.Todo;
+import com.klwork.business.domain.model.Project;
 import com.klwork.business.domain.service.ProjectService;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.data.LazyLoadingContainer;
 import com.klwork.explorer.data.LazyLoadingQuery;
 import com.klwork.explorer.ui.Images;
-import com.klwork.explorer.ui.business.project.ProjectTreeTable.ValueEditColumnGenerator;
-import com.klwork.explorer.ui.business.query.ProjectListItem;
 import com.klwork.explorer.ui.business.query.ProjectListQuery;
 import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.event.SubmitEventListener;
+import com.klwork.explorer.ui.handler.BinderHandler;
+import com.klwork.explorer.ui.handler.TableFieldCache;
 import com.klwork.explorer.ui.handler.TableHandler;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.klwork.explorer.ui.util.ThemeImageColumnGenerator;
@@ -22,39 +22,33 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.ui.themes.Runo;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.Reindeer;
 
 public class ProjectList extends CustomComponent {
 	private static final long serialVersionUID = 7916755916967574384L;
 	protected I18nManager i18nManager;
+
+	final HashMap<Object, String> projectNames = new HashMap<Object, String>();
 	
-	final HashMap<Object, HashMap<Object, Field>> fields = new HashMap<Object, HashMap<Object, Field>>();
-	final HashMap<Field, Object> itemIds = new HashMap<Field, Object>();
-	final HashMap<Field, String> projectNames = new HashMap<Field, String>();
+	private TableFieldCache fieldCache = new TableFieldCache();
 	//当前table id
 	private String currentProjectId;
 	ProjectMain projectMain;
@@ -100,17 +94,8 @@ public class ProjectList extends CustomComponent {
 			@Override
 			public void itemClick(ItemClickEvent event) {
 				if (event.isDoubleClick()) {
-					Object source = event.getItemId();
-					System.out.println();
-					HashMap<Object, Field> itemMap = fields.get(source);
-					for (Field f : itemMap.values()) {
-						if(f instanceof TextField){
-							TextField d = (TextField)f;
-							d.setReadOnly(false);
-							d.setImmediate(true);
-							d.focus();
-						}
-					}
+					Object itemId = event.getItemId();
+					fieldCache.setFieldReadOnly(itemId, false);
 				}
 			}
 		});
@@ -119,15 +104,18 @@ public class ProjectList extends CustomComponent {
 		listTable.setTableFieldFactory(new TableFieldFactory() {
 			private static final long serialVersionUID = -5741977060384915110L;
 
-			public Field createField(Container container, Object itemId,
+			public Field createField(Container container, final Object itemId,
 					final Object propertyId, Component uiContext) {
 				TextField tf = null;
 				final Object objectId = itemId;
-				final ProjectListItem c = (ProjectListItem)container.getItem(itemId);
+				//final ProjectListItem c = (ProjectListItem)container.getItem(itemId);
+				final Project c = BinderHandler.getTableBean(
+						listTable, itemId);
+				final Object key = itemId.toString()+propertyId.toString();
+				
 				if ("name".equals(propertyId)) {
-					if (getTfFromCache(itemId, propertyId) != null) {
-						tf = getTfFromCache(itemId, propertyId);
-						// bindFieldToObje(itemId, propertyId, tf, beanItem);
+					if (fieldCache.getPropertyFieldFromCache(itemId, propertyId) != null) {
+						tf = fieldCache.getPropertyFieldFromCache(itemId, propertyId);
 						return tf;
 					}
 					
@@ -135,39 +123,38 @@ public class ProjectList extends CustomComponent {
 					//tf.setPropertyDataSource(c.getItemProperty(propertyId));
 					tf.setImmediate(true);
 					tf.setReadOnly(true);
-					//tf.setSizeUndefined();
 					tf.setWidth("100%");
 					
-					/*tf.addFocusListener(new FocusListener() {
+					tf.addFocusListener(new FocusListener() {
 						private static final long serialVersionUID = 1006388127259206641L;
 
 						public void focus(FocusEvent event) {
-							HashMap<Object, Field> itemMap = fields.get(objectId);
-							//
-							for (Field f : itemMap.values())
-								f.setReadOnly(false);
+							fieldCache.setFieldReadOnly(itemId, false);
 						}
 
-					});*/
+					});
 					tf.addBlurListener(new BlurListener() {
 						private static final long serialVersionUID = -4497552765206819985L;
 
 						public void blur(BlurEvent event) {
-							HashMap<Object, Field> itemMap = fields
-									.get(objectId);
-						
-							for (Field f : itemMap.values()) {// 所有字段只读
+							fieldCache.setFieldReadOnly(itemId, true);
+							
+							String oldNameValue = projectNames.get(key);
+							if(!oldNameValue.equals(c.getName())){
+								projectService.updateProjectName(c.getId(),c.getName());
+							}
+							/*for (Field f : itemMap.values()) {// 所有字段只读
 								f.setReadOnly(true);
 								String oldNameValue = projectNames.get(f);
 								if(!oldNameValue.equals(f.getValue())){
 									projectService.updateProjectName(c.getItemProperty("id").toString(),f.getValue().toString());
 								}
-							}
+							}*/
 						}
 					});
 					// 把name设置到cache中
-					saveTfToCache(itemId, propertyId, tf);
-					projectNames.put(tf, c.getItemProperty("name").toString());
+					fieldCache.savePrppertyFieldToCache(itemId, propertyId, tf);
+					projectNames.put(key, c.getName());
 				}else {
 					tf = new TextField((String) propertyId);
 					tf.setData(itemId);
@@ -246,34 +233,6 @@ public class ProjectList extends CustomComponent {
 
 	}
 	
-	private TextField getTfFromCache(Object itemId, Object propertyId) {
-		TextField tf = null;
-
-		// Manage the field in the field storage
-		HashMap<Object, Field> itemMap = fields.get(itemId);
-		if (itemMap == null) {
-			itemMap = new HashMap<Object, Field>();
-			fields.put(itemId, itemMap);
-		}
-		if (itemMap.get(propertyId) != null) {
-			tf = (TextField) itemMap.get(propertyId);
-		}
-		return tf;
-	}
-	
-	private void saveTfToCache(final Object itemId,
-			final Object propertyId, TextField tf) {
-		if (tf != null) {
-			// Manage the field in the field storage
-			HashMap<Object, Field> itemMap = fields.get(itemId);
-			if (itemMap == null) {
-				itemMap = new HashMap<Object, Field>();
-				fields.put(itemId, itemMap);
-			}
-			itemMap.put(propertyId, tf);// 每个属性一个textfield
-			itemIds.put(tf, itemId);
-		}
-	}
 	
 	public void selectElement(Table table, int index) {
 		if (table.getContainerDataSource().size() > index) {

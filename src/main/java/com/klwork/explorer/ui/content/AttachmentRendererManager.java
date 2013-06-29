@@ -85,13 +85,16 @@ public class AttachmentRendererManager implements InitializingBean, Serializable
   }
   
   public void afterPropertiesSet() throws Exception {
+	  
+	  // Regular file upload
+	addAttachmentEditor(new FileAttachmentEditor());
+	    
 	//WW_TODO 资源文件创建器
     // URL
     addAttachmentRenderer(new UrlAttachmentRenderer());
     addAttachmentEditor(new UrlAttachmentEditor());
     
-    // Regular file upload
-    addAttachmentEditor(new FileAttachmentEditor());
+  
     
     // Basic types
     addAttachmentRenderer(new PdfAttachmentRenderer());

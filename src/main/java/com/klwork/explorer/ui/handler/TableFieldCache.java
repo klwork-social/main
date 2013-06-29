@@ -35,6 +35,20 @@ public class TableFieldCache {
 			f.setReadOnly(readOnly);
 		}
 	}
+	
+	/**
+	 * 设置其readOnly属性
+	 * @param itemId
+	 * @param readOnly
+	 */
+	public void setFieldFocus(Object itemId) {
+		HashMap<Object, Field> propertyMap = fieldCache.get(itemId);
+		if(propertyMap == null)
+			return;
+		for (Field f : propertyMap.values()) {
+			f.focus();
+		}
+	}
 
 	/**
 	 * 保存属性的field到cache

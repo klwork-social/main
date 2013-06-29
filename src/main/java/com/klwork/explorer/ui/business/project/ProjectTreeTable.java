@@ -29,6 +29,7 @@ import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.event.SubmitEventListener;
 import com.klwork.explorer.ui.handler.CommonFieldHandler;
+import com.klwork.explorer.ui.handler.TableFieldCache;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -80,13 +81,9 @@ public class ProjectTreeTable extends CustomComponent {
 	Property<String> integerPropety = null;
 	private final ArrayList<Object> visibleColumnIds = new ArrayList<Object>();
 	private final ArrayList<String> visibleColumnLabels = new ArrayList<String>();
-
-	// Map to find a field component by its item ID and property ID
-	final HashMap<Object, HashMap<Object, Field>> fields = new HashMap<Object, HashMap<Object, Field>>();
-
-	// Map to find the item ID of a field
-	final HashMap<Field, Object> itemIds = new HashMap<Field, Object>();
-
+	
+	private TableFieldCache fieldCache = new TableFieldCache();
+	
 	final TreeTable mainTreeTable = new TreeTable("我的周计划");
 
 	private BeanItem<Todo> currentBeanItem;
@@ -229,10 +226,7 @@ public class ProjectTreeTable extends CustomComponent {
 				if (event.isDoubleClick()) {
 					// Notification.show(event.getSource().toString());
 					Object source = event.getItemId();
-					HashMap<Object, Field> itemMap = fields.get(source);
-					for (Field f : itemMap.values()) {
-						f.focus();
-					}
+					fieldCache.setFieldFocus(source);
 				}
 			}
 		});
@@ -372,10 +366,7 @@ public class ProjectTreeTable extends CustomComponent {
 	}
 
 	private void openEdit(TreeTable ttable, final Object itemId) {
-		HashMap<Object, Field> itemMap = fields.get(itemId);
-		//
-		for (Field f : itemMap.values())
-			f.setReadOnly(false);
+		fieldCache.setFieldReadOnly(itemId, false);
 		ttable.select(itemId);
 	}
 
@@ -389,8 +380,8 @@ public class ProjectTreeTable extends CustomComponent {
 				if ("name".equals(propertyId)) {
 					final BeanItem<Todo> beanItem = (BeanItem<Todo>) itemId;
 
-					if (getTfFromCache(itemId, propertyId) != null) {
-						tf = getTfFromCache(itemId, propertyId);
+					if (fieldCache.getPropertyFieldFromCache(itemId, propertyId) != null) {
+						tf = fieldCache.getPropertyFieldFromCache(itemId, propertyId);
 						// bindFieldToObje(itemId, propertyId, tf, beanItem);
 						return tf;
 					}
@@ -413,16 +404,9 @@ public class ProjectTreeTable extends CustomComponent {
 						private static final long serialVersionUID = -4497552765206819985L;
 
 						public void blur(BlurEvent event) {
-							HashMap<Object, Field> itemMap = fields
-									.get(beanItem);
-							for (Field f : itemMap.values()) {// 所有字段只读
-								f.setReadOnly(true);
-							}
-
+							fieldCache.setFieldReadOnly(beanItem, true);
 							// copy toBean
 							Todo todo = tableItemToBean(currentBeanItem);
-							
-							
 							List<Todo> l = new ArrayList();
 							l.add(todo);
 							todoService.saveTodoList(l);
@@ -432,7 +416,7 @@ public class ProjectTreeTable extends CustomComponent {
 
 					});
 					// 把name设置到cache中
-					saveTfToCache(itemId, propertyId, tf);
+					fieldCache.savePrppertyFieldToCache(itemId, propertyId, tf);
 				} else {
 					tf = new TextField((String) propertyId);
 					tf.setData(itemId);
@@ -454,34 +438,7 @@ public class ProjectTreeTable extends CustomComponent {
 				System.out.println(propertyId + "---------" + itemId);
 			}
 
-			private void saveTfToCache(final Object itemId,
-					final Object propertyId, TextField tf) {
-				if (tf != null) {
-					// Manage the field in the field storage
-					HashMap<Object, Field> itemMap = fields.get(itemId);
-					if (itemMap == null) {
-						itemMap = new HashMap<Object, Field>();
-						fields.put(itemId, itemMap);
-					}
-					itemMap.put(propertyId, tf);// 每个属性一个textfield
-					itemIds.put(tf, itemId);
-				}
-			}
 
-			private TextField getTfFromCache(Object itemId, Object propertyId) {
-				TextField tf = null;
-
-				// Manage the field in the field storage
-				HashMap<Object, Field> itemMap = fields.get(itemId);
-				if (itemMap == null) {
-					itemMap = new HashMap<Object, Field>();
-					fields.put(itemId, itemMap);
-				}
-				if (itemMap.get(propertyId) != null) {
-					tf = (TextField) itemMap.get(propertyId);
-				}
-				return tf;
-			}
 		}
 
 		);
@@ -671,13 +628,8 @@ public class ProjectTreeTable extends CustomComponent {
 
 		@Override
 		public void handleAction(Action action, Object sender, Object target) {
-			System.out.println("sdfdf");
 			if (target instanceof TreeTable) {
-				// Object itemid = ((TextField) target).getData();
-				HashMap<Object, Field> itemMap = fields.get(currentBeanItem);
-				for (Field f : itemMap.values()) {
-					f.focus();
-				}
+				fieldCache.setFieldFocus(currentBeanItem);
 			}
 		}
 	}
