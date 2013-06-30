@@ -75,9 +75,6 @@
       inner join ${prefix}ACT_ID_MEMBERSHIP M on RES.ID_ = M.USER_ID_
       inner join ${prefix}ACT_ID_GROUP G on M.GROUP_ID_ = G.ID_
     </if>
-    <if test="teamId != null">
-      inner join ${prefix}TEAM_MEMBERSHIP TM on RES.ID_ = TM.USER_ID_
-    </if>
     <where>
       <if test="id != null">
         RES.ID_ = #{id}
@@ -94,6 +91,9 @@
       <if test="lastNameLike != null">
         and RES.LAST_ like #{lastNameLike}
       </if>
+      <if test="fullNameLike != null">
+        and (RES.FIRST_ like #{fullNameLike} or RES.LAST_ like #{fullNameLike})
+      </if>
       <if test="email != null">
         and RES.EMAIL_ = #{email}
       </if>
@@ -103,14 +103,35 @@
       <if test="groupId != null">
         and G.ID_ = #{groupId}
       </if>
-       <if test="teamId != null">
-        and TM.team_id_ = #{teamId}
-      </if>
       <if test="procDefId != null">
         and exists (select ID_ from ${prefix} ACT_RU_IDENTITYLINK where PROC_DEF_ID_ = #{procDefId} and USER_ID_=RES.ID_ )
       </if>
       
     </where>
   </sql>
+
+  <select id="selectUserByNativeQuery" parameterType="java.util.Map" resultMap="userResultMap">
+    <if test="resultType == 'LIST_PAGE'">
+      ${limitBefore}
+    </if>
+    ${sql}
+    <if test="resultType == 'LIST_PAGE'">
+      ${limitAfter}
+    </if>
+  </select>
+
+  <select id="selectUserByNativeQuery_mssql_or_db2" parameterType="java.util.Map" resultMap="userResultMap">
+    <if test="resultType == 'LIST_PAGE'">
+      ${limitBeforeNativeQuery}
+    </if>
+    ${sql}
+    <if test="resultType == 'LIST_PAGE'">
+      ${limitAfter}
+    </if>
+  </select>
+
+  <select id="selectUserCountByNativeQuery" parameterType="java.util.Map" resultType="long">
+    ${sql}
+  </select>
   
 </mapper>

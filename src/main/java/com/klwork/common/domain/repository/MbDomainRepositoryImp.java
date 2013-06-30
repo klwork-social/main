@@ -12,7 +12,7 @@ import com.klwork.common.utils.ClassNameUtil;
 import com.klwork.common.utils.ReflectionUtils;
 import com.klwork.common.utils.logging.Logger;
 import com.klwork.common.utils.logging.LoggerFactory;
-import com.klwork.explorer.web.SpringProcessEngineConfiguration;
+import com.klwork.explorer.web.CusSpringProcessEngineConfiguration;
 
 /**
  * 

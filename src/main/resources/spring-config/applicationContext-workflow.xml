@@ -51,7 +51,7 @@
   	<property name="dataSource" ref="dataSource" />
   </bean>
   
-  <bean id="processEngineConfiguration" class="com.klwork.explorer.web.SpringProcessEngineConfiguration">
+  <bean id="processEngineConfiguration" class="com.klwork.explorer.web.CusSpringProcessEngineConfiguration">
   	<property name="dataSource" ref="dataSource" />
   	<property name="transactionManager" ref="transactionManager" />
   	<property name="databaseSchemaUpdate" value="true" />

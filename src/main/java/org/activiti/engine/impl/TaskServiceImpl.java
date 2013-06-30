@@ -15,6 +15,7 @@ package org.activiti.engine.impl;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import org.activiti.engine.impl.cmd.DeleteIdentityLinkCmd;
 import org.activiti.engine.impl.cmd.DeleteTaskCmd;
 import org.activiti.engine.impl.cmd.GetAttachmentCmd;
 import org.activiti.engine.impl.cmd.GetAttachmentContentCmd;
+import org.activiti.engine.impl.cmd.GetCommentCmd;
 import org.activiti.engine.impl.cmd.GetIdentityLinksForTaskCmd;
 import org.activiti.engine.impl.cmd.GetProcessInstanceAttachmentsCmd;
 import org.activiti.engine.impl.cmd.GetProcessInstanceCommentsCmd;
@@ -41,13 +43,16 @@ import org.activiti.engine.impl.cmd.GetSubTasksCmd;
 import org.activiti.engine.impl.cmd.GetTaskAttachmentsCmd;
 import org.activiti.engine.impl.cmd.GetTaskCommentsCmd;
 import org.activiti.engine.impl.cmd.GetTaskDefinitionCmd;
+import org.activiti.engine.impl.cmd.GetTaskEventCmd;
 import org.activiti.engine.impl.cmd.GetTaskEventsCmd;
 import org.activiti.engine.impl.cmd.GetTaskVariableCmd;
 import org.activiti.engine.impl.cmd.GetTaskVariablesCmd;
+import org.activiti.engine.impl.cmd.HasTaskVariableCmd;
 import org.activiti.engine.impl.cmd.RemoveTaskVariablesCmd;
 import org.activiti.engine.impl.cmd.ResolveTaskCmd;
 import org.activiti.engine.impl.cmd.SaveAttachmentCmd;
 import org.activiti.engine.impl.cmd.SaveTaskCmd;
+import org.activiti.engine.impl.cmd.SetTaskDueDateCmd;
 import org.activiti.engine.impl.cmd.SetTaskPriorityCmd;
 import org.activiti.engine.impl.cmd.SetTaskVariablesCmd;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
@@ -81,7 +86,6 @@ public class TaskServiceImpl extends ServiceImpl implements TaskService {
   public void saveTask(Task task) {
     commandExecutor.execute(new SaveTaskCmd(task));
   }
-  
   
   public void deleteTask(String taskId) {
     commandExecutor.execute(new DeleteTaskCmd(taskId, null, false));
@@ -174,12 +178,16 @@ public class TaskServiceImpl extends ServiceImpl implements TaskService {
     commandExecutor.execute(new ResolveTaskCmd(taskId, null));
   }
 
-  public void resolve(String taskId, Map<String, Object> variables) {
+  public void resolveTask(String taskId, Map<String, Object> variables) {
     commandExecutor.execute(new ResolveTaskCmd(taskId, variables));
   }
 
   public void setPriority(String taskId, int priority) {
     commandExecutor.execute(new SetTaskPriorityCmd(taskId, priority) );
+  }
+
+  public void setDueDate(String taskId, Date dueDate) {
+    commandExecutor.execute(new SetTaskDueDateCmd(taskId, dueDate) );
   }
   
   public TaskQuery createTaskQuery() {
@@ -210,8 +218,16 @@ public class TaskServiceImpl extends ServiceImpl implements TaskService {
     return commandExecutor.execute(new GetTaskVariableCmd(executionId, variableName, false));
   }
   
+  public boolean hasVariable(String taskId, String variableName) {
+    return commandExecutor.execute(new HasTaskVariableCmd(taskId, variableName, false));
+  }
+  
   public Object getVariableLocal(String executionId, String variableName) {
     return commandExecutor.execute(new GetTaskVariableCmd(executionId, variableName, true));
+  }
+  
+  public boolean hasVariableLocal(String taskId, String variableName) {
+    return commandExecutor.execute(new HasTaskVariableCmd(taskId, variableName, true));
   }
   
   public void setVariable(String executionId, String variableName, Object value) {
@@ -260,8 +276,18 @@ public class TaskServiceImpl extends ServiceImpl implements TaskService {
     commandExecutor.execute(new RemoveTaskVariablesCmd(taskId, variableNames, true));
   }
 
-  public void addComment(String taskId, String processInstance, String message) {
-    commandExecutor.execute(new AddCommentCmd(taskId, processInstance, message));
+  public Comment addComment(String taskId, String processInstance, String message) {
+    return commandExecutor.execute(new AddCommentCmd(taskId, processInstance, message));
+  }
+  
+  @Override
+  public Comment getComment(String commentId) {
+    return commandExecutor.execute(new GetCommentCmd(commentId));
+  }
+  
+  @Override
+  public Event getEvent(String eventId) {
+    return commandExecutor.execute(new GetTaskEventCmd(eventId));
   }
 
   public List<Comment> getTaskComments(String taskId) {
@@ -293,7 +319,12 @@ public class TaskServiceImpl extends ServiceImpl implements TaskService {
   }
   
   public void deleteComments(String taskId, String processInstanceId) {
-    commandExecutor.execute(new DeleteCommentCmd(taskId, processInstanceId));
+    commandExecutor.execute(new DeleteCommentCmd(taskId, processInstanceId, null));
+  }
+  
+  @Override
+  public void deleteComment(String commentId) {
+    commandExecutor.execute(new DeleteCommentCmd(null, null, commentId));
   }
 
   public Attachment getAttachment(String attachmentId) {
@@ -315,6 +346,8 @@ public class TaskServiceImpl extends ServiceImpl implements TaskService {
   public List<Task> getSubTasks(String parentTaskId) {
     return commandExecutor.execute(new GetSubTasksCmd(parentTaskId));
   }
+
+
 
   public void currentNewInstanceByKey(String processInstanceId, String activitId,
 			Map<String, String> formProperties) {

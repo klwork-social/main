@@ -36,8 +36,7 @@ public class DeleteIdentityLinkCusCmd implements Command<Object>, Serializable {
 	}
 
 	public Void execute(CommandContext commandContext) {
-		Context.getCommandContext().getIdentityLinkEntityManager().deleteIdentityLink(identityLink);
+		Context.getCommandContext().getIdentityLinkEntityManager().deleteIdentityLink(identityLink,true);
 		return null;
 	}
-
 }

@@ -50,7 +50,7 @@ public abstract class AbstractPage extends CustomComponent {
   protected void initUi() {
 	//WW_TODO x initUI,生成/代办任务/搜索行/任务相关事件
     //showEvents = getEventComponent() != null;
-    showEvents = false;
+    showEvents = true;
     //如果有事件为GridLayout 3,3
     initMainLayout();
     setSizeFull();
@@ -64,9 +64,11 @@ public abstract class AbstractPage extends CustomComponent {
     addSelectComponent();
     
     // 2, 0, 2, 2,任务相关事件,相当于x
-    if(showEvents) {
+    if(getEventComponent() != null){
       addEventComponent();
     }
+    //默认为显示
+    setEventHiden(false);
   }
   
   protected void addEventComponent() {
@@ -102,7 +104,6 @@ public abstract class AbstractPage extends CustomComponent {
       grid.setColumnExpandRatio(0, .20f);
       grid.setColumnExpandRatio(1, .80f);
     }
-    
     grid.addStyleName(Reindeer.SPLITPANEL_SMALL);
     grid.setSizeFull();
     
@@ -112,6 +113,14 @@ public abstract class AbstractPage extends CustomComponent {
     setCompositionRoot(grid);
   }
   
+  public void setEventHiden(boolean show) {
+	  if(show){//不显示
+		  grid.setColumnExpandRatio(2, .23f);
+	  }else {//显示
+		  grid.setColumnExpandRatio(2, 0f);
+	  }
+	  showEvents = show;
+  }
   protected void addSearch() {
     Component searchComponent = getSearchComponent();
     if(searchComponent != null) {
@@ -178,4 +187,13 @@ public abstract class AbstractPage extends CustomComponent {
     return null;
   }
 
+	public boolean isShowEvents() {
+		return showEvents;
+	}
+	
+	public void setShowEvents(boolean showEvents) {
+		this.showEvents = showEvents;
+	}
+  
+  
 }

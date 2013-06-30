@@ -48,6 +48,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Embedded;
@@ -89,8 +90,10 @@ public class TaskDetailPanel extends DetailPanel {
   protected TaskRelatedContentComponent relatedContent;
   protected Button completeButton;
   protected Button claimButton;
+  private boolean showEvent = false;
   
   public TaskDetailPanel(Task task, TaskPage taskPage) {
+	showEvent = taskPage.isShowEvents();
     this.task = task;
     this.taskPage = taskPage;
     this.taskService = ProcessEngines.getDefaultProcessEngine().getTaskService();
@@ -176,9 +179,32 @@ public boolean judgeInnerTask() {
     propertiesLayout.addComponent(new PriorityComponent(task, i18nManager, taskService));
     //创建于多少之前
     initCreateTime(propertiesLayout);
+    
+    initShowEvent(propertiesLayout);
   }
   
-  protected void initCreateTime(HorizontalLayout propertiesLayout) {
+  private String getShowEventButtonTitle() {
+	  if(showEvent)
+		  return "隐藏任务留言";
+	  return "显示任务留言";
+  }
+  private void initShowEvent(HorizontalLayout propertiesLayout) {
+	final Button updateSave = new Button(getShowEventButtonTitle());
+		updateSave.addClickListener(new ClickListener() {
+			@SuppressWarnings("unchecked")
+			public void buttonClick(ClickEvent event) {
+				showEvent = !showEvent;
+				taskPage.setEventHiden(showEvent);
+				updateSave.setCaption(getShowEventButtonTitle());
+				
+			}
+		}
+			);
+	  propertiesLayout.addComponent(updateSave);
+	  
+  }
+
+protected void initCreateTime(HorizontalLayout propertiesLayout) {
     PrettyTimeLabel createLabel = new PrettyTimeLabel(
             i18nManager.getMessage(Messages.TASK_CREATED_SHORT), task.getCreateTime(), "", true);
     createLabel.addStyleName(ExplorerLayout.STYLE_TASK_HEADER_CREATE_TIME);

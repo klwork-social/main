@@ -82,7 +82,7 @@ public class ActivityStartPopupWindow extends PopupWindow {
 		
 		this.todoId = todoId;
 		this.i18nManager = ViewToolManager.getI18nManager();
-		String processDefinitionId = "fixSystemFailure:1:516";
+		String processDefinitionId = "vacationRequest:1:36";
 		this.processDefinition = repositoryService
 				.getProcessDefinition(processDefinitionId);
 		if (processDefinition != null) {
