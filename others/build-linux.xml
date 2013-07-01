@@ -144,9 +144,8 @@
 			</copy>
 		<!-- copy the property files to class path-->
 
-		<javac encoding="utf-8" srcdir="${project.home}/src/main/java" destdir="${build.classes}" debug="${build.debug}" includeantruntime="false">
-			<compilerarg value="-Xlint:unchecked" />
-			<classpath refid="my.classpath" />
+		<javac encoding="utf-8" srcdir="${project.home}/src/main/java" nowarn="yes" destdir="${build.classes}" debug="${build.debug}" includeantruntime="false">
+					<classpath refid="my.classpath" />
 		</javac>
 
 
