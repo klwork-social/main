@@ -133,12 +133,16 @@
 	<target name="compile" description="--> description">
 		<mkdir dir="${build.classes}" />
 		<copy todir="${build.classes}">
-			<fileset dir="${project.home}/src/main">
+			<fileset dir="${project.home}/src/main/java">
 				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
+		<copy todir="${build.classes}">
+				<fileset dir="${project.home}/src/main/resources">
+					<exclude name="**/*.java" />
+				</fileset>
+			</copy>
 		<!-- copy the property files to class path-->
-		<mkdir dir="${test.dir}" />
 
 		<javac encoding="utf-8" srcdir="${project.home}/src/main/java" destdir="${build.classes}" debug="${build.debug}" includeantruntime="false">
 			<compilerarg value="-Xlint:unchecked" />
@@ -161,10 +165,14 @@
 						</fileset>
 					</copy>-->
 	</target>
-
+	
 	<target name="product_deploy">
 		<antcall target="war">
 			<param name="war_type" value="product" />
 		</antcall>
+	</target>
+	
+	<target name="clean" description="--> clean the project">
+		<delete dir="${build.dir}" />
 	</target>
 </project>
