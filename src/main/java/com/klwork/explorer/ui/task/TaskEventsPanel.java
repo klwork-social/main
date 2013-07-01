@@ -20,7 +20,10 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.identity.Picture;
+import org.activiti.engine.task.Comment;
+import org.activiti.engine.task.Task;
 
+import com.klwork.explorer.Constants;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewManager;
@@ -32,7 +35,6 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.StreamResource;
-import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
@@ -66,6 +68,8 @@ public class TaskEventsPanel extends Panel {
   
   protected VerticalLayout pMainContent;
   protected String taskId;
+  protected Task task;
+  
   protected List<org.activiti.engine.task.Event> taskEvents;
   protected TextField commentInputField;
   protected GridLayout eventGrid;
@@ -103,6 +107,7 @@ public class TaskEventsPanel extends Panel {
    */
   public void setTaskId(String taskId) {
     this.taskId = taskId;
+    this.task = taskService.createTaskQuery().taskId(taskId).singleResult();
     refreshTaskEvents();
   }
   
@@ -126,28 +131,28 @@ public class TaskEventsPanel extends Panel {
   }
   
   protected void addTaskEvents() {
-    if(taskId != null) {
+    if(taskId != null && task.getProcessInstanceId() != null) {
       //WW_TODO 查询任务的实践
-      taskEvents = taskService.getTaskEvents(taskId);
-      for (final org.activiti.engine.task.Event event : taskEvents) {
+    	List<Comment> list = taskService.getProcessInstanceComments(task.getProcessInstanceId());
+      for (final Comment event : list) {
         addTaskEventPicture(event, eventGrid);
         addTaskEventText(event, eventGrid);
       }
     }
   }
 
-  protected void addTaskEventPicture(final org.activiti.engine.task.Event taskEvent, GridLayout eventGrid) {
+  protected void addTaskEventPicture(final Comment taskEvent, GridLayout eventGrid) {
     final Picture userPicture = identityService.getUserPicture(taskEvent.getUserId());
     Embedded authorPicture = null;
     
     if (userPicture != null) {
-      /*StreamResource imageresource = new StreamResource(new StreamSource() {
-        private static final long serialVersionUID = 1L;
-        public InputStream getStream() {
-          return userPicture.getInputStream();
-        }
-      }, "event_" + taskEvent.getUserId() + "." + Constants.MIMETYPE_EXTENSION_MAPPING.get(userPicture.getMimeType()), ExplorerApp.get());
-      authorPicture = new Embedded(null, imageresource);*/
+        StreamResource imageresource = new StreamResource(new StreamSource() {
+            private static final long serialVersionUID = 1L;
+            public InputStream getStream() {
+              return userPicture.getInputStream();
+            }
+          }, "event_" + taskEvent.getUserId() + "." + Constants.MIMETYPE_EXTENSION_MAPPING.get(userPicture.getMimeType()));
+          authorPicture = new Embedded(null, imageresource);
     } else {
       authorPicture = new Embedded(null, Images.USER_50);
     }
@@ -159,7 +164,7 @@ public class TaskEventsPanel extends Panel {
     eventGrid.addComponent(authorPicture);
   }
   
-  protected void addTaskEventText(final org.activiti.engine.task.Event taskEvent, final GridLayout eventGrid) {
+  protected void addTaskEventText(final Comment taskEvent, final GridLayout eventGrid) {
     VerticalLayout layout = new VerticalLayout();
     layout.addStyleName(ExplorerLayout.STYLE_TASK_EVENT);
     layout.setWidth("100%");
@@ -189,7 +194,7 @@ public class TaskEventsPanel extends Panel {
     Button addCommentButton = new Button(i18nManager.getMessage(Messages.TASK_ADD_COMMENT));
     hLayout.addComponent(addCommentButton);
     hLayout.setComponentAlignment(addCommentButton, Alignment.MIDDLE_LEFT);
-    addCommentButton.addListener(new ClickListener() {
+    addCommentButton.addClickListener(new ClickListener() {
       public void buttonClick(ClickEvent event) {
         addNewComment(commentInputField.getValue().toString());
       }
@@ -224,7 +229,7 @@ public void initAddEventInput(HorizontalLayout hLayout) {
 }
   
   protected void addNewComment(String text) {
-    taskService.addComment(taskId, null, text);
+    taskService.addComment(null, task.getProcessInstanceId(), text);
     refreshTaskEvents();
     commentInputField.setValue("");
     commentInputField.focus();

@@ -187,7 +187,8 @@ protected void initProcessDefinitions() {
         .addClasspathResource("org/activiti/explorer/demo/process/Helpdesk.bpmn20.xml")
         .addClasspathResource("org/activiti/explorer/demo/process/Helpdesk.png")
         .addClasspathResource("org/activiti/explorer/demo/process/reviewSalesLead.bpmn20.xml");
-        s.deploy();
+    	Deployment dt = s.deploy();
+    	System.out.println("Demo processes" + dt.getId() + "-------------" +  "  部署name" + dt.getName());
     }
     
     String reportDeploymentName = "Demo reports";

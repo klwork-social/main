@@ -136,7 +136,7 @@ public abstract class TaskPage extends AbstractTablePage {
     Task task = taskService.createTaskQuery().taskId(id).singleResult();
     Component detailComponent = new TaskDetailPanel(task, TaskPage.this);
     //WW_TODO 联动任务事件平台
-    //taskEventPanel.setTaskId(task.getId());
+    taskEventPanel.setTaskId(task.getId());
     return detailComponent;
   }
   

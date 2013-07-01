@@ -97,7 +97,14 @@ public class ActivityStartPopupWindow extends PopupWindow {
 		center();
 		// addComponent(new ProfilePanel(userId));
 		// setContent(new ProfilePanel(userId));
-		initImage();
+		mainLayout = new VerticalLayout();
+		setContent(mainLayout);
+		Label processTitle = new Label(
+				i18nManager.getMessage(Messages.PROCESS_HEADER_DIAGRAM));
+		processTitle.addStyleName(ExplorerLayout.STYLE_H3);
+		mainLayout.addComponent(processTitle);
+		
+		//initImage();
 
 		initNotice();
 		initButtons();
@@ -136,13 +143,6 @@ public class ActivityStartPopupWindow extends PopupWindow {
 	}
 
 	protected void initImage() {
-		mainLayout = new VerticalLayout();
-
-		Label processTitle = new Label(
-				i18nManager.getMessage(Messages.PROCESS_HEADER_DIAGRAM));
-		processTitle.addStyleName(ExplorerLayout.STYLE_H3);
-		mainLayout.addComponent(processTitle);
-
 		boolean didDrawImage = false;
 		boolean jsDia = true;
 		if (jsDia) {
@@ -243,7 +243,7 @@ public class ActivityStartPopupWindow extends PopupWindow {
 					i18nManager.getMessage(Messages.PROCESS_NO_DIAGRAM));
 			mainLayout.addComponent(noImageAvailable);
 		}
-		setContent(mainLayout);
+		
 	}
 
 	private void doStartProcessInstance() {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/settings/1.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://maven.apache.org/setrings/1.0.0 
+	http://maven.apache.org/xsd/settings-1.0.0.xsd">
+	<localRepository>/mydata/prg_home/.m2/repository</localRepository>
+	<mirrors>
+		<mirror>
+			<id>nexus</id>
+			<name>Nexus</name>
+			<mirrorOf>central</mirrorOf>
+			<url>http://112.124.0.156:8081/nexus/content/groups/public/</url>
+		</mirror>
+	</mirrors>
+</settings>

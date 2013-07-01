@@ -15,13 +15,18 @@ package com.klwork.explorer.ui.task;
 
 import java.io.Serializable;
 
+import org.activiti.engine.IdentityService;
+import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.identity.User;
+import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Event;
 
 import com.klwork.explorer.I18nManager;
+import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.klwork.explorer.ui.user.UserCache;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 
 
@@ -38,7 +43,7 @@ public class TaskEventTextResolver implements Serializable {
   protected I18nManager i18nManager;
   
   public TaskEventTextResolver() {
-    //this.i18nManager = ExplorerApp.get().getI18nManager();
+	  this.i18nManager = ViewToolManager.getI18nManager();
   }
   
   public Label resolveText(Event event) {
@@ -82,7 +87,18 @@ public class TaskEventTextResolver implements Serializable {
       text += i18nManager.getMessage(Messages.EVENT_DEFAULT, eventAuthor, event.getMessage());
     }*/
     text = "hello,baidu";
-    return new Label(text, Label.CONTENT_XHTML);
+    return new Label(text, ContentMode.HTML);
   }
+
+public Label resolveText(Comment event) {
+	IdentityService identityService = ProcessEngines.getDefaultProcessEngine().getIdentityService();
+    User user = identityService.createUserQuery().userId(event.getUserId()).singleResult();
+    String eventAuthor = "<span class='" + ExplorerLayout.STYLE_TASK_EVENT_AUTHOR + "'>" 
+          + user.getFirstName() + " " + user.getLastName() + "</span> ";
+    
+    String text = null;
+    text = i18nManager.getMessage(Messages.EVENT_COMMENT, eventAuthor, event.getFullMessage());
+	return new Label(text, ContentMode.HTML);
+}
 
 }
