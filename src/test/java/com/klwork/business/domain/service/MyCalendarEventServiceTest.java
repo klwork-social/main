@@ -30,7 +30,7 @@ public class MyCalendarEventServiceTest extends BaseTxWebTests {
 		myCalendarEventService.createMyCalendarEvent(myCalendarEvent);
 		MyCalendarEvent myCalendarEvent2 = myCalendarEventService.findMyCalendarEventById(myCalendarEvent.getId());
 		assertEquals(myCalendarEvent.getCaption(),myCalendarEvent2.getCaption());
-		assertEquals(true,myCalendarEvent2.getAllDay());
+		assertEquals(true,myCalendarEvent2.isAllDay());
 	}
 
 }

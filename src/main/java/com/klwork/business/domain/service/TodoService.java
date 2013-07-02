@@ -48,6 +48,8 @@ public class TodoService {
 
 	public int updateTodo(Todo todo) {
 		saveTodoCalendar(todo);
+		Date now = StringDateUtil.now();
+		todo.setLastUpdate(now);
 		return rep.update(todo);
 	}
 

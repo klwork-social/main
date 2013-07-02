@@ -7,13 +7,14 @@ import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.klwork.common.dto.vo.ViewPage;
 
-@Repository
 @SuppressWarnings("unchecked")
 public class BaseMybaitsDao extends SqlSessionDaoSupport {
+	
 	// select
 	// ///////////////////////////////////////////////////////////////////
 	public Object selectEntityByModel(String sqlMapId, Object obj) {

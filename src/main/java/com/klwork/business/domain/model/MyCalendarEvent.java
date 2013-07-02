@@ -272,19 +272,18 @@ public class MyCalendarEvent extends BasicEvent implements Serializable {
 		fireEventChange();
 	}
 
-	@Override
 	public boolean isAllDay() {
 		return allDay;
 	}
 
-	/**
+/*	*//**
 	 * 
 	 * 
 	 * @return
-	 */
+	 *//*
 	public Boolean getAllDay() {
 		return allDay;
-	}
+	}*/
 
 	/**
 	 * 
