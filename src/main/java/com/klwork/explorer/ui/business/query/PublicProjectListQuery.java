@@ -46,7 +46,7 @@ public class PublicProjectListQuery extends AbstractLazyLoadingQuery {
 		return projectService.count(q);
 	}
 
-	private OutsourcingProjectQuery createQuery() {
+	protected OutsourcingProjectQuery createQuery() {
 		OutsourcingProjectQuery q = new OutsourcingProjectQuery();
 		//需求发布中
 		q.setPrgStatus(EntityDictionary.OUTSOURCING_STATUS_PUBLISHED);

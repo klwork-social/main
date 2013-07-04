@@ -69,7 +69,7 @@ public class DemoDataGenerator implements ModelDataJsonConstants {
     }
     
     if (createDemoModels) {
-      initModelData();
+      //initModelData();
     }
   }
   
@@ -173,7 +173,7 @@ public class DemoDataGenerator implements ModelDataJsonConstants {
   @SuppressWarnings("unused")
 protected void initProcessDefinitions() {
     
-    String deploymentName = "Demo processes";
+    /*String deploymentName = "Demo processes";
     List<Deployment> deploymentList = repositoryService.createDeploymentQuery().deploymentName(deploymentName).list();
     if (deploymentList == null || deploymentList.size() == 0) {
     	DeploymentBuilder s = repositoryService.createDeployment()
@@ -201,10 +201,10 @@ protected void initProcessDefinitions() {
         .addClasspathResource("org/activiti/explorer/demo/process/reports/helpdeskFirstLineVsEscalated.bpmn20.xml")
         .addClasspathResource("org/activiti/explorer/demo/process/reports/employeeProductivity.bpmn20.xml")
         .deploy();
-    }
+    }*/
     
     String crowdsourcingName = "外包流程";
-    deploymentList = repositoryService.createDeploymentQuery().deploymentName(crowdsourcingName).list();
+    List<Deployment>  deploymentList = repositoryService.createDeploymentQuery().deploymentName(crowdsourcingName).list();
     //WW_TODO 数据库启动时加载流程文件
     if (deploymentList == null || deploymentList.size() == 0) {
     	DeploymentBuilder s = repositoryService.createDeployment()
@@ -224,7 +224,7 @@ protected void initProcessDefinitions() {
     	}
     }
     
-    // Generate some data for the 'employee productivity' report
+   /* // Generate some data for the 'employee productivity' report
     if (generateReportData) {
       Date now = new Date();
       ClockUtil.setCurrentTime(now);
@@ -244,7 +244,7 @@ protected void initProcessDefinitions() {
       }
       
       ClockUtil.reset();
-    }
+    }*/
     
   }
   

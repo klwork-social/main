@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.klwork.explorer.ui.business.project;
+package com.klwork.explorer.ui.business.outproject;
 
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.vaadin.server.Sizeable;

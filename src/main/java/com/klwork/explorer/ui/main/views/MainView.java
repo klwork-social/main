@@ -24,9 +24,10 @@ import com.klwork.explorer.ViewManager;
 import com.klwork.explorer.ui.base.AbstractPage;
 import com.klwork.explorer.ui.business.organization.OrganizationMainPage;
 import com.klwork.explorer.ui.business.organization.OrganizationMemberMainPage;
+import com.klwork.explorer.ui.business.outproject.OutProjectManagerMainPage;
+import com.klwork.explorer.ui.business.outproject.PublicProjectListPage;
 import com.klwork.explorer.ui.business.project.MyCalendarView;
 import com.klwork.explorer.ui.business.project.ProjectMain;
-import com.klwork.explorer.ui.business.project.PublicProjectListPage;
 import com.klwork.explorer.ui.mainlayout.MainLayout;
 import com.klwork.explorer.ui.task.InboxPage;
 import com.klwork.explorer.ui.task.InvolvedPage;
@@ -168,7 +169,8 @@ public class MainView extends Panel implements View {
 	public void showPublicProject() {
 		switchMainContent(new PublicProjectListPage());
 	}
-
+	
+	//用户成员管理
 	public void showOrganizationMain() {
 		switchMainContent(new OrganizationMainPage());
 		
@@ -178,6 +180,11 @@ public class MainView extends Panel implements View {
 		switchMainContent(new OrganizationMemberMainPage());
 	}
 
-
+	/**
+	 * 显示外部项目管理
+	 */
+	public void showOutProjectManagerPage() {
+		switchMainContent(new OutProjectManagerMainPage());
+	}
 
 }

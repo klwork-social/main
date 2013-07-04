@@ -101,23 +101,35 @@ public class MainMenuBar extends HorizontalLayout {
 				Images.MAIN_MENU_TASKS, false, 80);
 		taskButton.addClickListener(new ShowTasksClickListener());
 		menuItemButtons.put(ViewManager.MAIN_NAVIGATION_TASK, taskButton);
-
+		
+		//公共任务
 		Button processButton = addMenuButton(
 				ViewManager.MAIN_NAVIGATION_PROCESS,
-				"公共项目",
+				i18nManager.getMessage(Messages.MAIN_MENU_PUBLIC_TASK),
 				Images.MAIN_MENU_PROCESS, false, 80);
 		processButton
 				.addClickListener(new ShowProcessDefinitionsClickListener());
 		menuItemButtons.put(ViewManager.MAIN_NAVIGATION_PROCESS, processButton);
-
-		Button reportingButton = addMenuButton(
+		
+		
+		
+		//我的代办事项
+		Button todoListButton = addMenuButton(
 				ViewManager.MAIN_NAVIGATION_REPORT,
-				"反馈",
+				i18nManager.getMessage(Messages.MAIN_MENU_TODOLIST),
 				Images.MAIN_MENU_REPORTS, false, 80);
-		reportingButton.addClickListener(new ShowReportsClickListener());
+		todoListButton.addClickListener(new ShowTodoListClickListener());
 		menuItemButtons
-				.put(ViewManager.MAIN_NAVIGATION_REPORT, reportingButton);
-
+				.put(ViewManager.MAIN_NAVIGATION_REPORT, todoListButton);
+		
+		//外部项目管理
+				Button outProjectManagerButton = addMenuButton(
+						ViewManager.MAIN_NAVIGATION_PROCESS,
+						i18nManager.getMessage(Messages.MAIN_MENU_MY_PROJECT),
+						Images.MAIN_MENU_PROCESS, false, 80);
+				outProjectManagerButton
+						.addClickListener(new ShowOutProjectManagerClickListener());
+				menuItemButtons.put(ViewManager.MAIN_NAVIGATION_PROCESS, outProjectManagerButton);
 		/*
 		 * if (xx.getLoggedInUser().isAdmin()) { Button manageButton =
 		 * addMenuButton(ViewManager.MAIN_NAVIGATION_MANAGE,
@@ -166,12 +178,14 @@ public class MainMenuBar extends HorizontalLayout {
 
 		MenuItem rootItem = helpMenu.addItem("项目管理", null);
 		rootItem.setStyleName(ExplorerLayout.STYLE_HEADER_PROFILE_MENU);
-		rootItem.addItem("创建项目", new Command() {
+		//项目计划
+		rootItem.addItem(i18nManager.getMessage(Messages.MAIN_MENU_TODOLIST), new Command() {
 			public void menuSelected(MenuItem selectedItem) {
 				ViewToolManager.getMainView().showProjectPage();
 			}
 		});
-		rootItem.addItem("我的日程", new Command() {
+		//我的日程
+		rootItem.addItem(i18nManager.getMessage(Messages.EXPAND_MENU_MY_SCHEDULE), new Command() {
 			public void menuSelected(MenuItem selectedItem) {
 				ViewToolManager.getMainView().showMySchedulePage();
 			}
@@ -269,6 +283,18 @@ public class MainMenuBar extends HorizontalLayout {
 	private class ShowProcessDefinitionsClickListener implements ClickListener {
 		public void buttonClick(ClickEvent event) {
 			ViewToolManager.getMainView().showPublicProject();
+		}
+	}
+	
+	private class ShowOutProjectManagerClickListener implements ClickListener {
+		public void buttonClick(ClickEvent event) {
+			ViewToolManager.getMainView().showOutProjectManagerPage();
+		}
+	}
+	
+	private class ShowTodoListClickListener implements ClickListener {
+		public void buttonClick(ClickEvent event) {
+			ViewToolManager.getMainView().showProjectPage();
 		}
 	}
 

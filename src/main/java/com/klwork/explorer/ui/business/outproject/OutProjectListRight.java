@@ -1,4 +1,4 @@
-package com.klwork.explorer.ui.business.project;
+package com.klwork.explorer.ui.business.outproject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +18,7 @@ import com.klwork.explorer.data.LazyLoadingContainer;
 import com.klwork.explorer.data.LazyLoadingQuery;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
+import com.klwork.explorer.ui.business.project.NewProjectWindow;
 import com.klwork.explorer.ui.business.query.PublicProjectListQuery;
 import com.klwork.explorer.ui.custom.DetailPanel;
 import com.klwork.explorer.ui.event.SubmitEvent;

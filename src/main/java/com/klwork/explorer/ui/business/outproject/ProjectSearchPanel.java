@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package com.klwork.explorer.ui.business.project;
+package com.klwork.explorer.ui.business.outproject;
 
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.TaskService;
