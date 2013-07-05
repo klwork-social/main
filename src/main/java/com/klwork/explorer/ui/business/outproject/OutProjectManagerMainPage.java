@@ -21,6 +21,7 @@ public class OutProjectManagerMainPage extends AbstractManagePage{
 
 	@Override
 	protected Component initHeadComponent() {
-		return new OutProjectManagerMenuBar();
+		//return new OutProjectManagerMenuBar();
+		return null;
 	}
 }

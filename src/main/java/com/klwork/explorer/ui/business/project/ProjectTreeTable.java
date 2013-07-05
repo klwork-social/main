@@ -75,7 +75,7 @@ public class ProjectTreeTable extends CustomComponent {
 	private String projectId;
 	protected I18nManager i18nManager;
 
-	ProjectMain main = null;
+	ProjectMainPage main = null;
 	HashMap<String, BeanItem<Todo>> inventoryStore = new HashMap<String, BeanItem<Todo>>();
 	BeanItem<Todo> testBeanItem = null;
 	Property<String> integerPropety = null;
@@ -95,7 +95,7 @@ public class ProjectTreeTable extends CustomComponent {
 	//
 	TodoService todoService;
 
-	public ProjectTreeTable(String prgId, ProjectMain projectMain) {
+	public ProjectTreeTable(String prgId, ProjectMainPage projectMain) {
 		System.out.println("ProjectTreeTable 初始化");
 		this.i18nManager = ViewToolManager.getI18nManager();
 		this.main = projectMain;

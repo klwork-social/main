@@ -1,6 +1,7 @@
 package com.klwork.explorer.ui.business.project;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.klwork.business.domain.model.Project;
 import com.klwork.business.domain.service.ProjectService;
@@ -9,6 +10,7 @@ import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.data.LazyLoadingContainer;
 import com.klwork.explorer.data.LazyLoadingQuery;
 import com.klwork.explorer.ui.Images;
+import com.klwork.explorer.ui.base.AbstractVCustomComponent;
 import com.klwork.explorer.ui.business.query.ProjectListQuery;
 import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.event.SubmitEventListener;
@@ -46,7 +48,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-public class ProjectList extends CustomComponent {
+public class ProjectList extends AbstractVCustomComponent {
 	private static final long serialVersionUID = 7916755916967574384L;
 	protected I18nManager i18nManager;
 
@@ -57,46 +59,39 @@ public class ProjectList extends CustomComponent {
 	private String currentProjectId;
 	private Object currentItemId;
 	
-	ProjectMain projectMain;
+	ProjectMainPage mainPage;
 	ProjectService projectService;
 
-	public ProjectList(ProjectMain projectMain) {
+	public ProjectList(ProjectMainPage mainPage) {
 		this.i18nManager = ViewToolManager.getI18nManager();
-		this.projectMain = projectMain;
+		this.mainPage = mainPage;
 		projectService = ViewToolManager.getBean("projectService");
-		init();
-		setSizeFull();
 	}
+	
 
 /*	public ProjectList(ProjectMain projectMain, String projectId) {
 		this(projectMain);
 		this.projectId = projectId;
 	}*/
-
-	protected void init() {
-		VerticalLayout layout = new VerticalLayout();
-		// layout.setMargin(true);
-		layout.setSizeFull();
-		setCompositionRoot(layout);
-		initHead(layout);
-		layout.setSpacing(true);
+	@Override
+	protected void initUi() {
+		initHead();
 		// 项目table
-		initProjectList(layout);
+		initProjectList();
 	}
 
-	
-
-	private void initProjectList(VerticalLayout layout) {
+	private void initProjectList() {
 		Panel panel = new Panel();
 		panel.addActionHandler(new KbdHandler());
-		layout.addComponent(panel);
-		layout.setExpandRatio(panel, 1);
+		getMainLayout().addComponent(panel);
+		getMainLayout().setExpandRatio(panel, 1);
 		
 		
 		final Table listTable = new Table();
 		listTable.addStyleName(ExplorerLayout.STYLE_TASK_LIST);
 		listTable.addStyleName(ExplorerLayout.STYLE_SCROLLABLE);
 		panel.setContent(listTable);
+		listTable.setWidth("100%");
 		/*layout.addComponent(listTable);
 		layout.setExpandRatio(listTable, 1);*/
 		// Listener to change right panel when clicked on a task
@@ -262,7 +257,12 @@ public class ProjectList extends CustomComponent {
 					String name = (String) item.getItemProperty("name").getValue();
 					System.out.println(id);
 					if (id != null) {
-						projectMain.initRightContent(id,name);
+						Map<String,String> parameter = new HashMap<String,String>();
+						parameter.put("id", id);
+						parameter.put("name", name);
+						mainPage.setLeftParameter(parameter);
+						mainPage.initRightComponent();
+						//projectMain.initRightContent(id,name);
 					}
 				} else {
 					System.out.println("erro....null?");
@@ -271,11 +271,11 @@ public class ProjectList extends CustomComponent {
 		};
 	}
 
-	private void initHead(VerticalLayout layout) {
+	private void initHead() {
 		HorizontalLayout headerLayout = new HorizontalLayout();
 		headerLayout.setWidth(100, Unit.PERCENTAGE);
 		headerLayout.setMargin(true);
-		layout.addComponent(headerLayout);
+		getMainLayout().addComponent(headerLayout);
 		initTitle(headerLayout);
 		initAddProjectButton(headerLayout);
 	}

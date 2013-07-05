@@ -168,7 +168,11 @@ public boolean judgeInnerTask() {
     Label nameLabel = new Label(task.getName());
     nameLabel.addStyleName(Reindeer.LABEL_H2);
     taskDetails.addComponent(nameLabel, 1, 0);
-    taskDetails.setComponentAlignment(nameLabel, Alignment.MIDDLE_LEFT);
+    
+    /*Label nameLabel2 = new Label(task.getId());
+    nameLabel2.addStyleName(Reindeer.LABEL_H2);
+    taskDetails.addComponent(nameLabel2, 2, 0);
+    taskDetails.setComponentAlignment(nameLabel2, Alignment.MIDDLE_RIGHT);*/
 
     // Properties
     HorizontalLayout propertiesLayout = new HorizontalLayout();//满了，往下排
@@ -179,11 +183,17 @@ public boolean judgeInnerTask() {
     propertiesLayout.addComponent(new PriorityComponent(task, i18nManager, taskService));
     //创建于多少之前
     initCreateTime(propertiesLayout);
-    
+    initTaskNo(propertiesLayout);
     initShowEvent(propertiesLayout);
   }
   
-  private String getShowEventButtonTitle() {
+  private void initTaskNo(HorizontalLayout propertiesLayout) {
+	  Label nameLabel2 = new Label("任务编号:" + task.getId());
+	  //nameLabel2.addStyleName(Reindeer.LABEL_SMALL);
+	  propertiesLayout.addComponent(nameLabel2);
+  }
+
+private String getShowEventButtonTitle() {
 	  if(showEvent)
 		  return "隐藏任务留言";
 	  return "显示任务留言";

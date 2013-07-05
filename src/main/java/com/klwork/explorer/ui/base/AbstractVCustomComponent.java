@@ -21,17 +21,18 @@ public abstract class AbstractVCustomComponent extends CustomComponent {
 
 	@Override
 	public void attach() {
+		super.attach();
 		init();
 	}
 
 	private void init() {
-		setSizeFull();
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSizeFull();
 		layout.setSpacing(true);
 		setCompositionRoot(layout);
 		setMainLayout(layout);
 		initUi();
+		setSizeFull();
 	}
 
 	protected abstract void initUi();

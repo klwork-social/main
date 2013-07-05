@@ -30,8 +30,18 @@ public abstract class AbstractManagePage extends CustomComponent {
 	VerticalLayout mainLayout;
 	final HorizontalSplitPanel mainSplit = new HorizontalSplitPanel();
 	protected Object leftParameter;
+	//用来标识右边的内容是否先加载
+	protected boolean firstInitRight = false;
 	
 	
+	public boolean isFirstInitRight() {
+		return firstInitRight;
+	}
+
+	public void setFirstInitRight(boolean firstInitRight) {
+		this.firstInitRight = firstInitRight;
+	}
+
 	public VerticalLayout getMainLayout() {
 		return mainLayout;
 	}
@@ -56,6 +66,7 @@ public abstract class AbstractManagePage extends CustomComponent {
 
 	@Override
 	public void attach() {
+		super.attach();
 		initUi();
 	}
 
@@ -69,7 +80,9 @@ public abstract class AbstractManagePage extends CustomComponent {
 		initHead();
 		initSplitLayout();
 		initLeft();
-		//initRight();
+		if(isFirstInitRight()){
+			initRight();
+		}
 	}
 
 	protected void initLeft() {
@@ -97,10 +110,15 @@ public abstract class AbstractManagePage extends CustomComponent {
 	/**
 	 * 头部内容
 	 */
-	protected abstract Component initHeadComponent();
+	protected Component initHeadComponent() {
+		return null;
+	}
 
 	protected void initHead() {
-		mainLayout.addComponent(initHeadComponent());
+		Component c = initHeadComponent();
+		if(c != null){
+			mainLayout.addComponent(c);
+		}
 	}
 
 	protected void initMainLayout() {

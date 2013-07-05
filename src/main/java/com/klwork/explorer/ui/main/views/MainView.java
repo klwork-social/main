@@ -27,7 +27,7 @@ import com.klwork.explorer.ui.business.organization.OrganizationMemberMainPage;
 import com.klwork.explorer.ui.business.outproject.OutProjectManagerMainPage;
 import com.klwork.explorer.ui.business.outproject.PublicProjectListPage;
 import com.klwork.explorer.ui.business.project.MyCalendarView;
-import com.klwork.explorer.ui.business.project.ProjectMain;
+import com.klwork.explorer.ui.business.project.ProjectMainPage;
 import com.klwork.explorer.ui.mainlayout.MainLayout;
 import com.klwork.explorer.ui.task.InboxPage;
 import com.klwork.explorer.ui.task.InvolvedPage;
@@ -136,7 +136,7 @@ public class MainView extends Panel implements View {
 	 * 显示我的项目
 	 */
 	public void showProjectPage() {
-		switchMainContent(new ProjectMain());
+		switchMainContent(new ProjectMainPage());
 	}
 
 	/**

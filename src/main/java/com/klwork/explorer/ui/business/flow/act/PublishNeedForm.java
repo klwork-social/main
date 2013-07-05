@@ -66,7 +66,7 @@ public class PublishNeedForm extends com.klwork.explorer.ui.task.TaskForm {
 	//需求审核人列表
 	public IdentityLink identityLinkChecker;
 
-	FieldGroup fieldGroup = new FieldGroup();
+	protected FieldGroup fieldGroup = new FieldGroup();
 
 	public PublishNeedForm(Task task) {
 		setTask(task);

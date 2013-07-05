@@ -41,7 +41,8 @@ public abstract class AbstractPage extends CustomComponent {
   //WW_TODO attach 调用initUI
   @Override
   public void attach() {
-   initUi();
+	  super.attach();
+	  initUi();
   }
   
   /**
