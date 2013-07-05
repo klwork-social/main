@@ -18,31 +18,12 @@ import com.klwork.business.domain.model.OutsourcingProjectQuery;
  * 主要用来进行查询发布的项目
  * @author ww
  */
-public class OutProjectPublishQuery extends PublicProjectListQuery {
+public class OutProjectAddInQuery extends PublicProjectListQuery {
 
 	private static final long serialVersionUID = -1647959665934595909L;
-	private String userId = null;
-	private String status = null;
 	private String participant = null;
 	private String participantType = null;
 	
-	
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
 
 	public String getParticipant() {
 		return participant;
@@ -60,20 +41,15 @@ public class OutProjectPublishQuery extends PublicProjectListQuery {
 		this.participantType = participantType;
 	}
 
-	public OutProjectPublishQuery(String userId, String status) {
+	public OutProjectAddInQuery(String participant, String participantType) {
 		super();
-		this.userId = userId;
-		this.status = status;
+		this.participant = participant;
+		this.participantType = participantType;
 	}
 
 	@Override
 	protected OutsourcingProjectQuery createQuery() {
 		OutsourcingProjectQuery q = new OutsourcingProjectQuery();
-		q.setOwnUser(userId);
-		if(status != null){
-			// 需求发布中
-			q.setPrgStatus(status);
-		}
 		if(participant != null){
 			// 需求发布中
 			q.setParticipant(participant);

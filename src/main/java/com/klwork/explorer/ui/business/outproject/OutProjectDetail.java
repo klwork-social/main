@@ -86,7 +86,7 @@ public class OutProjectDetail extends DetailPanel {
 	}
 
 	private void initForm() {
-		Task task = taskService.createTaskQuery().taskId("119").singleResult();
+		Task task = taskService.createTaskQuery().taskId("424").singleResult();
 		TaskForm c = new OutProjectNeedForm(task);
 		centralLayout.addComponent(c);
 	}

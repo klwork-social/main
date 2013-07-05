@@ -77,9 +77,13 @@ public abstract class AbstractManagePage extends CustomComponent {
 	protected void initUi() {
 		setSizeFull();
 		initMainLayout();
+		//头部
 		initHead();
+		//HorizontalSplitPanel控件
 		initSplitLayout();
+		//左边的导航
 		initLeft();
+		//右边的显示页面,默认是不进行触发的
 		if(isFirstInitRight()){
 			initRight();
 		}
@@ -90,25 +94,29 @@ public abstract class AbstractManagePage extends CustomComponent {
 	}
 
 	public void initRight() {
-		getMainSplit().setSecondComponent(initRightComponent());
+		initRight(initRightComponent());
+	}
+	
+	public void initRight(Component c) {
+		getMainSplit().setSecondComponent(c);
 	}
 
 	/**
-	 * 得到左边的空间
+	 * 得到左边的显示对象
 	 * 
 	 * @return
 	 */
 	protected abstract Component initLeftComponent();
 
 	/**
-	 * 右边的内容
+	 * 得到右边的显示对象
 	 * 
 	 * @return
 	 */
 	protected abstract Component initRightComponent();
 
 	/**
-	 * 头部内容
+	 * 头部内容,默认没有头部
 	 */
 	protected Component initHeadComponent() {
 		return null;

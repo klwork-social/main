@@ -62,8 +62,8 @@ public class ProjectSearchPanel extends Panel {
     addStyleName(ExplorerLayout.STYLE_SEARCHBOX);
     
     layout = new HorizontalLayout();
-    layout.setHeight(36, Unit.PIXELS);
-    layout.setWidth(70, Unit.PERCENTAGE); // 99, otherwise the Panel will display scrollbars
+    layout.setHeight(100, Unit.PERCENTAGE);
+    layout.setWidth(100, Unit.PERCENTAGE); // 99, otherwise the Panel will display scrollbars
     layout.setSpacing(true);
     layout.setMargin(new MarginInfo(false, true, false, true));
     setContent(layout);
@@ -77,7 +77,7 @@ public class ProjectSearchPanel extends Panel {
     // Csslayout is used to style inputtext as rounded
     //CssLayout csslayout2 = new CssLayout();
     CustomLayout csslayout = new CustomLayout("circularButton");
-    csslayout.setHeight(24, Unit.PIXELS);
+    //csslayout.setHeight(24, Unit.PIXELS);
     csslayout.setWidth(100, Unit.PERCENTAGE);
     layout.addComponent(csslayout);
     

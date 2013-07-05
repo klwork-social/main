@@ -1,19 +1,13 @@
 package com.klwork.explorer.ui.business.outproject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngines;
-import org.activiti.engine.identity.User;
-import org.activiti.engine.impl.persistence.entity.UserEntity;
 
+import com.klwork.business.domain.model.OutsourcingProject;
 import com.klwork.business.domain.model.Team;
 import com.klwork.business.domain.service.TeamMembershipService;
 import com.klwork.business.domain.service.TeamService;
 import com.klwork.explorer.I18nManager;
-import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.base.AbstractTabPage;
@@ -48,12 +42,17 @@ public class OutProjectManagerRight extends AbstractTabPage {
 	protected Table membersTable;
 	protected Label noMembersTable;
 	protected OutProjectManagerMainPage mainPage;
+	
+	private OutsourcingProject relateOutSourceingProject;
 
-	public OutProjectManagerRight(OutProjectManagerMainPage page,Object outProjectId) {
+	public OutProjectManagerRight(OutProjectManagerMainPage page,Object parameter) {
 		identityService = ProcessEngines.getDefaultProcessEngine()
 				.getIdentityService();
 		i18nManager = ViewToolManager.getI18nManager();
 		mainPage = page;
+		if(parameter != null){
+			relateOutSourceingProject = (OutsourcingProject)parameter;
+		}
 	}
 	
 	@Override
@@ -61,10 +60,10 @@ public class OutProjectManagerRight extends AbstractTabPage {
 		OutProjectDetail detial = new OutProjectDetail();
 		addTab(detial, "项目详细");
 		TaskEventsPanel taskEventPanel = new TaskEventsPanel();
-		taskEventPanel.setTaskId("119");
+		taskEventPanel.setTaskId("424");
 		addTab(taskEventPanel, "任务留言");
 		//
-		addTab(new WinnersListPage(), "获奖名单");
+		addTab(new WinnersListPage(relateOutSourceingProject), "获奖名单");
 		addTab(new OutProjectAnalysisPage(), "项目状态");
 		
 	}

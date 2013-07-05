@@ -129,6 +129,10 @@ sqlMapConfig:
   
   <sql id="selectOutsourcingProjectByQueryCriteriaSql">
     from outsourcing_project U
+     <if test="participant != null">
+      inner join project_participants PART on U.ID_ = PART.out_prg_id_
+    </if>
+    
     <where>
         <if test="ownUser != null">
         AND U.own_user_ = #{ownUser}
@@ -147,6 +151,12 @@ sqlMapConfig:
     </if>
     <if test="procInstId != null">
         AND U.proc_inst_id_ = #{procInstId}
+    </if>
+     <if test="participantType != null">
+    AND PART.participants_type_ = #{participantType}
+    </if>
+    <if test="participant != null">
+    AND PART.user_id_ = #{participant}
     </if>
     </where>
   </sql>

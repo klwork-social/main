@@ -503,4 +503,7 @@ public interface Messages {
   String OUTPROJECT_MY_PUBLISH = "outproject_my_publish";
   String OUTPROJECT_NO_PARTICIPATION_PROMPT = "outproject_no_participation_prompt";//项目没有参与
   String OUTPROJECT_NO_PUBLISH_PROMPT = "outproject_no_publish_prompt";//
+  
+  String OUTPROJECT_WINNER_NO_ONES = "outproject_winner_no_ones";
+  String OUTPROJECT_PARTICIPANT_NO_PROJECTS = "outproject_participant_no_projects";
 }

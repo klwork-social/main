@@ -19,9 +19,4 @@ public class OutProjectManagerMainPage extends AbstractManagePage{
 		return new OutProjectManagerRight(this,getLeftParameter());
 	}
 
-	@Override
-	protected Component initHeadComponent() {
-		//return new OutProjectManagerMenuBar();
-		return null;
-	}
 }

@@ -46,6 +46,12 @@ public class OutsourcingProjectQuery extends QueryParameter{
 	 */
 	private String procInstId;
 	
+	//参与者
+	private String participant;
+	
+	//参与的类型
+	private String participantType;
+	
 
 	/**
 	 * 
@@ -160,6 +166,22 @@ public class OutsourcingProjectQuery extends QueryParameter{
 	public String getProcInstId(){
 		return procInstId;
 	}
-	
 
+	public String getParticipant() {
+		return participant;
+	}
+
+	public void setParticipant(String participant) {
+		this.participant = participant;
+	}
+
+	public String getParticipantType() {
+		return participantType;
+	}
+
+	public void setParticipantType(String participantType) {
+		this.participantType = participantType;
+	}
+	
+	
 }
