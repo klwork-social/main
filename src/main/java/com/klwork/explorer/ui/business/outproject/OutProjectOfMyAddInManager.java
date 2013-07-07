@@ -43,6 +43,7 @@ public class OutProjectOfMyAddInManager extends AbstractVCustomComponent {
 	VerticalLayout tableLayout;
 	OutProjectManagerMainPage mainPage;
 	TeamService teamService;
+	OutsourcingProject outsourcingProject;
 
 	public OutProjectOfMyAddInManager(OutProjectManagerMainPage projectMain) {
 		this.i18nManager = ViewToolManager.getI18nManager();
@@ -97,8 +98,8 @@ public class OutProjectOfMyAddInManager extends AbstractVCustomComponent {
 
 							if (item != null) {
 								BeanItem<OutsourcingProject> r = (BeanItem<OutsourcingProject>) item;
-								mainPage.setLeftParameter(r.getBean());
-								mainPage.initRight();
+								outsourcingProject = r.getBean();
+								initRight();
 							} else {
 								System.out.println("erro....null?");
 							}
@@ -151,7 +152,20 @@ public class OutProjectOfMyAddInManager extends AbstractVCustomComponent {
 	 * 选择table的下一行
 	 */
 	public void refreshSelectNext() {
+		if(listTable != null)
 		TableHandler.refreshSelectNext(listTable);
+	}
+
+	public void refreshRightContent() {
+		if(listTable != null){
+			initRight();
+		}
+		
+	}
+
+	public void initRight() {
+		mainPage.setLeftParameter(outsourcingProject);
+		mainPage.initRight(mainPage.initAddInRightComponent());
 	}
 
 }

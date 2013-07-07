@@ -242,8 +242,18 @@ public class ProjectManagerService {
 	 * @return
 	 */
 	public OutsourcingProject getRelateOutSourceingProject(Task task) {
+		String processInstanceId = task.getProcessInstanceId();
+		return queryOutProjectByProInsId(processInstanceId);
+	}
+	
+	/**
+	 * 查询流程相关的实体
+	 * @param processInstanceId
+	 * @return
+	 */
+	public OutsourcingProject queryOutProjectByProInsId(String processInstanceId) {
 		OutsourcingProjectQuery query = new OutsourcingProjectQuery();
-		query.setProcInstId(task.getProcessInstanceId());
+		query.setProcInstId(processInstanceId);
 		OutsourcingProject ret = outsourcingProjectService
 				.findOneEntityByQuery(query);
 		if (ret != null)

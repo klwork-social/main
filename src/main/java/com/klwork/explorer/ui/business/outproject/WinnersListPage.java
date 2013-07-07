@@ -67,7 +67,7 @@ public class WinnersListPage extends DetailPanel {
 		centralLayout.setMargin(true);
 		setDetailContainer(centralLayout);
 
-		Label title = new Label("所有公共项目");
+		Label title = new Label("");
 		title.addStyleName(ExplorerLayout.STYLE_H3);
 		title.setWidth(100, Unit.PERCENTAGE);
 		centralLayout.addComponent(title);

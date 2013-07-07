@@ -18,5 +18,9 @@ public class OutProjectManagerMainPage extends AbstractManagePage{
 	protected Component initRightComponent() {
 		return new OutProjectManagerRight(this,getLeftParameter());
 	}
+	
+	protected Component initAddInRightComponent() {
+		return new OutProjectManagerAddInRight(this,getLeftParameter());
+	}
 
 }

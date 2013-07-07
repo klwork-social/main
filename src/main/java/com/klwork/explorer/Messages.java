@@ -176,6 +176,8 @@ public interface Messages {
   String TASK_FORM_UPLOAD_HELP = "task_form_upload_help";
   String TASK_FORM_GRADE_HELP = "task_form_grade_help";
   
+  String TASK_FORM_HISTORY_HELP = "task_form_history_help";
+  
   String TASK_SUBTASKS = "task_subtasks";
   String TASK_NO_SUBTASKS = "task_no_subtasks";
   String TASK_CONFIRM_DELETE_SUBTASK = "task_confirm_delete_subtask";
@@ -506,4 +508,9 @@ public interface Messages {
   
   String OUTPROJECT_WINNER_NO_ONES = "outproject_winner_no_ones";
   String OUTPROJECT_PARTICIPANT_NO_PROJECTS = "outproject_participant_no_projects";
+  
+  String OUTPROJECT_PAGE_DETAIL="outproject_page_detail";
+  String OUTPROJECT_PAGE_COMMENT="outproject_page_comment";
+  String OUTPROJECT_PAGE_WINNERLIST="outproject_page_winnerlist";
+  String OUTPROJECT_PAGE_STATUS="outproject_page_status";
 }

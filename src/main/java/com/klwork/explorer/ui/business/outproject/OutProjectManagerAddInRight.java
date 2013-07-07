@@ -28,7 +28,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-public class OutProjectManagerRight extends AbstractTabPage {
+public class OutProjectManagerAddInRight extends AbstractTabPage {
 
 	protected Team team;
 	protected TeamService teamService;
@@ -50,7 +50,7 @@ public class OutProjectManagerRight extends AbstractTabPage {
 	HistoricTaskInstance historicTaskInstance;
 	private OutsourcingProject relateOutSourceingProject;
 
-	public OutProjectManagerRight(OutProjectManagerMainPage page,Object parameter) {
+	public OutProjectManagerAddInRight(OutProjectManagerMainPage page,Object parameter) {
 		identityService = ProcessEngines.getDefaultProcessEngine()
 				.getIdentityService();
 		historyService = ProcessEngines.getDefaultProcessEngine().getHistoryService();
@@ -72,7 +72,7 @@ public class OutProjectManagerRight extends AbstractTabPage {
 		addTab(taskEventPanel, i18nManager.getMessage(Messages.OUTPROJECT_PAGE_COMMENT));
 		//
 		addTab(new WinnersListPage(relateOutSourceingProject), i18nManager.getMessage(Messages.OUTPROJECT_PAGE_WINNERLIST));
-		addTab(new OutProjectAnalysisPage(), i18nManager.getMessage(Messages.OUTPROJECT_PAGE_STATUS));
+		//addTab(new OutProjectAnalysisPage(), i18nManager.getMessage(Messages.OUTPROJECT_PAGE_STATUS));
 		
 	}
 

@@ -11,11 +11,22 @@ public  class TableHandler {
 	 * @param index
 	 */
 	public static void selectElement(Table table, int index) {
-		if (table.getContainerDataSource().size() >= index) {
+		if (table.getContainerDataSource().size() > index) {
 			table.select(index);
 			table.setCurrentPageFirstItemId(index);
 		}
 	}
+	
+	/**
+	 * 选择table的下一个元素
+	 * @param table
+	 */
+	public static void refreshSelected(Table table) {
+		if(table.getValue() != null){
+		    Integer selectedIndex = (Integer) table.getValue();
+		    selectElement(table,selectedIndex);
+		}
+	  }
 	
 	/**
 	 * 选择table的下一个元素

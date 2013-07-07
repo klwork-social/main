@@ -29,6 +29,7 @@ import com.klwork.explorer.ui.business.outproject.PublicProjectListPage;
 import com.klwork.explorer.ui.business.project.MyCalendarView;
 import com.klwork.explorer.ui.business.project.ProjectMainPage;
 import com.klwork.explorer.ui.mainlayout.MainLayout;
+import com.klwork.explorer.ui.task.ArchivedPage;
 import com.klwork.explorer.ui.task.InboxPage;
 import com.klwork.explorer.ui.task.InvolvedPage;
 import com.klwork.explorer.ui.task.QueuedPage;
@@ -159,7 +160,8 @@ public class MainView extends Panel implements View {
 	}
 
 	public void showArchivedPage() {
-		// TODO Auto-generated method stub
+		switchView(new ArchivedPage(), ViewManager.MAIN_NAVIGATION_TASK,
+				TaskMenuBar.ENTRY_ARCHIVED);
 		
 	}
 	
