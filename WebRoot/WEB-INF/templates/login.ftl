@@ -37,11 +37,11 @@
                 <table>
                     <tr>
                         <td>Username</td>
-                        <td><input type="text" name="username" value="kermit"/></td>
+                        <td><input type="text" name="username" value="admin"/></td>
                     </tr>
                     <tr>
                         <td>Password</td>
-                        <td><input type="password" name="password" value="kermit"/></td>
+                        <td><input type="password" name="password" value="admin123456"/></td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
