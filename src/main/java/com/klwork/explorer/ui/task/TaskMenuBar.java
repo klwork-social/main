@@ -96,7 +96,9 @@ public class TaskMenuBar extends ToolBar {
     
     // 组的任务
     final List<String> groups = teamService.queryTeamsOfUser(user.getId());
-    long queuedCount = new TeamTaskListQuery(groups).size();
+    long queuedCount = 0;
+    if(!groups.isEmpty())
+    	queuedCount = new TeamTaskListQuery(groups).size();
     ToolbarEntry queuedItem = addToolbarEntry(ENTRY_QUEUED, i18nManager.getMessage(Messages.TASK_MENU_QUEUED),new ToolbarCommand() {
         public void toolBarItemSelected() {
         	ViewToolManager.getMainView().showTeamTaskPage(groups);
