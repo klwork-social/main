@@ -1,0 +1,60 @@
+@mixin skeleton {
+	
+	/* ------
+   Header
+   ------ */
+.header {
+	padding:0 12px 0 10px;
+	height:1%;
+	position:relative;
+	background:#007dc3 url(../img/bg-header.gif) repeat-x;
+}
+
+.header .v-button .v-button-wrap {
+	display: block;
+	height: 100%;
+	width: 100%;	
+	background:url(../img/separator-1.gif) no-repeat 100% 50%;	
+}
+
+.header .v-button:hover, .header .v-button.active {
+	background:url(../img/bg-nav-hover.gif) no-repeat 50% 0;
+	text-decoration:none;
+}
+
+
+.logo {
+	margin:12px 0;
+	background:url(../img/logo.png) no-repeat;
+	text-indent:-9999px;
+	width:207px;
+	height:30px;
+	float:left;
+}
+
+/* ------------
+   Main content
+   ------------ */
+.main {
+	background-color: #fff;	
+}
+
+.main-content {
+	background-color: #fff;	
+}
+
+/* ------
+   Footer
+   ------ */
+.footer {
+	background:#f9f9f9;
+	border-top:1px solid #ababab;
+	font:bold 11px Arial, Helvetica, sans-serif;
+	color:#666;
+	padding:10px 0;
+}
+
+.footer .v-label {
+	text-align: center;	
+}
+}

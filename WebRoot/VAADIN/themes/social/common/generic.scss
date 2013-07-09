@@ -1,0 +1,49 @@
+@mixin generic {
+	
+	/* -------
+   Generic
+   ------- */
+
+.v-label-red {
+  color: red;
+}
+
+.v-panel-nocaption.v-panel-nocaption-light {  
+  border: none;
+}
+
+.v-label-bold {
+  font-weight: bold;
+}
+
+.v-label-caption,
+.v-button-caption {
+	text-shadow: none;	
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.v-button-link .v-button-caption, .v-link a:link span, .v-link a:visited span  {
+  color:#3c3c3c;
+}
+
+.noResizeTextArea{
+  resize: none;
+}
+
+.error {
+    background: url("../img/warning.png") no-repeat scroll 0 0 transparent;
+    color: red;
+    padding-left: 20px;
+}
+
+/* -------------
+   Popup windows
+   ------------- */
+.v-window-light .v-window-header {
+	color:#007dc3;
+	font:18px Arial, Helvetica, sans-serif;
+}
+}

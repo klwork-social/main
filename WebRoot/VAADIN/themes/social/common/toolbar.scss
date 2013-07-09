@@ -1,0 +1,139 @@
+@mixin toolbar {
+/* -------
+   Toolbar
+   ------- */
+.toolbar {
+	width:100%;
+	background:#fff url(../img/bg-toolbar.gif) repeat-x 0 100%;
+}
+
+.v-horizontallayout-toolbar .v-horizontallayout-margin-left {
+	padding-left: 10px;
+}
+
+.v-horizontallayout-toolbar .v-horizontallayout-margin-right {
+	padding-right: 10px;
+}
+
+.v-horizontallayout-toolbar .v-horizontallayout-spacing-on {
+	padding-right: 15px;	
+}
+
+.toolbar .v-button-toolbar-count.link.v-button-link {
+	color:#fff;
+	background:url(../img/bg-number.gif) no-repeat;
+	padding:0 0 0 4px;
+	margin:0 0 0;
+	outline: 0;
+}
+
+.toolbar .v-button-toolbar-count.link.v-button-link.active {
+	background:url(../img/bg-number-active.gif) no-repeat;
+}
+
+.toolbar .toolbar-count .v-button-wrap  {
+	background:url(../img/bg-number.gif) no-repeat 100% 0;
+	padding:0 0 1px 0;
+	margin:0 0 0 0;
+}
+
+.toolbar .v-button-toolbar-count.link.v-button-link.active .v-button-wrap  {
+	background:url(../img/bg-number-active.gif) no-repeat 100% 0;
+}
+
+.toolbar .v-button-toolbar-count.link.v-button-link.active .v-button-wrap .v-button-caption {
+	color: #fff;
+}
+
+.toolbar .v-button-wrap .v-button-caption {
+	font:16px/18px Arial, Helvetica, sans-serif;
+	padding:0 5px 0 0;	
+	text-decoration: none;
+	color: #8e8e8e;
+}
+
+.toolbar .toolbar-button .v-button-wrap .v-button-caption {
+	font:11px Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color:#464646;
+}
+
+.toolbar .v-button-wrap .v-button-caption:hover {
+	color:#464646;
+}
+
+.toolbar .v-button-link.active .v-button-wrap .v-button-caption {
+	color:#007dc3;
+}
+
+.toolbar .toolbar-count .v-button-wrap  {
+	background:url(../img/bg-number.gif) no-repeat 100% 0;
+	padding:0 0 1px 0;
+	margin:0 0 0 0;
+}
+
+.toolbar .toolbar-count.active .v-button-wrap {
+	background:url(../img/bg-number-active.gif) no-repeat 100% 0;
+}
+
+.toolbar .toolbar-count .v-button-wrap .v-button-caption {
+	font:10px/12px Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	color:#fff;
+}
+
+.toolbar .v-menubar {
+	background: none;	
+	border: none;
+	font:16px/18px Arial, Helvetica, sans-serif;
+	padding: 0px;	
+	text-decoration: none;
+	color: #8e8e8e;
+}
+
+.toolbar .v-menubar .v-menubar-menuitem-selected {
+	color: #464646;
+	background: none;
+}
+
+.toolbar .v-menubar .v-menubar-menuitem-selected .v-menubar-menuitem-caption {
+	text-shadow: none;
+}
+
+.toolbar .v-menubar .v-menubar-menuitem:hover {
+	color: #464646;
+}
+
+.toolbar .v-menubar.active {
+	color:#007dc3;
+}
+
+/* Toolbar popup */
+.v-menubar-popup .v-menubar-submenu-toolbar-popup {
+   font:14px Arial, Helvetica, sans-serif;
+   background-color: #fff;
+   color: #464646;
+}
+
+.v-menubar-toolbar-popup .v-menubar-menuitem .v-menubar-menuitem-caption {
+	text-shadow: none;	
+}
+ 
+div.v-menubar-toolbar-popup {
+	padding-left: 0px;	
+}
+
+.v-menubar-toolbar-popup .v-menubar-menuitem {
+	 padding-left: 0px;
+	 padding-right: 5px;
+}
+.v-menubar-popup .v-menubar-submenu-toolbar-popup .v-menubar-menuitem-selected {
+ 	background: #eaeaea;
+ 	color: #464646;
+}
+
+.v-menubar-popup .v-menubar-submenu-toolbar-popup .v-menubar-menuitem-selected .v-menubar-menuitem-caption {
+	text-shadow: none;	
+}	
+	
+}

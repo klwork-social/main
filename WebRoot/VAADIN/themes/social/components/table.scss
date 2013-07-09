@@ -1,0 +1,44 @@
+@mixin table {
+	
+	/* ---------------------
+   Table - default style
+   --------------------- */
+.v-table-row-odd, .v-table-row {
+ 	background-color: #fff;
+	overflow:hidden;
+	font:12px/14px Arial, Helvetica, sans-serif;
+}
+
+.v-table-row-odd.v-selected, .v-table-row.v-selected {
+	background: #dff5ff;
+	color: #000000;
+	font-weight: bold;
+	text-shadow: none;
+}
+ 
+.v-table-row-odd .v-table-cell-content, .v-table-row .v-table-cell-content {
+	border: none;
+	height: 35px;
+	border-bottom: 1px solid #c5c5c5;	
+}
+
+.v-table-cell-content {
+    vertical-align: middle;
+}
+
+.v-table-body {
+	border: 1px solid #c5c5c5;
+}
+.v-table-body.focused {
+	border: 1px solid #c5c5c5;
+}
+
+.v-table .v-table-caption-container {
+	padding-right: 0px;
+	text-shadow: none;
+}
+
+.v-table .v-table-header-wrap {
+	background:#fff url(../img/bg-table.png) repeat-x 0 100%;
+}
+}

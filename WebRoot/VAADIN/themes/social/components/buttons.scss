@@ -1,0 +1,114 @@
+@mixin buttons {
+
+/* -----------------------
+   Buttons - Normal button
+   ----------------------- */
+ 
+.v-button:focus {
+    background-position: 0 0;
+    background-image: url(../img/button-bg-left-active.gif);
+}
+
+.v-button:focus .v-button-wrap {
+    background-position: right 0;
+    background-image: url(../img/button-bg-right-active.gif);
+}
+
+.v-button:active,
+.v-button.v-pressed {
+    background-position: 0 0;
+    background-image: url(../img/button-bg-left-down.gif);
+}
+
+.v-button:active .v-button-wrap,
+.v-button.v-pressed .v-button-wrap {
+    background-position: right 0;
+    background-image: url(../img/button-bg-right-down.gif);
+}
+
+.v-button,
+.v-disabled.v-button {
+    height: 24px;
+    padding: 0 0 0 5px;
+    background: transparent url(../img/button-bg-left.gif) repeat-x 0 0;
+    cursor: pointer;
+}
+
+.v-button-wrap,
+.v-disabled.v-button .v-button-wrap {
+    height: 24px;
+    padding: 4px 10px 0 4px;
+    background: transparent url(../img/button-bg-right.gif) repeat-x right 0;
+    cursor: pointer;
+}
+
+.v-button-caption {
+    color: #464646;
+}
+
+.v-button.v-disabled .v-button-wrap .v-button-caption {
+	color: #646464;	
+	cursor: default;
+}
+/* ----------------------
+   Buttons - Small button
+   ---------------------- */
+.v-button-small,
+.v-disabled.v-button-small,
+.v-button-small:active,
+.v-pressed.v-button-small,
+.v-button-small:focus {
+    height: 17px;
+    padding: 0 0 0 6px;
+    background: transparent url(../img/button-bg-small-left.gif) repeat-x 0 0;
+    font:bold 10px/12px Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
+.v-button-small .v-button-wrap,
+.v-button-small.v-disabled .v-button-wrap,
+.v-button-small:active .v-button-wrap,
+.v-button-small.v-pressed .v-button-wrap {
+    height: 17px;
+    padding: 1px 12px 0 6px;
+    background: transparent url(../img/button-bg-small-right.gif) repeat-x right 0;
+    font:bold 10px/12px Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
+.v-button-small:focus .v-button-wrap {
+	background: transparent url(../img/button-bg-small-right-focus.gif) repeat-x right 0;	
+}
+
+.v-button-small:focus {
+	background: transparent url(../img/button-bg-small-left-focus.gif) repeat-x 0 0;	
+}
+
+.v-button-small .v-button-wrap .v-button-caption {
+	font:bold 10px/12px Arial, Helvetica, sans-serif;
+}
+
+/* --------------------
+   Buttons - Add button
+   -------------------- */
+ .v-button-add,
+.v-disabled.v-button-add,
+.v-button-add:active,
+.v-pressed.v-button-add,
+.v-button-add:focus
+{
+    height: 25px;
+    width:  26px;
+    background: transparent url(../img/ico-8.gif) no-repeat 0 0;
+    cursor: pointer;
+}
+
+.v-button-add .v-button-wrap,
+.v-button-add.v-disabled .v-button-wrap,
+.v-button-add:active .v-button-wrap,
+.v-button-add.v-pressed .v-button-wrap,
+.v-button-add:focus .v-button-wrap {
+    background: none;
+}	
+	
+}

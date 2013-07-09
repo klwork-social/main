@@ -1,0 +1,162 @@
+@mixin task {
+
+/* ---------
+   Event box
+   --------- */
+
+.v-panel-task-event-panel .v-panel-content > div {
+	background:#f2f2f2 url(../img/bg-sidebar.gif) repeat-y;
+}
+
+.v-panel-task-event-panel .v-label-h2 {
+	color:#007dc3;
+	font:18px Arial, Helvetica, sans-serif;
+}
+
+.v-panel-task-event-panel .v-verticallayout .v-verticallayout-margin-top {
+	padding-top: 5px; 
+}
+
+.v-gridlayout-event-grid .v-gridlayout-spacing-on {
+	padding-top: 15px;
+    padding-left: 8px;
+}
+
+.v-gridlayout-event-grid .v-gridlayout-margin-top {
+	padding-top: 10px;	
+}
+
+.task-event-author {
+  color:#3c3c3c;
+  font-weight: bold;
+}
+
+.task-event-time {
+  display:block;
+  font:10px Arial, Helvetica, sans-serif;
+  color:#8c8c8c;
+}
+
+/* ---------------------
+   Detail - Detail panel
+   ---------------------  */
+.v-csslayout-detail-panel {
+	background:#f2f2f2 url(../img/bg-c.gif) repeat-x;
+	padding-top: 1px;
+	padding-left: 1px;
+	border: 1px solid #cecece;
+	-moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -khtml-border-radius: 6px;
+    border-radius: 6px;
+}
+
+/* --------------------
+   Detail - Title block
+   -------------------- */
+ .title-block .v-gridlayout-spacing-on {
+ 	padding-top: 5px;
+}
+ 
+.title-block .v-gridlayout-margin-bottom {
+ 	padding-bottom: 5px;
+}
+
+.title-block .v-horizontallayout-margin-bottom {
+ 	padding-bottom: 5px;
+}
+
+.title-block .h2 {
+	color:#007dc3;
+	font:24px/26px Arial, Helvetica, sans-serif;
+}
+
+.title-block .task-duedate, .title-block .job-duedate {
+	padding-left: 20px;
+	background: transparent url(../img/duedate-16.png) no-repeat 0 0; 	
+}
+
+.title-block .task-priority-low {
+	padding-left: 20px;
+	background: transparent url(../img/priority-low-16.png) no-repeat 0 0; 	
+}
+.title-block .task-priority-medium {
+	padding-left: 20px;
+	background: transparent url(../img/priority-medium-16.png) no-repeat 0 0; 	
+}
+.title-block .task-priority-high {
+	padding-left: 20px;
+	background: transparent url(../img/priority-high-16.png) no-repeat 0 0; 	
+}
+
+.title-block .task-create-time, .title-block .process-deploy-time,
+.title-block .process-start-time, .title-block .deployment-deploy-time {
+	padding-left: 20px;
+	background: transparent url(../img/create-time-16.png) no-repeat 0 0; 	
+}
+
+.title-block .process-version {
+	padding-left: 20px;
+	background: transparent url(../img/version-16.png) no-repeat 0 0; 	
+}
+
+/* --------------------
+   Detail - Block
+   -------------------- */
+.block-holder {
+	overflow:hidden;
+	margin:0 0 8px;
+	padding-top:10px;
+	border-top:1px solid #dcdcdc;
+}
+
+.block-holder .h3, .block-holder.h3  {
+	margin:0;
+	color:#007dc3;
+	font:16px Arial, Helvetica, sans-serif;
+}
+
+.block-holder.no-line  {
+  border: none;
+}
+
+.block-holder .add {
+	float:right;
+	background:url(../img/ico-8.gif) no-repeat;
+	text-indent:-9999px;
+	width:26px;
+	height:25px;
+	overflow:hidden;
+}
+
+/* -------------
+   Task - Detail
+   ------------- */	
+.involve-people .v-gridlayout .v-gridlayout-margin-top {
+	padding-top: 5px;	
+}
+
+.subtasks .v-gridlayout-spacing-on {
+	padding-top: 3px;
+	padding-left: 5px;
+}
+	
+/* ---------------
+   Form Properties
+   --------------- */
+.formprops .h4 {
+	color:#3c3c3c;
+	font:bold 12px Arial, Helvetica, sans-serif;
+}
+
+.formprop-user-selected {
+	font-weight: bold;	
+	padding-left: 20px;
+	background: url(../img/user-16.png) no-repeat;
+}
+
+.formprop-no-user-selected {
+	color: #848484;
+}
+	
+}
