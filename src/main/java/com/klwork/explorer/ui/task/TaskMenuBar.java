@@ -17,8 +17,9 @@ import java.util.List;
 
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngines;
-import org.activiti.engine.identity.Group;
 
+import com.klwork.business.domain.service.TeamService;
+import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
@@ -28,12 +29,11 @@ import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.custom.ToolBar;
 import com.klwork.explorer.ui.custom.ToolbarEntry;
 import com.klwork.explorer.ui.custom.ToolbarEntry.ToolbarCommand;
-import com.klwork.explorer.ui.custom.ToolbarPopupEntry;
 import com.klwork.explorer.ui.task.data.ArchivedListQuery;
 import com.klwork.explorer.ui.task.data.InboxListQuery;
 import com.klwork.explorer.ui.task.data.InvolvedListQuery;
-import com.klwork.explorer.ui.task.data.QueuedListQuery;
 import com.klwork.explorer.ui.task.data.TasksListQuery;
+import com.klwork.explorer.ui.task.data.TeamTaskListQuery;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -55,12 +55,15 @@ public class TaskMenuBar extends ToolBar {
   public static final String ENTRY_ARCHIVED = "archived";
   
   protected transient IdentityService identityService;
+  protected transient TeamService teamService;
   protected I18nManager i18nManager;
   
   public TaskMenuBar() {
     this.identityService = ProcessEngines.getDefaultProcessEngine().getIdentityService();
     //this.viewManager = ExplorerApp.get().getViewManager();
     this.i18nManager = ViewToolManager.getI18nManager();
+    teamService = (TeamService) SpringApplicationContextUtil.getContext()
+			.getBean("teamService");
     //WW_TODO x代办任务、我的任务,已归档
     initItems();
   //WW_TODO x新任务
@@ -91,24 +94,14 @@ public class TaskMenuBar extends ToolBar {
     });
     tasksEntry.setCount(tasksCount);
     
-    // 队列
-    List<Group> groups = identityService.createGroupQuery().groupMember(user.getId()).list();
-    ToolbarPopupEntry queuedItem = addPopupEntry(ENTRY_QUEUED, (i18nManager.getMessage(Messages.TASK_MENU_QUEUED)));
-    long queuedCount = 0;
-    for (final Group group : groups) {
-      if (group.getType().equals("assignment")) {
-        long groupCount = new QueuedListQuery(group.getId()).size(); 
-        
-        queuedItem.addMenuItem(group.getName() + " (" + groupCount + ")", new ToolbarCommand() {
-          public void toolBarItemSelected() {
-            //viewManager.showQueuedPage(group.getId());
-        	  ViewToolManager.getMainView().showQueuedPage(group.getId());
-          }
-        });
-        
-        queuedCount += groupCount;
-      }
-    }
+    // 组的任务
+    final List<String> groups = teamService.queryTeamsOfUser(user.getId());
+    long queuedCount = new TeamTaskListQuery(groups).size();
+    ToolbarEntry queuedItem = addToolbarEntry(ENTRY_QUEUED, i18nManager.getMessage(Messages.TASK_MENU_QUEUED),new ToolbarCommand() {
+        public void toolBarItemSelected() {
+        	ViewToolManager.getMainView().showTeamTaskPage(groups);
+        }
+      });
     queuedItem.setCount(queuedCount);
     
     // Involved 受邀

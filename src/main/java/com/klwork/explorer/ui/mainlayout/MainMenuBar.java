@@ -25,12 +25,15 @@ import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.user.ChangePasswordPopupWindow;
 import com.klwork.explorer.ui.user.ProfilePopupWindow;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
@@ -88,7 +91,10 @@ public class MainMenuBar extends HorizontalLayout {
 		initTitle();// 1.0
 		// WW_TODO 首页大菜单(任务流程、报表、管理)
 		initButtons();
-
+		
+		//通知按钮
+		//initNotificationButton();
+		
 		initProjectButton();
 		// WW_TODO 用户修改密码/注销等
 		initProfileButton();// 1.0
@@ -172,6 +178,36 @@ public class MainMenuBar extends HorizontalLayout {
 		return button;
 	}
 
+	private void initNotificationButton() {
+		
+		 Button notify = new Button("2");
+	        notify.setDescription("未读通知(2)");
+	        // notify.addStyleName("borderless");
+	        //notify.addStyleName(ExplorerLayout.STYLE_MAIN_MENU_BUTTON);
+	        //notify.addStyleName(Reindeer.BUTTON_LINK);
+	        CssLayout panel = new CssLayout();
+	        panel.addStyleName("dashboard");
+	        panel.setSizeFull();
+	        notify.addStyleName("notifications");
+	        notify.addStyleName("unread");
+	        notify.addStyleName("icon-only");
+	        notify.addStyleName("icon-bell");
+	        notify.addClickListener(new ClickListener() {
+	            @Override
+	            public void buttonClick(ClickEvent event) {
+	                //((DashboardUI) getUI()).clearDashboardButtonBadge();
+	                event.getButton().removeStyleName("unread");
+	                event.getButton().setDescription("Notifications");
+	            }
+	        });
+	        
+	        panel.addComponent(notify);
+	        //notify.setSizeFull();
+	        addComponent(panel);   
+		setComponentAlignment(panel, Alignment.BOTTOM_CENTER);
+		setExpandRatio(panel, 1.0f);
+	}
+	
 	private void initProjectButton() {
 		MenuBar helpMenu = new MenuBar();
 		helpMenu.addStyleName(ExplorerLayout.STYLE_HEADER_PROFILE_BOX);

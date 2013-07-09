@@ -388,7 +388,7 @@ public class StringTool {
 	public static boolean judgeBlank(Object dest) {
 		if (dest == null)
 			return false;
-		return true;
+		return judgeBlank(dest.toString());
 	}
 
 	public static java.util.Date parseDate(String key) {

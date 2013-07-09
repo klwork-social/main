@@ -61,6 +61,7 @@ public class CommonFieldHandler {
 			Map<String, String> data, Object defaultValue) {
 		ComboBox s = new ComboBox();
 		s.setNullSelectionAllowed(false);
+		//s.setImmediate(true);
 		Object firstItemId = null;
 		if (StringTool.judgeBlank(caption)) {
 			s.setCaption(caption);

@@ -12,6 +12,7 @@
  */
 package com.klwork.explorer.ui.task;
 
+import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.FormService;
@@ -24,7 +25,9 @@ import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 
+import com.klwork.business.domain.service.TeamService;
 import com.klwork.common.utils.StringTool;
+import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.NotificationManager;
@@ -78,6 +81,7 @@ public class TaskDetailPanel extends DetailPanel {
   protected transient TaskService taskService;
   protected transient FormService formService;
   protected transient RepositoryService repositoryService;
+  protected transient TeamService teamService;
   protected I18nManager i18nManager;
   protected NotificationManager notificationManager;
   
@@ -99,6 +103,8 @@ public class TaskDetailPanel extends DetailPanel {
     this.taskService = ProcessEngines.getDefaultProcessEngine().getTaskService();
     this.formService = ProcessEngines.getDefaultProcessEngine().getFormService();
     this.repositoryService = ProcessEngines.getDefaultProcessEngine().getRepositoryService();
+    teamService = (TeamService) SpringApplicationContextUtil.getContext()
+			.getBean("teamService");
     this.i18nManager = ViewToolManager.getI18nManager();
     this.notificationManager = ViewToolManager.getNotificationManager();
     if( task != null && task instanceof TaskEntity && task.getProcessDefinitionId() != null){
@@ -468,10 +474,17 @@ protected void initCreateTime(HorizontalLayout propertiesLayout) {
   }
   
   protected boolean canUserClaimTask() {
-   return taskService.createTaskQuery()
-     .taskCandidateUser(LoginHandler.getLoggedInUser().getId())
+   String userId = LoginHandler.getLoggedInUser().getId();
+   boolean userCandidate =  taskService.createTaskQuery()
+     .taskCandidateUser(userId)
      .taskId(task.getId())
      .count() == 1; 
+   	List<String> groups = teamService.queryTeamsOfUser(userId);
+    boolean groupCandidate =  taskService.createTaskQuery()
+    		.taskCandidateGroupIn(groups)
+    	     .taskId(task.getId())
+    	     .count() == 1; 
+    return userCandidate || groupCandidate;
   }
   
   protected void addEmptySpace(ComponentContainer container) {

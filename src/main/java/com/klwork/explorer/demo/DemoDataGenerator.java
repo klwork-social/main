@@ -115,17 +115,17 @@ public class DemoDataGenerator implements ModelDataJsonConstants {
   }
 
   protected void initDemoUsers() {
-    createUser("kermit", "Kermit", "The Frog", "kermit", "kermit@activiti.org", 
+    createUser("admin", "Admin", " ", "admin123456", "klwork.v@gmail.com", 
             "org/activiti/explorer/images/kermit.jpg",
             Arrays.asList("management", "sales", "marketing", "engineering", "user", "admin"),
             Arrays.asList("birthDate", "10-10-1955", "jobTitle", "Muppet", "location", "Hollywoord",
                           "phone", "+123456789", "twitterName", "alfresco", "skype", "activiti_kermit_frog"));
     
-    createUser("gonzo", "Gonzo", "The Great", "gonzo", "gonzo@activiti.org", 
+    createUser("wangwei", "Wang", "Wei", "123456", "wangwei_fir@126.com", 
             "org/activiti/explorer/images/gonzo.jpg",
-            Arrays.asList("management", "sales", "marketing", "user"),
+            Arrays.asList("management", "engineering","user"),
             null);
-    createUser("fozzie", "Fozzie", "Bear", "fozzie", "fozzie@activiti.org", 
+    createUser("wtongzhen", "wtongzhen", "", "123456", "wtongzhen@126.com", 
             "org/activiti/explorer/images/fozzie.jpg",
             Arrays.asList("marketing", "engineering", "user"),
             null);

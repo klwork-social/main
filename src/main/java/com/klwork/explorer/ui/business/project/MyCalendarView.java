@@ -701,7 +701,7 @@ public class MyCalendarView extends Panel {
 
     private ComboBox createCalendarFormatSelect() {
         ComboBox s = new ComboBox("日历格式");
-        s.addContainerProperty("caption", String.class, "");
+        s.addContainerProperty("caption", String.class, "默认");
         s.setItemCaptionPropertyId("caption");
 
         Item i = s.addItem(DEFAULT_ITEMID);

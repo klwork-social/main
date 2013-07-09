@@ -12,6 +12,8 @@
  */
 package com.klwork.explorer.ui.main.views;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.shiro.SecurityUtils;
@@ -35,6 +37,7 @@ import com.klwork.explorer.ui.task.InvolvedPage;
 import com.klwork.explorer.ui.task.QueuedPage;
 import com.klwork.explorer.ui.task.TaskMenuBar;
 import com.klwork.explorer.ui.task.TasksPage;
+import com.klwork.explorer.ui.task.TeamTaskPage;
 import com.klwork.explorer.web.VaadinView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -156,6 +159,11 @@ public class MainView extends Panel implements View {
 	// 组任务
 	public void showQueuedPage(String groupId) {
 		switchView(new QueuedPage(groupId), ViewManager.MAIN_NAVIGATION_TASK,
+				TaskMenuBar.ENTRY_QUEUED);
+	}
+	
+	public void showTeamTaskPage(List<String> groups) {
+		switchView(new TeamTaskPage(groups), ViewManager.MAIN_NAVIGATION_TASK,
 				TaskMenuBar.ENTRY_QUEUED);
 	}
 

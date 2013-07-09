@@ -12,17 +12,30 @@
  */
 package com.klwork.explorer.ui.task;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.identity.User;
 import org.activiti.engine.task.Task;
 
+import com.klwork.business.domain.service.TeamService;
+import com.klwork.common.utils.StringTool;
+import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
-import com.klwork.explorer.ui.custom.PopupWindow;
+import com.klwork.explorer.ui.base.AbstractFormPoputWindow;
+import com.klwork.explorer.ui.handler.CommonFieldHandler;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -31,89 +44,125 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.Form;
-import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.themes.Reindeer;
 
 /**
  * Popup window to create a new task
- * 
- * @author Joram Barrez
  */
-public class NewTaskPopupWindow extends PopupWindow {
+public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 
 	private static final long serialVersionUID = 1L;
 
 	protected transient TaskService taskService;
+	protected transient IdentityService identityService;
+	protected TeamService teamService;
 	protected I18nManager i18nManager;
 
 	// protected HorizontalLayout layout;
-	protected Form form;
+	// protected Form form;
 	protected TextField nameField;
 	protected TextArea descriptionArea;
 	protected DateField dueDateField;
 	protected PriorityComboBox priorityComboBox;
+	ComboBox userGroupComboBox;
+	ComboBox userComboBox;
 	protected Button createTaskButton;
 
 	public NewTaskPopupWindow() {
 		this.taskService = ProcessEngines.getDefaultProcessEngine()
 				.getTaskService();
 		this.i18nManager = ViewToolManager.getI18nManager();
-
-		setModal(true);
-		center();
-		setResizable(false);
-		setCaption(i18nManager.getMessage(Messages.TASK_NEW));
-		addStyleName(Reindeer.WINDOW_LIGHT);
-		setWidth(430, UNITS_PIXELS);
-		setHeight(320, UNITS_PIXELS);
-
-		initForm();
-		initCreateTaskButton();
-		initEnterKeyListener();
+		teamService = (TeamService) SpringApplicationContextUtil.getContext()
+				.getBean("teamService");
+		identityService = ProcessEngines.getDefaultProcessEngine()
+				.getIdentityService();
 	}
 
-	protected void initForm() {
-		form = new Form();
-		form.setValidationVisibleOnCommit(true);
-		form.setImmediate(true);
-		setContent(form);
-		// addComponent(form);
+	@Override
+	protected void intPopWindowCustom() {
+		setCaption(i18nManager.getMessage(Messages.TASK_NEW));
+		setWidth(450, Unit.PIXELS);
+		setHeight(360, Unit.PIXELS);
+	}
 
+	@Override
+	protected void initFormSubComponent() {
 		// name
 		nameField = new TextField(i18nManager.getMessage(Messages.TASK_NAME));
 		nameField.focus();
 		nameField.setRequired(true);
 		nameField.setRequiredError(i18nManager
 				.getMessage(Messages.TASK_NAME_REQUIRED));
-		form.addField("name", nameField);
+		getForm().addComponent(nameField);
 
 		// description
 		descriptionArea = new TextArea(
 				i18nManager.getMessage(Messages.TASK_DESCRIPTION));
 		descriptionArea.setColumns(25);
-		form.addField("description", descriptionArea);
-
+		// form.addField("description", descriptionArea);
+		getForm().addComponent(descriptionArea);
 		// duedate
-		dueDateField = new DateField(
-				i18nManager.getMessage(Messages.TASK_DUEDATE));
-		dueDateField.setResolution(DateField.RESOLUTION_DAY);
-		form.addField("duedate", dueDateField);
+		dueDateField = CommonFieldHandler.createDateField(
+				i18nManager.getMessage(Messages.TASK_DUEDATE), false);
+		// form.addField("duedate", dueDateField);
+		getForm().addComponent(dueDateField);
 
 		// priority
 		priorityComboBox = new PriorityComboBox(i18nManager);
-		form.addField("priority", priorityComboBox);
+		// form.addField("priority", priorityComboBox);
+		getForm().addComponent(priorityComboBox);
+		Map<String, String> groupsMap = teamService.queryTeamMapOfUser(LoginHandler
+				.getLoggedInUser().getId());
+		groupsMap.put("", "请选择");
+		userGroupComboBox = CommonFieldHandler.createComBox("用户组", groupsMap, "null");
+		//userGroupComboBox.
+		userGroupComboBox.addValueChangeListener(new com.vaadin.data.Property.ValueChangeListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -3864934875844211279L;
+
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				Object o  = event.getProperty().getValue();
+				changeUserSelect(o.toString());
+			}
+			
+		});
+		getForm().addComponent(userGroupComboBox);
+		
+		Map<String, String> usersMap = new HashMap();
+		usersMap.put("", "请选择");
+		userComboBox = CommonFieldHandler.createComBox("用户", usersMap, "");
+		getForm().addComponent(userComboBox);
+		
+		initCreateTaskButton();
+		initEnterKeyListener();
+	}
+	
+	/**
+	 * 重新改变用户的选择
+	 * @param groupId
+	 */
+	protected void changeUserSelect(String groupId) {
+		Map<String, String> usersMap = new HashMap<String, String>();
+		List<User> users = identityService.createUserQuery()
+				.memberOfTeam(groupId).list();
+		userComboBox.removeAllItems();
+		for (User user : users) {
+			Item i = userComboBox.addItem(user.getId());
+			userComboBox.setItemCaption(user.getId(), user.getId());
+		}
 	}
 
 	protected void initCreateTaskButton() {
 		HorizontalLayout buttonLayout = new HorizontalLayout();
-		buttonLayout.setWidth(100, UNITS_PERCENTAGE);
-		form.getFooter().setWidth(100, UNITS_PERCENTAGE);
-		form.getFooter().addComponent(buttonLayout);
+		buttonLayout.setWidth(100, Unit.PERCENTAGE);
+		form.addComponent(buttonLayout);
 
 		Button createButton = new Button(
 				i18nManager.getMessage(Messages.BUTTON_CREATE));
@@ -121,7 +170,7 @@ public class NewTaskPopupWindow extends PopupWindow {
 		buttonLayout
 				.setComponentAlignment(createButton, Alignment.BOTTOM_RIGHT);
 
-		createButton.addListener(new ClickListener() {
+		createButton.addClickListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				handleFormSubmit();
 			}
@@ -144,7 +193,6 @@ public class NewTaskPopupWindow extends PopupWindow {
 	protected void handleFormSubmit() {
 		try {
 			// Check for errors
-			form.commit(); // will throw exception in case validation is false
 
 			// Create task
 			Task task = taskService.newTask();
@@ -152,9 +200,25 @@ public class NewTaskPopupWindow extends PopupWindow {
 			task.setDescription(descriptionArea.getValue().toString());
 			task.setDueDate((Date) dueDateField.getValue());
 			task.setPriority(priorityComboBox.getPriority());
-			task.setOwner(LoginHandler.getLoggedInUser().getId());
+			//是否是组的任务
+			boolean addGroupLink = false;
+			Object userGroupId = userGroupComboBox.getValue();
+			if(StringTool.judgeBlank(userGroupId)){
+				Object userId = userComboBox.getValue();
+				if(StringTool.judgeBlank(userId)){//用户不为空
+					//taskService .addUserIdentityLink( task.getId(), userId.toString(), role);
+					task.setOwner(userId.toString());
+				}else {
+					addGroupLink = true;
+				}
+			}else {
+				task.setOwner(LoginHandler.getLoggedInUser().getId());
+			}
 			taskService.saveTask(task);
-
+			
+			if(addGroupLink){
+				taskService.addCandidateGroup( task.getId(), userGroupId.toString());
+			}
 			// close popup and navigate to new group
 			close();
 			ViewToolManager.getMainView().showTasksPage(task.getId());
@@ -162,7 +226,7 @@ public class NewTaskPopupWindow extends PopupWindow {
 		} catch (InvalidValueException e) {
 			// Do nothing: the Form component will render the errormsgs
 			// automatically
-			setHeight(350, UNITS_PIXELS);
+			setHeight(350, Unit.PIXELS);
 		}
 	}
 
