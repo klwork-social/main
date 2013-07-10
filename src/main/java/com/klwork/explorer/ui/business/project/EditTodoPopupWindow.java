@@ -109,7 +109,6 @@ public class EditTodoPopupWindow extends PopupWindow {
 		line.setComponentAlignment(label, Alignment.BOTTOM_RIGHT);
 		TextField nameField = new TextField();
 		nameField.setWidth("80%");
-		
 		// nameField.setSizeUndefined();
 		scheduleEventFieldGroup.bind(nameField, "name");
 		line.addComponent(nameField,1,0,3,0);
