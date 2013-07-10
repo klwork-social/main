@@ -93,4 +93,13 @@ public class CommonFieldHandler {
 		spacer.addStyleName(ExplorerLayout.STYLE_DETAIL_BLOCK);
 		return spacer;
 	}
+	
+	public static Label createLable(String caption){
+		Label label = new Label(); 
+		if (StringTool.judgeBlank(caption)) {
+			label.setCaption(caption);
+		}
+		return label;
+		
+	}
 }
