@@ -1,5 +1,9 @@
 package com.klwork.explorer.ui.business.project;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import com.klwork.business.domain.model.Todo;
 import com.klwork.business.domain.service.TodoService;
 import com.klwork.common.utils.StringDateUtil;
@@ -22,7 +26,10 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
@@ -63,11 +70,11 @@ public class EditTodoPopupWindow extends PopupWindow {
 	private void initUI() {
 		addStyleName(Reindeer.WINDOW_LIGHT);
 		setModal(true);
-		setHeight("30%");
-		setWidth("50%");
+		setHeight("50%");
+		setWidth("60%");
 		center();
 		
-		VerticalLayout bottom = new VerticalLayout();
+		HorizontalLayout bottom = new HorizontalLayout();
 		bottom.setSizeFull();
 		// bottom.setMargin(true);
 		bottom.setSpacing(true);
@@ -81,21 +88,89 @@ public class EditTodoPopupWindow extends PopupWindow {
 		}
 
 		// layout.setExpandRatio(bottom, 1f);
-		HorizontalLayout line = new HorizontalLayout() {
-			@Override
-			public void addComponent(Component c) {
-				super.addComponent(c);
-				setComponentAlignment(c, Alignment.MIDDLE_LEFT);
-				c.setSizeUndefined();
-			}
-		};
+//		HorizontalLayout line = new HorizontalLayout() ;
+		GridLayout line = new GridLayout(4,7);
+		line.addStyleName("v-gridlayout");
+//		{
+//			@Override
+//			public void addComponent(Component c) {
+//				super.addComponent(c);
+//				setComponentAlignment(c, Alignment.MIDDLE_LEFT);
+//				c.setSizeUndefined();
+//			}
+//		};
+//		line.addComponent(c)
 		line.setWidth("100%");
 		line.setSpacing(true);
-		/*
-		 * Label first = new Label("优先级:"); line.addComponent(first);
-		 * first.setWidth("80px");
-		 */
-		NativeSelect select = new NativeSelect("优先级:");
+		line.setMargin(true);
+
+		Label label = CommonFieldHandler.createLable("标题:");
+		line.addComponent(label);
+		line.setComponentAlignment(label, Alignment.BOTTOM_RIGHT);
+		TextField nameField = new TextField();
+		nameField.setWidth("80%");
+		// nameField.setSizeUndefined();
+		scheduleEventFieldGroup.bind(nameField, "name");
+		line.addComponent(nameField,1,0,3,0);
+		line.setComponentAlignment(nameField, Alignment.MIDDLE_CENTER);
+//		line.setExpandRatio(nameField, 0.7f);
+		
+		Label label2 = CommonFieldHandler.createLable("开始时间:");
+		line.addComponent(label2,0,1,0,1);
+		line.setComponentAlignment(label2, Alignment.BOTTOM_RIGHT);
+		// 创建一个时间后台变化的listener
+		BlurListener timeReCountListener = createTimeReCountListener();
+		DateField startDateField = CommonFieldHandler.createDateField("",false);
+		scheduleEventFieldGroup.bind(startDateField, "startDate");
+		startDateField.addBlurListener(timeReCountListener);
+		line.addComponent(startDateField,1,1,1,1);
+		line.setComponentAlignment(label2, Alignment.MIDDLE_CENTER);
+
+		Label label3 = CommonFieldHandler.createLable("估算时间:");
+		line.addComponent(label3,2,1,2,1);
+		line.setComponentAlignment(label3, Alignment.BOTTOM_RIGHT);
+		HorizontalLayout hlay = new HorizontalLayout() ;
+		TextField estimateField = new TextField();
+		// estimateField.setInputPrompt("");
+//		line.addComponent(estimateField,3,1,3,1);
+//		hlay.setComponentAlignment(label3, Alignment.MIDDLE_CENTER);
+		hlay.addComponent(estimateField);
+		estimateField.addBlurListener(timeReCountListener);
+		scheduleEventFieldGroup.bind(estimateField, "estimate");
+		// gs.setWidth("100%");
+		// WW_TODO 估算时间单位
+		ComboBox unit_cb = createTimeUnitComboBox();
+//		line.addComponent(unit_cb,4,1,4,1);
+//		hlay.setComponentAlignment(unit_cb, Alignment.MIDDLE_CENTER);
+		hlay.addComponent(unit_cb);
+		scheduleEventFieldGroup.bind(unit_cb, "estimateUnit");
+		unit_cb.addBlurListener(timeReCountListener);
+		// unit_cb.setWidth("15px");
+		line.addComponent(hlay,3,1,3,1);
+		line.setComponentAlignment(hlay, Alignment.MIDDLE_CENTER);
+
+		Label label4 = CommonFieldHandler.createLable("到期时间:");
+		line.addComponent(label4,0,2,0,2);
+		line.setComponentAlignment(label4, Alignment.BOTTOM_RIGHT);
+		completionDateField = CommonFieldHandler.createDateField("", false);
+		line.addComponent(completionDateField,1,2,1,2);
+		line.setComponentAlignment(completionDateField, Alignment.MIDDLE_CENTER);
+		scheduleEventFieldGroup.bind(completionDateField, "completionDate");
+//		line.setExpandRatio(completionDateField, 1.0f);
+		
+		Label label6 = CommonFieldHandler.createLable("消耗时间:");
+		line.addComponent(label6,2,2,2,2);
+		line.setComponentAlignment(label6, Alignment.BOTTOM_RIGHT);
+		TextField gs1 = new TextField();
+		gs1.setInputPrompt("50%");
+		line.addComponent(gs1,3,2,3,2);
+		line.setComponentAlignment(gs1, Alignment.MIDDLE_CENTER);
+		
+		Label label5 = CommonFieldHandler.createLable("优先级:");
+//		label.setWidth("80px");
+		line.addComponent(label5,0,3,0,3);
+		line.setComponentAlignment(label5, Alignment.BOTTOM_RIGHT);
+		NativeSelect select = new NativeSelect();
 		select.addItem("无");
 		select.addItem("0(最低)");
 		String itemId = "1(中)";
@@ -103,88 +178,49 @@ public class EditTodoPopupWindow extends PopupWindow {
 		select.addItem("2(高)");
 		select.setNullSelectionAllowed(false);
 		select.select(itemId);
-		line.addComponent(select);
+		line.addComponent(select,1,3,1,3);
+		line.setComponentAlignment(select, Alignment.BOTTOM_RIGHT);
 
-		// line.addComponent(new Label("完成百分比:"));
-		TextField tf = new TextField("完成百分比:");
+		Label label1 = CommonFieldHandler.createLable("完成百分比:");
+		line.addComponent(label1,2,3,2,3);
+		line.setComponentAlignment(label1, Alignment.MIDDLE_RIGHT);
+		TextField tf = new TextField();
 		tf.setInputPrompt("50%");
-		line.addComponent(tf);
+		line.addComponent(tf,3,3,3,3);
+		line.setComponentAlignment(label1, Alignment.MIDDLE_RIGHT);
 
-		// 创建一个时间后台变化的listener
-		BlurListener timeReCountListener = createTimeReCountListener();
-		DateField startDateField = CommonFieldHandler.createDateField("开始时间",
-				false);
-
-		scheduleEventFieldGroup.bind(startDateField, "startDate");
-		startDateField.addBlurListener(timeReCountListener);
-		line.addComponent(startDateField);
-
-		// line.addComponent(new Label("估算时间"));
-		HorizontalLayout x = new HorizontalLayout();
-		TextField estimateField = new TextField("估算时间");
-		// estimateField.setInputPrompt("");
-		x.addComponent(estimateField);
-
-		estimateField.addBlurListener(timeReCountListener);
-		scheduleEventFieldGroup.bind(estimateField, "estimate");
-		// gs.setWidth("100%");
-		// WW_TODO 估算时间单位
-		ComboBox unit_cb = createTimeUnitComboBox();
-		x.addComponent(unit_cb);
-		scheduleEventFieldGroup.bind(unit_cb, "estimateUnit");
-		unit_cb.addBlurListener(timeReCountListener);
-		// unit_cb.setWidth("15px");
-
-		line.addComponent(x);
-		// line.setS
-
-		completionDateField = CommonFieldHandler.createDateField("到期时间", false);
-		line.addComponent(completionDateField);
-		scheduleEventFieldGroup.bind(completionDateField, "completionDate");
-		line.setExpandRatio(completionDateField, 1.0f);
-
-		bottom.addComponent(line);
-		line = new HorizontalLayout() {
-			@Override
-			public void addComponent(Component c) {
-				super.addComponent(c);
-				setComponentAlignment(c, Alignment.MIDDLE_LEFT);
-				c.setSizeUndefined();
-			}
-		};
-		line.setWidth("100%");
-		line.setSpacing(true);
-
-		TextField nameField = new TextField("标题");
-		nameField.setWidth("100%");
-		// nameField.setSizeUndefined();
-		scheduleEventFieldGroup.bind(nameField, "name");
-		line.addComponent(nameField);
-		line.setExpandRatio(nameField, 0.7f);
-
-		// line.addComponent(new Label("消耗时间"));
-		TextField gs1 = new TextField("消耗时间");
-		gs1.setInputPrompt("50%");
-		line.addComponent(gs1);
-
-		CheckBox relatedCalendar_cb = new CheckBox("关联日历");
+		Label label7 = CommonFieldHandler.createLable("关联日历:");
+		line.addComponent(label7,0,4,0,4);
+		line.setComponentAlignment(label7, Alignment.MIDDLE_RIGHT);
+		CheckBox relatedCalendar_cb = new CheckBox();
 		relatedCalendar_cb.setValue(false);
-		line.addComponent(relatedCalendar_cb);
+		line.addComponent(relatedCalendar_cb,1,4,1,4);
+		line.setComponentAlignment(relatedCalendar_cb, Alignment.MIDDLE_RIGHT);
 		scheduleEventFieldGroup.bind(relatedCalendar_cb, "relatedCalendar");
 
-		CheckBox cb = new CheckBox("是否关联外部任务");
+		Label label8 = CommonFieldHandler.createLable("关联外部任务:");
+		label8.setWidth("20px");
+		line.addComponent(label8,0,5,0,5);
+		line.setComponentAlignment(label8, Alignment.MIDDLE_RIGHT);
+		CheckBox cb = new CheckBox();
 		cb.setValue(true);
-		line.addComponent(cb);
+		line.addComponent(cb,1,5,1,5);
+		line.setComponentAlignment(cb, Alignment.MIDDLE_RIGHT);
 		scheduleEventFieldGroup.bind(cb, "relatedTask");
 
-		NativeSelect select2 = new NativeSelect("外部任务类型");
+		Label label9 = CommonFieldHandler.createLable("外部任务类型:");
+		label9.setWidth("20px");
+		line.addComponent(label9,2,5,2,5);
+		line.setComponentAlignment(label9, Alignment.MIDDLE_RIGHT);
+		NativeSelect select2 = new NativeSelect();
 		select2.addItem("外包任务");
 		select2.addItem("外包任务-类型2");
 		select2.setNullSelectionAllowed(false);
-		line.addComponent(select2);
+		line.addComponent(select2,3,5,3,5);
+		line.setComponentAlignment(select2, Alignment.MIDDLE_RIGHT);
 		// select2.select("Timed");
 
-		final Button updateSave = new Button("save");
+		final Button updateSave = new Button("保存");
 		updateSave.addClickListener(new ClickListener() {
 			@SuppressWarnings("unchecked")
 			public void buttonClick(ClickEvent event) {
@@ -206,9 +242,22 @@ public class EditTodoPopupWindow extends PopupWindow {
 				if(fieldGroupTodo.getRelatedTask()) { ViewToolManager.showPopupWindow(new ActivityStartPopupWindow( "1111")); }
 			}
 		});
-		line.addComponent(updateSave);
-		line.setExpandRatio(updateSave, 1.0f);
+		line.addComponent(updateSave,3,6,3,6);
+		line.setComponentAlignment(updateSave, Alignment.MIDDLE_RIGHT);
+//		line.setExpandRatio(updateSave, 1.0f);
 
+		// Align and size the labels.     
+//		for (int col=0; col<line.getColumns(); col++) {     
+//		    for (int row=0; row<line.getRows(); row++) {     
+//		        Component c = line.getComponent(col, row);     
+//		        line.setComponentAlignment(c, Alignment.TOP_CENTER);     
+//		                  
+//		        // Make the labels high to illustrate the empty     
+//		        // horizontal space.     
+//		        if (col != 0 || row != 0)     
+//		            c.setHeight("100%");     
+//		    }     
+//		}
 		bottom.addComponent(line);
 	}
 
@@ -228,16 +277,24 @@ public class EditTodoPopupWindow extends PopupWindow {
 	}
 
 	private ComboBox createTimeUnitComboBox() {
-		ComboBox s = new ComboBox("");
-		s.addContainerProperty("unit", String.class, 0);
-		s.setItemCaptionPropertyId("unit");
-		Item i = s.addItem(0);
-		i.getItemProperty("unit").setValue("小时");
-		s.select(0);
-		i = s.addItem(1);
-		i.getItemProperty("unit").setValue("天");
-		i = s.addItem(2);
-		i.getItemProperty("unit").setValue("分钟");
+//		ComboBox s = new ComboBox();
+//		s.addContainerProperty("unit", String.class, 0);
+//		s.setItemCaptionPropertyId("unit");
+//		Item i = s.addItem(0);
+//		i.getItemProperty("unit").setValue("小时");
+//		s.select(0);
+//		i = s.addItem(1);
+//		i.getItemProperty("unit").setValue("天");
+//		i = s.addItem(2);
+//		i.getItemProperty("unit").setValue("分钟");
+//		s.setWidth("55px");
+		
+		Map<String, String> data = new HashMap();
+		data.put("0", "分");
+		data.put("1", "天");
+		data.put("2", "时");
+		ComboBox s = CommonFieldHandler.createComBox(null,
+				data, "1");
 		s.setWidth("55px");
 
 		return s;
