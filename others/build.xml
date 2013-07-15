@@ -25,35 +25,34 @@
 
 
 
-	<artifact:pom file="../pom.xml" id="maven.project" />
-	<artifact:dependencies pathId="classpath.build" filesetid="maven.fileset.build">  
-	            <pom refid="maven.project" />  
-	        </artifact:dependencies>  
-	  
-	        <artifact:dependencies pathId="classpath.runtime" filesetid="maven.fileset.runtime" usescope="runtime">  
-	            <pom refid="maven.project"/>  
-	        </artifact:dependencies>  
-	          
-	        <artifact:dependencies pathId="classpath.provided" filesetid="maven.fileset.provided" scopes="provided">  
-	            <pom refid="maven.project" />  
-	        </artifact:dependencies>    
+	
 
 
-		
+
 	<path id="my.classpath">
 		<pathelement location="${classes}" />
 		<!--<fileset dir="${WEB-INF/lib}">
 			<include name="**/*.jar" />
 		</fileset>-->
-		 <fileset refid="maven.fileset.provided" />
-		 <fileset refid="maven.fileset.runtime" />
+		<fileset refid="maven.fileset.provided" />
+		<fileset refid="maven.fileset.runtime" />
 	</path>
-	
+
 
 	<target name="copyRuntimeJars" description="将所有运行时所需的Jar包都放到WEB-INF的lib下">
-		<artifact:dependencies pathId="runtime.classpath" filesetId="runtime.fileset" useScope="runtime" settingsfile="${mvnsettings}">
-			<pom refid="maven.project" />
-		</artifact:dependencies>
+		<artifact:pom file="../pom.xml" id="maven.project" />
+			<artifact:dependencies pathId="classpath.build" filesetid="maven.fileset.build">
+				<pom refid="maven.project" />
+			</artifact:dependencies>
+
+			<artifact:dependencies pathId="classpath.runtime" filesetid="maven.fileset.runtime" usescope="runtime">
+				<pom refid="maven.project" />
+			</artifact:dependencies>
+
+			<artifact:dependencies pathId="classpath.provided" filesetid="maven.fileset.provided" scopes="provided">
+				<pom refid="maven.project" />
+			</artifact:dependencies>
+		
 
 		<delete>
 			<fileset dir="${WEB-INF/lib}" includes="*.jar" />
@@ -61,7 +60,7 @@
 
 
 		<copy todir="${WEB-INF/lib}">
-			<fileset refid="runtime.fileset" />
+			<fileset refid="maven.fileset.runtime" />
 			<mapper type="flatten" />
 		</copy>
 		<!-- 将一些特殊的包，自己下载的放在此目录下-->
@@ -92,6 +91,18 @@
 	<target name="SassCompile" description="SassCompile">
 		<property name="param1" value="${WebRoot}/VAADIN/themes/social/styles.scss" />
 		<property name="param2" value="${WebRoot}/VAADIN/themes/social/styles.css" />
+		<java classname="com.vaadin.sass.SassCompiler">
+			<arg value="${param1}" />
+			<arg value="${param2}" />
+			<classpath>
+				<path refid="testTask.classpath" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="SassCompile2" description="SassCompile">
+		<property name="param1" value="${WebRoot}/VAADIN/themes/dashboard/styles.scss" />
+		<property name="param2" value="${WebRoot}/VAADIN/themes/dashboard/styles.css" />
 		<java classname="com.vaadin.sass.SassCompiler">
 			<arg value="${param1}" />
 			<arg value="${param2}" />
@@ -138,10 +149,10 @@
 			</fileset>
 		</copy>
 		<copy todir="${build.classes}">
-				<fileset dir="${project.home}/src/main/resources">
-					<exclude name="**/*.java" />
-				</fileset>
-			</copy>
+			<fileset dir="${project.home}/src/main/resources">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
 		<!-- copy the property files to class path-->
 
 		<javac encoding="utf-8" srcdir="${project.home}/src/main/java" nowarn="yes" destdir="${build.classes}" debug="${build.debug}" includeantruntime="false">
@@ -164,13 +175,13 @@
 						</fileset>
 					</copy>-->
 	</target>
-	
+
 	<target name="product_deploy">
 		<antcall target="war">
 			<param name="war_type" value="product" />
 		</antcall>
 	</target>
-	
+
 	<target name="clean" description="--> clean the project">
 		<delete dir="${build.dir}" />
 	</target>
