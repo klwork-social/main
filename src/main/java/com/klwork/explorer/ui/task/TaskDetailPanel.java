@@ -120,6 +120,7 @@ public class TaskDetailPanel extends DetailPanel {
   
   protected void init() {
     setSizeFull();
+    addStyleName("social");
     addStyleName(Reindeer.LAYOUT_WHITE);
     
     // Central panel: all task data

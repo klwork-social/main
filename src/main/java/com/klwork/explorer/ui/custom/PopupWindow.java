@@ -28,7 +28,7 @@ public class PopupWindow extends Window {
   private static final long serialVersionUID = 1L;
   
   public PopupWindow() {
-    
+	 // addStyleName("social");
   }
   
   public PopupWindow(String caption) {

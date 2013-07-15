@@ -24,6 +24,7 @@ import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.base.AbstractTablePage;
 import com.klwork.explorer.ui.custom.TaskListHeader;
 import com.klwork.explorer.ui.custom.ToolBar;
+import com.klwork.explorer.ui.mainlayout.DashBoardLayout;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.klwork.explorer.ui.util.ThemeImageColumnGenerator;
 import com.vaadin.data.Item;
@@ -89,8 +90,9 @@ public abstract class TaskPage extends AbstractTablePage {
   protected Table createList() {
 	//WW_TODO taskpage 的createList,右边的列
     taskTable = new Table();
-    taskTable.addStyleName(ExplorerLayout.STYLE_TASK_LIST);
-    taskTable.addStyleName(ExplorerLayout.STYLE_SCROLLABLE);
+    taskTable.addStyleName(DashBoardLayout.TABLE_BOARD);
+   /* taskTable.addStyleName(ExplorerLayout.STYLE_TASK_LIST);
+    taskTable.addStyleName(ExplorerLayout.STYLE_SCROLLABLE);*/
     
     // Listener to change right panel when clicked on a task
     taskTable.addValueChangeListener(getListSelectionListener());
@@ -100,8 +102,8 @@ public abstract class TaskPage extends AbstractTablePage {
     taskTable.setContainerDataSource(taskListContainer);
     
     // Create column header
-    taskTable.addGeneratedColumn("icon", new ThemeImageColumnGenerator(Images.TASK_22));
-    taskTable.setColumnWidth("icon", 22);
+   /* taskTable.addGeneratedColumn("icon", new ThemeImageColumnGenerator(Images.TASK_22));
+    taskTable.setColumnWidth("icon", 22);*/
     
     taskTable.addContainerProperty("name", String.class, null);
     taskTable.setColumnHeaderMode(Table.ColumnHeaderMode.HIDDEN);
@@ -136,7 +138,7 @@ public abstract class TaskPage extends AbstractTablePage {
     Task task = taskService.createTaskQuery().taskId(id).singleResult();
     Component detailComponent = new TaskDetailPanel(task, TaskPage.this);
     //WW_TODO 联动任务事件平台
-    taskEventPanel.setTaskId(task.getId());
+    //taskEventPanel.setTaskId(task.getId());
     return detailComponent;
   }
   

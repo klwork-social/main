@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.klwork.explorer.ui.base.AbstractManagePage;
 import com.vaadin.ui.Component;
 
+@Deprecated
 public class ProjectMainPage extends AbstractManagePage{
 	ProjectMainRight pright = null;
 	/**

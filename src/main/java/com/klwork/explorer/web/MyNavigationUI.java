@@ -12,15 +12,24 @@
  */
 package com.klwork.explorer.web;
 
-import com.klwork.explorer.security.ShiroSecurityNavigator;
-import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
-import com.vaadin.annotations.Theme;
-import com.vaadin.server.*;
-import com.vaadin.ui.*;
-
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import com.klwork.explorer.security.ShiroSecurityNavigator;
+import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
+import com.vaadin.annotations.PreserveOnRefresh;
+import com.vaadin.annotations.Theme;
+import com.vaadin.server.DefaultErrorHandler;
+import com.vaadin.server.ErrorHandler;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 
 /**
@@ -28,6 +37,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("prototype")
+@PreserveOnRefresh
 @Theme(ExplorerLayout.THEME)
 public class MyNavigationUI extends UI implements ErrorHandler
 {

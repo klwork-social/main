@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.ViewManager;
 import com.klwork.explorer.ui.base.AbstractPage;
+import com.klwork.explorer.ui.base.AbstractTaskMainPage;
 import com.klwork.explorer.ui.business.organization.OrganizationMainPage;
 import com.klwork.explorer.ui.business.organization.OrganizationMemberMainPage;
 import com.klwork.explorer.ui.business.outproject.OutProjectManagerMainPage;
@@ -51,7 +52,7 @@ import com.vaadin.ui.Panel;
 @VaadinView(value = MainView.NAME, cached = true)
 public class MainView extends Panel implements View {
 	// 为空的实体第一个显示？
-	public static final String NAME = "";
+	public static final String NAME = "main";
 
 	private static final long serialVersionUID = 1L;
 
@@ -71,11 +72,11 @@ public class MainView extends Panel implements View {
 		// this.
 	}
 
-	protected AbstractPage currentPage;
+	protected AbstractTaskMainPage currentPage;
 
 	// Helper
 
-	protected void switchView(AbstractPage page, String mainMenuActive,
+	protected void switchView(AbstractTaskMainPage page, String mainMenuActive,
 			String subMenuActive) {
 		currentPage = page;
 		// 高亮选择的主菜单

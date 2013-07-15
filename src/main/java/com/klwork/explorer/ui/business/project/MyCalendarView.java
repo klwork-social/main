@@ -889,6 +889,7 @@ public class MyCalendarView extends Panel {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         layout.setSpacing(true);
+        layout.addStyleName("social");
 
         scheduleEventPopup = new Window(null, layout);
         scheduleEventPopup.setWidth("400px");

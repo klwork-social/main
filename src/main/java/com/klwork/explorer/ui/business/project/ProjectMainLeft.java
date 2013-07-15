@@ -4,7 +4,7 @@ import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.ui.base.AbstractAccordionComponent;
 import com.vaadin.ui.Label;
-
+@Deprecated
 public class ProjectMainLeft extends AbstractAccordionComponent {
 	protected I18nManager i18nManager;
 	ProjectMainPage mainPage;
@@ -17,9 +17,9 @@ public class ProjectMainLeft extends AbstractAccordionComponent {
 	@Override
 	protected void initUi() {
 		super.initUi();
-		ProjectList c = new ProjectList(mainPage);
-		addAccordion(c, "项目管理");
-		addAccordion(new Label("过滤"), "过滤");
+		/*ProjectList c = new ProjectList(mainPage);
+		addAccordion(c, "我的项目计划");*/
+		//addAccordion(new Label("过滤"), "过滤");
 		//selectedAccordion(c);
 	}
 }

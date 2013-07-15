@@ -26,6 +26,7 @@ import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
+import com.klwork.explorer.ui.base.AbstractTabViewPage;
 import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.event.SubmitEventListener;
 import com.klwork.explorer.ui.handler.CommonFieldHandler;
@@ -75,7 +76,7 @@ public class ProjectTreeTable extends CustomComponent {
 	private String projectId;
 	protected I18nManager i18nManager;
 
-	ProjectMainPage main = null;
+	AbstractTabViewPage  mainPage;
 	HashMap<String, BeanItem<Todo>> inventoryStore = new HashMap<String, BeanItem<Todo>>();
 	BeanItem<Todo> testBeanItem = null;
 	Property<String> integerPropety = null;
@@ -95,10 +96,10 @@ public class ProjectTreeTable extends CustomComponent {
 	//
 	TodoService todoService;
 
-	public ProjectTreeTable(String prgId, ProjectMainPage projectMain) {
+	public ProjectTreeTable(String prgId, AbstractTabViewPage projectMain) {
 		System.out.println("ProjectTreeTable 初始化");
 		this.i18nManager = ViewToolManager.getI18nManager();
-		this.main = projectMain;
+		this.mainPage = projectMain;
 		this.projectId = prgId;
 		todoService = (TodoService) SpringApplicationContextUtil.getContext()
 				.getBean("todoService");
@@ -664,7 +665,7 @@ public class ProjectTreeTable extends CustomComponent {
 							if(event.getData() != null){
 								//将值copy回来，进行日历刷新
 								copyBeanValueToContainer(hContainer,(BeanItem<Todo>) event.getData());
-								main.refreshCalendarView();
+								mainPage.refreshRelatedView();
 							}
 						}
 					});

@@ -22,7 +22,7 @@ public class ProjectMainRight extends AbstractTabPage {
 
 	@Override
 	public void initTabData() {
-		MyCalendarView v = new MyCalendarView();
+		//MyCalendarView v = new MyCalendarView();
 		this.getTabSheet().setCloseHandler(new CloseHandler() {
 			private static final long serialVersionUID = -1764556772862038086L;
 
@@ -41,7 +41,7 @@ public class ProjectMainRight extends AbstractTabPage {
 			}
 		
 		});
-		addTab(v, "我的日程");
+		//addTab(v, "我的日程");
 	}
 	
 	public void initRightContent(String prgId,String name) {
@@ -67,6 +67,7 @@ public class ProjectMainRight extends AbstractTabPage {
 	 * @return
 	 */
 	private Component buildTodoListScreen(String prgId) {
-		return new ProjectTreeTable(prgId,projectMainPage);
+		//return new ProjectTreeTable(prgId,projectMainPage);
+		return null;
 	}
 }

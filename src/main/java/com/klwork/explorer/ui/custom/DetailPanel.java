@@ -15,7 +15,7 @@ package com.klwork.explorer.ui.custom;
 
 
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
-import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -43,7 +43,7 @@ public class DetailPanel extends VerticalLayout {
     setSizeFull();
     addStyleName(ExplorerLayout.STYLE_DETAIL_PANEL);
     setMargin(true);
-    
+    //setMargin(new MarginInfo(true,true,false,true));
     CssLayout cssLayout = new CssLayout(); // Needed for rounded corners,圆角
     cssLayout.addStyleName(ExplorerLayout.STYLE_DETAIL_PANEL);
     cssLayout.setSizeFull();
@@ -58,6 +58,7 @@ public class DetailPanel extends VerticalLayout {
     VerticalLayout verticalLayout = new VerticalLayout();
     verticalLayout.setWidth(100, Unit.PERCENTAGE);
     verticalLayout.setMargin(true);
+    //verticalLayout.setMargin(new MarginInfo(true,true,false,true));
     mainPanel.setContent(verticalLayout);
   }
   

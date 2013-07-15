@@ -22,7 +22,7 @@ import com.vaadin.ui.Table;
  * @author Joram Barrez
  * @author Frederik Heremans
  */
-public abstract class AbstractTablePage extends AbstractPage {
+public abstract class AbstractTablePage extends AbstractTaskMainPage {
 
   private static final long serialVersionUID = 1L;
   

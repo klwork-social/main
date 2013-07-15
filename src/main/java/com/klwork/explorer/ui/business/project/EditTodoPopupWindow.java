@@ -14,6 +14,7 @@ import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.custom.PopupWindow;
 import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.handler.CommonFieldHandler;
+import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.vaadin.data.Item;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
@@ -75,6 +76,7 @@ public class EditTodoPopupWindow extends PopupWindow {
 		center();
 		
 		HorizontalLayout bottom = new HorizontalLayout();
+		bottom.setStyleName(ExplorerLayout.THEME);
 		bottom.setSizeFull();
 		// bottom.setMargin(true);
 		bottom.setSpacing(true);

@@ -45,6 +45,10 @@ public class AbstractTabPage extends CustomComponent {
 		return tabSheet.addTab(c, caption);
 	}
 	
+	public Tab addTab(Component c) {
+		return tabSheet.addTab(c);
+	}
+	
 	public void setSelectedTab(Component tabObj) {
 		tabSheet.setSelectedTab(tabObj);
 	}

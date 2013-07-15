@@ -37,7 +37,12 @@ public class ShiroSecurityNavigator extends DiscoveryNavigator
 	 */
 	private static final long serialVersionUID = -3180021276126839421L;
 	private static Logger logger = LoggerFactory.getLogger(ShiroSecurityNavigator.class);
-
+	
+	/**
+	 * 构造函数，初始化时，会把spring自动注入的视图进行初始化
+	 * @param ui
+	 * @param container
+	 */
     public ShiroSecurityNavigator(UI ui, ComponentContainer container)
     {
         super(ui, container);

@@ -194,13 +194,13 @@ public class DiscoveryNavigator extends Navigator implements ViewCacheContainer
     public void navigateTo(String navigationState)
     {
         // We can't bind NULL
-        if (navigationState == null)
+        if (navigationState == null  || navigationState.equals("") || navigationState.equals("/"))
         {
-            navigationState = "";
+            navigationState = "dashboard";//默认导航到面板
         }
 
         // fix Vaadin,一般为!#号
-        if (navigationState.startsWith("!"))
+        if (navigationState.startsWith("!") || navigationState.startsWith("/"))
         {
             super.navigateTo(navigationState.substring(1));
         }

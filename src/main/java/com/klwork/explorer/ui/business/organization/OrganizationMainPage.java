@@ -59,10 +59,10 @@ public class OrganizationMainPage extends AbstractManagePage {
 		return new GroupListRight(this, getLeftParameter());
 	}
 
-	@Override
+	/*@Override
 	protected Component initHeadComponent() {
 		return new GroupMenuBar();
-	}
+	}*/
 	
 	
 	public void refreshSelectNext() {

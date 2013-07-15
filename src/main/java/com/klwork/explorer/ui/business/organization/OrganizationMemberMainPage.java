@@ -19,8 +19,8 @@ public class OrganizationMemberMainPage extends AbstractManagePage{
 		return new OrganMemberRight(this,getLeftParameter());
 	}
 
-	@Override
+	/*@Override
 	protected Component initHeadComponent() {
 		return new GroupMenuBar();
-	}
+	}*/
 }
