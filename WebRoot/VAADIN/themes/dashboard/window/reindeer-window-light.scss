@@ -1,0 +1,73 @@
+@mixin reindeer-window-light($primaryStyleName : v-window) {
+
+/**
+ Light style window -----------------------------
+**/
+
+.#{$primaryStyleName}-light {
+	.#{$primaryStyleName}-outerheader {
+		background: transparent;
+		padding: 15px 52px 0 18px;
+	}
+	.#{$primaryStyleName}-header {
+		font-size: 16px;
+		color: #292e34;
+		text-shadow: none;
+	}
+	.#{$primaryStyleName}-resizebox {
+		width: 12px;
+		height: 12px;
+		background-image: url(img/light/resize.png); /** sprite-ref: verticals */
+	}
+	.#{$primaryStyleName}-footer {
+		background: transparent;
+		height: 12px;
+	}
+	.#{$primaryStyleName}-closebox {
+		right: 1px;
+		top: 17px;
+		width: 19px;
+		height: 15px;
+		
+		background-image: url(img/light/close.png); /** sprite-ref: verticals */
+		&:hover {
+			background-image: url(img/light/close-hover.png); /** sprite-ref: verticals */
+		}
+		&:active {
+			background-image: url(img/light/close-pressed.png); /** sprite-ref: verticals */
+		}
+	}
+	
+	.#{$primaryStyleName}-maximizebox {
+		top: 17px;
+		
+		background-image: url(img/light/maximize.png); /** sprite-ref: verticals */
+		&:hover {
+			background-image: url(img/light/maximize-hover.png); /** sprite-ref: verticals */
+		}
+		&:active {
+			background-image: url(img/light/maximize-active.png); /** sprite-ref: verticals */
+		}
+	}
+	.#{$primaryStyleName}-restorebox {
+		top: 17px;
+	
+		background-image: url(img/light/restore.png); /** sprite-ref: verticals */
+		&:hover {
+			background-image: url(img/light/restore-hover.png); /** sprite-ref: verticals */
+		}
+		&:active {
+			background-image: url(img/light/restore-active.png); /** sprite-ref: verticals */
+		}
+	}
+	
+	.#{$primaryStyleName}-contents {
+		background: transparent;
+	}
+	/* This must be the last sprite added to the verticals-sprite image */
+	.#{$primaryStyleName}-wrap {
+		background: #f7f7f8 repeat-x;
+		background-image: url(img/light/content-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	}
+  }
+}

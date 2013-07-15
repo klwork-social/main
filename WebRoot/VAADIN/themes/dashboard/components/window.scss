@@ -1,0 +1,4 @@
+@import "../../reindeer/window/window.scss";
+@mixin dashboard-window {
+	@include reindeer-window;
+}
