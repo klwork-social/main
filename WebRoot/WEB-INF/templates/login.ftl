@@ -33,7 +33,7 @@
     <tr>
         <td>
             <h1>Apache Shiro Example</h1>
-            <form method="post" action="">
+            <form method="post" action="login-submit">
                 <table>
                     <tr>
                         <td>Username</td>
