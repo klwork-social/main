@@ -30,6 +30,7 @@
  */
 package middlegen.plugins.hibernate;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -1505,7 +1506,7 @@ public class HibernatePlugin extends JavaPlugin {
 		
 		if(permitGenCode("entity")){
 		//ibitis map.xml
-		addConfiguredFileproducer(new FileProducer(getDestinationDir(), dir1 + "{0}"
+		addConfiguredFileproducer(new FileProducer(queryFactDesDir(), dir1 + "{0}"
 				+ getBeansuffix() + "_SqlMap.xml", getClass().getResource("iBatis.vm")));
 		}
 		
@@ -1519,11 +1520,11 @@ public class HibernatePlugin extends JavaPlugin {
 					&& _hibernateDomainObject.getDir().trim().length() > 0) {
 				dir = "/" + _hibernateDomainObject.getDir().trim() + "/";
 			}
-			addConfiguredFileproducer(new FileProducer(getDestinationDir(), dir
+			addConfiguredFileproducer(new FileProducer(queryFactDesDir(), dir
 					+ _hibernateDomainObject.getPrefix() + "{0}" + _hibernateDomainObject.getSuffix()
 					+ ".java", getClass().getResource("DomainObject.vm")));
 			//生成查询对象
-			addConfiguredFileproducer(new FileProducer(getDestinationDir(), dir
+			addConfiguredFileproducer(new FileProducer(queryFactDesDir(), dir
 					+ _hibernateDomainObject.getPrefix() + "{0}" + _hibernateDomainObject.getSuffix()
 					+ "Query.java", getClass().getResource("QueryParameter.vm")));
 			
@@ -1541,7 +1542,7 @@ public class HibernatePlugin extends JavaPlugin {
 					+ _hibernateManager.getPrefix() + "{0}" + _hibernateManager.getSuffix()
 					+ ".java", getClass().getResource("ServiceImpl.vm")));*/
 			if(permitGenCode("service")){
-			addConfiguredFileproducer(new FileProducer(getDestinationDir(), "/"+_hibernateManager.getInterFaceDir().trim()+"/"
+			addConfiguredFileproducer(new FileProducer(queryFactDesDir(), "/"+_hibernateManager.getInterFaceDir().trim()+"/"
 					+ _hibernateManager.getPrefix() + "{0}" + _hibernateManager.getInterFaceSuffix()
 					+ ".java", getClass().getResource("Service.vm")));
 			}
@@ -1562,13 +1563,13 @@ public class HibernatePlugin extends JavaPlugin {
 		
 		//dao
 		if(permitGenCode("service")){
-		addConfiguredFileproducer(new FileProducer(getDestinationDir(), "/"+config.getProperty("dao.dir").trim()+"/"
+		addConfiguredFileproducer(new FileProducer(queryFactDesDir(), "/"+config.getProperty("dao.dir").trim()+"/"
 				+ config.getProperty("daoImpl.prefix").trim() + "{0}" + config.getProperty("dao.suffix").trim()
 				+ ".java", getClass().getResource("Repository.vm")));
 		}
 		//生成测试代码 
 		if (permitGenCode("test")){
-			String path = getDestinationDir().getPath();
+			String path = queryFactDesDir().getPath();
 			//System.out.println(path.substring(0,path.length() - this.getDestination() ));
 			String responsePath = "/"+config.getProperty("dao.dir").trim()+"/"
 					+ config.getProperty("daoImpl.prefix").trim() + "{0}" + config.getProperty("dao.suffix").trim()
@@ -1590,6 +1591,13 @@ public class HibernatePlugin extends JavaPlugin {
 		}
 		
 
+	}
+
+	public File queryFactDesDir() {
+		File destinationDir = getDestinationDir();
+		String path = destinationDir.getPath();
+		System.out.println(path);
+		return destinationDir;
 	}
 
 	private boolean permitGenCode(String type) {

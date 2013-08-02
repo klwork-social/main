@@ -25,7 +25,7 @@
 
 
 
-	
+
 
 
 
@@ -41,18 +41,18 @@
 
 	<target name="copyRuntimeJars" description="将所有运行时所需的Jar包都放到WEB-INF的lib下">
 		<artifact:pom file="../pom.xml" id="maven.project" />
-			<artifact:dependencies pathId="classpath.build" filesetid="maven.fileset.build">
-				<pom refid="maven.project" />
-			</artifact:dependencies>
+		<artifact:dependencies pathId="classpath.build" filesetid="maven.fileset.build">
+			<pom refid="maven.project" />
+		</artifact:dependencies>
 
-			<artifact:dependencies pathId="classpath.runtime" filesetid="maven.fileset.runtime" usescope="runtime">
-				<pom refid="maven.project" />
-			</artifact:dependencies>
+		<artifact:dependencies pathId="classpath.runtime" filesetid="maven.fileset.runtime" usescope="runtime">
+			<pom refid="maven.project" />
+		</artifact:dependencies>
 
-			<artifact:dependencies pathId="classpath.provided" filesetid="maven.fileset.provided" scopes="provided">
-				<pom refid="maven.project" />
-			</artifact:dependencies>
-		
+		<artifact:dependencies pathId="classpath.provided" filesetid="maven.fileset.provided" scopes="provided">
+			<pom refid="maven.project" />
+		</artifact:dependencies>
+
 
 		<delete>
 			<fileset dir="${WEB-INF/lib}" includes="*.jar" />
@@ -84,6 +84,7 @@
 			</copy>-->
 	</target>
 	<path id="testTask.classpath">
+		<pathelement location="${classes}" />
 		<fileset dir="${WEB-INF/lib}">
 			<include name="**/*.jar" />
 		</fileset>
@@ -94,6 +95,15 @@
 		<java classname="com.vaadin.sass.SassCompiler">
 			<arg value="${param1}" />
 			<arg value="${param2}" />
+			<classpath>
+				<path refid="testTask.classpath" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="current-code">
+		<java classname="org.apache.tools.ant.launch.Launcher" failonerror="true" fork="yes">
+			<arg line="-file gen-build.xml" />
 			<classpath>
 				<path refid="testTask.classpath" />
 			</classpath>
