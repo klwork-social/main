@@ -7,7 +7,7 @@
 }
 
 .v-vaadin-version:after {
-	content: "7.1.1.nightly-20162dbe200111a514ab0849963dcf3eea1a9c83-130";
+	content: "7.1.0";
 }
 
 .v-generated-body {
@@ -317,7 +317,7 @@
 }
 
 .v-vaadin-version:after {
-	content: "7.1.1.nightly-20162dbe200111a514ab0849963dcf3eea1a9c83-130";
+	content: "7.1.0";
 }
 
 .v-generated-body {
@@ -5598,6 +5598,50 @@ body .dashboard.v-app .v-app-loading {
 
 .dashboard .reports .transaction .seats {
 	left: 60%;
+}
+
+.dashboard .forward {
+	background: none repeat scroll 0 0 #F8F8F8;
+	border: 1px solid #BDD1DF;
+	border-radius: 3px 3px 3px 3px;
+	clear: both;
+	color: #333333;
+	display: block;
+	font-size: 12px;
+	margin-bottom: 10px;
+	padding: 13px;
+	position: relative;
+}
+
+.dashboard .forward em {
+	background: url(img/weibo/tip.gif) no-repeat scroll 0 0 transparent;
+	height: 8px;
+	left: 20px;
+	position: absolute;
+	top: -8px;
+	width: 15px;
+}
+
+.dashboard .wb_text {
+	font-size: 14px;
+	line-height: 23px;
+	padding: 4px 0;
+}
+
+.dashboard .wb_text a {
+	color: #49976B;
+	text-decoration: none;
+}
+
+.dashboard .wb_text a:hover {
+	text-decoration: underline;
+}
+
+.dashboard .wb_name {
+	color: #33463F;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 16px;
 }
 
 .dashboard .v-view {

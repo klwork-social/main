@@ -25,6 +25,7 @@
 
 @import "views/sales.scss";
 @import "views/reports.scss";
+@import "views/weibo.scss";
 
 
 @mixin dashboard {
@@ -42,6 +43,8 @@
 	@include dashboard-window;
 	@include dashboard-sales-view;
 	@include dashboard-reports-view;
+	
+	@include weibo;
 
 
 	.v-view {

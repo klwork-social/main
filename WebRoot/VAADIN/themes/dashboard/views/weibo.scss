@@ -1,0 +1,43 @@
+@mixin weibo {
+.forward {
+    background: none repeat scroll 0 0 #F8F8F8;
+    border: 1px solid #BDD1DF;
+    border-radius: 3px 3px 3px 3px;
+    clear: both;
+    color: #333333;
+    display: block;
+    font-size: 12px;
+    margin-bottom: 10px;
+    padding: 13px;
+    position: relative;
+}
+.forward em {
+    background: url("../img/weibo/tip.gif") no-repeat scroll 0 0 transparent;
+    height: 8px;
+    left: 20px;
+    position: absolute;
+    top: -8px;
+    width: 15px;
+  }
+  
+.wb_text {
+    font-size: 14px;
+    line-height: 23px;
+    padding: 4px 0;
+}
+
+.wb_text a {
+color: #49976B;
+text-decoration: none;
+}
+.wb_text a:hover {
+    text-decoration: underline;
+}
+
+.wb_name {
+	color: #33463F;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+}
+}
