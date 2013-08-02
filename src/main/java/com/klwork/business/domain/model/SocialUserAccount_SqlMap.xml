@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	(social_user_account) :${table.comment}
+字段:
+	id_(varchar)	:
+	weibo_uid_(varchar)	:
+	status_(int4)	:
+	account_selected_(int4)	:
+	expired_time_(timestamp)	:
+	own_user_(varchar)	:
+	name_(varchar)	:
+	last_update_(timestamp)	:
+	type_(int4)	:
+sqlMapConfig:
+	<typeAlias alias="SocialUserAccount" type="com.klwork.business.domain/model.SocialUserAccount" />
+	<mapper resource="com/klwork/business/domain/model/SocialUserAccount_SqlMap.xml" />
+-->
+<mapper namespace="com.klwork.business.domain.model.SocialUserAccount">
+
+  <!-- INSERT -->
+  <insert id="insertSocialUserAccount" parameterType="com.klwork.business.domain.model.SocialUserAccount">
+    insert into social_user_account (
+    	id_,
+	weibo_uid_,
+	status_,
+	account_selected_,
+	expired_time_,
+	own_user_,
+	name_,
+	last_update_,
+	type_
+	)
+    values (
+      		#{id,jdbcType=VARCHAR},
+ 		#{weiboUid,jdbcType=VARCHAR},
+ 		#{status,jdbcType=INTEGER},
+ 		#{accountSelected,jdbcType=INTEGER},
+ 		#{expiredTime,jdbcType=TIMESTAMP},
+ 		#{ownUser,jdbcType=VARCHAR},
+ 		#{name,jdbcType=VARCHAR},
+ 		#{lastUpdate,jdbcType=TIMESTAMP},
+    	#{type,jdbcType=INTEGER}
+    	)
+  </insert>
+  
+  <!-- UPDATE -->
+  <update id="updateSocialUserAccount" parameterType="com.klwork.business.domain.model.SocialUserAccount">
+    update social_user_account set
+    	<if test="weiboUid != null">
+ weibo_uid_ = #{weiboUid,jdbcType=VARCHAR},
+</if>
+<if test="status != null">
+ status_ = #{status,jdbcType=INTEGER},
+</if>
+<if test="accountSelected != null">
+ account_selected_ = #{accountSelected,jdbcType=INTEGER},
+</if>
+<if test="expiredTime != null">
+ expired_time_ = #{expiredTime,jdbcType=TIMESTAMP},
+</if>
+<if test="ownUser != null">
+ own_user_ = #{ownUser,jdbcType=VARCHAR},
+</if>
+<if test="name != null">
+ name_ = #{name,jdbcType=VARCHAR},
+</if>
+<if test="lastUpdate != null">
+ last_update_ = #{lastUpdate,jdbcType=TIMESTAMP},
+</if>
+<if test="type != null">
+ type_ = #{type,jdbcType=INTEGER},
+</if>
+ where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- Delete -->	
+  <!--delete id="deleteSocialUserAccount" parameterType="string">
+    delete from social_user_account where id = #{id}
+  </delete-->
+  
+  <!-- SELECT -->
+  <select id="selectSocialUserAccountById" parameterType="string" resultMap="SocialUserAccountMap">
+    select * from social_user_account where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectSocialUserAccountByQueryCriteria" parameterType="com.klwork.business.domain.model.SocialUserAccountQuery" resultMap="SocialUserAccountMap">
+    select U.*
+    <include refid="selectSocialUserAccountByQueryCriteriaSql" />
+    <if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+	</if>
+    <!--if test="orderBy != null">
+      order by ${orderBy}
+    </if> -->
+  </select>
+  
+   <select id="selectSocialUserAccountCountByQueryCriteria" parameterType="com.klwork.business.domain.model.SocialUserAccountQuery" resultType="int">
+    select count(U.id_)
+    <include refid="selectSocialUserAccountByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="selectSocialUserAccountByQueryCriteriaSql">
+    from social_user_account U
+    <where>
+        <if test="weiboUid != null">
+        AND U.weibo_uid_ = #{weiboUid}
+    </if>
+    <if test="status != null">
+        AND U.status_ = #{status}
+    </if>
+    <if test="accountSelected != null">
+        AND U.account_selected_ = #{accountSelected}
+    </if>
+    <if test="ownUser != null">
+        AND U.own_user_ = #{ownUser}
+    </if>
+    <if test="name != null">
+        AND U.name_ = #{name}
+    </if>
+    <if test="type != null">
+        AND U.type_ = #{type}
+    </if>
+    </where>
+  </sql>
+  
+	<resultMap id="SocialUserAccountMap" type="com.klwork.business.domain.model.SocialUserAccount">
+	<result property="id" column="id_" />
+	<result property="weiboUid" column="weibo_uid_" />
+	<result property="status" column="status_" />
+	<result property="accountSelected" column="account_selected_" />
+	<result property="expiredTime" column="expired_time_" />
+	<result property="ownUser" column="own_user_" />
+	<result property="name" column="name_" />
+	<result property="lastUpdate" column="last_update_" />
+	<result property="type" column="type_" />
+</resultMap>
+</mapper>

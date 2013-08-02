@@ -12,6 +12,10 @@
 				/site/** = anon
                 /user/login = authc
                 /user/login-submit = anon
+                /user/weibo-login = anon
+                /user/qq-login = anon
+                /user/testCurrentData = anon
+                /user/oauth = anon
                 /logout/ = logout
                 /** = authc, roles[user]
 			</value>
@@ -26,6 +30,7 @@
 	<!-- JDBC Realm -->
 	<bean id="jdbcShiroRealm" class="com.klwork.explorer.security.MyJdbcShiroRealm">
 		<property name="identityService" ref="identityService" />
+		<property name="userService" ref="userService" />
 		<property name="cacheManager" ref="shiroCacheManager"/>
 	</bean>
 	

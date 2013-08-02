@@ -185,7 +185,8 @@ public class TrieBasedUserCache implements UserCache {
   @Autowired
   public void setIdentityService(IdentityService identityService) {
     this.identityService = identityService;
-    loadUsers();
+    //WW_TODO 用户cache loadusers
+    //loadUsers();
   }
   
 }

@@ -14,5 +14,9 @@
 		<mapper resource="com/klwork/business/domain/model/MyCalendarEvent_SqlMap.xml" />
 		<mapper resource="com/klwork/business/domain/model/OutsourcingProject_SqlMap.xml" />
 		<mapper resource="com/klwork/business/domain/model/ProjectParticipant_SqlMap.xml" />
+		<mapper resource="com/klwork/business/domain/model/DictDef_SqlMap.xml" />
+		<mapper resource="com/klwork/business/domain/model/SocialUserAccount_SqlMap.xml" />
+		<mapper resource="com/klwork/business/domain/model/SocialUserAccountInfo_SqlMap.xml" />
+		<mapper resource="com/klwork/business/domain/model/SocialUserWeibo_SqlMap.xml" />
 	</mappers>
 </configuration>

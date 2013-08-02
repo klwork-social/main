@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	(dict_def) :${table.comment}
+字段:
+	id_(varchar)	:
+	code_(varchar)	:
+	type_(int4)	:
+	name_(varchar)	:
+	value_(varchar)	:
+sqlMapConfig:
+	<typeAlias alias="DictDef" type="com.klwork.business.domain/model.DictDef" />
+	<mapper resource="com/klwork/business/domain/model/DictDef_SqlMap.xml" />
+-->
+<mapper namespace="com.klwork.business.domain.model.DictDef">
+
+  <!-- INSERT -->
+  <insert id="insertDictDef" parameterType="com.klwork.business.domain.model.DictDef">
+    insert into dict_def (
+    	id_,
+	code_,
+	type_,
+	name_,
+	value_
+	)
+    values (
+      		#{id,jdbcType=VARCHAR},
+ 		#{code,jdbcType=VARCHAR},
+ 		#{type,jdbcType=VARCHAR},
+ 		#{name,jdbcType=VARCHAR},
+    	#{value,jdbcType=VARCHAR}
+    	)
+  </insert>
+  
+  <!-- UPDATE -->
+  <update id="updateDictDef" parameterType="com.klwork.business.domain.model.DictDef">
+    update dict_def set
+    	<if test="code != null">
+ code_ = #{code,jdbcType=VARCHAR},
+</if>
+<if test="type != null">
+ type_ = #{type,jdbcType=INTEGER},
+</if>
+<if test="name != null">
+ name_ = #{name,jdbcType=VARCHAR},
+</if>
+<if test="value != null">
+ value_ = #{value,jdbcType=VARCHAR},
+</if>
+ where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- Delete -->	
+  <!--delete id="deleteDictDef" parameterType="string">
+    delete from dict_def where id = #{id}
+  </delete-->
+  
+  <!-- SELECT -->
+  <select id="selectDictDefById" parameterType="string" resultMap="DictDefMap">
+    select * from dict_def where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectDictDefByQueryCriteria" parameterType="com.klwork.business.domain.model.DictDefQuery" resultMap="DictDefMap">
+    select U.*
+    <include refid="selectDictDefByQueryCriteriaSql" />
+    <if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+	</if>
+    <!--if test="orderBy != null">
+      order by ${orderBy}
+    </if> -->
+  </select>
+  
+   <select id="selectDictDefCountByQueryCriteria" parameterType="com.klwork.business.domain.model.DictDefQuery" resultType="int">
+    select count(U.id_)
+    <include refid="selectDictDefByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="selectDictDefByQueryCriteriaSql">
+    from dict_def U
+    <where>
+        <if test="code != null">
+        AND U.code_ = #{code}
+    </if>
+    <if test="type != null">
+        AND U.type_ = #{type}
+    </if>
+    <if test="name != null">
+        AND U.name_ = #{name}
+    </if>
+    </where>
+  </sql>
+  
+	<resultMap id="DictDefMap" type="com.klwork.business.domain.model.DictDef">
+	<result property="id" column="id_" />
+	<result property="code" column="code_" />
+	<result property="type" column="type_" />
+	<result property="name" column="name_" />
+	<result property="value" column="value_" />
+</resultMap>
+</mapper>

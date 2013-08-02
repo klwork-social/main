@@ -513,4 +513,8 @@ public interface Messages {
   String OUTPROJECT_PAGE_COMMENT="outproject_page_comment";
   String OUTPROJECT_PAGE_WINNERLIST="outproject_page_winnerlist";
   String OUTPROJECT_PAGE_STATUS="outproject_page_status";
+  
+  //social
+  String SOCIAL_MAIN_MENU = "social_main_menu";
+  
 }

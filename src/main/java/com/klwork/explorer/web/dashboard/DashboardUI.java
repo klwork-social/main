@@ -248,6 +248,10 @@ public class DashboardUI extends UI implements ErrorHandler{
         menuLayout.addComponent(b);
         viewNameToMenuButton.put("/" + view, b);
         
+        view = "social";
+        b = createViewButton(view,i18nManager.getMessage(Messages.SOCIAL_MAIN_MENU));
+        menuLayout.addComponent(b);
+        viewNameToMenuButton.put("/" + view, b);
         
 	}
 

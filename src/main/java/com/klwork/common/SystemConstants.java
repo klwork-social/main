@@ -42,69 +42,10 @@ public final class SystemConstants {
 	public static int pageSize = StringTool.parseInt(SystemProperties
 			.getString("System.PageSize"));
 	
-	/**
-	 * 微立聚sina的APPKEY
-	 */
-	public static final String SINA_APP_KEY = "1497784661";
+	public final static String  CLIENT_ID = "2904944388";
 	
-	/**
-	 * 微立聚sina的APPSECRET
-	 */
-	public static final String SINA_APP_SECRET = "c528f98ce3f7cdd1145aaedef03a6f29";
+	public final static String  CLINET_SECRET = "199bb797e82c8902454cf25c9626fcec";
 	
-	/**
-	 * 微立聚腾讯的APPKEY
-	 */
-	public static final String QQ_APP_KEY = "801059539";
-	
-	/**
-	 * 微立聚腾讯的APPSECRET
-	 */
-	public static final String QQ_APP_SECRET = "dcefa386b2b5cb5af4482b1f18ae26d4";
-	
-	/**
-	 * 立即推sina的APPKEY
-	 */
-	public static final String SINA_APP_KEY_LJT = "1748365159";
-	
-	/**
-	 * 立即推sina的APPSECRET
-	 */
-	public static final String SINA_APP_SECRET_LJT = "fba3a35eb132079895082b8cb3b09c0e";
-	
-	/**
-	 * 立即推腾讯的APPKEY
-	 */
-	public static final String QQ_APP_KEY_LJT = "801149347";
-	
-	/**
-	 * 立即推腾讯的APPSECRET
-	 */
-	public static final String QQ_APP_SECRET_LJT = "746b5537fc79cb5ab6cefa38dcbcebe0";
-
-	/**
-	 * 还未开始监控
-	 */
-	public final static int CHANNEL_NU_MONITOR = 0;
-	/**
-	 * 正常链接状态
-	 */
-	public final static int CHANNEL_NORMAL = 1;
-	/**
-	 * 监控中
-	 */
-	public final static int CHANNEL_MONITOR =2;
-	/**
-	 * 被删帖
-	 */
-	public final static int CHANNEL_DELETE = 3;
-	/**
-	 * 监控完毕
-	 */
-	public final static int CHANNEL_HAVE_MONITRO = 4;
-	/**
-	 * 信息不全，不进行监控
-	 */
-	public final static int CHANNEL_MSG_UNALL = 5;
+	public final static String  GO_BACK = "http://127.0.0.1/ks/user/weibo-login";
 
 }

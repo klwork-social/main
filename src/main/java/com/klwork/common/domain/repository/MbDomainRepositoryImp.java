@@ -1,6 +1,7 @@
 package com.klwork.common.domain.repository;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.impl.cfg.IdGenerator;
@@ -140,7 +141,14 @@ public class MbDomainRepositoryImp<T, PK extends Serializable> implements
 		statement = statement.substring(0, statement.length()) + suffix;
 		return statement;
 	}
-
+	
+	public <T> T getOnlyOne(List<T> list) {
+		if (list !=null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
+	
 	public static IdGenerator getIdGenerator() {
 		return idGenerator;
 	}

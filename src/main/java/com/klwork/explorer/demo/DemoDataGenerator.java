@@ -15,28 +15,23 @@ package com.klwork.explorer.demo;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
-import org.activiti.engine.identity.Group;
-import org.activiti.engine.identity.Picture;
-import org.activiti.engine.identity.User;
-import org.activiti.engine.impl.util.ClockUtil;
-import org.activiti.engine.impl.util.IoUtil;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.Model;
-import org.activiti.engine.task.Task;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.klwork.business.domain.service.UserService;
+import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 
 
 /**
@@ -47,8 +42,9 @@ public class DemoDataGenerator implements ModelDataJsonConstants {
   protected static final Logger LOGGER = LoggerFactory.getLogger(DemoDataGenerator.class);
 
   protected transient ProcessEngine processEngine;
-  protected transient IdentityService identityService;
+  public transient IdentityService identityService;
   protected transient RepositoryService repositoryService;
+  protected transient UserService userService;
   
   protected boolean createDemoUsersAndGroups;
   protected boolean createDemoProcessDefinitions;
@@ -58,6 +54,8 @@ public class DemoDataGenerator implements ModelDataJsonConstants {
   public void init() {
     this.identityService = processEngine.getIdentityService();
     this.repositoryService = processEngine.getRepositoryService();
+    userService = (UserService)SpringApplicationContextUtil.getContext()
+			.getBean("userService");
     
     if (createDemoUsersAndGroups) {
       initDemoGroups();
@@ -96,78 +94,30 @@ public class DemoDataGenerator implements ModelDataJsonConstants {
   protected void initDemoGroups() {
     String[] assignmentGroups = new String[] {"management", "sales", "marketing", "engineering"};
     for (String groupId : assignmentGroups) {
-      createGroup(groupId, "assignment");
+      userService.createGroup(groupId, "assignment");
     }
     
     String[] securityGroups = new String[] {"user", "admin"}; 
     for (String groupId : securityGroups) {
-      createGroup(groupId, "security-role");
+      userService.createGroup(groupId, "security-role");
     }
   }
   
-  protected void createGroup(String groupId, String type) {
-    if (identityService.createGroupQuery().groupId(groupId).count() == 0) {
-      Group newGroup = identityService.newGroup(groupId);
-      newGroup.setName(groupId.substring(0, 1).toUpperCase() + groupId.substring(1));
-      newGroup.setType(type);
-      identityService.saveGroup(newGroup);
-    }
-  }
-
   protected void initDemoUsers() {
-    createUser("admin", "Admin", " ", "admin123456", "klwork.v@gmail.com", 
+    userService.createUser("admin", "Admin", " ", "admin123456", "klwork.v@gmail.com", 
             "org/activiti/explorer/images/kermit.jpg",
             Arrays.asList("management", "sales", "marketing", "engineering", "user", "admin"),
             Arrays.asList("birthDate", "10-10-1955", "jobTitle", "Muppet", "location", "Hollywoord",
                           "phone", "+123456789", "twitterName", "alfresco", "skype", "activiti_kermit_frog"));
     
-    createUser("wangwei", "Wang", "Wei", "123456", "wangwei_fir@126.com", 
+    userService.createUser("wangwei", "Wang", "Wei", "123456", "wangwei_fir@126.com", 
             "org/activiti/explorer/images/gonzo.jpg",
             Arrays.asList("management", "engineering","user"),
             null);
-    createUser("wtongzhen", "wtongzhen", "", "123456", "wtongzhen@126.com", 
+    userService.createUser("wtongzhen", "wtongzhen", "", "123456", "wtongzhen@126.com", 
             "org/activiti/explorer/images/fozzie.jpg",
             Arrays.asList("marketing", "engineering", "user"),
             null);
-  }
-  
-  protected void createUser(String userId, String firstName, String lastName, String password, 
-          String email, String imageResource, List<String> groups, List<String> userInfo) {
-    
-    if (identityService.createUserQuery().userId(userId).count() == 0) {
-      
-      // Following data can already be set by demo setup script
-      
-      User user = identityService.newUser(userId);
-      user.setFirstName(firstName);
-      user.setLastName(lastName);
-      user.setPassword(password);
-      user.setEmail(email);
-      identityService.saveUser(user);
-      
-      if (groups != null) {
-        for (String group : groups) {
-          identityService.createMembership(userId, group);
-        }
-      }
-    }
-    
-    // Following data is not set by demo setup script
-      
-    // image
-    if (imageResource != null) {
-      byte[] pictureBytes = IoUtil.readInputStream(this.getClass().getClassLoader().getResourceAsStream(imageResource), null);
-      Picture picture = new Picture(pictureBytes, "image/jpeg");
-      identityService.setUserPicture(userId, picture);
-    }
-      
-    // user info
-    if (userInfo != null) {
-      for(int i=0; i<userInfo.size(); i+=2) {
-        identityService.setUserInfo(userId, userInfo.get(i), userInfo.get(i+1));
-      }
-    }
-    
   }
   
   @SuppressWarnings("unused")

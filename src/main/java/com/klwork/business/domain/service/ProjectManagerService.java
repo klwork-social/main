@@ -166,7 +166,7 @@ public class ProjectManagerService {
 	 * @param project
 	 */
 	public void participateProject(OutsourcingProject project) {
-		// WW_TODO 参与到本项目
+		// WW_TODO 参与到本项目1
 		// 当前用户
 		String userId = LoginHandler.getLoggedInUser().getId();
 

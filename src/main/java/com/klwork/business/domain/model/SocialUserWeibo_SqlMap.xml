@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	(social_user_weibo) :${table.comment}
+字段:
+	id_(varchar)	:
+	retweeted_id_(varchar)	:
+	user_account_id_(varchar)	:
+	owner_(varchar)	:
+	create_at_(timestamp)	:
+	weibo_id_(varchar)	:
+	text_(varchar)	:
+	source_(varchar)	:
+	favorited_(int4)	:
+	truncated_(int4)	:
+	in_reply_to_status_id_(varchar)	:
+	in_reply_to_user_id_(varchar)	:
+	in_reply_to_screen_name_(varchar)	:
+	mid_(varchar)	:
+	reposts_count_(int4)	:
+	comments_count_(int4)	:
+	weibo_uid_follower_(int4)	:
+	weibo_uid_(varchar)	:
+	user_screen_name_(varchar)	:
+	user_name_(varchar)	:
+	user_profile_image_url_(varchar)	:
+	user_domain_(varchar)	:
+	thumbnail_pic_(varchar)	:
+	original_pic_(varchar)	:
+	bmiddle_pic_(varchar)	:
+	user_verified_(int4)	:
+	weibo_type_(int4)	:
+	weibo_handle_type_(int4)	:
+	last_update_(timestamp)	:
+	type_(int4)	:
+sqlMapConfig:
+	<typeAlias alias="SocialUserWeibo" type="com.klwork.business.domain/model.SocialUserWeibo" />
+	<mapper resource="com/klwork/business/domain/model/SocialUserWeibo_SqlMap.xml" />
+-->
+<mapper namespace="com.klwork.business.domain.model.SocialUserWeibo">
+
+  <!-- INSERT -->
+  <insert id="insertSocialUserWeibo" parameterType="com.klwork.business.domain.model.SocialUserWeibo">
+    insert into social_user_weibo (
+    	id_,
+	retweeted_id_,
+	user_account_id_,
+	owner_,
+	create_at_,
+	weibo_id_,
+	text_,
+	source_,
+	favorited_,
+	truncated_,
+	in_reply_to_status_id_,
+	in_reply_to_user_id_,
+	in_reply_to_screen_name_,
+	mid_,
+	reposts_count_,
+	comments_count_,
+	weibo_uid_follower_,
+	weibo_uid_,
+	user_screen_name_,
+	user_name_,
+	user_profile_image_url_,
+	user_domain_,
+	thumbnail_pic_,
+	original_pic_,
+	bmiddle_pic_,
+	user_verified_,
+	weibo_type_,
+	weibo_handle_type_,
+	last_update_,
+	type_
+	)
+    values (
+      		#{id,jdbcType=VARCHAR},
+ 		#{retweetedId,jdbcType=VARCHAR},
+ 		#{userAccountId,jdbcType=VARCHAR},
+ 		#{owner,jdbcType=VARCHAR},
+ 		#{createAt,jdbcType=TIMESTAMP},
+ 		#{weiboId,jdbcType=VARCHAR},
+ 		#{text,jdbcType=VARCHAR},
+ 		#{source,jdbcType=VARCHAR},
+ 		#{favorited,jdbcType=INTEGER},
+ 		#{truncated,jdbcType=INTEGER},
+ 		#{inReplyToStatusId,jdbcType=VARCHAR},
+ 		#{inReplyToUserId,jdbcType=VARCHAR},
+ 		#{inReplyToScreenName,jdbcType=VARCHAR},
+ 		#{mid,jdbcType=VARCHAR},
+ 		#{repostsCount,jdbcType=INTEGER},
+ 		#{commentsCount,jdbcType=INTEGER},
+ 		#{weiboUidFollower,jdbcType=INTEGER},
+ 		#{weiboUid,jdbcType=VARCHAR},
+ 		#{userScreenName,jdbcType=VARCHAR},
+ 		#{userName,jdbcType=VARCHAR},
+ 		#{userProfileImageUrl,jdbcType=VARCHAR},
+ 		#{userDomain,jdbcType=VARCHAR},
+ 		#{thumbnailPic,jdbcType=VARCHAR},
+ 		#{originalPic,jdbcType=VARCHAR},
+ 		#{bmiddlePic,jdbcType=VARCHAR},
+ 		#{userVerified,jdbcType=INTEGER},
+ 		#{weiboType,jdbcType=INTEGER},
+ 		#{weiboHandleType,jdbcType=INTEGER},
+ 		#{lastUpdate,jdbcType=TIMESTAMP},
+    	#{type,jdbcType=INTEGER}
+    	)
+  </insert>
+  
+  <!-- UPDATE -->
+  <update id="updateSocialUserWeibo" parameterType="com.klwork.business.domain.model.SocialUserWeibo">
+    update social_user_weibo set
+    	<if test="retweetedId != null">
+ retweeted_id_ = #{retweetedId,jdbcType=VARCHAR},
+</if>
+<if test="userAccountId != null">
+ user_account_id_ = #{userAccountId,jdbcType=VARCHAR},
+</if>
+<if test="owner != null">
+ owner_ = #{owner,jdbcType=VARCHAR},
+</if>
+<if test="createAt != null">
+ create_at_ = #{createAt,jdbcType=TIMESTAMP},
+</if>
+<if test="weiboId != null">
+ weibo_id_ = #{weiboId,jdbcType=VARCHAR},
+</if>
+<if test="text != null">
+ text_ = #{text,jdbcType=VARCHAR},
+</if>
+<if test="source != null">
+ source_ = #{source,jdbcType=VARCHAR},
+</if>
+<if test="favorited != null">
+ favorited_ = #{favorited,jdbcType=INTEGER},
+</if>
+<if test="truncated != null">
+ truncated_ = #{truncated,jdbcType=INTEGER},
+</if>
+<if test="inReplyToStatusId != null">
+ in_reply_to_status_id_ = #{inReplyToStatusId,jdbcType=VARCHAR},
+</if>
+<if test="inReplyToUserId != null">
+ in_reply_to_user_id_ = #{inReplyToUserId,jdbcType=VARCHAR},
+</if>
+<if test="inReplyToScreenName != null">
+ in_reply_to_screen_name_ = #{inReplyToScreenName,jdbcType=VARCHAR},
+</if>
+<if test="mid != null">
+ mid_ = #{mid,jdbcType=VARCHAR},
+</if>
+<if test="repostsCount != null">
+ reposts_count_ = #{repostsCount,jdbcType=INTEGER},
+</if>
+<if test="commentsCount != null">
+ comments_count_ = #{commentsCount,jdbcType=INTEGER},
+</if>
+<if test="weiboUidFollower != null">
+ weibo_uid_follower_ = #{weiboUidFollower,jdbcType=INTEGER},
+</if>
+<if test="weiboUid != null">
+ weibo_uid_ = #{weiboUid,jdbcType=VARCHAR},
+</if>
+<if test="userScreenName != null">
+ user_screen_name_ = #{userScreenName,jdbcType=VARCHAR},
+</if>
+<if test="userName != null">
+ user_name_ = #{userName,jdbcType=VARCHAR},
+</if>
+<if test="userProfileImageUrl != null">
+ user_profile_image_url_ = #{userProfileImageUrl,jdbcType=VARCHAR},
+</if>
+<if test="userDomain != null">
+ user_domain_ = #{userDomain,jdbcType=VARCHAR},
+</if>
+<if test="thumbnailPic != null">
+ thumbnail_pic_ = #{thumbnailPic,jdbcType=VARCHAR},
+</if>
+<if test="originalPic != null">
+ original_pic_ = #{originalPic,jdbcType=VARCHAR},
+</if>
+<if test="bmiddlePic != null">
+ bmiddle_pic_ = #{bmiddlePic,jdbcType=VARCHAR},
+</if>
+<if test="userVerified != null">
+ user_verified_ = #{userVerified,jdbcType=INTEGER},
+</if>
+<if test="weiboType != null">
+ weibo_type_ = #{weiboType,jdbcType=INTEGER},
+</if>
+<if test="weiboHandleType != null">
+ weibo_handle_type_ = #{weiboHandleType,jdbcType=INTEGER},
+</if>
+<if test="lastUpdate != null">
+ last_update_ = #{lastUpdate,jdbcType=TIMESTAMP},
+</if>
+<if test="type != null">
+ type_ = #{type,jdbcType=INTEGER},
+</if>
+ where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- Delete -->	
+  <!--delete id="deleteSocialUserWeibo" parameterType="string">
+    delete from social_user_weibo where id = #{id}
+  </delete-->
+  
+  <!-- SELECT -->
+  <select id="selectSocialUserWeiboById" parameterType="string" resultMap="SocialUserWeiboMap">
+    select * from social_user_weibo where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectSocialUserWeiboByQueryCriteria" parameterType="com.klwork.business.domain.model.SocialUserWeiboQuery" resultMap="SocialUserWeiboMap">
+    select U.*
+    <include refid="selectSocialUserWeiboByQueryCriteriaSql" />
+    <if test="orderBy != null">
+      order by ${orderBy}
+    </if>
+   <if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+	</if>
+  </select>
+  
+    <select id="selectLastSocialUserWeibo" parameterType="com.klwork.business.domain.model.SocialUserWeiboQuery" resultMap="SocialUserWeiboMap">
+    select U.*
+    <include refid="selectSocialUserWeiboByQueryCriteriaSql" />
+      order by create_at_ desc
+	  limit 1 offset 0
+  </select>
+  
+   <select id="selectSocialUserWeiboCountByQueryCriteria" parameterType="com.klwork.business.domain.model.SocialUserWeiboQuery" resultType="int">
+    select count(U.id_)
+    <include refid="selectSocialUserWeiboByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="selectSocialUserWeiboByQueryCriteriaSql">
+    from social_user_weibo U
+    <where>
+        <if test="retweetedId != null">
+        AND U.retweeted_id_ = #{retweetedId}
+    </if>
+    <if test="userAccountId != null">
+        AND U.user_account_id_ = #{userAccountId}
+    </if>
+    <if test="weiboId != null">
+        AND U.weibo_id_ = #{weiboId}
+    </if>
+    <if test="weiboType != null">
+        AND U.weibo_type_ = #{weiboType}
+    </if>
+    <if test="weiboHandleType != null">
+        AND U.weibo_handle_type_ = #{weiboHandleType}
+    </if>
+    <if test="type != null">
+        AND U.type_ = #{type}
+    </if>
+     <if test="userName != null">
+        AND U.user_name_ = #{userName}
+    </if>
+    </where>
+  </sql>
+  
+	<resultMap id="SocialUserWeiboMap" type="com.klwork.business.domain.model.SocialUserWeibo">
+	<result property="id" column="id_" />
+	<result property="retweetedId" column="retweeted_id_" />
+	<result property="userAccountId" column="user_account_id_" />
+	<result property="owner" column="owner_" />
+	<result property="createAt" column="create_at_" />
+	<result property="weiboId" column="weibo_id_" />
+	<result property="text" column="text_" />
+	<result property="source" column="source_" />
+	<result property="favorited" column="favorited_" />
+	<result property="truncated" column="truncated_" />
+	<result property="inReplyToStatusId" column="in_reply_to_status_id_" />
+	<result property="inReplyToUserId" column="in_reply_to_user_id_" />
+	<result property="inReplyToScreenName" column="in_reply_to_screen_name_" />
+	<result property="mid" column="mid_" />
+	<result property="repostsCount" column="reposts_count_" />
+	<result property="commentsCount" column="comments_count_" />
+	<result property="weiboUidFollower" column="weibo_uid_follower_" />
+	<result property="weiboUid" column="weibo_uid_" />
+	<result property="userScreenName" column="user_screen_name_" />
+	<result property="userName" column="user_name_" />
+	<result property="userProfileImageUrl" column="user_profile_image_url_" />
+	<result property="userDomain" column="user_domain_" />
+	<result property="thumbnailPic" column="thumbnail_pic_" />
+	<result property="originalPic" column="original_pic_" />
+	<result property="bmiddlePic" column="bmiddle_pic_" />
+	<result property="userVerified" column="user_verified_" />
+	<result property="weiboType" column="weibo_type_" />
+	<result property="weiboHandleType" column="weibo_handle_type_" />
+	<result property="lastUpdate" column="last_update_" />
+	<result property="type" column="type_" />
+</resultMap>
+</mapper>

@@ -83,7 +83,7 @@ public class AbstractTabViewPage extends CustomComponent {
 		}else {
 			Tab t =  addTab(c, caption);
 			t.setClosable(true);
-			//setSelectedTab(c);
+			setSelectedTab(c);
 			return t;
 		}
 	}
