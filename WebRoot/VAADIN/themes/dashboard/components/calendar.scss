@@ -1,0 +1,94 @@
+@mixin custom-calendar {
+
+/* ------------
+   calendar custom
+   ------------ */
+
+/**
+ * Green 
+ */
+
+/* For month view */
+.v-calendar .v-calendar-event-green {
+	color: #4f8324;
+	}
+.v-calendar .v-calendar-event-green-all-day {
+	background-color: #61c114;
+	}
+
+/* For week/day view */
+.v-calendar .v-calendar-event-green .v-calendar-event-caption {
+	color: #4f8324;
+	}
+.v-calendar .v-calendar-event-green .v-calendar-event-content {
+	border-color: #61c114;
+	background-color: #daff70;
+	}
+
+
+/**
+ * Blue 
+ */
+
+/* For month view */
+.v-calendar .v-calendar-event-blue {
+	color: #1c4b8b;
+	}
+.v-calendar .v-calendar-event-blue-all-day {
+	background-color: #0a56bc;
+	}
+
+/* For week/day view */
+.v-calendar .v-calendar-event-blue .v-calendar-event-caption {
+	color: #1c4b8b;
+	}
+.v-calendar .v-calendar-event-blue .v-calendar-event-content {
+	border-color: #0a56bc;
+	background-color: #529bff;
+	}
+
+
+/**
+ * Red 
+ */
+
+/* For month view */
+.v-calendar .v-calendar-event-red {
+	color: #831d1d;
+	}
+.v-calendar .v-calendar-event-red-all-day {
+	background-color: #bd1a1a;
+	}
+
+/* For week/day view */
+.v-calendar .v-calendar-event-red .v-calendar-event-caption {
+	color: #831d1d;
+	}
+.v-calendar .v-calendar-event-red .v-calendar-event-content {
+	border-color: #bd1a1a;
+	background-color: #ff9d9d;
+	}
+
+
+/**
+ * Orange 
+ */
+
+/* For month view */
+.v-calendar .v-calendar-event-orange {
+	color: #8b5923;
+	}
+.v-calendar .v-calendar-event-orange-all-day {
+	background-color: #cd6a00;
+	}
+
+/* For week/day view */
+.v-calendar .v-calendar-event-orange .v-calendar-event-caption {
+	color: #8b5923;
+	}
+.v-calendar .v-calendar-event-orange .v-calendar-event-content {
+	border-color: #cd6a00;
+	background-color: #faa345;
+	}
+
+}

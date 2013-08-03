@@ -21,6 +21,7 @@
 @import "components/common-table.scss";
 @import "components/dashboard-table.scss";
 @import "components/window.scss";
+@import "components/calendar.scss";
 
 
 @import "views/sales.scss";
@@ -45,7 +46,7 @@
 	@include dashboard-reports-view;
 	
 	@include weibo;
-
+	@include custom-calendar;
 
 	.v-view {
 		overflow: hidden;
