@@ -90,6 +90,10 @@ public class DictDefRepository extends
 		dictDef = new DictDef("6", "weibo_type", "-1", "微博分类", "6");
 		insertData(dictDef);
 		
+		dictDef = new DictDef("7", "color", "-1", "颜色分类", "7");
+		insertData(dictDef);
+		
+		
 		insertData(dictDef);
 		dictDef = new DictDef("100", "sina", "2", "新浪", "0");
 		insertData(dictDef);
@@ -185,6 +189,15 @@ public class DictDefRepository extends
 		insertData(dictDef);
 		
 		dictDef = new DictDef("272", "at_me_status", "6", "at@我的微博状态", "3");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("280", "green", "7", "绿", "1");
+		insertData(dictDef);
+		dictDef = new DictDef("281", "blue", "7", "蓝", "2");
+		insertData(dictDef);
+		dictDef = new DictDef("282", "red", "7", "红", "3");
+		insertData(dictDef);
+		dictDef = new DictDef("283", "orange", "7", "橙", "4");
 		insertData(dictDef);
 	}
 

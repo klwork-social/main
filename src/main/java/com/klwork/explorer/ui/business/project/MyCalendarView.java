@@ -24,6 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.model.MyCalendarEvent;
 import com.klwork.business.domain.model.MyCalendarEventQuery;
 import com.klwork.business.domain.service.MyCalendarEventService;
@@ -538,17 +539,9 @@ public class MyCalendarView extends Panel {
     
 
     private ComboBox createStyleNameComboBox() {
-        ComboBox s = new ComboBox("颜色");
-        s.addContainerProperty("c", String.class, "");
-        s.setItemCaptionPropertyId("c");
-        Item i = s.addItem("color1");
-        i.getItemProperty("c").setValue("绿");
-        i = s.addItem("color2");
-        i.getItemProperty("c").setValue("蓝");
-        i = s.addItem("color3");
-        i.getItemProperty("c").setValue("红");
-        i = s.addItem("color4");
-        i.getItemProperty("c").setValue("橙");
+    	List<DictDef> list = DictDef.queryDictsByType(DictDef
+				.dict("color"));
+        ComboBox s = CommonFieldHandler.createComBox("颜色", list, "blue");
         return s;
     }
 

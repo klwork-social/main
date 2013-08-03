@@ -1,7 +1,10 @@
 package com.klwork.explorer.ui.handler;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import com.klwork.business.domain.model.DictDef;
 import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.vaadin.data.Item;
@@ -43,7 +46,9 @@ public class CommonFieldHandler {
 
 	public static DateField createDateField(String caption,
 			boolean useSecondResolution) {
+		System.out.println(Locale.getDefault());
 		DateField f = new DateField();
+		//f.setLocale(Locale.US);
 		if (StringTool.judgeBlank(caption)) {
 			f.setCaption(caption);
 		}
@@ -72,6 +77,32 @@ public class CommonFieldHandler {
 			s.setItemCaption(p, title);
 			if(p.equals(defaultValue)){
 				firstItemId = p;
+			}
+		}
+		
+		// Select first element
+	    if (firstItemId != null) {
+	      s.select(firstItemId);
+	    }
+		return s;
+	}
+	
+	public static ComboBox createComBox(String caption,
+			List<DictDef> data, Object defaultValue) {
+		ComboBox s = new ComboBox();
+		s.setNullSelectionAllowed(false);
+		//s.setImmediate(true);
+		Object firstItemId = null;
+		if (StringTool.judgeBlank(caption)) {
+			s.setCaption(caption);
+		}
+		
+		for (DictDef def : data) {
+			String itemId = def.getCode();
+			Item i = s.addItem(itemId);
+			s.setItemCaption(itemId, def.getName());
+			if(def.getValue().equals(defaultValue)){
+				firstItemId = itemId;
 			}
 		}
 		

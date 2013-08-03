@@ -98,7 +98,7 @@ public class DashboardUI extends UI implements ErrorHandler{
     	 VaadinSession.getCurrent().setErrorHandler(this);
         helpManager = new HelpManager(this);
         
-        setLocale(Locale.CHINA);
+        setLocale(Locale.CHINESE);
 
         setContent(rootLayout);
         rootLayout.addStyleName("root");
