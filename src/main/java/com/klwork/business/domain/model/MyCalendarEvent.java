@@ -53,7 +53,7 @@ public class MyCalendarEvent extends BasicEvent implements Serializable {
 	/**
 	 *  
 	 */
-	private String styleName;
+	private String styleName = "blue";
 	/**
 	 *  
 	 */

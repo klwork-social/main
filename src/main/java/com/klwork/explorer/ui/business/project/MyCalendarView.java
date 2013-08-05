@@ -979,7 +979,7 @@ public class MyCalendarView extends Panel {
         event.setCaption("");
         event.setStart(startDate);
         event.setEnd(endDate);
-        event.setStyleName("color1");
+        event.setStyleName("blue");
         return event;
     }
 

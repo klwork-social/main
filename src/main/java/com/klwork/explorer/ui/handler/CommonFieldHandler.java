@@ -101,7 +101,7 @@ public class CommonFieldHandler {
 			String itemId = def.getCode();
 			Item i = s.addItem(itemId);
 			s.setItemCaption(itemId, def.getName());
-			if(def.getValue().equals(defaultValue)){
+			if(def.getCode().equals(defaultValue)){//default以code为准
 				firstItemId = itemId;
 			}
 		}
