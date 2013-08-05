@@ -7,14 +7,13 @@ $font: normal 9.3px Open Sans, Arial, sans-serif;
 	.v-widget {
 		color: inherit;
 		font: inherit;
-		font-size: 14px;
+		font-size: 12px;
 	}
 	
 	&.v-app,
 	.v-drag-element,
 	.v-contextmenu,
 	.v-menubar-popup,
-	.v-filterselect-suggestpopup,
 	.v-popupview-popup,
 	.v-Notification,
 	.v-window,
@@ -70,7 +69,6 @@ $font: normal 9.3px Open Sans, Arial, sans-serif;
 	/* Transient overlay elements */
 	.v-contextmenu,
 	.v-menubar-popup,
-	.v-filterselect-suggestpopup,
 	.v-datefield-popup,
 	.v-popupview-popup,
 	.v-tooltip,

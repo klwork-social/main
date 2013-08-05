@@ -1,8 +1,7 @@
+@import "../../reindeer/select/select.scss";
 @mixin dashboard-combobox {
-	.v-filterselect-suggestpopup {
-		color:#FFFFFF;
-		background:#FFFFFF;
-		font: 12.5px Open Sans,Arial,sans-serif;
+    .v-filterselect-suggestpopup{
+		font-size: 12px;
 	}
-
+	@include reindeer-select;
 }
