@@ -12,11 +12,8 @@ package com.klwork.explorer.ui.main.views;
 
 import org.springframework.context.annotation.Scope;
 
-import com.klwork.explorer.ui.business.outproject.OutProjectManagerMainPage;
-import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.klwork.explorer.web.VaadinView;
 import com.vaadin.annotations.PreserveOnRefresh;
-import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.HorizontalLayout;
@@ -32,7 +29,6 @@ public class OutProjectManagerView extends HorizontalLayout implements View {
     @Override
     public void enter(ViewChangeEvent event) {
         setSizeFull();
-        addStyleName("social");
         if(page == null){
         	page = new OutProjectManagerMainPage();
 			addComponent(page);

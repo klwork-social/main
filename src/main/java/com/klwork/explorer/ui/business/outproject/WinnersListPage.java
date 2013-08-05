@@ -60,6 +60,7 @@ public class WinnersListPage extends DetailPanel {
 
 	private void init() {
 		setSizeFull();
+		addStyleName(ExplorerLayout.THEME);
 		addStyleName(Reindeer.LAYOUT_WHITE);
 
 		// Central panel: all task data

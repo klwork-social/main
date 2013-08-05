@@ -55,6 +55,7 @@ public class OutProjectDetail extends DetailPanel {
 	private void init() {
 		setSizeFull();
 		//addStyleName(Reindeer.PANEL_LIGHT);
+		addStyleName("social");
 		addStyleName(Reindeer.LAYOUT_WHITE);
 		centralLayout = new VerticalLayout();
 	    centralLayout.setMargin(true);

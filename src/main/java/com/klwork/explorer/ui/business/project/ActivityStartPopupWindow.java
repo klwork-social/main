@@ -82,14 +82,14 @@ public class ActivityStartPopupWindow extends PopupWindow {
 		
 		this.todoId = todoId;
 		this.i18nManager = ViewToolManager.getI18nManager();
-		String processDefinitionId = "vacationRequest:1:36";
+		/*String processDefinitionId = "vacationRequest:1:36";
 		this.processDefinition = repositoryService
 				.getProcessDefinition(processDefinitionId);
 		if (processDefinition != null) {
 			deployment = repositoryService.createDeploymentQuery()
 					.deploymentId(processDefinition.getDeploymentId())
 					.singleResult();
-		}
+		}*/
 		addStyleName(Reindeer.WINDOW_LIGHT);
 		setModal(true);
 		setHeight("80%");

@@ -76,6 +76,7 @@ public class TaskEventsPanel extends Panel {
 	protected GridLayout eventGrid;
 
 	public TaskEventsPanel() {
+		addStyleName(ExplorerLayout.THEME);
 		pMainContent = new VerticalLayout();
 		this.setContent(pMainContent);
 		this.taskService = ProcessEngines.getDefaultProcessEngine()

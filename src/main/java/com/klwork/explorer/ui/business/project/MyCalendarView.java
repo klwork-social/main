@@ -977,6 +977,7 @@ public class MyCalendarView extends Panel {
 
     	MyCalendarEvent event = new MyCalendarEvent();
         event.setCaption("");
+        event.setAllDay(true);
         event.setStart(startDate);
         event.setEnd(endDate);
         event.setStyleName("blue");

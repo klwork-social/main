@@ -42,6 +42,7 @@ public class PublicProjectListPage extends CustomComponent {
 
 	@Override
 	public void attach() {
+		super.attach();
 		initUi();
 	}
 
