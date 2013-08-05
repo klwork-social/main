@@ -28,6 +28,11 @@
 			<param-name>systemMessagesBeanName</param-name>
 			<param-value>DEFAULT</param-value>
 		</init-param>
+		<init-param>
+			<description>Application widgetset</description>
+			<param-name>widgetset</param-name>
+			<param-value>org.vaadin.peter.contextmenu.ContextmenuWidgetset</param-value>
+		</init-param>
 		<load-on-startup>10</load-on-startup>
 	</servlet>
 	<servlet-mapping>
