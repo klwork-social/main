@@ -29,14 +29,7 @@
 
 
 
-	<path id="my.classpath">
-		<pathelement location="${classes}" />
-		<!--<fileset dir="${WEB-INF/lib}">
-			<include name="**/*.jar" />
-		</fileset>-->
-		<fileset refid="maven.fileset.provided" />
-		<fileset refid="maven.fileset.runtime" />
-	</path>
+
 
 
 	<target name="copyRuntimeJars" description="将所有运行时所需的Jar包都放到WEB-INF的lib下">
@@ -152,6 +145,26 @@
 	</target>
 
 	<target name="compile" description="--> description">
+		<artifact:pom file="../pom.xml" id="maven.project" />
+		<artifact:dependencies pathId="classpath.build" filesetid="maven.fileset.build">
+			<pom refid="maven.project" />
+		</artifact:dependencies>
+
+		<artifact:dependencies pathId="classpath.runtime" filesetid="maven.fileset.runtime" usescope="runtime">
+			<pom refid="maven.project" />
+		</artifact:dependencies>
+
+		<artifact:dependencies pathId="classpath.provided" filesetid="maven.fileset.provided" scopes="provided">
+			<pom refid="maven.project" />
+		</artifact:dependencies>
+		<path id="my.classpath">
+			<pathelement location="${classes}" />
+			<fileset dir="${third-lib}">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset refid="maven.fileset.provided" />
+			<fileset refid="maven.fileset.runtime" />
+		</path>
 		<mkdir dir="${build.classes}" />
 		<copy todir="${build.classes}">
 			<fileset dir="${project.home}/src/main/java">
