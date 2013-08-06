@@ -114,6 +114,38 @@ public class CommonFieldHandler {
 	}
 	
 	/**
+	 * 创建ComBox
+	 * @param caption 标题
+	 * @param data 数据源
+	 * @param defaultValue 默认值
+	 * @param isDefault 是否允许默认
+	 * @return
+	 */
+	public static ComboBox createComBox(String caption,
+			Map<Object, String> data, Object defaultValue,Boolean isDefault) {
+		ComboBox s = new ComboBox();
+		s.setNullSelectionAllowed(false);
+		//s.setImmediate(true);
+		Object firstItemId = null;
+		if (StringTool.judgeBlank(caption)) {
+			s.setCaption(caption);
+		}
+		for (Object p : data.keySet()) {
+			String title = data.get(p);
+			Item i = s.addItem(p);
+			s.setItemCaption(p, title);
+			if(p.equals(defaultValue)){
+				firstItemId = p;
+			}
+		}
+		// Select first element
+	    if (isDefault == true && firstItemId != null) {
+	      s.select(firstItemId);
+	    }
+		return s;
+	}
+	
+	/**
 	 * 得到一个分界线
 	 * @return
 	 */
