@@ -42,10 +42,6 @@ public final class SystemConstants {
 	public static int pageSize = StringTool.parseInt(SystemProperties
 			.getString("System.PageSize"));
 	
-	public final static String  CLIENT_ID = "2904944388";
-	
-	public final static String  CLINET_SECRET = "199bb797e82c8902454cf25c9626fcec";
-	
-	public final static String  GO_BACK = "http://127.0.0.1/ks/user/weibo-login";
+
 
 }

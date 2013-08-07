@@ -3,6 +3,7 @@ package com.klwork.business.utils;
 import net.sf.json.JSONObject;
 
 import com.tencent.weibo.oauthv2.OAuthV2;
+import com.tencent.weibo.oauthv2.OAuthV2Client;
 
 public class TencentSociaTool {
 	public static OAuthV2 getQQAuthV2() {
@@ -15,5 +16,11 @@ public class TencentSociaTool {
 	
 	public static Object getJsonDataObject(String reponseJsonStr) {
 		return JSONObject.fromObject(reponseJsonStr).get("data");
+	}
+	
+	public static String generateAuthorizationURL(){
+		OAuthV2 oAuth = getQQAuthV2();
+		String url = OAuthV2Client.generateAuthorizationURL(oAuth);
+		return url;
 	}
 }

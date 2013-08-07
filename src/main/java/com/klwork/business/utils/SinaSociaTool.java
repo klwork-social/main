@@ -83,4 +83,14 @@ public class SinaSociaTool {
 		}
 		return WeiboContentTransLate.transLateall(text, "blue");
 	}
+
+	public static String generateAuthorizationURL() {
+		String clientId = SocialConfig.getString("client_id");
+		String clinetSecret = SocialConfig.getString("clinet_secret");
+		String redirectUrl = SocialConfig.getString("go_back");
+		//
+		String r = "http%3a%2f%2f127.0.0.1%2fks%2fuser%2fweibo-login";
+		String url = "https://api.weibo.com/oauth2/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + r + "&state=SinaWeiBo";
+		return url;
+	}
 }

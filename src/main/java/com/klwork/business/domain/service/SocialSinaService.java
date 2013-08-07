@@ -41,6 +41,7 @@ import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.business.domain.model.SocialUserAccountQuery;
 import com.klwork.business.domain.model.SocialUserWeibo;
 import com.klwork.business.utils.SinaSociaTool;
+import com.klwork.business.utils.SocialConfig;
 import com.klwork.common.SystemConstants;
 import com.klwork.common.dto.vo.ViewPage;
 import com.klwork.common.utils.ReflectionUtils;
@@ -69,9 +70,9 @@ public class SocialSinaService {
 
 	private Map queryUserByCode(String code) throws WeiboException {
 		HashMap map = new HashMap();
-		String clientId = SystemConstants.CLIENT_ID;
-		String clinetSecret = SystemConstants.CLINET_SECRET;
-		String redirectUrl = SystemConstants.GO_BACK;
+		String clientId = SocialConfig.getString("client_id");
+		String clinetSecret = SocialConfig.getString("clinet_secret");
+		String redirectUrl = SocialConfig.getString("go_back");
 		AccessToken accessToken = new Oauth().getAccessTokenByCode(code,
 				clientId, clinetSecret, redirectUrl);
 		Weibo weibo = new Weibo();
@@ -297,7 +298,7 @@ public class SocialSinaService {
 
 		SocialUserAccountInfo appKeyInfo = newAccountInfo(socialUserAccount);
 		appKeyInfo.setKey("appkeyId");
-		appKeyInfo.setValue(SystemConstants.CLIENT_ID);
+		appKeyInfo.setValue(SocialConfig.getString("client_id"));
 		appKeyInfo.setValueType(DictDef.dictInt("string"));
 		socialUserAccountInfoService.createSocialUserAccountInfo(appKeyInfo);
 	}

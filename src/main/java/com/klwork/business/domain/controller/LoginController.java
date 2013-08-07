@@ -28,10 +28,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.service.SocialSinaService;
 import com.klwork.business.domain.service.SocialTencentService;
 import com.klwork.business.domain.service.SocialUserAccountService;
 import com.klwork.business.domain.service.UserService;
+import com.klwork.business.utils.SinaSociaTool;
 import com.klwork.business.utils.TencentSociaTool;
 import com.tencent.weibo.oauthv2.OAuthV2;
 import com.tencent.weibo.oauthv2.OAuthV2Client;
@@ -139,11 +141,10 @@ public class LoginController {
 	@RequestMapping(value = "oauth", method = RequestMethod.GET)
 	public String oauthPage(HttpServletRequest request,String type) {
 		String url = "";
-		if("1".equals(type)){
-			OAuthV2 oAuth = TencentSociaTool.getQQAuthV2();
-			url = OAuthV2Client.generateAuthorizationURL(oAuth);
-		}else {
-			
+		if(DictDef.dict("tencent").equals(type)){//tencent
+			url = TencentSociaTool.generateAuthorizationURL();
+		}else {//sina
+			url = SinaSociaTool.generateAuthorizationURL();
 		}
 		return "redirect:"+url;
 	}
