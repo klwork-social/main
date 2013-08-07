@@ -1,0 +1,10 @@
+target/
+.classpath
+.project
+work/
+WebRoot/WEB-INF/lib/
+WebRoot/WEB-INF/lib/classes/
+*.diff
+*.patch
+*.log
+*.swp
