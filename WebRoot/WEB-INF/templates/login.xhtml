@@ -1,117 +1,43 @@
-<!doctype html>
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Klwork</title>
-		<style type="text/css">
-body {
-	text-align: center;
-	font: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 14px;
-	font-weight: bold;
-	background-color: #ffffff;
-	color: White;
-	margin: 0;
-	padding: 0;
-}
-input {
-	width:180px;
-	border:1px solid #cccccc;
-	background-color:#f5f5f5;
-}
-a {
-	text-decoration: none;
-	color: #99ccff;
-	font-size: 12px;
-}
-img {
-	border:0px;
-}
-.tdright {
-	text-align: right;
-	width: 100px;
-	height:35px;
-}
-.tdleft {
-	text-align:left;
-	padding-left:8px;
-}
-a:link, a:visited {
-	text-decoration: none;
-	color: #336699;
-}
-a:hover {
-	color:Red;
-	font-weight:bold;
-	text-decoration: underline;
-	font-size: 12px;
-}
-#labOAuth2Login {
-	margin-top: 30px;
-}
-#labOAuth2Login a {
-	margin-right: 10px;
-}
-		</style>
-	</head>
-	<body>
-		<div style="width: 800px; margin: 100px auto;">
-			<h1 style="font-size: xx-large; color: #99ccff; font-style: italic;">Login To KLWOK</h1>
-			<div style="margin: auto; text-align: center;margin-top: 50px;">
-				<form method="post" action="login-submit">
-					<input name="myAct" type="hidden" value="Login" />
-					<table width="420px" align="center">
-						<tr>
-							<td class="tdright">
-								<span>用户名</span>:
-							</td>
-							<td class="tdleft">
-								<input type="text" name="username" value="admin"/>
-							</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td class="tdright">
-								<span>密　码</span>:
-							</td>
-							<td class="tdleft">
-								<input type="password" name="password" value="admin123456"/>
-							</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td class="tdright"></td>
-							<td class="tdleft" colspan="2">
-								<input id="btnLogin" name="btnLogin" type="submit" value="登录" style="width: 71px;&#xD;&#xA;								margin-left: 10px; cursor: pointer; padding-top: 2px;" />
-								<a href="/sys/reg" style="margin-left: 10px;">注册</a> | 
-								<a href="/sys/getpassword" style="margin-left: 2px;">找回密码</a>
-							</td>
-						</tr>
-						<tr>
-							<td style="height:50px;"></td>
-						</tr>
-						<tr>
-							<td class="tdright">
-								<font size="2px" color="aqua">其他登录方式：</font>
-							</td>
-							<td colspan="2" class="tdleft">
-								<div id="labOAuth2Login">
-									<a href="https://api.weibo.com/oauth2/authorize?response_type=code&client_id=2904944388&redirect_uri=http%3a%2f%2f127.0.0.1%2fks%2fuser%2fweibo-login&state=SinaWeiBo" target="_blank">
-										<img align='absmiddle' src="/skin/system_tech/images/oauth_sinaweibo.png" /> 微博
-									</a> 
-									<a href="http://127.0.0.1/ks/user/oauth?type=1" target="_blank">
-										<img align='absmiddle' src="/skin/system_tech/images/oauth_qq.png" /> QQ
-									</a>
-									<a href="https://oauth.taobao.com/authorize?response_type=code&client_id=21255835&redirect_uri=http%3a%2f%2fwww.cyqdata.com%2fsys%2flogin&state=TaoBao" target="_blank">
-										<img align='absmiddle' src="/skin/system_tech/images/oauth_taobao.png" /> 淘宝
-									</a> 
-								</div>
-							</td>
-						</tr>
-					</table>
-				</form>
-				<div id="postMessage" style="text-align:center;margin-top:20px;"></div>
-			</div>
-		</div>
-	</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<#include "/commonHeader.xhtml"/>
+<style type="text/css">
+<!--
+*{padding:0px;margin:0px;}
+img{border:none}
+.login_body{background:url(${ctxPath}/site/images/land_bg.jpg) no-repeat center 0px;}
+.title{width:100%;height:45px;background:#000;opacity:0.6}
+.title img{padding-left:28px;padding-top:15px;}
+.login{width:325px;margin:0 auto;margin-top:187px;}
+.p1{height:30px;font-family:"Microsoft YaHei";}
+.p1 span{display:block;float:left;height:30px;line-height:30px;margin-right:10px;}
+.p2{width:321px;height:44px;background:url(${ctxPath}/site/images/text_bg1.png) no-repeat;margin-top:12px;}
+.p3{width:321px;height:44px;background:url(${ctxPath}/site/images/text_bg2.png) no-repeat;margin-top:12px;}
+.text1{width:275px;height:30px;border:none;background:none;padding-left:40px;color:#666;margin-top:6px;}
+.p4{font-size:12px;margin-top:6px;}
+.span0{padding-left:6px;}
+.span1{padding-left:195px;}
+.span1 a{color:#000;text-decoration:none;}
+.p5{padding-top:20px;}
+.p5 span{padding-left:42px;}
+-->
+</style>
+<script type="text/javascript" src="${ctxPath}/site/js/login.js"></script>
+</head>
+<body class="login_body">
+<div class="title"><img src="${ctxPath}/site/images/logo.png"/></div>
+
+<div class="login">
+<form method="post" action="${ctxPath}/user/login-submit" id="login_form" method="post">
+<p class="p1"><span>使用合作网站登录：</span><span><a href="${ctxPath}/user/oauth?type=1"><img src="${ctxPath}/site/images/weibo1.png"/></a></span><span><a href="${ctxPath}/user/oauth?type=0"><img src="${ctxPath}/site/images/weibo2.png"/></a></span></p>
+<p class="p2"><input type="text" class="text1" value="请输入用户名" name="username"/></p>
+<p class="p3"><input type="password" class="text1" value="123456" name="password"/></p>
+<p class="p4"><input type="checkbox"/><span class="span0">记住密码</span><span class="span1"><a href="#">忘记密码？</a></span></p>
+<p class="p5"><span><a href="javascript:void();" onclick="return klwork_login.loginChecked();"><img src="${ctxPath}/site/images/land.png"/></a></span><span><a href="#"><img src="${ctxPath}/site/images/reg.png"/></a></span></p>
+</form>
+</div>
+</body>
 </html>
