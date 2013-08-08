@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>无标题文档</title>
+<title>klwork</title>
 <#include "/commonHeader.xhtml"/>
 <style type="text/css">
 <!--
@@ -23,6 +23,31 @@ img{border:none}
 .span1 a{color:#000;text-decoration:none;}
 .p5{padding-top:20px;}
 .p5 span{padding-left:42px;}
+.ks-footer {
+    font: 14px/1.125 宋体,Arial,Helvetica,sans-serif;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    width: 950px;
+}
+.ks-footer .footenter {
+    line-height: 20px;
+    overflow: hidden;
+    padding: 8px 0 10px;
+    width: 100%;
+}
+
+.ks-footer .footenter .copyRight {
+    float: left;
+}
+.ks-footer .footenter .nav {
+    float: left;
+}
+.ks-footer .footenter .nav a {
+    color:#000000;
+    text-decoration: none;
+    margin: 0 8px;
+}
 -->
 </style>
 <script type="text/javascript" src="${ctxPath}/site/js/login.js"></script>
@@ -30,7 +55,7 @@ img{border:none}
 <body class="login_body">
 <div class="title"><img src="${ctxPath}/site/images/logo.png"/></div>
 
-<div class="login">
+<div class="login" style="margin-bottom: 100px;">
 <form method="post" action="${ctxPath}/user/login-submit" id="login_form" method="post">
 <p class="p1"><span>使用合作网站登录：</span><span><a href="${ctxPath}/user/oauth?type=1"><img src="${ctxPath}/site/images/weibo1.png"/></a></span><span><a href="${ctxPath}/user/oauth?type=0"><img src="${ctxPath}/site/images/weibo2.png"/></a></span></p>
 <p class="p2"><input type="text" class="text1" value="请输入用户名" name="username"/></p>
@@ -39,5 +64,11 @@ img{border:none}
 <p class="p5"><span><a href="javascript:void();" onclick="return klwork_login.loginChecked();"><img src="${ctxPath}/site/images/land.png"/></a></span><span><a href="#"><img src="${ctxPath}/site/images/reg.png"/></a></span></p>
 </form>
 </div>
+<div class="ks-footer">
+			<div class="footenter">
+				<div class="copyRight">沪ICP备13025856号    Copyright &copy; 2013 KLWORK Corporation, All Rights&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+				<div class="nav"><a target="_blank" title="微博" href="http://weibo.com/klwork">官方微博</a>|<a target="_blank" title="blog" href="http://blog.klwork.com">blog</a></div>
+			</div>
+		</div>
 </body>
 </html>
