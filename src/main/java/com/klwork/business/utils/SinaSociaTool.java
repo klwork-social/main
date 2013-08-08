@@ -9,6 +9,8 @@ import weibo4j.model.Status;
 import weibo4j.model.StatusWapper;
 import weibo4j.util.WeiboContentTransLate;
 
+import com.klwork.common.utils.UriUtility;
+
 public class SinaSociaTool {
 
 	/**
@@ -89,7 +91,9 @@ public class SinaSociaTool {
 		String clinetSecret = SocialConfig.getString("clinet_secret");
 		String redirectUrl = SocialConfig.getString("go_back");
 		//
-		String r = "http%3a%2f%2f127.0.0.1%2fks%2fuser%2fweibo-login";
+//		String r = "http%3a%2f%2f127.0.0.1%2fks%2fuser%2fweibo-login";
+//		r = "http://127.0.0.1/ks/user/weibo-login";
+		String r = UriUtility.encode(redirectUrl, "utf-8");
 		String url = "https://api.weibo.com/oauth2/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + r + "&state=SinaWeiBo";
 		return url;
 	}

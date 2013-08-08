@@ -153,7 +153,7 @@ public class UriUtility {
     return "";
   }
 
-  private static String decode(final String content, final String encoding) {
+  public static String decode(final String content, final String encoding) {
     try {
       return URLDecoder.decode(content, encoding != null ? encoding : "UTF-8");
     } catch (UnsupportedEncodingException problem) {
@@ -161,7 +161,7 @@ public class UriUtility {
     }
   }
 
-  private static String encode(final String content, final String encoding) {
+  public static String encode(final String content, final String encoding) {
     try {
       return URLEncoder.encode(content, encoding != null ? encoding : "UTF-8");
     } catch (UnsupportedEncodingException problem) {
