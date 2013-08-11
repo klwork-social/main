@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>会员登录操作</title>
+<#include "/commonHeader.xhtml"/>
+<style type="text/css">
+<!--
+*{padding:0px;margin:0px;}
+img{border:none}
+.login_body{background:url(${ctxPath}/site/images/land_bg.jpg) no-repeat center 0px;}
+.title{width:100%;height:45px;background:#000;opacity:0.6}
+.title img{padding-left:28px;padding-top:15px;}
+
+.login_tab{width:596px;margin:0 auto;height:43px;margin-top:68px;}
+.login_tab span{display:block;float:left;width:184px;height:43px;line-height:43px;text-align:center;font-family:"Microsoft YaHei";font-size:18px;color:#837e7e;cursor:pointer;}
+.login_tab span.tab1{background-color:rgba(0,0,0,0.5); background:#000\9; filter:alpha(opacity=50);color:#fff;}
+.login_tab span.tab1 *{position:relative;}
+
+.login_all{width:596px;margin:0 auto;padding-top:25px;padding-bottom:30px;background-color:rgba(0,0,0,0.5); background:#000\9; filter:alpha(opacity=50);margin-bottom:40px; }
+.login_all *{position:relative;}
+
+.p6{width:559px;height:28px;line-height:28px;background:#4b4c3f;color:#c9c3c3;margin:0 auto;font-size:12px;padding-left:10px;margin-bottom:40px;}
+.p7{height:29px;padding-left:45px;margin-bottom:13px;}
+.p7 span{display:block;float:left;}
+.span2{width:81px;line-height:29px;font-size:14px;color:#fff;}
+.span3{width:240px;height:29px;background:url(${ctxPath}/site/images/text_bg3.jpg) no-repeat;}
+.text2{width:235px;height:26px;border:none;background:none;padding-top:3px;padding-left:5px;}
+.span4{padding-left:14px;color:#b5b4b4;font-size:12px;height:29px;line-height:29px;}
+.tishi{width:528px;line-height:39px;padding:0 15px;color:#F00;background:#fff;border:1px solid #000;margin:40px auto 0 auto;font-size:12px;}
+.tishi a{color:#000;text-decoration:none;}
+.p8{width:119px;height:36px;margin:0 auto;margin-top:24px;}
+.p9{width:98px;height:37px;margin:0 auto;margin-top:24px;}
+-->
+</style>
+<script type="text/javascript" src="${ctxPath}/site/js/loginSet.js"></script>
+</head>
+
+<body class="login_body">
+<div class="title"><img src="${ctxPath}/site/images/logo.png"/></div>
+
+<div class="login_tab">
+<span class="tab1">完善登录帐号信息</span>
+<span>绑定原有注册帐号</span>
+</div><!--login_tab end-->
+
+<div class="login_all">
+<form id="login_form" name="login_form" method="post" action="${ctxPath}/user/perfectSubmit">
+<p class="p6">使用第三方登录需要完善一些重要信息，完成后下次登录就不会出现此页面。</p>
+
+<p class="p7"><span class="span2">用户名：</span><span class="span3"><input type="text" class="text2" id="id" name="id" value="${user.id!}"/></span><span class="span4">（登录ID）</span></p>
+<p class="p7"><span class="span2">登录密码：</span><span class="span3"><input type="password" class="text2" id="password" name="password"/></span><span class="span4">（本站的独立密码）</span></p>
+<p class="p7"><span class="span2">登录名：</span><span class="span3"><input type="text" class="text2" id="firstName" name="firstName" value="${user.firstName!}"/></span><span class="span4">（在本站看到的名字）</span></p>
+<p class="p7"><span class="span2">Email：</span><span class="span3"><input type="text" class="text2" id="email" name="email"/></span><span class="span4">电子邮件（重要，密码找回需要）</span></p>
+<div class="tishi">这个用户名已经存在，您是否使用过其他的帐号登录，建议绑定原有帐号，请点击<a href="#">绑定原有注册帐号</a></div>
+<p class="p8"><a href="javascript:void(-1);" onclick="return klwork_loginSet.perfectSubmit();"><img src="${ctxPath}/site/images/login_all.png"/></a></p>
+</form>
+</div><!--login_all end-->
+
+
+
+<div class="login_all" style="display:none">
+<form id="bind_form" name="bind_form" method="post" action="${ctxPath}/user/bindSubmit">
+<p class="p6">绑定原来在本站注册的账号可以享受qq和本站的账号登录。</p>
+
+<p class="p7"><span class="span2">登录帐号：</span><span class="span3"><input type="text" class="text2" id="bindName" name="bindName"/></span><span class="span4">（登录ID）</span></p>
+<p class="p7"><span class="span2">登录密码：</span><span class="span3"><input type="password" class="text2" id="bindPassword" name="bindPassword"/></span><span class="span4">（本站的独立密码）</span></p>
+<p class="p9"><a href="javascript:void(-1);" onclick="return klwork_loginSet.bindSubmit();"><img src="${ctxPath}/site/images/bangding.png"/></a></p>
+</div>
+</form>
+<!--login_all end-->
+
+</body>
+</html>
