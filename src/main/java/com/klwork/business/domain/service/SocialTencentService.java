@@ -14,12 +14,16 @@ package com.klwork.business.domain.service;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.activiti.engine.IdentityService;
+import org.activiti.engine.identity.User;
+import org.activiti.engine.impl.persistence.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +34,7 @@ import com.klwork.business.domain.model.SocialUserAccountQuery;
 import com.klwork.business.domain.model.SocialUserWeibo;
 import com.klwork.business.domain.model.SocialUserWeiboQuery;
 import com.klwork.business.utils.TencentSociaTool;
+import com.klwork.common.DataBaseParameters;
 import com.klwork.common.utils.StringDateUtil;
 import com.klwork.explorer.security.LoginHandler;
 import com.tencent.weibo.api.StatusesAPI;
@@ -56,42 +61,60 @@ public class SocialTencentService {
 
 	@Autowired
 	private SocialUserWeiboService socialUserWeiboService;
-
-	public org.activiti.engine.identity.User handlerUserAuthorize(String code,
+	
+	
+	public Map queryUserInfoByCode(String code,
 			String openid, String openkey) {
+		HashMap map = new HashMap();
+		OAuthV2 oAuth = TencentSociaTool.getQQAuthV2();
+		oAuth.setAuthorizeCode(code);
+		oAuth.setOpenid(openid);
+		oAuth.setOpenkey(openkey);
+
+		String accessToken = null, userOpenID = null;
+		long tokenExpireIn = 0L;
+
+		// 换取access token
+		oAuth.setGrantType("authorize_code");
+		try {
+			OAuthV2Client.accessToken(oAuth);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+
+		// 检查是否正确取得access token
+		if (oAuth.getStatus() == 3) {
+			System.out.println("Get Access Token failed!");
+			return null;
+		}
+
+		UserAPI userAPI = new UserAPI(oAuth.getOauthVersion());
+		String userInfoJson = "";
+		try {
+			userInfoJson = userAPI.info(oAuth, "json");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Object userInfoObject = TencentSociaTool
+				.getJsonDataObject(userInfoJson);
+		if (judgeNull(userInfoObject)) {
+			return null;
+		}
+		
+		JSONObject userInfo = ((JSONObject) userInfoObject);
+		map.put("user", userInfo);
+		map.put("token", accessToken);
+		map.put("oAuth", oAuth);
+		map.put("code", code);
+		return map;
+
+	}
+	public org.activiti.engine.identity.User handlerUserAuthorize(Map map) {
+		OAuthV2 oAuth = (OAuthV2) map.get("oAuth");
+		JSONObject userInfo = (JSONObject) map.get("user");
 		org.activiti.engine.identity.User retUser = null;
 		try {
-			OAuthV2 oAuth = TencentSociaTool.getQQAuthV2();
-			oAuth.setAuthorizeCode(code);
-			oAuth.setOpenid(openid);
-			oAuth.setOpenkey(openkey);
-
-			String accessToken = null, userOpenID = null;
-			long tokenExpireIn = 0L;
-
-			// 换取access token
-			oAuth.setGrantType("authorize_code");
-			try {
-				OAuthV2Client.accessToken(oAuth);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-
-			// 检查是否正确取得access token
-			if (oAuth.getStatus() == 3) {
-				System.out.println("Get Access Token failed!");
-				return null;
-			}
-
-			UserAPI userAPI = new UserAPI(oAuth.getOauthVersion());
-			String userInfoJson = userAPI.info(oAuth, "json");
-			Object userInfoObject = TencentSociaTool
-					.getJsonDataObject(userInfoJson);
-			if (judgeNull(userInfoObject)) {
-				return null;
-			}
-			JSONObject userInfo = ((JSONObject) userInfoObject);
-
 			SocialUserAccountQuery query = getQuery(userInfo);
 			List<SocialUserAccount> list = socialUserAccountService
 					.findSocialUserAccountByQueryCriteria(query, null);
@@ -99,7 +122,7 @@ public class SocialTencentService {
 				SocialUserAccount c = list.get(0);
 				retUser = updateSocialInfo(c, userInfo, oAuth);
 			} else {
-				retUser = addSocialInfo(userInfo, oAuth);
+				//retUser = addSocialInfo(userInfo, oAuth);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -110,7 +133,7 @@ public class SocialTencentService {
 	public SocialUserAccountQuery getQuery(JSONObject userInfo) {
 		SocialUserAccountQuery query = new SocialUserAccountQuery();
 		query.setWeiboUid(userInfo.getString("name"));
-		query.setType(DictDef.dictInt("tencent"));
+		query.setType(DataBaseParameters.TENCENT);
 		return query;
 	}
 
@@ -163,25 +186,7 @@ public class SocialTencentService {
 		socialUserAccountInfoService.createSocialUserAccountInfo(oInfo);
 	}
 
-	private org.activiti.engine.identity.User addSocialInfo(
-			JSONObject userInfo, OAuthV2 oAuth) {
-		String userId = userInfo.getString("name");
-		String nick = userInfo.getString("nick");
-		org.activiti.engine.identity.User retUser = userService.createUser(
-				userId, nick, null, "123456", null, null,
-				Arrays.asList("user"), null);
-		SocialUserAccount socialUserAccount = new SocialUserAccount();
-		socialUserAccount.setWeiboUid(userId);
-		socialUserAccount.setName(nick);
-		socialUserAccount.setType(DictDef.dictInt("tencent"));
-		socialUserAccount.setOwnUser(userId);
-		socialUserAccountService.createSocialUserAccount(socialUserAccount);
-		//
-		// updateSocialUserInfo(weiboUserInfoBean, socialUserAccount);
-		addTokenInfos(oAuth, socialUserAccount);
 
-		return retUser;
-	}
 
 	public void updateSocialUserInfo(JSONObject userInfo,
 			SocialUserAccount socialUserAccount) {
@@ -214,7 +219,7 @@ public class SocialTencentService {
 		String ownerUserId = LoginHandler.getLoggedInUser().getId();
 		SocialUserAccount ac = socialUserAccountService.findSocialUserByType(
 				ownerUserId,
-				DictDef.dictInt("tencent"));
+				DataBaseParameters.TENCENT);
 		if (ac != null) {
 			String accountId = ac.getId();
 			SocialUserAccountInfo tok = socialUserAccountInfoService
@@ -291,7 +296,7 @@ public class SocialTencentService {
 		convertTecentJsonInfoToDbWb(source, soruceWeibo);
 		soruceWeibo.setUserAccountId(ac.getId());
 		soruceWeibo.setOwner(ownerUserId);
-		soruceWeibo.setType(DictDef.dictInt("tencent"));
+		soruceWeibo.setType(DataBaseParameters.TENCENT);
 		return soruceWeibo;
 	}
 	
@@ -300,7 +305,7 @@ public class SocialTencentService {
 		String ownerUserId = LoginHandler.getLoggedInUser().getId();
 		SocialUserAccount ac = socialUserAccountService.findSocialUserByType(
 				ownerUserId,
-				DictDef.dictInt("tencent"));
+				DataBaseParameters.TENCENT);
 		if (ac != null) {
 			String accountId = ac.getId();
 			SocialUserAccountInfo tok = socialUserAccountInfoService
@@ -469,6 +474,33 @@ public class SocialTencentService {
 		 */
 
 		return weibo;
+	}
+
+	public User initUserByThirdUser(Map thirdUserMap) {
+		JSONObject userInfo = (JSONObject) thirdUserMap.get("user");
+		String userId = userInfo.getString("name");
+		String nick = userInfo.getString("nick");
+		org.activiti.engine.identity.User user = identityService
+				.newUser(userId);
+		user.setFirstName(nick);
+		return user;
+	}
+	
+	public void addTencentSocialInfo(org.activiti.engine.identity.User user, HashMap thirdUserMap) {
+		JSONObject userInfo = (JSONObject) thirdUserMap.get("user");
+		OAuthV2 oAuth = (OAuthV2) thirdUserMap.get("oAuth");
+		
+		String userId = userInfo.getString("name");
+		String nick = userInfo.getString("nick");
+	
+		SocialUserAccount socialUserAccount = new SocialUserAccount();
+		socialUserAccount.setWeiboUid(userId);
+		socialUserAccount.setName(nick);
+		socialUserAccount.setType(DataBaseParameters.TENCENT);
+		socialUserAccount.setOwnUser(user.getId());
+		socialUserAccountService.createSocialUserAccount(socialUserAccount);
+		addTokenInfos(oAuth, socialUserAccount);
+		
 	}
 
 }

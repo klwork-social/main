@@ -12,15 +12,12 @@
  */
 package com.klwork.business.domain.service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import net.sf.json.JSONObject;
 
 import org.activiti.engine.IdentityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,16 +39,17 @@ import com.klwork.business.domain.model.SocialUserAccountQuery;
 import com.klwork.business.domain.model.SocialUserWeibo;
 import com.klwork.business.utils.SinaSociaTool;
 import com.klwork.business.utils.SocialConfig;
-import com.klwork.common.SystemConstants;
+import com.klwork.common.DataBaseParameters;
 import com.klwork.common.dto.vo.ViewPage;
 import com.klwork.common.utils.ReflectionUtils;
-import com.klwork.explorer.security.LoginHandler;
 
 /**
  * The Class SocialSinaService.
  */
 @Service
 public class SocialSinaService {
+
+	
 
 	@Autowired
 	public SocialUserAccountService socialUserAccountService;
@@ -68,7 +66,7 @@ public class SocialSinaService {
 	@Autowired
 	UserService userService;
 
-	private Map queryUserByCode(String code) throws WeiboException {
+	public Map queryUserInfoByCode(String code) throws WeiboException {
 		HashMap map = new HashMap();
 		String clientId = SocialConfig.getString("client_id");
 		String clinetSecret = SocialConfig.getString("clinet_secret");
@@ -78,27 +76,31 @@ public class SocialSinaService {
 		Weibo weibo = new Weibo();
 		Users users = new Users();
 		weibo.setToken(accessToken.getAccessToken());
+
 		User sinaUser = users.showUserById(accessToken.getUid());
 		map.put("user", sinaUser);
 		map.put("token", accessToken);
+		map.put("code", code);
 		return map;
 	}
 
-	public void saveSocialUserWeiboList(SocialUserAccount ac, String ownerUserId, List<Status> list, Integer weiboType,
+	public void saveSocialUserWeiboList(SocialUserAccount ac,
+			String ownerUserId, List<Status> list, Integer weiboType,
 			Integer weiboHandleType) {
 		if (null == list) {
 			return;
 		}
 
 		for (int i = 0; i < list.size(); i++) {
-			SocialUserWeibo weibo = currentSocialUserWeibo(ownerUserId,ac);
+			SocialUserWeibo weibo = currentSocialUserWeibo(ownerUserId, ac);
 			Status status = list.get(i);
 			statusToWeibo(weibo, status);
 			// 原创微博信息
 			Status retweetedStatus = status.getRetweetedStatus();
 			if (null != retweetedStatus) {
-				SocialUserWeibo retWeibo = handlerRetweetedWeibo(ac,ownerUserId,weiboType,
-						weiboHandleType, retweetedStatus);
+				SocialUserWeibo retWeibo = handlerRetweetedWeibo(ac,
+						ownerUserId, weiboType, weiboHandleType,
+						retweetedStatus);
 				try {
 					socialUserWeiboService.createSocialUserWeibo(retWeibo);
 					weibo.setRetweetedId(retWeibo.getId());
@@ -118,9 +120,10 @@ public class SocialSinaService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 微博对象转换为实体对象
+	 * 
 	 * @param weibo
 	 * @param status
 	 */
@@ -128,11 +131,10 @@ public class SocialSinaService {
 		weibo.setCreateAt(status.getCreatedAt());
 		weibo.setWeiboId(status.getId());
 		weibo.setText(status.getText());
-		weibo.setSource((status.getSource() == null) ? "" : status
-				.getSource().getName());
+		weibo.setSource((status.getSource() == null) ? "" : status.getSource()
+				.getName());
 
-		weibo.setInReplyToStatusId(String.valueOf(status
-				.getInReplyToStatusId()));
+		weibo.setInReplyToStatusId(String.valueOf(status.getInReplyToStatusId()));
 		weibo.setInReplyToUserId(String.valueOf(status.getInReplyToUserId()));
 		weibo.setInReplyToScreenName(status.getInReplyToScreenName());
 		weibo.setMid(status.getMid());
@@ -149,8 +151,7 @@ public class SocialSinaService {
 			weibo.setUserDomain("");
 			weibo.setUserVerified(0);
 		} else {
-			weibo.setUserProfileImageUrl(status.getUser()
-					.getProfileImageUrl());
+			weibo.setUserProfileImageUrl(status.getUser().getProfileImageUrl());
 			weibo.setWeiboUidFollower(status.getUser().getFollowersCount());
 			weibo.setWeiboUid(status.getUser().getId());
 			weibo.setUserScreenName(status.getUser().getScreenName());
@@ -160,28 +161,29 @@ public class SocialSinaService {
 		}
 	}
 
-	private SocialUserWeibo handlerRetweetedWeibo(SocialUserAccount ac, String ownerUserId,Integer weiboType,
-			Integer weiboHandleType, Status retweetedStatus) {
-		SocialUserWeibo retWeibo = currentSocialUserWeibo(ownerUserId,ac);
-		statusToWeibo(retWeibo,retweetedStatus);
+	private SocialUserWeibo handlerRetweetedWeibo(SocialUserAccount ac,
+			String ownerUserId, Integer weiboType, Integer weiboHandleType,
+			Status retweetedStatus) {
+		SocialUserWeibo retWeibo = currentSocialUserWeibo(ownerUserId, ac);
+		statusToWeibo(retWeibo, retweetedStatus);
 		retWeibo.setWeiboType(weiboType);// 我的微博
 		retWeibo.setWeiboHandleType(weiboHandleType);// 全部微博
 		return retWeibo;
 	}
-	
+
 	private SocialUserWeibo currentSocialUserWeibo(String ownerUserId,
 			SocialUserAccount ac) {
-		SocialUserWeibo soruceWeibo =  new SocialUserWeibo();
+		SocialUserWeibo soruceWeibo = new SocialUserWeibo();
 		soruceWeibo.setUserAccountId(ac.getId());
 		soruceWeibo.setOwner(ownerUserId);
-		soruceWeibo.setType(DictDef.dictInt("sina"));
+		soruceWeibo.setType(DataBaseParameters.SINA);
 		return soruceWeibo;
 	}
-	
+
 	public void myWeiboToDb(int type) {
 		String ownerUserId = "fir5671";
 		SocialUserAccount ac = socialUserAccountService.findSocialUserByType(
-				ownerUserId, DictDef.dictInt("sina"));
+				ownerUserId, DataBaseParameters.SINA);
 		if (ac != null) {
 			String accountId = ac.getId();
 			SocialUserAccountInfo tok = socialUserAccountInfoService
@@ -202,13 +204,13 @@ public class SocialSinaService {
 			if (type == 0) {
 				list = SinaSociaTool.findDsrmAccountRelationWeiboInfo(
 						assessToken, paging, baseAPP, feature);
-				saveSocialUserWeiboList(ac,ownerUserId,list, 1, 0);
+				saveSocialUserWeiboList(ac, ownerUserId, list, 1, 0);
 			} else {
 				String uid = ac.getWeiboUid();
 				// 获取用户发布的微博
 				list = SinaSociaTool.findDsrmAccountWeiboInfo(assessToken, uid,
 						paging, baseAPP, feature);
-				saveSocialUserWeiboList(ac,ownerUserId,list, 1, 1);
+				saveSocialUserWeiboList(ac, ownerUserId, list, 1, 1);
 			}
 		}
 	}
@@ -216,30 +218,25 @@ public class SocialSinaService {
 	/**
 	 * 处理用户授权返回
 	 * 
-	 * @param code
+	 * @param map
 	 * @return
 	 */
-	public org.activiti.engine.identity.User handlerUserAuthorize(String code) {
+	public org.activiti.engine.identity.User handlerUserAuthorize(Map map) {
 		org.activiti.engine.identity.User user = null;
-		try {
-			// weibo4j.model.User sinaUser =
-			Map map = queryUserByCode(code);
-			weibo4j.model.User sinaUser = (weibo4j.model.User) map.get("user");
-			AccessToken accessToken = (AccessToken) map.get("token");
-			SocialUserAccountQuery query = new SocialUserAccountQuery();
-			query.setWeiboUid(sinaUser.getId());
-			query.setType(DictDef.dictInt("sina"));
-			List<SocialUserAccount> list = socialUserAccountService
-					.findSocialUserAccountByQueryCriteria(query, null);
-			if (list != null && list.size() > 0) {
-				SocialUserAccount c = list.get(0);
-				user = updateSinaSocialInfo(sinaUser, c, accessToken);
-			} else {
-				user = addSinaSocialInfo(sinaUser, accessToken);
-			}
-		} catch (WeiboException e) {
-			e.printStackTrace();
+		weibo4j.model.User sinaUser = (weibo4j.model.User) map.get("user");
+		AccessToken accessToken = (AccessToken) map.get("token");
+		SocialUserAccountQuery query = new SocialUserAccountQuery();
+		query.setWeiboUid(sinaUser.getId());
+		query.setType(DataBaseParameters.SINA);
+		List<SocialUserAccount> list = socialUserAccountService
+				.findSocialUserAccountByQueryCriteria(query, null);
+		if (list != null && list.size() > 0) {// 帐号已经存在
+			SocialUserAccount c = list.get(0);
+			user = updateSinaSocialInfo(sinaUser, c, accessToken);
+		} else {
+			// user = addSinaSocialInfo(sinaUser, accessToken);
 		}
+
 		return user;
 	}
 
@@ -254,25 +251,24 @@ public class SocialSinaService {
 		return la;
 	}
 
-	private org.activiti.engine.identity.User addSinaSocialInfo(User sinaUser,
-			AccessToken accessToken) {
+	public void addSinaSocialInfo(org.activiti.engine.identity.User retUser,Map thirdUserMap) {
+		weibo4j.model.User sinaUser = (weibo4j.model.User) thirdUserMap.get("user");
+		AccessToken accessToken = (AccessToken) thirdUserMap.get("token");
 		// 增加一个用户
 		String userId = sinaUser.getName();
-		org.activiti.engine.identity.User retUser = userService.createUser(
+		/*org.activiti.engine.identity.User retUser = userService.createUser(
 				userId, sinaUser.getScreenName(), null, "123456", null, null,
-				Arrays.asList("user"), null);
+				Arrays.asList("user"), null);*/
 		// 把密码怎么给
 		SocialUserAccount socialUserAccount = new SocialUserAccount();
 		socialUserAccount.setWeiboUid(sinaUser.getId());
 		socialUserAccount.setName(userId);
-		socialUserAccount.setType(DictDef.dictInt("sina"));
-		socialUserAccount.setOwnUser(userId);
-
+		socialUserAccount.setType(DataBaseParameters.SINA);
+		socialUserAccount.setOwnUser(retUser.getId());
 		socialUserAccountService.createSocialUserAccount(socialUserAccount);
 		updateSocialInfos(sinaUser, socialUserAccount);
 		// accessToken
 		addTokenInfos(accessToken, socialUserAccount);
-		return retUser;
 	}
 
 	private void addTokenInfos(AccessToken accessToken,
@@ -354,5 +350,41 @@ public class SocialSinaService {
 			socialUserAccountInfoService.createSocialUserAccountInfo(info);
 
 		}
+	}
+
+	public org.activiti.engine.identity.User initUserByThirdUser(
+			Map thirdUserMap) {
+		weibo4j.model.User sinaUser = (weibo4j.model.User) thirdUserMap
+				.get("user");
+		org.activiti.engine.identity.User user = identityService
+				.newUser(sinaUser.getName());
+		user.setFirstName(sinaUser.getScreenName());
+		// user.setEmail(sinaUser.)
+		// user.setLastName(lastName);
+		return user;
+	}
+
+	public org.activiti.engine.identity.User addUerByThirdInfo(
+			org.activiti.engine.identity.User user, HashMap thirdUserMap) {
+		weibo4j.model.User sinaUser = (weibo4j.model.User) thirdUserMap
+				.get("user");
+		AccessToken accessToken = (AccessToken) thirdUserMap.get("token");
+		// 增加一个用户
+		String userId = user.getId();
+		org.activiti.engine.identity.User retUser = userService.createUser(
+				userId, user.getFirstName(), null, user.getPassword(), null, null,
+				Arrays.asList("user"), null);
+		// 把密码怎么给
+		SocialUserAccount socialUserAccount = new SocialUserAccount();
+		socialUserAccount.setWeiboUid(sinaUser.getId());
+		socialUserAccount.setName(userId);
+		socialUserAccount.setType(DataBaseParameters.SINA);
+		socialUserAccount.setOwnUser(userId);
+
+		socialUserAccountService.createSocialUserAccount(socialUserAccount);
+		updateSocialInfos(sinaUser, socialUserAccount);
+		// accessToken
+		addTokenInfos(accessToken, socialUserAccount);
+		return retUser;
 	}
 }

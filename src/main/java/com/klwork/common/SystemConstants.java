@@ -22,13 +22,14 @@ public final class SystemConstants {
 	public final static String COOKIE_USER_PWD = "cookieUserPwd";
 	
 	/**
-	 * session中存放菜单组的attribute值
+	 * 第三方登录的信息标志
 	 */
-	public final static String SESSION_MENU_GROUP = "menuGroupList";
+	public final static String SESSION_THIRD_USER_MAP = "third_user_map";
+	
 	/**
-	 * session中存放的url权限列表的attribute值
+	 * 第三方登录的类型标志
 	 */
-	public final static String SESSION_FUNC_URL_LIST = "functionUrlList";
+	public final static String SESSION_THIRD_LOGIN_TYPE = "third_login_type";
 
 	/**
 	 * 文件后缀
@@ -42,6 +43,6 @@ public final class SystemConstants {
 	public static int pageSize = StringTool.parseInt(SystemProperties
 			.getString("System.PageSize"));
 	
-
+	
 
 }

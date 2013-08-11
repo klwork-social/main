@@ -67,7 +67,7 @@ public class DictDefRepository extends
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		initData();
+		//initData();
 		if (defMaps == null) {
 			defMaps = initAllDictyToMap();
 		}
