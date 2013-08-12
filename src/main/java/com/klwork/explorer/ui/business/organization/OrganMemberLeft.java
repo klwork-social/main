@@ -7,6 +7,7 @@ import com.klwork.business.domain.model.EntityDictionary;
 import com.klwork.business.domain.service.TeamService;
 import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 import com.klwork.explorer.I18nManager;
+import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.ui.base.AbstractVCustomComponent;
 import com.klwork.explorer.ui.handler.TableHandler;
@@ -72,9 +73,9 @@ public class OrganMemberLeft extends AbstractVCustomComponent {
 		
 		BeanItemContainer<MemberType> container = new BeanItemContainer<MemberType>(
 				MemberType.class);
-		MemberType first = new MemberType("正式成员", "3",EntityDictionary.TEAM_GROUP_TYPE_FORMAL);
+		MemberType first = new MemberType(i18nManager.getMessage(Messages.TEAM_GROUP_TYPE_FORMAL), "3",EntityDictionary.TEAM_GROUP_TYPE_FORMAL);
 		container.addBean(first);
-		container.addBean(new MemberType("正在邀请..", "13",EntityDictionary.TEAM_GROUP_TYPE_INVITE));
+		//container.addBean(new MemberType("正在邀请..", "13",EntityDictionary.TEAM_GROUP_TYPE_INVITE));
 		listTable.setContainerDataSource(container);
 		
 		listTable.addValueChangeListener(new Property.ValueChangeListener() {
@@ -135,7 +136,8 @@ public class OrganMemberLeft extends AbstractVCustomComponent {
 	}
 
 	protected void initTitle(HorizontalLayout headerLayout) {
-		Label title = new Label("团队成员管理");
+		//"团队成员管理"
+		Label title = new Label(i18nManager.getMessage(Messages.ORGANIZATION_TEAM_MEMBER_MANAGER));
 		title.addStyleName(ExplorerLayout.STYLE_H3);
 		title.setWidth(100, Unit.PERCENTAGE);
 		headerLayout.addComponent(title);

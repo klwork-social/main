@@ -106,8 +106,9 @@ public class OrganMemberRight extends DetailPanel {
 
 	protected void initMembers() {
 		HorizontalLayout membersHeader = new HorizontalLayout();
-		membersHeader.setSpacing(true);
+		//membersHeader.setSpacing(true);
 		membersHeader.setWidth(100, Unit.PERCENTAGE);
+		membersHeader.setMargin(true);
 		membersHeader.addStyleName(ExplorerLayout.STYLE_DETAIL_BLOCK);
 		addDetailComponent(membersHeader);
 		// 组的标题

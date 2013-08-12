@@ -191,8 +191,8 @@ public class GroupListLeft extends AbstractVCustomComponent {
 			listTable.setColumnWidth("icon", 22);
 
 			listTable.addContainerProperty("name", String.class, "");
-			listTable.addGeneratedColumn("count",
-					new MemberCountColumnGenerator());
+			/*listTable.addGeneratedColumn("count",
+					new MemberCountColumnGenerator());*/
 			listTable.setEditable(false);
 			TableHandler.setTableNoHead(listTable);
 			// 默认选择第一个table
@@ -233,7 +233,7 @@ public class GroupListLeft extends AbstractVCustomComponent {
 	}
 
 	protected void initTitle(HorizontalLayout headerLayout) {
-		Label title = new Label("所有分组");
+		Label title = new Label(i18nManager.getMessage(Messages.TEAM_GROUP_TABLE_TITLE));
 		title.addStyleName(ExplorerLayout.STYLE_H3);
 		title.setWidth(100, Unit.PERCENTAGE);
 		headerLayout.addComponent(title);

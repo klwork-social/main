@@ -145,7 +145,7 @@ public class SelectUsersPopupWindow extends PopupWindow {
 		searchField.setInputPrompt(i18nManager
 				.getMessage(Messages.PEOPLE_SEARCH));
 		searchField.setWidth(180, Unit.PIXELS);
-		searchField.focus();
+		//searchField.focus();
 		searchLayout.addComponent(searchField);
 
 		// Logic to change table according to input

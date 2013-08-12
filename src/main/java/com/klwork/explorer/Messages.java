@@ -497,8 +497,17 @@ public interface Messages {
 //Time Organization
   String ORGANIZATION_TEAM_MANAGER = "organization_team_manager";
   String ORGANIZATION_TEAM_MEMBER = "organization_team_member";
+  String ORGANIZATION_TEAM_MEMBER_MANAGER = "organization_team_member_manager";
+  String TEAM_GROUP_TYPE_FORMAL = "team_group_type_formal";
   String TEAM_NO_ONES = "team_no_ones";
   String TEAM_NEW_CREATE = "team_new_create";
+  String TEAM_GROUP_TABLE_TITLE = "team_group_table_title";
+  
+  String TEAM_CREATE = "team_create";
+  String TEAM_NO_MEMBERS = "team_no_members";
+  String TEAM_SELECT_MEMBERS = "team_select_members";
+  String TEAM_DELETE = "team_delete";
+  
   
   //out project
   String OUTPROJECT_MY_PARTICIPATION = "outproject_my_participation";

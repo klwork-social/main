@@ -97,9 +97,10 @@ public class GroupListRight extends DetailPanel {
 
 	protected void initMembers() {
 		HorizontalLayout membersHeader = new HorizontalLayout();
-		membersHeader.setSpacing(true);
+		//membersHeader.setSpacing(true);
 		membersHeader.setWidth(100, Unit.PERCENTAGE);
 		membersHeader.addStyleName(ExplorerLayout.STYLE_DETAIL_BLOCK);
+		membersHeader.setMargin(true);
 		addDetailComponent(membersHeader);
 		// 组的标题
 		initMembersTitle(membersHeader);
@@ -140,7 +141,7 @@ public class GroupListRight extends DetailPanel {
 			membersLayout.addComponent(membersTable);
 		} else {
 			noMembersTable = new Label(
-					i18nManager.getMessage(Messages.GROUP_NO_MEMBERS));
+					i18nManager.getMessage(Messages.TEAM_NO_MEMBERS));
 			membersLayout.addComponent(noMembersTable);
 		}
 	}
@@ -193,7 +194,7 @@ public class GroupListRight extends DetailPanel {
 	}
 
 	protected void initAddMembersButton(HorizontalLayout membersHeader) {
-		Button addButton = new Button("增加成员");
+		Button addButton = new Button("增加团队成员");
 		// addButton.addStyleName(ExplorerLayout.STYLE_ADD);
 		membersHeader.addComponent(addButton);
 		membersHeader.setComponentAlignment(addButton, Alignment.MIDDLE_RIGHT);
@@ -201,7 +202,7 @@ public class GroupListRight extends DetailPanel {
 		addButton.addClickListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				final SelectMyMemberPopupWindow selectUsersPopup = new SelectMyMemberPopupWindow(
-						i18nManager.getMessage(Messages.GROUP_SELECT_MEMBERS,
+						i18nManager.getMessage(Messages.TEAM_SELECT_MEMBERS,
 								team.getName()), true, false, getCurrentMembers());
 				ViewToolManager.showPopupWindow(selectUsersPopup);
 
@@ -327,7 +328,7 @@ public class GroupListRight extends DetailPanel {
 
 	protected void initDeleteButton(VerticalLayout actionsLayout) {
 		Button deleteButton = new Button(
-				i18nManager.getMessage(Messages.GROUP_DELETE));
+				i18nManager.getMessage(Messages.TEAM_DELETE));
 		deleteButton.addStyleName(Reindeer.BUTTON_SMALL);
 		actionsLayout.addComponent(deleteButton);
 
