@@ -7,7 +7,7 @@
 }
 
 .v-vaadin-version:after {
-	content: "7.1.1.nightly-20162dbe200111a514ab0849963dcf3eea1a9c83-130";
+	content: "7.1.1";
 }
 
 .v-generated-body {
@@ -333,7 +333,7 @@
 }
 
 .v-vaadin-version:after {
-	content: "7.1.1.nightly-20162dbe200111a514ab0849963dcf3eea1a9c83-130";
+	content: "7.1.1";
 }
 
 .v-generated-body {
@@ -11476,10 +11476,10 @@ body .social .dashboard.v-app .v-app-loading {
 .social .dashboard .v-widget {
 	color: inherit;
 	font: inherit;
-	font-size: 14px;
+	font-size: 12px;
 }
 
-.social .dashboard.v-app, .social .dashboard .v-drag-element, .social .dashboard .v-contextmenu, .social .dashboard .v-menubar-popup, .social .dashboard .v-filterselect-suggestpopup, .social .dashboard .v-datefield-popup, .social .dashboard .v-popupview-popup, .social .dashboard .v-Notification, .social .dashboard .v-window, .social .dashboard .v-tooltip {
+.social .dashboard.v-app, .social .dashboard .v-drag-element, .social .dashboard .v-contextmenu, .social .dashboard .v-menubar-popup, .social .dashboard .v-popupview-popup, .social .dashboard .v-Notification, .social .dashboard .v-window, .social .dashboard .v-tooltip {
 	color: #5a6066;
 	font: normal 9.3px Open Sans, Arial, sans-serif;
 }
@@ -11526,7 +11526,7 @@ body .social .dashboard.v-app .v-app-loading {
 	-ms-interpolation-mode: bicubic;
 }
 
-.social .dashboard .v-contextmenu, .social .dashboard .v-menubar-popup, .social .dashboard .v-filterselect-suggestpopup, .social .dashboard .v-datefield-popup, .social .dashboard .v-popupview-popup, .social .dashboard .v-tooltip, .social .dashboard .v-window.dialog, .social .dashboard .v-Notification-tray {
+.social .dashboard .v-contextmenu, .social .dashboard .v-menubar-popup, .social .dashboard .v-datefield-popup, .social .dashboard .v-popupview-popup, .social .dashboard .v-tooltip, .social .dashboard .v-window.dialog, .social .dashboard .v-Notification-tray {
 	background: #343638;
 	background: rgba(52, 54, 56, 0.92);
 	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
@@ -11623,6 +11623,294 @@ body .social .dashboard.v-app .v-app-loading {
 
 .social .dashboard .v-menubar-separator span {
 	border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.social .dashboard .v-filterselect-suggestpopup {
+	font-size: 12px;
+}
+
+.social .dashboard .v-filterselect {
+	height: 24px;
+	background-repeat: no-repeat;
+	background-image: url(../reindeer/select/img/left.png);/** sprite-ref: verticals; sprite-margin-bottom: 1px */
+	padding-left: 2px;
+	padding-right: 25px;
+}
+
+.social .dashboard.v-app .v-filterselect-input, .social .dashboard .v-window .v-filterselect-input, .social .dashboard .v-popupview-popup .v-filterselect-input {
+	background: transparent repeat-x;
+	background-image: url(../reindeer/select/img/center.png);/** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
+	border: none;
+	height: 24px;
+}
+
+.social .dashboard.v-app input.v-filterselect-input, .social .dashboard .v-window input.v-filterselect-input, .social .dashboard .v-popupview-popup input.v-filterselect-input {
+	padding: 4px 0 4px 2px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.social .dashboard .v-filterselect-prompt .v-filterselect-input {
+	font-style: normal;
+}
+
+.social .dashboard .v-filterselect-input:focus {
+	outline: none;
+}
+
+.social .dashboard .v-filterselect-focus {
+	background-image: url(../reindeer/select/img/left-focus.png);/** sprite-ref: verticals; sprite-margin-bottom: 1px */
+}
+
+.social .dashboard .v-filterselect-focus .v-filterselect-input {
+	background-image: url(../reindeer/select/img/center-focus.png);/** sprite-ref: verticals; sprite-alignment: repeat */
+}
+
+.social .dashboard .v-filterselect-button {
+	overflow: hidden;
+	width: 25px;
+	height: 24px;
+	background-position: 0 0;
+	background-image: url(../reindeer/select/img/right.png);/** sprite-ref: verticals ; sprite-margin-bottom: 1px */
+	cursor: default;
+	margin-right: -25px;
+}
+
+.social .dashboard .v-filterselect-button:hover {
+	background-image: url(../reindeer/select/img/right-hover.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-filterselect-button:active {
+	background-image: url(../reindeer/select/img/right-pressed.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-filterselect-focus .v-filterselect-button {
+	background-image: url(../reindeer/select/img/right-focus.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-filterselect-focus .v-filterselect-button:hover {
+	background-image: url(../reindeer/select/img/right-focus-hover.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-filterselect-focus .v-filterselect-button:active {
+	background-image: url(../reindeer/select/img/right-focus-pressed.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-disabled .v-filterselect-button:hover, .social .dashboard .v-readonly .v-filterselect-button:hover {
+	background-image: url(../reindeer/select/img/right.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-filterselect-suggestpopup {
+	background: #f8f8f9;
+	border: none;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	overflow: hidden;
+}
+
+.social .dashboard .v-filterselect-suggestmenu {
+	margin: 4px 0;
+}
+
+.social .dashboard .v-filterselect-suggestmenu .gwt-MenuItem {
+	padding: 1px 8px;
+	height: 16px;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	cursor: default;
+}
+
+.social .dashboard .v-filterselect-suggestmenu .gwt-MenuItem .v-icon {
+	margin-right: 3px;
+}
+
+.social .dashboard .v-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: transparent repeat-x;
+	background-image: url(../reindeer/common/img/sel-bg.png);/** sprite-ref: verticals; sprite-alignment: repeat */
+	color: #fff;
+	text-shadow: #3b5a7a 0 1px 0;
+}
+
+.social .dashboard .v-filterselect-nextpage, .social .dashboard .v-filterselect-nextpage-off, .social .dashboard .v-filterselect-prevpage-off, .social .dashboard .v-filterselect-prevpage {
+	height: 11px;
+	width: 100%;
+	background: transparent;
+	margin-bottom: -4px;
+}
+
+.social .dashboard .v-filterselect-nextpage, .social .dashboard .v-filterselect-nextpage-off {
+	margin: -4px 0 0;
+}
+
+.social .dashboard .v-filterselect-nextpage:hover {
+	background-repeat: repeat-x;
+	background-image: url(../reindeer/select/img/page-down-hover.png);/** sprite-ref: verticals; sprite-alignment: repeat */
+}
+
+.social .dashboard .v-filterselect-prevpage:hover {
+	background-repeat: repeat-x;
+	background-image: url(../reindeer/select/img/page-up-hover.png);/** sprite-ref: verticals; sprite-alignment: repeat */
+}
+
+.social .dashboard .v-filterselect-nextpage:active {
+	background-repeat: repeat-x;
+	background-image: url(../reindeer/select/img/page-down-pressed.png);/** sprite-ref: verticals; sprite-alignment: repeat */
+}
+
+.social .dashboard .v-filterselect-prevpage:active {
+	background-repeat: repeat-x;
+	background-image: url(../reindeer/select/img/page-up-pressed.png);/** sprite-ref: verticals; sprite-alignment: repeat */
+}
+
+.social .dashboard .v-filterselect-nextpage-off span, .social .dashboard .v-filterselect-prevpage-off span {
+	display: none;
+}
+
+.social .dashboard .v-filterselect-nextpage span, .social .dashboard .v-filterselect-prevpage span {
+	display: block;
+	height: 11px;
+	width: 100%;
+	overflow: hidden;
+	text-indent: -99999px;
+	background: transparent no-repeat center 3px;
+	background-image: url(../reindeer/select/img/arrow-down.png);/** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
+.social .dashboard .v-filterselect-prevpage span {
+	background-image: url(../reindeer/select/img/arrow-up.png);/** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+}
+
+.social .dashboard .v-filterselect-nextpage:hover span {
+	background-image: url(../reindeer/select/img/arrow-down-hover.png);/** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+}
+
+.social .dashboard .v-filterselect-prevpage:hover span {
+	background-image: url(../reindeer/select/img/arrow-up-hover.png);/** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+}
+
+.social .dashboard .v-filterselect-status {
+	text-shadow: #e9eaeb 0 1px 0;
+	font-size: 11px;
+	line-height: normal;
+	width: 100%;
+	padding: 3px 0;
+	height: 11px;
+	overflow: hidden;
+	background-repeat: repeat-x;
+	background-image: url(../reindeer/select/img/status-bg.png);/** sprite-ref: verticals; sprite-alignment: repeat */
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
+.v-ie .social .dashboard .v-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: transparent url(../reindeer/common/img/sel-bg.png) repeat-x;
+}
+
+.v-ie .social .dashboard .v-filterselect-nextpage:hover {
+	background: transparent url(../reindeer/select/img/page-down-hover.png) repeat-x;
+}
+
+.v-ie .social .dashboard .v-filterselect-prevpage:hover {
+	background: transparent url(../reindeer/select/img/page-up-hover.png) repeat-x;
+}
+
+.v-ie .social .dashboard .v-filterselect-prevpage span {
+	background: transparent url(../reindeer/select/img/arrow-up.png) no-repeat center 3px;
+}
+
+.v-ie .social .dashboard .v-filterselect-nextpage span {
+	background: transparent url(../reindeer/select/img/arrow-down.png) no-repeat center 3px;
+}
+
+.v-ie .social .dashboard .v-filterselect-prevpage:hover span {
+	background: transparent url(../reindeer/select/img/arrow-up-hover.png) no-repeat center 3px;
+}
+
+.v-ie .social .dashboard .v-filterselect-nextpage:hover span {
+	background: transparent url(../reindeer/select/img/arrow-down-hover.png) no-repeat center 3px;
+}
+
+.v-ie .social .dashboard .v-filterselect-status {
+	background: transparent url(../reindeer/select/img/status-bg.png) repeat-x;
+}
+
+.social .dashboard .v-filterselect .v-icon {
+	width: 16px;
+	position: relative;
+}
+
+.social .dashboard .v-filterselect .v-icon + .v-filterselect-input {
+	margin-left: -16px;
+	padding-left: 18px;
+}
+
+.social .dashboard .black .v-filterselect {
+	background-image: url(../reindeer/select/img/black/left-black.png);/** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+
+.social .dashboard.v-app .black .v-filterselect-input, .social .dashboard .v-window .black .v-filterselect-input, .social .dashboard .v-window-black .v-filterselect-input, .social .dashboard .v-popupview-popup .black .v-filterselect-input {
+	color: #c9ccce;
+	background-image: url(../reindeer/select/img/black/center-black.png);/** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
+}
+
+.social .dashboard .black .v-filterselect-focus {
+	background-image: url(../reindeer/select/img/black/left-black-focus.png);/** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+
+.social .dashboard .black .v-filterselect-focus .v-filterselect-input {
+	background-image: url(../reindeer/select/img/black/center-black-focus.png);/** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
+}
+
+.social .dashboard .black .v-filterselect-button {
+	background-image: url(../reindeer/select/img/black/right-black.png);/** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+
+.social .dashboard .black .v-filterselect-button:hover {
+	background-image: url(../reindeer/select/img/black/right-black-hover.png);/** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+
+.social .dashboard .black .v-filterselect-button:active {
+	background-image: url(../reindeer/select/img/black/right-black-pressed.png);/** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+
+.social .dashboard .black .v-filterselect-focus .v-filterselect-button {
+	background-image: url(../reindeer/select/img/black/right-black-focus.png);/** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+
+.social .dashboard .black .v-filterselect-focus .v-filterselect-button:hover {
+	background-image: url(../reindeer/select/img/black/right-black-focus-hover.png);/** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+
+.social .dashboard .black .v-filterselect-focus .v-filterselect-button:active {
+	background-image: url(../reindeer/select/img/black/right-black-focus-pressed.png);/** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+
+.social .dashboard .black .v-disabled .v-filterselect-button:hover, .social .dashboard .black .v-readonly .v-filterselect-button:hover {
+	background-image: url(../reindeer/select/img/black/right-black.png);/** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+
+.social .dashboard .black .v-filterselect-prompt .v-filterselect-input {
+	color: #5f6366;
+}
+
+.social .dashboard .black .v-select select, .social .dashboard .black .v-select-twincol select {
+	border-color: #38393a;
+	border-top-color: #2c2d2e;
+	border-bottom-color: #3e3f3f;
+	background: #151717;
+	color: #c9ccce;
 }
 
 .social .dashboard .v-button {
@@ -11762,83 +12050,10 @@ body .social .dashboard.v-app .v-app-loading {
 	box-shadow: none;
 }
 
-.social .dashboard .v-filterselect {
-	position: relative;
-}
-
-.social .dashboard .v-filterselect-input {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	background: transparent;
-	border: none;
-	padding: 0 1.5em 0 0;
-	margin: 0;
-	font-size: inherit;
-	width: 100% !important;
-}
-
-.social .dashboard .v-filterselect-input:focus {
-	outline: none;
-}
-
-.social .dashboard .v-filterselect-button {
+.social .dashboard .myTabButton {
 	position: absolute;
-	right: 1.5em;
-	width: 0;
-	height: 0;
-	border: 1px solid;
-	border-width: 0.5em 0.45em;
-	border-color: #646E77 transparent transparent;
-	top: 0.8em;
-	background: transparent;
-}
-
-.social .dashboard .v-filterselect-suggestpopup {
-	margin-top: 0.4em !important;
-}
-
-.social .dashboard .v-filterselect-suggestmenu tr {
-	line-height: inherit;
-}
-
-.social .dashboard .v-filterselect-prevpage-off, .social .dashboard .v-filterselect-prevpage, .social .dashboard .v-filterselect-nextpage-off, .social .dashboard .v-filterselect-nextpage {
-	background: transparent;
-}
-
-.social .dashboard .v-filterselect-prevpage-off, .social .dashboard .v-filterselect-prevpage {
-	padding-bottom: 5px;
-}
-
-.social .dashboard .v-filterselect-nextpage-off, .social .dashboard .v-filterselect-nextpage {
-	padding-top: 5px;
-}
-
-.social .dashboard .v-filterselect-prevpage-off span, .social .dashboard .v-filterselect-prevpage span, .social .dashboard .v-filterselect-nextpage-off span, .social .dashboard .v-filterselect-nextpage span {
-	width: 0;
-	height: 0;
-	border: 1px solid;
-	border-width: 0.5em 0.45em;
-	border-color: transparent transparent #aaa;
-	overflow: hidden;
-	display: inline-block;
-}
-
-.social .dashboard .v-filterselect-nextpage-off span, .social .dashboard .v-filterselect-nextpage span {
-	border-color: #aaa transparent transparent;
-}
-
-.social .dashboard .v-filterselect-prevpage:hover span {
-	border-bottom-color: #fff;
-}
-
-.social .dashboard .v-filterselect-nextpage:hover span {
-	border-top-color: #fff;
-}
-
-.social .dashboard .v-filterselect-status {
-	color: #999;
-	font-size: 13px;
+	top: 5px;
+	right: 55px;
 }
 
 .social .dashboard .v-label {
@@ -11966,206 +12181,71 @@ body .social .dashboard.v-app .v-app-loading {
 	margin: 0.8em 0 0;
 }
 
-.social .dashboard .v-table-header-wrap, .social .dashboard .v-table-footer-wrap {
-	border: 0.1em solid #d4d5d5;
-	background: #f4f4f4;
-	background: -moz-linear-gradient(top, #f9f9f9 0%, #f0f0f0 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f9f9f9), color-stop(100%, #f0f0f0));
-	background: -webkit-linear-gradient(top, #f9f9f9 0%, #f0f0f0 100%);
-	background: -o-linear-gradient(top, #f9f9f9 0%, #f0f0f0 100%);
-	background: -ms-linear-gradient(top, #f9f9f9 0%, #f0f0f0 100%);
+.social .dashboard .board .v-table-row-odd, .social .dashboard .board .v-table-row {
+	background-color: #414243;
+	overflow: hidden;
+	font: 12px / 14px Arial, Helvetica, sans-serif;
 }
 
-.social .dashboard .v-table-header-wrap {
-	border-bottom: none;
+.social .dashboard .board .v-table-row-odd.v-selected, .social .dashboard .board .v-table-row.v-selected {
+	background: #333537;
+	color: #fff;
+	font-weight: bold;
+	text-shadow: none;
 }
 
-.social .dashboard .v-table-footer-wrap {
-	border-top: none;
-}
-
-.social .dashboard .v-table-footer td {
+.social .dashboard .board .v-table-row-odd .v-table-cell-content, .social .dashboard .board .v-table-row .v-table-cell-content {
 	border: none;
-	border-left: 0.1em solid #e5e8e8;
+	height: 35px;
+	border-bottom: 1px solid #414243;
 }
 
-.social .dashboard .v-table-footer td:first-child {
+.social .dashboard .board .v-table-body {
+	border: 0px;
+}
+
+.social .dashboard .board .v-table-body.focused {
+	border: 0px;
+}
+
+.social .dashboard .v-table-row-odd, .social .dashboard .v-table-row {
+	background-color: #fff;
+	overflow: hidden;
+	font: 12px / 14px Arial, Helvetica, sans-serif;
+}
+
+.social .dashboard .v-table-row-odd.v-selected, .social .dashboard .v-table-row.v-selected {
+	background: #dff5ff;
+	color: #000000;
+	font-weight: bold;
+	text-shadow: none;
+}
+
+.social .dashboard .v-table-row-odd .v-table-cell-content, .social .dashboard .v-table-row .v-table-cell-content {
 	border: none;
-}
-
-.social .dashboard .v-table-footer-container {
-	padding: 0.1em 0 0.1em 6px;
-	float: none;
-	font-size: 13px;
-	color: #979699;
-	text-shadow: 0 0.1em rgba(255, 255, 255, 0.7);
-}
-
-.social .dashboard .v-table-footer td:first-child .v-table-footer-container {
-	padding-left: 14px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
-.social .dashboard .v-table-footer td:last-child .v-table-footer-container {
-	padding-right: 6px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
-.social .dashboard .v-table-caption-container {
-	font-size: 13px;
-	font-weight: 600;
-	line-height: 1;
-	text-shadow: 0 0.1em rgba(255, 255, 255, 0.7);
-	padding-top: 0.6em;
-	padding-bottom: 0.6em;
-	padding-left: 6px;
-	margin-left: 0;
-	border-left: 1px solid #e5e8e8;
-}
-
-.social .dashboard .v-table-caption-container-align-right {
-	float: none;
-}
-
-.social .dashboard .v-table-header td:first-child .v-table-caption-container {
-	border-left-color: transparent;
-	margin-left: 8px;
-	padding-left: 4px;
-}
-
-.social .dashboard .v-table-header td:last-child .v-table-caption-container {
-	padding-right: 4px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
-.social .dashboard .v-table-resizer {
-	font-size: 13px;
-	height: 1.8em;
-	background: transparent;
-	width: 4px;
-}
-
-.social .dashboard .v-table-cell-wrapper {
-	font-size: 14px;
+	height: 35px;
+	border-bottom: 1px solid #c5c5c5;
 }
 
 .social .dashboard .v-table-cell-content {
-	border: none;
-	border-left: 1px solid #e5e8e8;
-	padding-top: 0.2em;
-	padding-bottom: 0.2em;
-}
-
-.social .dashboard .v-table-cell-content:first-child {
-	border-left-color: transparent;
-}
-
-.social .dashboard .v-table-cell-content:first-child .v-table-cell-wrapper {
-	padding-left: 8px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
-.social .dashboard .v-table-cell-content:last-child .v-table-cell-wrapper {
-	padding-right: 14px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+	vertical-align: middle;
 }
 
 .social .dashboard .v-table-body {
-	border: 0.1em solid #d4d5d5;
+	border: 1px solid #c5c5c5;
 }
 
-.social .dashboard .v-table-row-odd {
-	background-color: #f3f4f5;
+.social .dashboard .v-table-body.focused {
+	border: 1px solid #c5c5c5;
 }
 
-.social .dashboard .v-table .v-selected {
-	text-shadow: 0 0.1em 0.1em rgba(0, 0, 0, 0.3);
-	background: #6ba7e4;
-	background: -moz-linear-gradient(top, #75b0e7 0%, #5f9de1 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #75b0e7), color-stop(100%, #5f9de1));
-	background: -webkit-linear-gradient(top, #75b0e7 0%, #5f9de1 100%);
-	background: -o-linear-gradient(top, #75b0e7 0%, #5f9de1 100%);
-	background: -ms-linear-gradient(top, #75b0e7 0%, #5f9de1 100%);
+.social .dashboard .v-table .v-table-caption-container {
+	padding-right: 0px;
+	text-shadow: none;
 }
 
-.social .dashboard .v-table .v-selected + .v-selected {
-	background: #5f9de1;
-}
-
-.social .dashboard .v-table .v-selected .v-table-cell-content {
-	border-left-color: transparent;
-}
-
-.social .dashboard .v-table-header-cell-asc .v-table-sort-indicator, .social .dashboard .v-table-header-cell-desc .v-table-sort-indicator {
-	background: transparent;
-	width: 0.5em;
-	height: 1.8em;
-	font-size: 13px;
-	line-height: 2;
-	text-shadow: 0 0.1em rgba(255, 255, 255, 0.7);
-}
-
-.social .dashboard .v-table-header-cell-asc .v-table-sort-indicator:before, .social .dashboard .v-table-header-cell-desc .v-table-sort-indicator:before {
-	font-family: "fontello";
-	font-style: normal;
-	font-weight: normal;
-	speak: none;
-	display: inline-block;
-}
-
-.social .dashboard .v-table-header-cell-asc .v-table-sort-indicator:before {
-	content: "\25b4";
-}
-
-.social .dashboard .v-table-header-cell-desc .v-table-sort-indicator:before {
-	content: "\25be";
-}
-
-.social .dashboard .v-table.borderless .v-table-header-wrap, .social .dashboard .v-table.borderless .v-table-body {
-	border: none;
-}
-
-.social .dashboard .v-table.borderless .v-table-header-wrap {
-	border-bottom: 1px solid #d4d5d5;
-}
-
-.social .dashboard .v-table.borderless .v-table-footer-wrap {
-	border-top: 1px solid #d4d5d5;
-}
-
-.social .dashboard .v-table.plain .v-table-header-wrap {
-	background: transparent;
-	border: none;
-}
-
-.social .dashboard .v-table.plain .v-table-caption-container {
-	padding-top: 0.4em;
-	padding-bottom: 0.8em;
-}
-
-.social .dashboard .v-table.plain .v-table-row, .social .dashboard .v-table.plain .v-table-row-odd {
-	background: transparent;
-}
-
-.social .dashboard .v-table.plain .v-table-cell-content {
-	border-left-color: transparent;
-	border-bottom: 1px solid #eee;
-	padding-top: 0.3em;
-	padding-bottom: 0.3em;
-}
-
-.social .dashboard .v-table.plain .v-table-caption-container {
-	border-left-color: transparent;
+.social .dashboard .v-table .v-table-header-wrap {
+	background: #fff url(../dashboard/img/bg-table.png) repeat-x 0 100%;
 }
 
 .social .dashboard .v-tabsheet {
@@ -12300,284 +12380,272 @@ body .social .dashboard.v-app .v-app-loading {
 	display: none;
 }
 
-.social .dashboard .v-textfield, .social .dashboard .v-filterselect {
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	border: 1px solid #c9c8c7;
-	border-top-color: #d8d7d6;
-	background: #fff;
-	box-shadow: 0 0 0 2px rgba(51, 50, 49, 0.07);
-	font: inherit;
-	color: inherit;
-	line-height: 1;
-	margin: 0;
-}
-
-.social .dashboard input.v-widget.v-textfield, .social .dashboard .v-filterselect {
-	padding: 0.25em 0.3em;
-}
-
-.v-webkit .social .dashboard input.v-textfield, .v-webkit .social .dashboard .v-filterselect {
-	padding-bottom: 0.3em;
-}
-
-.social .dashboard .v-textfield:focus, .social .dashboard .v-filterselect-focus {
-	outline: none;
-	border-color: #69a5e4;
-}
-
-.social .dashboard input.v-textfield-prompt, .social .dashboard .v-filterselect-prompt .v-filterselect-input {
-	font-style: normal;
-}
-
-.social .dashboard input.v-widget.v-textfield.small, .social .dashboard .v-filterselect.small {
-	padding: 0.15em 0.2em;
-	font-size: 12px;
-}
-
-.v-webkit .social .dashboard input.v-textfield.small, .v-webkit .social .dashboard .v-filterselect.small {
-	padding-bottom: 0.2em;
-}
-
 .social .dashboard .v-window {
-	-webkit-animation: fade-in 160ms ease-out;
-	-moz-animation: fade-in 160ms ease-out;
-	-ms-animation: fade-in 160ms ease-out;
-	-o-animation: fade-in 160ms ease-out;
-	animation: fade-in 160ms ease-out;
-	opacity: 1;
-	-webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-	-moz-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+	background: transparent;
 }
 
-.social .dashboard .v-shadow-window {
-	display: none;
+.social .dashboard .v-window-wrap {
+	border: 1px solid #808386;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
-.v-ie8 .social .dashboard .v-shadow-window {
-	display: block;
-}
-
-.social .dashboard .v-window-closebox:before {
-	font-family: arial, sans-serif;
-	content: "\00D7";
-}
-
-.social .dashboard .v-window-closebox {
-	background: #343638;
-	color: #ddd;
-	font-size: 16px;
-	font-weight: normal;
-	line-height: 20px;
-	text-align: center;
-	width: 20px;
-	height: 20px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border-radius: 2px;
-	top: 10px;
-	right: 10px;
-}
-
-.social .dashboard .v-window-closebox:hover {
-	color: #fff;
-}
-
-.social .dashboard .v-window-closebox:active {
-	color: #ddd;
-	background: #000;
-}
-
-.social .dashboard .v-window-modalitycurtain {
-	opacity: 0.7;
-	filter: alpha(opacity=70);
-	background: #353637;
-	background: -moz-radial-gradient(center, ellipse cover, #4c4d4e 0%, #1b1c1c 100%);
-	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #4c4d4e), color-stop(100%, #1b1c1c));
-	background: -webkit-radial-gradient(center, ellipse cover, #4c4d4e 0%, #1b1c1c 100%);
-	background: -o-radial-gradient(center, ellipse cover, #4c4d4e 0%, #1b1c1c 100%);
-	background: -ms-radial-gradient(center, ellipse cover, #4c4d4e 0%, #1b1c1c 100%);
+.v-sa .social .dashboard .v-window-wrap, .v-op .social .dashboard .v-window-wrap {
+	border-color: rgba(0, 0, 0, 0.2);
 }
 
 .social .dashboard .v-window-outerheader {
-	padding: 0.5em 20px;
-	height: 1.7em;
-	font-weight: 300;
-	font-size: 20px;
+	padding: 12px 52px 0 14px;
+	height: 37px;
+	background: black repeat-x;
+	background-image: url(../reindeer/window/img/header-bg.png);/** sprite-ref: verticals; sprite-alignment: repeat */
 }
 
 .social .dashboard .v-window-header {
-	font-weight: inherit;
-}
-
-.social .dashboard .dialog.v-window {
-	color: #a6a9aa;
-	font-size: 13px;
-}
-
-.social .dashboard .dialog.v-window .v-window-header {
-	text-align: center;
+	font-weight: bold;
+	font-size: 12px;
+	line-height: normal;
 	color: #fff;
+	text-shadow: #000 0 -1px 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+}
+
+.social .dashboard .v-window-error .v-window-header {
+	padding-left: 13px;
+	background: transparent url(../reindeer/common/icons/error.png) no-repeat 0 50%;
+}
+
+.social .dashboard .v-window-resizebox {
+	width: 15px;
+	height: 15px;
+	cursor: se-resize;
+	background: transparent;
+	background-image: url(../reindeer/window/img/resize.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-window-footer {
+	background-color: white;
+	background-repeat: repeat-x;
+	background-image: url(../reindeer/window/img/footer-bg.png);/** sprite-ref: verticals; sprite-alignment: repeat */
+	height: 15px;
+}
+
+.social .dashboard .v-window-closebox {
+	top: 12px;
+	right: 10px;
+	width: 15px;
+	height: 16px;
+	background: transparent;
+	background-image: url(../reindeer/window/img/close.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-window-closebox:hover {
+	background-image: url(../reindeer/window/img/close-hover.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-window-closebox:active {
+	background-image: url(../reindeer/window/img/close-pressed.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-window-maximizebox, .social .dashboard .v-window-restorebox {
+	top: 12px;
+	right: 28px;
+	width: 15px;
+	height: 16px;
+	background: transparent;
+}
+
+.social .dashboard .v-window-maximizebox, .social .dashboard .v-window-maximizebox:hover, .social .dashboard .v-window-maximizebox:active {
+	background-image: url(../reindeer/window/img/maximize.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-window-restorebox, .social .dashboard .v-window-restorebox:hover, .social .dashboard .v-window-restorebox:active {
+	background-image: url(../reindeer/window/img/restore.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-window-contents {
+	background: #fff;
+}
+
+.social .dashboard .v-window-modalitycurtain {
+	background: #56595b;
+}
+
+.social .dashboard .v-window-light .v-window-outerheader {
+	background: transparent;
+	padding: 15px 52px 0 18px;
+}
+
+.social .dashboard .v-window-light .v-window-header {
 	font-size: 16px;
-	font-weight: 400;
+	color: #292e34;
+	text-shadow: none;
 }
 
-.social .dashboard .v-window .footer {
-	background: #eee;
-	border-top: 1px solid #e0e0e0;
+.social .dashboard .v-window-light .v-window-resizebox {
+	width: 12px;
+	height: 12px;
+	background-image: url(../reindeer/window/img/light/resize.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .schedule {
-	position: relative;
+.social .dashboard .v-window-light .v-window-footer {
+	background: transparent;
+	height: 12px;
 }
 
-.social .dashboard .cover {
-	text-align: center;
+.social .dashboard .v-window-light .v-window-closebox {
+	right: 1px;
+	top: 17px;
+	width: 19px;
+	height: 15px;
+	background-image: url(../reindeer/window/img/light/close.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .cover .v-image {
-	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
-	-webkit-user-drag: none;
+.social .dashboard .v-window-light .v-window-closebox:hover {
+	background-image: url(../reindeer/window/img/light/close-hover.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .catalog .v-csslayout {
-	display: inline-block;
-	position: relative;
-	vertical-align: top;
-	cursor: pointer;
+.social .dashboard .v-window-light .v-window-closebox:active {
+	background-image: url(../reindeer/window/img/light/close-pressed.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .catalog .v-image {
-	width: 100px;
-	height: 145px;
-	position: absolute;
-	top: 10px;
-	border: 2px solid rgba(255, 255, 255, 0.1);
-	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-	-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border-radius: 2px;
+.social .dashboard .v-window-light .v-window-maximizebox {
+	top: 17px;
+	background-image: url(../reindeer/window/img/light/maximize.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-window-light .v-window-maximizebox:hover {
+	background-image: url(../reindeer/window/img/light/maximize-hover.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-window-light .v-window-maximizebox:active {
+	background-image: url(../reindeer/window/img/light/maximize-active.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-window-light .v-window-restorebox {
+	top: 17px;
+	background-image: url(../reindeer/window/img/light/restore.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-window-light .v-window-restorebox:hover {
+	background-image: url(../reindeer/window/img/light/restore-hover.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-window-light .v-window-restorebox:active {
+	background-image: url(../reindeer/window/img/light/restore-active.png);/** sprite-ref: verticals */
+}
+
+.social .dashboard .v-window-light .v-window-contents {
+	background: transparent;
+}
+
+.social .dashboard .v-window-light .v-window-wrap {
+	background: #f7f7f8 repeat-x;
+	background-image: url(../reindeer/window/img/light/content-bg.png);/** sprite-ref: verticals; sprite-alignment: repeat */
+}
+
+.social .dashboard .v-window-black .v-window-wrap {
+	border-color: #2e3030;
+	border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
 	overflow: hidden;
 }
 
-.social .dashboard .catalog .v-csslayout:hover .v-image {
-	border-color: #69a5e4;
+.v-sa .social .dashboard .v-window-black .v-window-wrap, .v-op .social .dashboard .v-window-black .v-window-wrap {
+	border-color: rgba(0, 0, 0, 0.8);
 }
 
-.social .dashboard .catalog .v-csslayout:hover .v-caption {
-	color: #000;
+.social .dashboard .v-window-black .v-window-wrap {
+	background-color: #1d2021;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
 }
 
-.social .dashboard .catalog .v-csslayout:before, .social .dashboard .cover:before {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 10px;
-	right: 32px;
-	width: 66px;
-	height: 128px;
-	background: url(../dashboard/img/poster-gloss.png);
-	z-index: 2;
+.v-sa .social .dashboard .v-window-black .v-window-wrap, .v-op .social .dashboard .v-window-black .v-window-wrap {
+	background-color: rgba(29, 32, 33, 0.9);
 }
 
-.social .dashboard .cover:before {
-	top: 0;
-	right: 0;
-	z-index: 2;
+.social .dashboard .v-window-black .v-window-outerheader {
+	height: 29px;
+	padding: 7px 14px;
+	background: transparent repeat-x;
+	background-image: url(../reindeer/window/img/black/header-bg.png);/** sprite-ref: black-verticals; sprite-alignment: repeat */
+	text-align: center;
+	-moz-border-radius-topright: 7px;
+	-moz-border-radius-topleft: 7px;
+	-webkit-border-top-right-radius: 7px;
+	-webkit-border-top-left-radius: 7px;
+	overflow: hidden;
+	border: none;
 }
 
-.social .dashboard .catalog .v-csslayout .v-caption {
-	position: relative;
-	padding-top: 160px;
-	width: 120px;
-	white-space: normal;
+.social .dashboard .v-window-black .v-window-header {
 	font-size: 12px;
-	padding-right: 1em;
-	padding-bottom: 1em;
-	cursor: pointer;
+	font-weight: normal;
+	color: #dddfe1;
 }
 
-.social .dashboard .catalog.v-layout {
-	padding: 20px 0 100px 30px;
-	background: #eee;
+.social .dashboard .v-window-black .v-window-closebox {
+	top: 8px;
+	background-image: url(../reindeer/window/img/black/close.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .schedule .tray {
-	position: absolute;
-	left: 0;
-	bottom: 0;
-	z-index: 9;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-	border-top: 1px solid #cdcecf;
-	background: #dfe0e1;
-	background: -moz-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d8d9da), color-stop(10%, #e6e7e8), color-stop(100%, #e0e1e2));
-	background: -webkit-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
-	background: -o-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
-	background: -ms-linear-gradient(top, #d8d9da 0%, #e6e7e8 10%, #e0e1e2 100%);
+.social .dashboard .v-window-black .v-window-closebox:hover {
+	background-image: url(../reindeer/window/img/black/close-hover.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .v-calendar-weekly-longevents {
-	display: none;
+.social .dashboard .v-window-black .v-window-closebox:active {
+	background-image: url(../reindeer/window/img/black/close-pressed.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .schedule .v-calendar-time, .social .dashboard .schedule .v-calendar-header-week, .social .dashboard .schedule .v-calendar-day-times, .social .dashboard .schedule .v-calendar-day-times .v-datecellslot-even {
-	border-color: transparent;
+.social .dashboard .v-window-black .v-window-footer {
+	background: transparent;
+	border: none;
+	height: 14px;
 }
 
-.social .dashboard .schedule .v-calendar-day-times .v-datecellslot {
-	border-color: #efefef;
+.social .dashboard .v-window-black .v-window-resizebox {
+	background: transparent no-repeat;
+	background-image: url(../reindeer/window/img/black/resize.png);/** sprite-ref: black-verticals; sprite-margin-bottom: 4px */
+	width: 14px;
+	height: 14px;
 }
 
-.social .dashboard .schedule .v-calendar-event {
-	overflow: visible;
+.social .dashboard .v-window-black .v-window-maximizebox {
+	top: 8px;
+	background-image: url(../reindeer/window/img/black/maximize.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .schedule .v-calendar-event-content {
-	margin-left: 10px;
+.social .dashboard .v-window-black .v-window-maximizebox:hover {
+	background-image: url(../reindeer/window/img/black/maximize-hover.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .schedule .v-calendar-event-caption {
-	left: 14px;
-	right: 0;
-	width: auto;
-	font-size: 12px;
-	font-weight: 600;
-	color: #fff;
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+.social .dashboard .v-window-black .v-window-maximizebox:active {
+	background-image: url(../reindeer/window/img/black/maximize-active.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .schedule .v-calendar-event-caption span {
-	color: #979699;
+.social .dashboard .v-window-black .v-window-restorebox {
+	top: 8px;
+	background-image: url(../reindeer/window/img/black/restore.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .schedule .v-calendar-current-time {
-	width: 100% !important;
+.social .dashboard .v-window-black .v-window-restorebox:hover {
+	background-image: url(../reindeer/window/img/black/restore-hover.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .schedule .v-calendar-time {
-	color: #979699;
+.social .dashboard .v-window-black .v-window-restorebox:active {
+	background-image: url(../reindeer/window/img/black/restore-active.png);/** sprite-ref: verticals */
 }
 
-.social .dashboard .schedule .v-calendar-header-day {
-	font-weight: 600;
-	font-size: 11px;
-	text-transform: uppercase;
-	color: #349aff;
-	-webkit-font-smoothing: antialiased;
-}
-
-.social .dashboard .schedule .v-calendar-event-content {
-	background-repeat: repeat-x, no-repeat;
-	background-size: auto, cover;
-	border: 1px solid #000;
-	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-	-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+.social .dashboard .v-window-black .v-window-contents {
+	border: none;
+	background: transparent repeat-x;
+	background-image: url(../reindeer/window/img/black/content-bg.png);/** sprite-ref: black-verticals; sprite-alignment: repeat */
 }
 
 .social .dashboard .timeline .h1 {
@@ -12929,12 +12997,116 @@ body .social .dashboard.v-app .v-app-loading {
 	left: 60%;
 }
 
-.social .dashboard .transactions .h1 {
-	padding: 10px 1em 0.5em 8px;
+.social .dashboard .forward {
+	background: none repeat scroll 0 0 #F8F8F8;
+	border: 1px solid #BDD1DF;
+	border-radius: 3px 3px 3px 3px;
+	clear: both;
+	color: #333333;
+	display: block;
+	font-size: 12px;
+	margin-bottom: 10px;
+	padding: 13px;
+	position: relative;
 }
 
-.social .dashboard .transactions .borderless .v-table-header-wrap {
-	border-top: 1px solid #d4d5d5;
+.social .dashboard .forward em {
+	background: url(../dashboard/img/weibo/tip.gif) no-repeat scroll 0 0 transparent;
+	height: 8px;
+	left: 20px;
+	position: absolute;
+	top: -8px;
+	width: 15px;
+}
+
+.social .dashboard .wb_text {
+	font-size: 14px;
+	line-height: 23px;
+	padding: 4px 0;
+}
+
+.social .dashboard .wb_text a {
+	color: #49976B;
+	text-decoration: none;
+}
+
+.social .dashboard .wb_text a:hover {
+	text-decoration: underline;
+}
+
+.social .dashboard .wb_name {
+	color: #33463F;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 16px;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-green {
+	color: #4f8324;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-green-all-day {
+	background-color: #61c114;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-green .v-calendar-event-caption {
+	color: #4f8324;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-green .v-calendar-event-content {
+	border-color: #61c114;
+	background-color: #daff70;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-blue {
+	color: #1c4b8b;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-blue-all-day {
+	background-color: #0a56bc;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-blue .v-calendar-event-caption {
+	color: #1c4b8b;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-blue .v-calendar-event-content {
+	border-color: #0a56bc;
+	background-color: #529bff;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-red {
+	color: #831d1d;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-red-all-day {
+	background-color: #bd1a1a;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-red .v-calendar-event-caption {
+	color: #831d1d;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-red .v-calendar-event-content {
+	border-color: #bd1a1a;
+	background-color: #ff9d9d;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-orange {
+	color: #8b5923;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-orange-all-day {
+	background-color: #cd6a00;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-orange .v-calendar-event-caption {
+	color: #8b5923;
+}
+
+.social .dashboard .v-calendar .v-calendar-event-orange .v-calendar-event-content {
+	border-color: #cd6a00;
+	background-color: #faa345;
 }
 
 .social .dashboard .v-view {

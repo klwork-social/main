@@ -4941,6 +4941,12 @@ body .dashboard.v-app .v-app-loading {
 	box-shadow: none;
 }
 
+.dashboard .myTabButton {
+	position: absolute;
+	top: 5px;
+	right: 55px;
+}
+
 .dashboard .v-label {
 	overflow: visible;
 }
@@ -5587,6 +5593,10 @@ body .dashboard.v-app .v-app-loading {
 .dashboard .help-overlay.timeline-browse {
 	top: auto !important;
 	bottom: 80px;
+}
+
+.dashboard .v-tabsheet-tabitemcell-tab-myTask {
+	background: url(img/bg-number-active.gif);
 }
 
 .dashboard .reports .drafts {
