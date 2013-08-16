@@ -63,8 +63,8 @@ img{border:none}
 <form id="bind_form" name="bind_form" method="post" action="${ctxPath}/user/bindSubmit">
 <p class="p6">绑定原来在本站注册的账号可以享受qq和本站的账号登录。</p>
 
-<p class="p7"><span class="span2">登录帐号：</span><span class="span3"><input type="text" class="text2" id="bindName" name="bindName"/></span><span class="span4">（登录ID）</span></p>
-<p class="p7"><span class="span2">登录密码：</span><span class="span3"><input type="password" class="text2" id="bindPassword" name="bindPassword"/></span><span class="span4">（本站的独立密码）</span></p>
+<p class="p7"><span class="span2">登录帐号：</span><span class="span3"><input type="text" class="text2" id="bindName" name="bindName" value="${user.id!}"/></span><span class="span4">（登录ID）</span></p>
+<p class="p7"><span class="span2">登录密码：</span><span class="span3"><input type="password" class="text2" id="bindPassword" name="bindPassword" value=""/></span><span class="span4">（本站的独立密码）</span></p>
 <p class="p9"><a href="javascript:void(-1);" onclick="return klwork_loginSet.bindSubmit();"><img src="${ctxPath}/site/images/bangding.png"/></a></p>
 </div>
 </form>
