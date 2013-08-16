@@ -12,7 +12,6 @@
  */
 package com.klwork.business.domain.service;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +22,7 @@ import net.sf.json.JSONObject;
 
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.User;
-import org.activiti.engine.impl.persistence.entity.UserEntity;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,12 +31,14 @@ import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.business.domain.model.SocialUserAccountQuery;
 import com.klwork.business.domain.model.SocialUserWeibo;
-import com.klwork.business.domain.model.SocialUserWeiboQuery;
+import com.klwork.business.domain.model.WeiboHandleResult;
+import com.klwork.business.domain.service.infs.AbstractSocialService;
 import com.klwork.business.utils.TencentSociaTool;
-import com.klwork.common.DataBaseParameters;
+import com.klwork.common.exception.ApplicationException;
 import com.klwork.common.utils.StringDateUtil;
-import com.klwork.explorer.security.LoginHandler;
+import com.klwork.common.utils.StringTool;
 import com.tencent.weibo.api.StatusesAPI;
+import com.tencent.weibo.api.TimelineParameter;
 import com.tencent.weibo.api.UserAPI;
 import com.tencent.weibo.oauthv2.OAuthV2;
 import com.tencent.weibo.oauthv2.OAuthV2Client;
@@ -46,7 +47,10 @@ import com.tencent.weibo.oauthv2.OAuthV2Client;
  * The Class SocialSinaService.
  */
 @Service
-public class SocialTencentService {
+public class SocialTencentService extends AbstractSocialService {
+	
+	private Logger logger = Logger.getLogger(getClass());
+	
 	@Autowired
 	public SocialUserAccountService socialUserAccountService;
 
@@ -57,12 +61,12 @@ public class SocialTencentService {
 	UserService userService;
 
 	@Autowired
-	private SocialUserAccountInfoService socialUserAccountInfoService;
+	public SocialUserAccountInfoService socialUserAccountInfoService;
 
 	@Autowired
-	private SocialUserWeiboService socialUserWeiboService;
+	public SocialUserWeiboService socialUserWeiboService;
 	
-	
+	@Override
 	public Map queryUserInfoByCode(String code,
 			String openid, String openkey) {
 		HashMap map = new HashMap();
@@ -108,8 +112,9 @@ public class SocialTencentService {
 		map.put("oAuth", oAuth);
 		map.put("code", code);
 		return map;
-
 	}
+	
+	@Override
 	public org.activiti.engine.identity.User handlerUserAuthorize(Map map) {
 		OAuthV2 oAuth = (OAuthV2) map.get("oAuth");
 		JSONObject userInfo = (JSONObject) map.get("user");
@@ -125,23 +130,24 @@ public class SocialTencentService {
 				//retUser = addSocialInfo(userInfo, oAuth);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new ApplicationException(e.getMessage());
 		}
 		return retUser;
 	}
 
 	public SocialUserAccountQuery getQuery(JSONObject userInfo) {
 		SocialUserAccountQuery query = new SocialUserAccountQuery();
-		query.setWeiboUid(userInfo.getString("name"));
-		query.setType(DataBaseParameters.TENCENT);
+		query.setName(userInfo.getString("name"));
+		query.setType(getSocialTypeInt());
 		return query;
 	}
 
 	private org.activiti.engine.identity.User updateSocialInfo(
 			SocialUserAccount c, JSONObject userInfo, OAuthV2 oAuth) {
 		org.activiti.engine.identity.User la = identityService
-				.createUserQuery().userId(c.getName()).singleResult();
+				.createUserQuery().userId(c.getOwnUser()).singleResult();
 		// updateSocialInfos(c, accessTokenObj);
+		updateSocialUserAccountByThird(c,userInfo);
 		updateSocialUserInfo(userInfo, c);
 		addTokenInfos(oAuth, c);
 		return la;
@@ -209,193 +215,221 @@ public class SocialTencentService {
 	}
 
 
-
-	public static void outInfo(String msg) {
-		System.out.println(msg);
-	}
-
-	public int weiboToDb() {
-		int updateSize = 0;
-		String ownerUserId = LoginHandler.getLoggedInUser().getId();
-		SocialUserAccount ac = socialUserAccountService.findSocialUserByType(
-				ownerUserId,
-				DataBaseParameters.TENCENT);
-		if (ac != null) {
-			String accountId = ac.getId();
-			SocialUserAccountInfo tok = socialUserAccountInfoService
-					.findAccountOfInfoByKey(DictDef.dict("accessToken"),
-							accountId);
-			String assessToken = tok.getValue();
-			SocialUserAccountInfo openIdInfo = socialUserAccountInfoService
-					.findAccountOfInfoByKey(DictDef.dict("openId"), accountId);
-			String openId = openIdInfo.getValue();
-			OAuthV2 oAuth = TencentSociaTool.getQQAuthV2();
-			oAuth.setAccessToken(assessToken);
-			oAuth.setOpenid(openId);
-			String format = "json";
-			String pageflag = "2";// 向上翻页
-			String reqnum = "50";
-
-			String contenttype = "0";
-			String type = "0";
-			JSONArray infoList = null;
-			Object responseJsonObject = null;
-			String lastid = "1";
-			SocialUserWeiboQuery query = new SocialUserWeiboQuery();
-			query.setUserAccountId(ac.getId());
-			String startTime = StringDateUtil.addDay(new Date(), -1).getTime()/1000 + "";//1347444000
-			SocialUserWeibo lastWeibo = socialUserWeiboService.queryLastWeibo(query);
-			String pagetime = lastWeibo == null ? startTime : String
-					.valueOf(lastWeibo.getCreateAt().getTime() / 1000);
-			do {
-				String response = "";
-				try {
-					response = new StatusesAPI(oAuth.getOauthVersion())
-							.homeTimeline(oAuth, format, pageflag, pagetime,
-									reqnum, type, contenttype);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				responseJsonObject = TencentSociaTool
-						.getJsonDataObject(response);
-				if (judgeNull(responseJsonObject)) {
-					break;
-				}
-				infoList = ((JSONObject) responseJsonObject)
-						.getJSONArray("info");
-				for (int i = 0; i < infoList.size(); i++) {// 没一条的微博
-					JSONObject infoObj = infoList.getJSONObject(i);
-					SocialUserWeibo dbWeibo = currentSocialUserWeibo(
-							ownerUserId, ac, infoObj);
-					
-					JSONObject source = infoObj.getJSONObject("source");
-					if (source != null && !source.toString().equals("null")) {//有原帖内容
-						SocialUserWeibo soruceWeibo = currentSocialUserWeibo(
-								ownerUserId, ac, source);
-						socialUserWeiboService.createSocialUserWeibo(soruceWeibo);
-						dbWeibo.setRetweetedId(soruceWeibo.getId());
-					}
-					socialUserWeiboService.createSocialUserWeibo(dbWeibo);
-					
-					
-					if(i == 0 ){
-						pagetime = infoObj.getString("timestamp");
-					}
-				}
-				updateSize += infoList.size();
-			} while (infoList != null && infoList.size() > 0
-					&& !judgeNull(responseJsonObject));
-		}
-		return updateSize;
-
-	}
-
-	public SocialUserWeibo currentSocialUserWeibo(String ownerUserId,
+	public SocialUserWeibo handlerRetweetedWeibo(String ownerUserId,
 			SocialUserAccount ac, JSONObject source) {
-		SocialUserWeibo soruceWeibo =  new SocialUserWeibo();
-		convertTecentJsonInfoToDbWb(source, soruceWeibo);
-		soruceWeibo.setUserAccountId(ac.getId());
-		soruceWeibo.setOwner(ownerUserId);
-		soruceWeibo.setType(DataBaseParameters.TENCENT);
+		SocialUserWeibo soruceWeibo = currentNewSocialUserWeibo(ownerUserId, ac);
+		convertThirdToWeiboEntity(soruceWeibo,source);
 		return soruceWeibo;
 	}
 	
-	public int myWeiboToDb() {
+	
+	/**
+	 * 把微博保存到数据库
+	 * @param ac
+	 * @param weiType
+	 * @return
+	 */
+	@Override
+	public int weiboToDb(SocialUserAccount ac, int weiType) {
+		String ownerUserId = ac.getOwnUser();
 		int updateSize = 0;
-		String ownerUserId = LoginHandler.getLoggedInUser().getId();
-		SocialUserAccount ac = socialUserAccountService.findSocialUserByType(
-				ownerUserId,
-				DataBaseParameters.TENCENT);
 		if (ac != null) {
 			String accountId = ac.getId();
-			SocialUserAccountInfo tok = socialUserAccountInfoService
-					.findAccountOfInfoByKey(DictDef.dict("accessToken"),
-							accountId);
-			String assessToken = tok.getValue();
-			SocialUserAccountInfo openIdInfo = socialUserAccountInfoService
-					.findAccountOfInfoByKey(DictDef.dict("openId"), accountId);
-			String openId = openIdInfo.getValue();
-			OAuthV2 oAuth = TencentSociaTool.getQQAuthV2();
-			oAuth.setAccessToken(assessToken);
-			oAuth.setOpenid(openId);
-			String format = "json";
-			String pageflag = "2";// 0：第一页，1：向下翻页，2向上翻页
-			String reqnum = "50";
-
-			String contenttype = "0";//内容过滤。0-表示所有类型，1-带文本，2-带链接，4-带图片，8-带视频，0x10-带音频
-			String type = "0";//0：所有类型，0x1：原创发表，0x2：转播
-			JSONArray infoList = null;
-			Object responseJsonObject = null;
-			String lastid = "0";//和pagetime配合使用（第一页：填0，向上翻页：填上一次请求返回的第一条记录id，向下翻页：填上一次请求返回的最后一条记录id）
-			String pagetime = "0";//本页起始时间（第一页：填0，向上翻页：填上一次请求返回的第一条记录时间，向下翻页：填上一次请求返回的最后一条记录时间）
-			SocialUserWeiboQuery query = new SocialUserWeiboQuery();
-			query.setUserAccountId(ac.getId());
-			String startTime = StringDateUtil.addDay(new Date(), -3).getTime()/1000 + "";//1347444000
-			SocialUserWeibo lastWeibo = socialUserWeiboService.queryLastWeibo(query);
-			if(lastWeibo != null){
-				pagetime = lastWeibo.getCreateAt().getTime()/1000 + "";//
-				lastid = lastWeibo.getWeiboId();
-			}else {
-				pagetime = startTime;
-			}
-			System.out.println(pagetime + "&&&&&&&&" + lastid);
-			do {
-				String response = "";
-				try {
-					response = new StatusesAPI(oAuth.getOauthVersion())
-							.broadcastTimeline(oAuth, format, pageflag, pagetime,
-									reqnum, lastid,type, contenttype);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				responseJsonObject = TencentSociaTool
-						.getJsonDataObject(response);
-				if (judgeNull(responseJsonObject) || ((JSONObject) responseJsonObject).get("info") == null) {
-					break;
-				}
-				infoList = ((JSONObject) responseJsonObject)
-						.getJSONArray("info");
-				for (int i = 0; i < infoList.size(); i++) {// 没一条的微博
-					JSONObject infoObj = infoList.getJSONObject(i);
-					SocialUserWeibo dbWeibo = currentSocialUserWeibo(
-							ownerUserId, ac, infoObj);
-					if(i == 0 ){//
-						pagetime = infoObj.getString("timestamp");
-						lastid = infoObj.getString("id");
-					}
-					JSONObject source = infoObj.getJSONObject("source");
-					if (source != null && !(source.toString().equals("null"))) {//有原帖内容
-						SocialUserWeibo soruceWeibo = currentSocialUserWeibo(
-								ownerUserId, ac, source);
-						try {
-							socialUserWeiboService.createSocialUserWeibo(soruceWeibo);
-						}catch(Exception e){
-							e.printStackTrace();
-							System.out.println("sub:" + soruceWeibo.getUserAccountId() + "--" +  soruceWeibo.getWeiboId());
-							continue;
-						}
-						dbWeibo.setRetweetedId(soruceWeibo.getId());
-					}
-					
-					try{
-					socialUserWeiboService.createSocialUserWeibo(dbWeibo);
-					}catch(Exception e){
-						e.printStackTrace();
-						System.out.println("" +dbWeibo.getUserAccountId() + "--" +  dbWeibo.getWeiboId());
-						continue;
-					}
-					
-					//System.out.println(infoObj.getString("timestamp") + "&&&&&&&&" + infoObj.getString("id"));
-				
-				}
-				updateSize += infoList.size();
-			} while (infoList != null && infoList.size() > 0
-					&& !judgeNull(responseJsonObject));
+			OAuthV2 oAuth = queryAccountToken(accountId);
+			
+			//我的微博
+			String webFetchTime = queryMyWeiboTime(ac);
+			TimelineParameter pBroadcastTime = new TimelineParameter(oAuth);
+			pBroadcastTime.pagetime = webFetchTime;
+			//pBroadcastTime.reqnum = "2";
+			myWeiboToDb(ac, oAuth,pBroadcastTime);
+			
+			//@我的微博
+			TimelineParameter pBroadcastTime2 = new TimelineParameter(oAuth);
+			String webFetchTime2 = queryMentionWeiboTime(ac);
+			pBroadcastTime2.pagetime = webFetchTime2;
+			mentionsWeiboToDb(ac, oAuth,pBroadcastTime2);
+			
+			//我关注的所有人的微博
+			TimelineParameter pBroadcastTime3 = new TimelineParameter(oAuth);
+			String webFetchTime3 = queryHomeWeiboTime(ac);
+			pBroadcastTime3.pagetime = webFetchTime3;
+			homeWeiboToDb(ac, oAuth,pBroadcastTime3,false);
 		}
 		return updateSize;
-
 	}
-
+	
+	/**
+	 * 最近的微博
+	 * @param ac
+	 * @param oAuth
+	 * @param pBroadcastTime
+	 */
+	public void latestWeiboToDb(SocialUserAccount ac, OAuthV2 oAuth,TimelineParameter pBroadcastTime) {
+			String response = "";
+			try {
+				response = new StatusesAPI(oAuth.getOauthVersion())
+						.broadcastTimeline(pBroadcastTime);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(StringTool.judgeBlank(response)){
+				WeiboHandleResult r = weiboSaveDb(response,ac);
+				if(r.isSuccess() && r.getInfoSize() >0){
+					pBroadcastTime.lastid = r.getLastid();
+					pBroadcastTime.pagetime = r.getPagetime();
+					latestWeiboToDb(ac,oAuth,pBroadcastTime);
+				}
+			}
+	}
+	
+	/**
+	 * 我发表的微博
+	 * @param ac
+	 * @param oAuth
+	 * @param pBroadcastTime
+	 */
+	public void myWeiboToDb(SocialUserAccount ac, OAuthV2 oAuth,TimelineParameter pBroadcastTime) {
+			String response = "";
+			try {
+				response = new StatusesAPI(oAuth.getOauthVersion())
+						.broadcastTimeline(pBroadcastTime);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(StringTool.judgeBlank(response)){
+				WeiboHandleResult r = weiboSaveDb(response,ac);
+				if(r.isSuccess() && r.getInfoSize() >0){
+					pBroadcastTime.lastid = r.getLastid();
+					pBroadcastTime.pagetime = r.getPagetime();
+					myWeiboToDb(ac,oAuth,pBroadcastTime);
+				}
+			}
+	}
+	
+	/**
+	 * @我的微博
+	 * @param ac
+	 * @param oAuth
+	 * @param pBroadcastTime
+	 */
+	public void mentionsWeiboToDb(SocialUserAccount ac, OAuthV2 oAuth,TimelineParameter pBroadcastTime) {
+			String response = "";
+			try {
+				response = new StatusesAPI(oAuth.getOauthVersion())
+						.mentionsTimeline(pBroadcastTime);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(StringTool.judgeBlank(response)){
+				WeiboHandleResult r = weiboSaveDb(response,ac);
+				if(r.isSuccess() && r.getInfoSize() >0){
+					pBroadcastTime.lastid = r.getLastid();
+					pBroadcastTime.pagetime = r.getPagetime();
+					mentionsWeiboToDb(ac,oAuth,pBroadcastTime);
+				}
+			}
+	}
+	
+	/**
+	 * 我的所有微博
+	 * @param ac
+	 * @param oAuth
+	 * @param pBroadcastTime
+	 */
+	public void homeWeiboToDb(SocialUserAccount ac, OAuthV2 oAuth,TimelineParameter pBroadcastTime,boolean sign) {
+			String response = "";
+			try {
+				response = new StatusesAPI(oAuth.getOauthVersion())
+						.homeTimeline(pBroadcastTime);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(StringTool.judgeBlank(response)){
+				WeiboHandleResult r = weiboSaveDb(response,ac);
+				if(r.isSuccess() && r.getInfoSize() >0){
+					pBroadcastTime.lastid = r.getLastid();
+					pBroadcastTime.pagetime = r.getPagetime();
+					if(!sign){
+						sign = true;
+						SocialUserAccountInfo info = new SocialUserAccountInfo();
+						info.setKey("weibo_last_time");
+						Date d = new Date(Long.parseLong(r.getPagetime()) * 1000);
+						info.setType(DictDef.dict("user_account_info_type"));//帐号类型
+						info.setValue(StringDateUtil.parseString(d, 4));
+						info.setValueType(DictDef.dictInt("date"));
+						info.setValueDate(d);
+						socialUserAccountInfoService.createSocialUserAccountInfo(info);
+					}
+					homeWeiboToDb(ac,oAuth,pBroadcastTime,sign);
+				}
+			}
+	}
+	
+	public OAuthV2 queryAccountToken(String accountId) {
+		//取数据库中的accesToken和openId
+		SocialUserAccountInfo tok = socialUserAccountInfoService
+				.findAccountOfInfoByKey(DictDef.dict("accessToken"),
+						accountId);
+		String assessToken = tok.getValue();
+		SocialUserAccountInfo openIdInfo = socialUserAccountInfoService
+				.findAccountOfInfoByKey(DictDef.dict("openId"), accountId);
+		String openId = openIdInfo.getValue();
+		
+		
+		OAuthV2 oAuth = TencentSociaTool.getQQAuthV2();
+		oAuth.setAccessToken(assessToken);
+		oAuth.setOpenid(openId);
+		return oAuth;
+	}
+	
+	/**
+	 * 将微博内容放到数据库
+	 * @param response
+	 * @param ac
+	 * @return
+	 */
+	private WeiboHandleResult weiboSaveDb(String response,SocialUserAccount ac) {
+		WeiboHandleResult result = new WeiboHandleResult();
+		JSONArray infoList = null;
+		String ownerUserId = ac.getOwnUser();
+		Object responseJsonObject = TencentSociaTool
+				.getJsonDataObject(response);
+		if (judgeNull(responseJsonObject) || ((JSONObject) responseJsonObject).get("info") == null) {
+			result.setSuccess(false);
+			return result;
+		}
+		infoList = ((JSONObject) responseJsonObject)
+				.getJSONArray("info");
+		boolean sign = false;
+		for (int i = 0; i < infoList.size(); i++) {// 没一条的微博
+			JSONObject infoObj = infoList.getJSONObject(i);
+			SocialUserWeibo dbWeibo = handlerRetweetedWeibo(
+					ownerUserId, ac, infoObj);
+			logger.info(i + "+++timestamp:" + infoObj.getString("timestamp") + "++++++++++++++++" +  "id:" + infoObj.getString("id"));
+			if(i == 0 ){//
+				result.setPagetime(infoObj.getString("timestamp"));
+				result.setLastid(infoObj.getString("id"));
+			}
+			JSONObject source = infoObj.getJSONObject("source");
+			if (source != null && !(source.toString().equals("null"))) {//有原帖内容
+				SocialUserWeibo soruceWeibo = handlerRetweetedWeibo(
+						ownerUserId, ac, source);
+				if(saveWeiboUserEntity(soruceWeibo)){
+					dbWeibo.setRetweetedId(soruceWeibo.getId());
+				}
+			}
+			
+			//插进本帖
+			saveWeiboUserEntity(dbWeibo);
+		}
+		if(infoList != null){//记录数
+			result.setInfoSize(infoList.size());
+		}
+		result.setSuccess(true);
+		return result;
+	}
+	
 	public boolean judgeNull(Object responseJsonObject) {
 		if(responseJsonObject == null){
 			return true;
@@ -408,9 +442,11 @@ public class SocialTencentService {
 		}
 		return false;
 	}
-
-	private SocialUserWeibo convertTecentJsonInfoToDbWb(JSONObject jsonInfo,
-			SocialUserWeibo weibo) {
+	
+	@Override
+	public <T> SocialUserWeibo convertThirdToWeiboEntity(SocialUserWeibo weibo,T thirdInfo
+			) {
+		JSONObject jsonInfo = (JSONObject)thirdInfo;
 		if (weibo == null) {
 			weibo = new SocialUserWeibo();
 			weibo.setCreateAt(new Date());
@@ -425,7 +461,9 @@ public class SocialTencentService {
 		weibo.setUserDomain(jsonInfo.getString("fromurl"));// 来源
 		
 		// 微博内容
-		weibo.setText(jsonInfo.getString("text"));
+		weibo.setText(jsonInfo.getString("origtext"));
+		//System.out.println(jsonInfo.getString("text") + "&&*&&&&");
+		//System.out.println(jsonInfo.getString("origtext"));
 		weibo.setUserVerified(jsonInfo.getInt("isvip"));
 		
 		
@@ -475,7 +513,8 @@ public class SocialTencentService {
 
 		return weibo;
 	}
-
+	
+	@Override
 	public User initUserByThirdUser(Map thirdUserMap) {
 		JSONObject userInfo = (JSONObject) thirdUserMap.get("user");
 		String userId = userInfo.getString("name");
@@ -487,20 +526,52 @@ public class SocialTencentService {
 	}
 	
 	public void addTencentSocialInfo(org.activiti.engine.identity.User user, HashMap thirdUserMap) {
-		JSONObject userInfo = (JSONObject) thirdUserMap.get("user");
-		OAuthV2 oAuth = (OAuthV2) thirdUserMap.get("oAuth");
 		
-		String userId = userInfo.getString("name");
-		String nick = userInfo.getString("nick");
-	
-		SocialUserAccount socialUserAccount = new SocialUserAccount();
-		socialUserAccount.setWeiboUid(userId);
-		socialUserAccount.setName(nick);
-		socialUserAccount.setType(DataBaseParameters.TENCENT);
-		socialUserAccount.setOwnUser(user.getId());
-		socialUserAccountService.createSocialUserAccount(socialUserAccount);
+		OAuthV2 oAuth = (OAuthV2) thirdUserMap.get("oAuth");
+		JSONObject userInfo = (JSONObject) thirdUserMap.get("user");
+		
+		SocialUserAccount socialUserAccount = addSocialUserAccountByThird(user,
+				userInfo);
 		addTokenInfos(oAuth, socialUserAccount);
 		
 	}
+	public SocialUserAccount addSocialUserAccountByThird(
+			org.activiti.engine.identity.User user, JSONObject userInfo) {
+		String name = userInfo.getString("name");
+		String nick = userInfo.getString("nick");
+		String uid = userInfo.getString("openid");
+		String url = userInfo.getString("homepage");
+		
+		SocialUserAccount socialUserAccount = new SocialUserAccount();
+		socialUserAccount.setWeiboUid(uid);
+		socialUserAccount.setName(name);
+		socialUserAccount.setUrl(url);
+		socialUserAccount.setUserScreenName(nick);
+		socialUserAccount.setType(getSocialTypeInt());
+		socialUserAccount.setOwnUser(user.getId());
+		socialUserAccountService.createSocialUserAccount(socialUserAccount);
+		return socialUserAccount;
+	}
+	
+	public void updateSocialUserAccountByThird(
+			SocialUserAccount socialUserAccount, JSONObject userInfo) {
+		String name = userInfo.getString("name");
+		String nick = userInfo.getString("nick");
+		String uid = userInfo.getString("openid");
+		String url = userInfo.getString("homepage");
+		socialUserAccount.setWeiboUid(uid);
+		socialUserAccount.setName(name);
+		socialUserAccount.setUrl(url);
+		socialUserAccount.setUserScreenName(nick);
+		socialUserAccount.setType(getSocialTypeInt());
+		socialUserAccountService.updateSocialUserAccount(socialUserAccount);
+	}
+	
+	@Override
+	public String getSocialType() {
+		return "1";
+	}
+
+
 
 }

@@ -12,4 +12,5 @@
     <import resource="applicationContext-security.xml"/>
 	<import resource="applicationContext-ui.xml"/>
 	<import resource="applicationContext-mvc.xml"/>
+	<!--import resource="applicationContext-quartz.xml"/-->
 </beans>

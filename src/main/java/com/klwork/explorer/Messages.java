@@ -31,7 +31,7 @@ public interface Messages {
   String BUTTON_SAVE = "button_save";
   String BUTTON_DELETE = "button_delete";
   String UNCAUGHT_EXCEPTION = "uncaught_exception";
-  
+  String SELECT_DEFAULT = "select_default";
   // Navigation
   String NAVIGATION_ERROR_NOT_INVOLVED_TITLE = "navigation_error_not_involved_title";
   String NAVIGATION_ERROR_NOT_INVOLVED = "navigation_error_not_involved";
@@ -507,7 +507,8 @@ public interface Messages {
   String TEAM_NO_MEMBERS = "team_no_members";
   String TEAM_SELECT_MEMBERS = "team_select_members";
   String TEAM_DELETE = "team_delete";
-  
+  String TEAM_SELECT = "team_sign_select";
+  String TEAM_MEMBER_SELECT = "team_mermber_select";
   
   //out project
   String OUTPROJECT_MY_PARTICIPATION = "outproject_my_participation";

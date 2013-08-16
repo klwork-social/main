@@ -33,6 +33,7 @@ import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.base.AbstractFormPoputWindow;
 import com.klwork.explorer.ui.handler.CommonFieldHandler;
+import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -80,13 +81,14 @@ public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 				.getBean("teamService");
 		identityService = ProcessEngines.getDefaultProcessEngine()
 				.getIdentityService();
+		 //addStyleName(ExplorerLayout.THEME);
 	}
 
 	@Override
 	protected void intPopWindowCustom() {
 		setCaption(i18nManager.getMessage(Messages.TASK_NEW));
-		setWidth(450, Unit.PIXELS);
-		setHeight(360, Unit.PIXELS);
+		setWidth(460, Unit.PIXELS);
+		setHeight(380, Unit.PIXELS);
 	}
 
 	@Override
@@ -117,8 +119,11 @@ public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 		getForm().addComponent(priorityComboBox);
 		Map<String, String> groupsMap = teamService.queryTeamMapOfUser(LoginHandler
 				.getLoggedInUser().getId());
-		groupsMap.put("", "请选择");
-		userGroupComboBox = CommonFieldHandler.createComBox("用户组", groupsMap, "null");
+		groupsMap.put("", i18nManager
+				.getMessage(Messages.SELECT_DEFAULT));
+		//"用户组"
+		userGroupComboBox = CommonFieldHandler.createComBox(i18nManager
+				.getMessage(Messages.TEAM_SELECT), groupsMap, "null");
 		//userGroupComboBox.
 		userGroupComboBox.addValueChangeListener(new com.vaadin.data.Property.ValueChangeListener() {
 			/**
@@ -136,8 +141,10 @@ public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 		getForm().addComponent(userGroupComboBox);
 		
 		Map<String, String> usersMap = new HashMap();
-		usersMap.put("", "请选择");
-		userComboBox = CommonFieldHandler.createComBox("用户", usersMap, "");
+		usersMap.put("", i18nManager
+				.getMessage(Messages.SELECT_DEFAULT));
+		userComboBox = CommonFieldHandler.createComBox(i18nManager
+				.getMessage(Messages.TEAM_MEMBER_SELECT), usersMap, "");
 		getForm().addComponent(userComboBox);
 		
 		initCreateTaskButton();

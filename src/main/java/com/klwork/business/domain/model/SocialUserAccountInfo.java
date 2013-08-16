@@ -24,6 +24,10 @@ public class SocialUserAccountInfo implements Serializable
 	/**
 	 *  
 	 */
+	private String userId;
+	/**
+	 *  
+	 */
 	private String accountId;
 	/**
 	 *  
@@ -36,11 +40,15 @@ public class SocialUserAccountInfo implements Serializable
 	/**
 	 *  
 	 */
-	private Integer valueType;
+	private Object valueType;
 	/**
 	 *  
 	 */
 	private String value;
+	/**
+	 *  
+	 */
+	private Integer valueInt;
 	/**
 	 *  
 	 */
@@ -73,6 +81,22 @@ public class SocialUserAccountInfo implements Serializable
 	 */	
 	public String getId(){
 		return id;
+	}
+	/**
+	 * 
+	 *
+	 * @param userId
+	 */
+	public void setUserId(String userId){
+		this.userId = userId;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getUserId(){
+		return userId;
 	}
 	/**
 	 * 
@@ -127,7 +151,7 @@ public class SocialUserAccountInfo implements Serializable
 	 *
 	 * @param valueType
 	 */
-	public void setValueType(Integer valueType){
+	public void setValueType(Object valueType){
 		this.valueType = valueType;
 	}
 	/**
@@ -135,7 +159,7 @@ public class SocialUserAccountInfo implements Serializable
 	 *
 	 * @return
 	 */	
-	public Integer getValueType(){
+	public Object getValueType(){
 		return valueType;
 	}
 	/**
@@ -153,6 +177,22 @@ public class SocialUserAccountInfo implements Serializable
 	 */	
 	public String getValue(){
 		return value;
+	}
+	/**
+	 * 
+	 *
+	 * @param valueInt
+	 */
+	public void setValueInt(Integer valueInt){
+		this.valueInt = valueInt;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public Integer getValueInt(){
+		return valueInt;
 	}
 	/**
 	 * 

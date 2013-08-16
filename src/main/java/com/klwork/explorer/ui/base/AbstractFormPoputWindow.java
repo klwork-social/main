@@ -14,6 +14,7 @@
 package com.klwork.explorer.ui.base;
 
 import com.klwork.explorer.ui.custom.PopupWindow;
+import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.themes.Reindeer;
@@ -73,6 +74,7 @@ public abstract class AbstractFormPoputWindow extends PopupWindow {
 	 */
 	protected void initForm() {
 		form = new FormLayout();
+		form.addStyleName(ExplorerLayout.THEME);
 		form.setSizeFull();
 		//form.setValidationVisibleOnCommit(true);
 		form.setImmediate(true);

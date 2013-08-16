@@ -13,6 +13,8 @@
 	name_(varchar)	:
 	last_update_(timestamp)	:
 	type_(int4)	:
+	user_screen_name_(varchar)	:
+	url_(varchar)	:
 sqlMapConfig:
 	<typeAlias alias="SocialUserAccount" type="com.klwork.business.domain/model.SocialUserAccount" />
 	<mapper resource="com/klwork/business/domain/model/SocialUserAccount_SqlMap.xml" />
@@ -30,7 +32,9 @@ sqlMapConfig:
 	own_user_,
 	name_,
 	last_update_,
-	type_
+	type_,
+	user_screen_name_,
+	url_
 	)
     values (
       		#{id,jdbcType=VARCHAR},
@@ -41,7 +45,9 @@ sqlMapConfig:
  		#{ownUser,jdbcType=VARCHAR},
  		#{name,jdbcType=VARCHAR},
  		#{lastUpdate,jdbcType=TIMESTAMP},
-    	#{type,jdbcType=INTEGER}
+ 		#{type,jdbcType=INTEGER},
+ 		#{userScreenName,jdbcType=VARCHAR},
+    	#{url,jdbcType=VARCHAR}
     	)
   </insert>
   
@@ -66,11 +72,17 @@ sqlMapConfig:
 <if test="name != null">
  name_ = #{name,jdbcType=VARCHAR},
 </if>
-<if test="lastUpdate != null">
- last_update_ = #{lastUpdate,jdbcType=TIMESTAMP},
-</if>
 <if test="type != null">
  type_ = #{type,jdbcType=INTEGER},
+</if>
+<if test="userScreenName != null">
+ user_screen_name_ = #{userScreenName,jdbcType=VARCHAR},
+</if>
+<if test="url != null">
+ url_ = #{url,jdbcType=VARCHAR},
+</if>
+<if test="lastUpdate != null">
+ last_update_ = #{lastUpdate,jdbcType=TIMESTAMP}
 </if>
  where id_ = #{id,jdbcType=VARCHAR}
   </update>
@@ -135,5 +147,7 @@ sqlMapConfig:
 	<result property="name" column="name_" />
 	<result property="lastUpdate" column="last_update_" />
 	<result property="type" column="type_" />
+	<result property="userScreenName" column="user_screen_name_" />
+	<result property="url" column="url_" />
 </resultMap>
 </mapper>

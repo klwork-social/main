@@ -1,5 +1,7 @@
 package com.klwork.business.domain.model;
 
+import java.util.Date;
+
 import com.klwork.common.dao.QueryParameter;
 
 /**
@@ -19,6 +21,11 @@ public class SocialUserAccountInfoQuery extends QueryParameter{
  	/**
 	 *  
 	 */
+	private String userId;
+	
+	/**
+	 *  
+	 */
 	private String accountId;
 	
 	/**
@@ -31,7 +38,29 @@ public class SocialUserAccountInfoQuery extends QueryParameter{
 	 */
 	private String key;
 	
-
+	
+	private Date dateBefore;
+	
+	private Date dateAfter;
+	/**
+	 * 
+	 *
+	 * @param userId
+	 */
+	public SocialUserAccountInfoQuery setUserId(String userId){
+		this.userId = userId;
+		return this;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getUserId(){
+		return userId;
+	}
+	
 	/**
 	 * 
 	 *
@@ -89,5 +118,22 @@ public class SocialUserAccountInfoQuery extends QueryParameter{
 		return key;
 	}
 	
+	public Date getDateBefore() {
+		return dateBefore;
+	}
+
+	public SocialUserAccountInfoQuery setDateBefore(Date dateBefore) {
+		this.dateBefore = dateBefore;
+		return this;
+	}
+
+	public Date getDateAfter() {
+		return dateAfter;
+	}
+
+	public SocialUserAccountInfoQuery setDateAfter(Date dateAfter) {
+		this.dateAfter = dateAfter;
+		return this;
+	}
 
 }

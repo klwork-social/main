@@ -75,10 +75,22 @@ public class SocialUserAccountService {
 	
 
 	public SocialUserAccount findSocialUserByType(String userId, int type) {
+		List<SocialUserAccount> list = findSocialUserListByType(userId, type);
+		return getOnlyOne(list);
+	}
+	
+	/**
+	 * 查询用户某个类型的第三方帐号
+	 * @param userId
+	 * @param type
+	 * @return
+	 */
+	public List<SocialUserAccount> findSocialUserListByType(String userId,
+			int type) {
 		SocialUserAccountQuery query = new SocialUserAccountQuery();
 		query.setOwnUser(userId).setType(type);
 		List<SocialUserAccount> list = findSocialUserAccountByQueryCriteria(query, null);
-		return getOnlyOne(list);
+		return list;
 	}
 
 	public <T> T getOnlyOne(List<T> list) {

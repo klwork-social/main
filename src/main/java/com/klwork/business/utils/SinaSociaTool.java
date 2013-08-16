@@ -28,11 +28,9 @@ public class SinaSociaTool {
 	public static List<Status> findDsrmAccountRelationWeiboInfo(
 			String accessToken, Paging paging, Integer baseAPP, Integer feature) {
 		Timeline timeline = new Timeline();
+		timeline.client.setToken(accessToken);
 		List<Status> list = null;
 		try {
-
-			Weibo weibo = new Weibo();
-			weibo.setToken(accessToken);
 			StatusWapper statusWapper = timeline.getHomeTimeline(baseAPP,
 					feature, paging);
 			if (null != statusWapper) {
@@ -41,7 +39,43 @@ public class SinaSociaTool {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		return list;
+	}
+	
+	/**
+	 *  @Enclosing_Method  : findDsrmMentionsAccountWeiboInfo
+	 *  @Written by        : wangsi
+	 *  @Creation Date     : 2012-11-1 上午11:16:02 
+	 *  @version           : v1.00
+	 *  @Description       :  
+	 *  获取最新的提到登录用户的微博列表，即@我的微博
+	 *  @param accessToken
+	 *  @param page
+	 *            返回结果的页码，默认为1。
+	 *  @param filter_by_author
+	 *            作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。
+	 *  @param filter_by_source
+	 *            来源筛选类型，0：全部、1：来自微博、2：来自微群，默认为0。
+	 *  @param filter_by_type
+	 *            原创筛选类型，0：全部微博、1：原创的微博，默认为0。
+	 *  @return
+	 **/
+	public static  List<Status> findMentionsAccountWeiboInfo(String accessToken, Paging page, Integer filter_by_author,
+			Integer filter_by_source, Integer filter_by_type){
+		
+		Timeline timeline = new Timeline();
+		timeline.client.setToken(accessToken);
+		List<Status> list = null;
+		try {
+			
+			StatusWapper statusWapper = timeline.getMentions(page, filter_by_author, filter_by_source, filter_by_type);
+			if (null != statusWapper) {
+				list = statusWapper.getStatuses();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return list;
 	}
 
@@ -63,11 +97,9 @@ public class SinaSociaTool {
 			String uid, Paging page, Integer base_app, Integer feature) {
 
 		Timeline timeline = new Timeline();
+		timeline.client.setToken(accessToken);
 		List<Status> list = null;
 		try {
-
-			Weibo weibo = new Weibo();
-			weibo.setToken(accessToken);
 			StatusWapper statusWapper = timeline.getUserTimelineByUid(uid,
 					page, base_app, feature);
 			if (null != statusWapper) {

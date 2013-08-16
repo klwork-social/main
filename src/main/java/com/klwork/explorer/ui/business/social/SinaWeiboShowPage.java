@@ -37,4 +37,6 @@ public class SinaWeiboShowPage extends AbstractTabViewPage{
 	        editor.addStyleName("no-horizontal-drag-hints");
 	        return editor;
 	}
+	
+
 }

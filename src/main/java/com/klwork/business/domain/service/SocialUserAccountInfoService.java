@@ -39,7 +39,7 @@ public class SocialUserAccountInfoService {
 
 	private SocialUserAccountInfo queryExist(SocialUserAccountInfo socialUserAccountInfo) {
 		SocialUserAccountInfoQuery query = new SocialUserAccountInfoQuery();
-		query.setKey(socialUserAccountInfo.getKey()).setAccountId(socialUserAccountInfo.getAccountId()).setType(socialUserAccountInfo.getType());
+		query.setKey(socialUserAccountInfo.getKey()).setAccountId(socialUserAccountInfo.getAccountId()).setType(socialUserAccountInfo.getType()).setUserId(socialUserAccountInfo.getUserId());
 		List<SocialUserAccountInfo> infos =  findSocialUserAccountInfoByQueryCriteria(query,null);
 		if(infos != null && infos.size() > 0){
 			return infos.get(0);

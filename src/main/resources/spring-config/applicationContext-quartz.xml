@@ -1,0 +1,44 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+	 
+	<!-- *************************新渠道赋值定时****************************************** -->
+	<bean id="weiboInitJob" class="com.klwork.business.domain.quartz.WeiboInitJob"></bean>
+	<bean id="weiboInitJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类对象 -->
+		<property name="targetObject">
+			<ref bean="weiboInitJob" />
+		</property>
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod">
+			<value>execute</value>
+		</property>
+		<property name="concurrent" value="false" /><!-- 多个job不会并发运行 -->
+	</bean>
+	<bean id="weiboInitJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="weiboInitJobDetail" />
+		</property>
+		<!-- 每5分钟调用一次 -->
+		<!-- 秒 分 小时 日期 月 星期 年 -->
+		<property name="cronExpression">
+			<value>0 */5 * * * ?</value>
+		</property>
+	</bean>
+	
+	<!--  总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
+	<bean id="startQuartz" lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="weiboInitJobTrigger" />
+			</list>
+		</property>
+		<property name="startupDelay">
+			<value>0</value>
+		</property>
+	</bean>
+</beans>

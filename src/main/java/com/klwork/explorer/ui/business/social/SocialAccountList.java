@@ -25,6 +25,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -85,7 +86,7 @@ public class SocialAccountList extends DetailPanel {
 	}
 
 	private void initProjectsTitle(HorizontalLayout membersHeader) {
-		Label usersHeader = new Label("项目列表");
+		Label usersHeader = new Label("帐号列表");
 		usersHeader.addStyleName(ExplorerLayout.STYLE_H3);
 		membersHeader.addComponent(usersHeader);
 
@@ -104,15 +105,18 @@ public class SocialAccountList extends DetailPanel {
 		listTable.setSortEnabled(true);
 		projectsLayout.addComponent(listTable);
 		listTable.addValueChangeListener(getListSelectionListener(listTable));
-		LazyLoadingQuery lazyLoadingQuery = new SocialListQuery();
+		LazyLoadingQuery lazyLoadingQuery = new SocialListQuery(this);
 		LazyLoadingContainer listContainer = new LazyLoadingContainer(
 				lazyLoadingQuery, 10);
 		listTable.setContainerDataSource(listContainer);
 		
-		listTable.addContainerProperty("id", String.class, null);
+		//listTable.addContainerProperty("id", String.class, null);
+		listTable.addContainerProperty("userScreenName", Button.class, "");
 		listTable.addContainerProperty("name", String.class, "");
+		listTable.addContainerProperty("url", String.class, "");
 		listTable.addContainerProperty("type", String.class, "");
-		listTable.addGeneratedColumn("action", new SocialActionColumnGenerator());
+		listTable.addContainerProperty("actions", Component.class, "");
+		//listTable.addGeneratedColumn("action", new SocialActionColumnGenerator());
 	}
 
 	public class SocialActionColumnGenerator implements ColumnGenerator {
@@ -130,7 +134,7 @@ public class SocialAccountList extends DetailPanel {
 			final SocialUserAccount socialUserAccount = BinderHandler.getTableBean(
 					source, itemId);
 			
-			Button editButton  = new Button("微博管理");
+			Button editButton  = new Button("微博");
 			editButton.addStyleName(Reindeer.BUTTON_LINK);
 			editButton.addClickListener(new ClickListener() {
 				public void buttonClick(ClickEvent event) {
@@ -226,9 +230,9 @@ public class SocialAccountList extends DetailPanel {
 
 	public void selectedHandle(SocialUserAccount socialUserAccount) {
 		if(socialUserAccount.getType() == 0){//新浪微博
-			mainPage.addTabSpecial(new SinaWeiboShowPage(socialUserAccount,mainPage), socialUserAccount.getName());
+			mainPage.addTabSpecial(new SinaWeiboShowPage(socialUserAccount,mainPage), "新浪_" + socialUserAccount.getUserScreenName());
 		}else {
-			mainPage.addTabSpecial(new QQWeiboShowPage(socialUserAccount,mainPage), socialUserAccount.getName());
+			mainPage.addTabSpecial(new QQWeiboShowPage(socialUserAccount,mainPage), "腾讯_" +  socialUserAccount.getUserScreenName());
 		}
 	}
 

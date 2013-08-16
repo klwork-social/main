@@ -4,6 +4,7 @@ import net.sf.json.JSONObject;
 
 import com.tencent.weibo.oauthv2.OAuthV2;
 import com.tencent.weibo.oauthv2.OAuthV2Client;
+import com.tencent.weibo.utils.TencentWeiboContentTransLate;
 
 public class TencentSociaTool {
 	public static OAuthV2 getQQAuthV2() {
@@ -22,5 +23,12 @@ public class TencentSociaTool {
 		OAuthV2 oAuth = getQQAuthV2();
 		String url = OAuthV2Client.generateAuthorizationURL(oAuth);
 		return url;
+	}
+
+	public static String textTranslate(String text) {
+		if(text == null || text.trim().length() == 0){
+			return null;
+		}
+		return TencentWeiboContentTransLate.transLateall(text, "blue");
 	}
 }

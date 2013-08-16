@@ -23,7 +23,6 @@ import com.klwork.common.dto.vo.ViewPage;
  * @author ww
  */
 
-@Repository(value = "dictDefRepository")
 public class DictDefRepository extends
 		MbDomainRepositoryImp<DictDef, Serializable> implements
 		InitializingBean {
@@ -67,7 +66,11 @@ public class DictDefRepository extends
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		//initData();
+		init();
+	}
+
+	public void init() {
+		initData();
 		if (defMaps == null) {
 			defMaps = initAllDictyToMap();
 		}
@@ -93,6 +96,17 @@ public class DictDefRepository extends
 		dictDef = new DictDef("7", "color", "-1", "颜色分类", "7");
 		insertData(dictDef);
 		
+		dictDef = new DictDef("8", "account_info_type", "-1", "帐号信息类型", "8");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("9", "user_info_dynamic", "-1", "用户附加动态信息", "9");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("10", "social_weibo_type", "-1", "微博类型", "10");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("11", "social_weibo_status", "-1", "微博状态", "11");
+		insertData(dictDef);
 		
 		insertData(dictDef);
 		dictDef = new DictDef("100", "sina", "2", "新浪", "0");
@@ -148,6 +162,17 @@ public class DictDefRepository extends
 		insertData(dictDef);
 		
 		dictDef = new DictDef("231", "gender", "3", "性别", "gender");
+		
+		dictDef = new DictDef("232", "weibo_last_time", "3", "微博最后更新时间", "weibo_last_time");
+		dictDef = new DictDef("233", "weibo_first_time", "3", "微博第一次更新时间", "weibo_first_time");
+		
+		dictDef = new DictDef("234", "my_weibo_last_time", "3", "微博最后更新时间", "my_weibo_last_time");
+		dictDef = new DictDef("235", "my_weibo_first_time", "3", "微博第一次更新时间", "my_weibo_first_time");
+		//记录数据库@我的最后时间
+		dictDef = new DictDef("236", "at_weibo_last_time", "3", "微博最后更新时间", "at_weibo_last_time");
+		dictDef = new DictDef("237", "at_weibo_first_time", "3", "微博第一次更新时间", "at_weibo_first_time");
+		
+		
 		insertData(dictDef);
 		
 		dictDef = new DictDef("250", "expiredTime", "4", "token过期时间", "expiredTime");
@@ -198,6 +223,41 @@ public class DictDefRepository extends
 		dictDef = new DictDef("282", "red", "7", "红", "3");
 		insertData(dictDef);
 		dictDef = new DictDef("283", "orange", "7", "橙", "4");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("290", "user_info_type", "8", "用户信息", "0");
+		insertData(dictDef);
+		dictDef = new DictDef("291", "user_account_info_type", "8", "用户帐号信息", "1");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("295", "user_last_logged_time", "9", "用户登录最后时间", "user_last_logged_time");
+		insertData(dictDef);
+		//1-原创发表，2-转载，3-私信，4-回复，5-空回，6-提及，7-评论,
+		dictDef = new DictDef("300", "weibo_type_ori_post", "10", "原创发表", "1");
+		insertData(dictDef);
+		dictDef = new DictDef("301", "weibo_type_reship", "10", "转载", "2");
+		insertData(dictDef);
+		dictDef = new DictDef("302", "weibo_type_private_letter", "10", "私信", "3");
+		insertData(dictDef);
+		dictDef = new DictDef("303", "weibo_type_revert", "10", "回复", "4");
+		insertData(dictDef);
+		dictDef = new DictDef("304", "weibo_type_blank_revert", "10", "空回", "5");
+		insertData(dictDef);
+		dictDef = new DictDef("305", "weibo_type_mention", "10", "提及", "6");
+		insertData(dictDef);
+		dictDef = new DictDef("306", "weibo_type_comment", "10", "评论", "7");
+		insertData(dictDef);
+		
+		//status : 微博状态，0-正常，1-系统删除，2-审核中，3-用户删除，4-根删除（根节点被系统审核删除）
+		dictDef = new DictDef("400", "weibo_status_normal", "11", "正常", "0");
+		insertData(dictDef);
+		dictDef = new DictDef("401", "weibo_status_sys_delete", "11", "系统删除", "1");
+		insertData(dictDef);
+		dictDef = new DictDef("402", "weibo_status_reviewing", "11", "审核中", "2");
+		insertData(dictDef);
+		dictDef = new DictDef("403", "weibo_status_user_delete", "11", "用户删除", "3");
+		insertData(dictDef);
+		dictDef = new DictDef("404", "weibo_status_root_delete", "11", "根删除", "4");
 		insertData(dictDef);
 	}
 

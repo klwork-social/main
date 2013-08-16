@@ -2,6 +2,7 @@ package com.klwork.business.domain.model;
 
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -149,6 +150,23 @@ public class DictDef implements Serializable
 	public static DictDef queryDictDefByCode(String code){
 		DictDef def  = DictDef.queryAllDefMaps().get(code);
 		return def;
+	}
+	
+	/**
+	 * 得到一种类型的所有数据字典
+	 * @param type
+	 * @return
+	 */
+	public static DictDef dictValue(String type,String value){
+		List<DictDef> list =  DictDefRepository.getDefTypeMap().get(type);
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			DictDef dictDef = (DictDef) iterator.next();
+			if(dictDef.getValue().equals(value)){
+				return dictDef;
+			}
+			
+		}
+		return null;
 	}
 	
 	/**

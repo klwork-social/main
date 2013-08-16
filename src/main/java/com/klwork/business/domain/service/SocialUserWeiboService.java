@@ -68,4 +68,12 @@ public class SocialUserWeiboService {
 	public SocialUserWeibo queryLastWeibo(SocialUserWeiboQuery query) {
 		return rep.queryLastWeibo(query);
 	}
+
+	public boolean existWeibo(String userAccountId, String weiboId) {
+		SocialUserWeiboQuery query = new SocialUserWeiboQuery();
+		query.setUserAccountId(userAccountId).setWeiboId(weiboId);
+		List list = rep.findSocialUserWeiboByQueryCriteria(query, null);
+		SocialUserWeibo r = rep.getOnlyOne(list);
+		return r != null;
+	}
 }

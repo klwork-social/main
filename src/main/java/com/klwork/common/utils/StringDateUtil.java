@@ -836,7 +836,11 @@ public class StringDateUtil {
 	public static Date now() {
 		return new Date();
 	}
-
+	
+	public static Date dateStart(Date fDate) {
+		return new Date();
+	}
+	
 	/**
 	 * 返回两个时间之前的所有时间(包含这两个时间)
 	 * @param startDate

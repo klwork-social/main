@@ -35,6 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 import weibo4j.model.WeiboException;
 
 import com.klwork.business.domain.model.DictDef;
+import com.klwork.business.domain.service.SocialMainService;
 import com.klwork.business.domain.service.SocialSinaService;
 import com.klwork.business.domain.service.SocialTencentService;
 import com.klwork.business.domain.service.SocialUserAccountService;
@@ -54,32 +55,37 @@ import com.klwork.common.exception.ApplicationException;
 public class LoginController {
 	@Autowired
 	private SocialSinaService socialSinaService;
-	
+
 	@Autowired
 	private SocialTencentService socialTencentService;
-	
+
 	@Autowired
 	public UserService userService;
 
 	@Autowired
 	public SocialUserAccountService socialUserAccountService;
-	
+
 	@Autowired
 	IdentityService identityService;
-	
+
+	@Autowired
+	SocialMainService socialService;
+
 	/**
 	 * 进入到普通登录页面
+	 * 
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value = "login", method = RequestMethod.GET)
 	public String login(HttpServletRequest request) {
-		//System.out.println("login:" + request.getRequestURL());
+		// System.out.println("login:" + request.getRequestURL());
 		return "login";
 	}
-	
+
 	/**
 	 * 进入到普通登录页面
+	 * 
 	 * @param request
 	 * @param modelMap
 	 * @return
@@ -101,9 +107,10 @@ public class LoginController {
 
 		return "login";
 	}
-	
+
 	/**
 	 * 普通登录的提交
+	 * 
 	 * @param username
 	 * @param password
 	 * @param request
@@ -119,7 +126,7 @@ public class LoginController {
 		Subject currentUser = SecurityUtils.getSubject();
 		String result = "login";
 		if (!currentUser.isAuthenticated()) {
-			userService.login(currentUser,username, password);
+			userService.login(currentUser, username, password);
 		} else {// 重复登录
 			/*
 			 * ShiroUser shiroUser = (ShiroUser) currentUser.getPrincipal();
@@ -132,9 +139,10 @@ public class LoginController {
 		String index = request.getContextPath() + "/";
 		response.sendRedirect(index);
 	}
-	
+
 	/**
 	 * 新浪微博的回调
+	 * 
 	 * @param request
 	 * @param response
 	 * @param code
@@ -144,29 +152,30 @@ public class LoginController {
 	@RequestMapping(value = "weibo-login")
 	public ModelAndView weiboLogin(HttpServletRequest request,
 			HttpServletResponse response, String code) throws IOException {
-		Map thirdUserMap = null;
-		try {
-			thirdUserMap = socialSinaService.queryUserInfoByCode(code);
-			request.getSession().setAttribute(SystemConstants.SESSION_THIRD_USER_MAP, thirdUserMap);
-			request.getSession().setAttribute(SystemConstants.SESSION_THIRD_LOGIN_TYPE, DataBaseParameters.SINA);
-		} catch (WeiboException e) {
-			throw new ApplicationException(e.getMessage());
-		}
-		org.activiti.engine.identity.User user =  socialSinaService.handlerUserAuthorize(thirdUserMap);
-		if(user != null){//以前已经登录过
+		Map thirdUserMap = socialSinaService.queryUserInfoByCode(code, null, null);
+		request.getSession().setAttribute(
+				SystemConstants.SESSION_THIRD_USER_MAP, thirdUserMap);
+		request.getSession().setAttribute(
+				SystemConstants.SESSION_THIRD_LOGIN_TYPE,
+				DataBaseParameters.SINA);
+
+		org.activiti.engine.identity.User user = socialSinaService
+				.handlerUserAuthorize(thirdUserMap);
+		if (user != null) {// 以前已经登录过
 			userService.doLogin(user);
 			String index = request.getContextPath() + "/";
 			response.sendRedirect(index);
-		}else {//生成一个用户放到前台
+		} else {// 生成一个用户放到前台
 			user = socialSinaService.initUserByThirdUser(thirdUserMap);
 		}
 		ModelMap retMap = new ModelMap();
 		retMap.put("user", user);
-		return new ModelAndView("oauthPage",retMap);
+		return new ModelAndView("oauthPage", retMap);
 	}
-	
+
 	/**
 	 * 腾讯微博的回调
+	 * 
 	 * @param request
 	 * @param response
 	 * @param code
@@ -176,28 +185,34 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "qq-login")
 	public ModelAndView qqLogin(HttpServletRequest request,
-			HttpServletResponse response, String code,String openid,String openkey) throws IOException {
-		
-		Map thirdUserMap  = socialTencentService.queryUserInfoByCode(code,openid,openkey);
-			request.getSession().setAttribute(SystemConstants.SESSION_THIRD_USER_MAP, thirdUserMap);
-			request.getSession().setAttribute(SystemConstants.SESSION_THIRD_LOGIN_TYPE, DataBaseParameters.TENCENT);
-		
-			org.activiti.engine.identity.User user =  socialTencentService.handlerUserAuthorize(thirdUserMap);
-			if(user != null){//以前已经登录过
-				userService.doLogin(user);
-				String index = request.getContextPath() + "/";
-				response.sendRedirect(index);
-			}else {//生成一个用户放到前台
-				user = socialTencentService.initUserByThirdUser(thirdUserMap);
-			}
-			ModelMap retMap = new ModelMap();
-			retMap.put("user", user);
-			return new ModelAndView("oauthPage",retMap);
+			HttpServletResponse response, String code, String openid,
+			String openkey) throws IOException {
+
+		Map thirdUserMap = socialTencentService.queryUserInfoByCode(code,
+				openid, openkey);
+		request.getSession().setAttribute(
+				SystemConstants.SESSION_THIRD_USER_MAP, thirdUserMap);
+		request.getSession().setAttribute(
+				SystemConstants.SESSION_THIRD_LOGIN_TYPE,
+				DataBaseParameters.TENCENT);
+
+		org.activiti.engine.identity.User user = socialTencentService
+				.handlerUserAuthorize(thirdUserMap);
+		if (user != null) {// 以前已经登录过
+			userService.doLogin(user);
+			String index = request.getContextPath() + "/";
+			response.sendRedirect(index);
+		} else {// 生成一个用户放到前台
+			user = socialTencentService.initUserByThirdUser(thirdUserMap);
+		}
+		ModelMap retMap = new ModelMap();
+		retMap.put("user", user);
+		return new ModelAndView("oauthPage", retMap);
 	}
-	
-	
+
 	/**
 	 * 用户绑定进行提交
+	 * 
 	 * @param request
 	 * @param response
 	 * @param user
@@ -206,35 +221,42 @@ public class LoginController {
 	@RequestMapping(value = "bindSubmit")
 	@ResponseBody
 	public AjaxResult bindSubmit(HttpServletRequest request,
-			HttpServletResponse response, String bindName,String bindPassword) throws IOException {
-		//org.activiti.engine.identity.User user =  socialTencentService.handlerUserAuthorize(code,openid,openkey);
+			HttpServletResponse response, String bindName, String bindPassword)
+			throws IOException {
+		// org.activiti.engine.identity.User user =
+		// socialTencentService.handlerUserAuthorize(code,openid,openkey);
 		AjaxResult result = new AjaxResult(false);
-		HashMap thirdUserMap = (HashMap)request.getSession().getAttribute(SystemConstants.SESSION_THIRD_USER_MAP);
-		Integer type = (Integer)request.getSession().getAttribute(SystemConstants.SESSION_THIRD_LOGIN_TYPE + "");
-		//String ten = DataBaseParameters.TENCENT + "";
+		HashMap thirdUserMap = (HashMap) request.getSession().getAttribute(
+				SystemConstants.SESSION_THIRD_USER_MAP);
+		String type = (String) request.getSession().getAttribute(
+				SystemConstants.SESSION_THIRD_LOGIN_TYPE + "");
+		// String ten = DataBaseParameters.TENCENT + "";
 		if (identityService.checkPassword(bindName, bindPassword)) {
-			User user = identityService.createUserQuery().userId(bindName).singleResult();
-			if(DataBaseParameters.TENCENT == type.intValue()){
-				socialTencentService.addTencentSocialInfo(user,thirdUserMap);
-			}else {
-				socialSinaService.addSinaSocialInfo(user,thirdUserMap);
+			User user = identityService.createUserQuery().userId(bindName)
+					.singleResult();
+			if (DataBaseParameters.TENCENT.equals(type.toString())) {
+				socialTencentService.addTencentSocialInfo(user, thirdUserMap);
+			} else {
+				socialSinaService.addSinaSocialInfo(user, thirdUserMap);
 			}
-			
+
 			userService.doLogin(user);
 			result = new AjaxResult(true);
-			/*String index = request.getContextPath() + "/";
-			response.sendRedirect(index);*/
-		}else {
-			result = new AjaxResult(false,"用户名密码不正确");
+			/*
+			 * String index = request.getContextPath() + "/";
+			 * response.sendRedirect(index);
+			 */
+		} else {
+			result = new AjaxResult(false, "用户名密码不正确");
 		}
-		
+
 		return result;
-		
+
 	}
-	
-	
+
 	/**
 	 * 用户完善信息后进行提交
+	 * 
 	 * @param user
 	 * @param request
 	 * @param response
@@ -243,52 +265,57 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "perfectSubmit")
 	@ResponseBody
-	public AjaxResult perfectSubmit(org.activiti.engine.impl.persistence.entity.UserEntity user,HttpServletRequest request,
-			HttpServletResponse response) throws Exception{
+	public AjaxResult perfectSubmit(
+			org.activiti.engine.impl.persistence.entity.UserEntity user,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		AjaxResult result = new AjaxResult(false);
 		if (identityService.createUserQuery().userId(user.getId()).count() > 0) {
-			result = new AjaxResult(false,"用户名已经存在");
+			result = new AjaxResult(false, "用户名已经存在");
 			return result;
 		}
-		HashMap thirdUserMap = (HashMap)request.getSession().getAttribute(SystemConstants.SESSION_THIRD_USER_MAP);
-		Integer type = (Integer)request.getSession().getAttribute(SystemConstants.SESSION_THIRD_LOGIN_TYPE);
-		if(thirdUserMap != null){
+		HashMap thirdUserMap = (HashMap) request.getSession().getAttribute(
+				SystemConstants.SESSION_THIRD_USER_MAP);
+		String type = (String) request.getSession().getAttribute(
+				SystemConstants.SESSION_THIRD_LOGIN_TYPE);
+		if (thirdUserMap != null) {
 			identityService.saveUser(user);
-			if(DataBaseParameters.TENCENT == type.intValue()){
-				socialTencentService.addTencentSocialInfo(user,thirdUserMap);
-			}else {
-				socialSinaService.addSinaSocialInfo(user,thirdUserMap);
+			if (DataBaseParameters.TENCENT.equals(type.toString())) {
+				socialTencentService.addTencentSocialInfo(user, thirdUserMap);
+			} else {
+				socialSinaService.addSinaSocialInfo(user, thirdUserMap);
 			}
 			userService.doLogin(user);
 			result = new AjaxResult(true);
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 跳转到微博的授权页
+	 * 
 	 * @param request
 	 * @param type
 	 * @return
 	 */
 	@RequestMapping(value = "oauth", method = RequestMethod.GET)
-	public String oauthPage(HttpServletRequest request,String type) {
+	public String oauthPage(HttpServletRequest request, String type) {
 		String url = "";
-		if(DictDef.dict("tencent").equals(type)){//tencent
+		if (DictDef.dict("tencent").equals(type)) {// tencent
 			url = TencentSociaTool.generateAuthorizationURL();
-		}else {//sina
+		} else {// sina
 			url = SinaSociaTool.generateAuthorizationURL();
 		}
-		return "redirect:"+url;
+		return "redirect:" + url;
 	}
-	
+
 	@RequestMapping(value = "testCurrentData")
 	@ResponseBody
 	public HashMap testCurrentData(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
-		//socialTencentService.myWeiboToDb();
-		socialSinaService.myWeiboToDb(1);
+		// socialTencentService.myWeiboToDb();
+		socialService.weiboInit();
 		HashMap test = new HashMap();
 		test.put("info", "success");
 		return test;

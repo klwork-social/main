@@ -46,7 +46,6 @@ public class TasksView extends VerticalLayout implements View {
 	    Button newCaseButton = new Button();
 	    newCaseButton.setStyleName("myTabButton");
 	    newCaseButton.setCaption(i18nManager.getMessage(Messages.TASK_NEW));
-	    //WW_TODO Fix
 	    newCaseButton.setIcon(Images.TASK_16);
 	    addComponent(newCaseButton);
 	    

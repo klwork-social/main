@@ -5,11 +5,13 @@
 	(social_user_account_info) :${table.comment}
 字段:
 	id_(varchar)	:
+	user_id_(varchar)	:
 	account_id_(varchar)	:
 	type_(varchar)	:
 	key_(varchar)	:
 	value_type_(int4)	:
 	value_(varchar)	:
+	value_int_(int4)	:
 	value_string_(varchar)	:
 	value_date_(timestamp)	:
 	value_double_(numeric)	:
@@ -24,11 +26,13 @@ sqlMapConfig:
   <insert id="insertSocialUserAccountInfo" parameterType="com.klwork.business.domain.model.SocialUserAccountInfo">
     insert into social_user_account_info (
     	id_,
+	user_id_,
 	account_id_,
 	type_,
 	key_,
 	value_type_,
 	value_,
+	value_int_,
 	value_string_,
 	value_date_,
 	value_double_,
@@ -36,11 +40,13 @@ sqlMapConfig:
 	)
     values (
       		#{id,jdbcType=VARCHAR},
+ 		#{userId,jdbcType=VARCHAR},
  		#{accountId,jdbcType=VARCHAR},
  		#{type,jdbcType=VARCHAR},
  		#{key,jdbcType=VARCHAR},
  		#{valueType,jdbcType=INTEGER},
  		#{value,jdbcType=VARCHAR},
+ 		#{valueInt,jdbcType=INTEGER},
  		#{valueString,jdbcType=VARCHAR},
  		#{valueDate,jdbcType=TIMESTAMP},
  		#{valueDouble,jdbcType=NUMERIC},
@@ -51,7 +57,10 @@ sqlMapConfig:
   <!-- UPDATE -->
   <update id="updateSocialUserAccountInfo" parameterType="com.klwork.business.domain.model.SocialUserAccountInfo">
     update social_user_account_info set
-    	<if test="accountId != null">
+    	<if test="userId != null">
+ user_id_ = #{userId,jdbcType=VARCHAR},
+</if>
+<if test="accountId != null">
  account_id_ = #{accountId,jdbcType=VARCHAR},
 </if>
 <if test="type != null">
@@ -65,6 +74,9 @@ sqlMapConfig:
 </if>
 <if test="value != null">
  value_ = #{value,jdbcType=VARCHAR},
+</if>
+<if test="valueInt != null">
+ value_int_ = #{valueInt,jdbcType=INTEGER},
 </if>
 <if test="valueString != null">
  value_string_ = #{valueString,jdbcType=VARCHAR},
@@ -94,12 +106,12 @@ sqlMapConfig:
   <select id="selectSocialUserAccountInfoByQueryCriteria" parameterType="com.klwork.business.domain.model.SocialUserAccountInfoQuery" resultMap="SocialUserAccountInfoMap">
     select U.*
     <include refid="selectSocialUserAccountInfoByQueryCriteriaSql" />
+     <if test="orderBy != null">
+      order by ${orderBy}
+    </if>
     <if test="start !=0 or limit!=0">
     limit #{limit} offset #{start}
 	</if>
-    <!--if test="orderBy != null">
-      order by ${orderBy}
-    </if> -->
   </select>
   
    <select id="selectSocialUserAccountInfoCountByQueryCriteria" parameterType="com.klwork.business.domain.model.SocialUserAccountInfoQuery" resultType="int">
@@ -110,7 +122,10 @@ sqlMapConfig:
   <sql id="selectSocialUserAccountInfoByQueryCriteriaSql">
     from social_user_account_info U
     <where>
-        <if test="accountId != null">
+        <if test="userId != null">
+        AND U.user_id_ = #{userId}
+    </if>
+    <if test="accountId != null">
         AND U.account_id_ = #{accountId}
     </if>
     <if test="type != null">
@@ -119,16 +134,24 @@ sqlMapConfig:
     <if test="key != null">
         AND U.key_ = #{key}
     </if>
+    <if test="dateBefore != null">
+        AND U.value_date_ &lt; #{dateBefore}
+      </if>
+      <if test="dateAfter != null">
+        AND U.value_date_ &gt; #{dateAfter}
+      </if>
     </where>
   </sql>
   
 	<resultMap id="SocialUserAccountInfoMap" type="com.klwork.business.domain.model.SocialUserAccountInfo">
 	<result property="id" column="id_" />
+	<result property="userId" column="user_id_" />
 	<result property="accountId" column="account_id_" />
 	<result property="type" column="type_" />
 	<result property="key" column="key_" />
 	<result property="valueType" column="value_type_" />
 	<result property="value" column="value_" />
+	<result property="valueInt" column="value_int_" />
 	<result property="valueString" column="value_string_" />
 	<result property="valueDate" column="value_date_" />
 	<result property="valueDouble" column="value_double_" />

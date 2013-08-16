@@ -53,6 +53,14 @@ public class SocialUserAccount implements Serializable
 	 *  
 	 */
 	private Integer type;
+	/**
+	 *  
+	 */
+	private String userScreenName;
+	/**
+	 *  
+	 */
+	private String url;
 
 	/**
 	 * 
@@ -197,5 +205,37 @@ public class SocialUserAccount implements Serializable
 	 */	
 	public Integer getType(){
 		return type;
+	}
+	/**
+	 * 
+	 *
+	 * @param userScreenName
+	 */
+	public void setUserScreenName(String userScreenName){
+		this.userScreenName = userScreenName;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getUserScreenName(){
+		return userScreenName;
+	}
+	/**
+	 * 
+	 *
+	 * @param url
+	 */
+	public void setUrl(String url){
+		this.url = url;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getUrl(){
+		return url;
 	}
 }

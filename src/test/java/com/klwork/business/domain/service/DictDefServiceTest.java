@@ -1,7 +1,9 @@
 package com.klwork.business.domain.service;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import static org.junit.Assert.assertEquals;
+
 import com.klwork.business.domain.model.DictDef;
 import com.klwork.common.DataBaseParameters;
 import com.klwork.test.base.BaseTxWebTests;
@@ -23,6 +25,14 @@ public class DictDefServiceTest extends BaseTxWebTests {
 		dictDefService.createDictDef(dictDef);
 		//String s = DataBaseParameters.TEST_SIGN_VALUE;
 		//assertEquals("-1",s);
+	}
+	
+	@Test
+	public void testDataBaseParameters() {
+		assertEquals("1",DataBaseParameters.TENCENT);
+		assertEquals("0",DataBaseParameters.SINA);
+		DictDef v = DictDef.dictValue(DictDef.dict("social_type"), "0");
+		assertEquals("新浪",v.getName());
 	}
 
 }

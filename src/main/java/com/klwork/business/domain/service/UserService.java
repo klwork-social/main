@@ -1,5 +1,6 @@
 package com.klwork.business.domain.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.activiti.engine.IdentityService;
@@ -18,6 +19,9 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.klwork.business.domain.model.DictDef;
+import com.klwork.business.domain.model.SocialUserAccountInfo;
+import com.klwork.common.utils.StringDateUtil;
 import com.klwork.explorer.Constants;
 import com.klwork.explorer.security.LoggedInUserImpl;
 import com.klwork.explorer.security.LoginHandler;
@@ -33,6 +37,9 @@ import com.klwork.explorer.security.LoginHandler;
 public class UserService {
 	@Autowired
 	IdentityService identityService;
+	
+	@Autowired
+	private SocialUserAccountInfoService socialUserAccountInfoService;
 
 	public User createUser(String userId, String firstName, String lastName,
 			String password, String email, String imageResource,
@@ -115,6 +122,17 @@ public class UserService {
 		token.setRememberMe(false);
 		try {
 			currentUser.login(token);
+			//登录成功后进行记录
+			
+			SocialUserAccountInfo info = new SocialUserAccountInfo();
+			info.setKey("user_last_logged_time");
+			Date d = new Date();
+			info.setType(DictDef.dict("user_info_type"));
+			info.setUserId(username);
+			info.setValue(StringDateUtil.parseString(d, 4));
+			info.setValueType(DictDef.dictInt("date"));
+			info.setValueDate(d);
+			socialUserAccountInfoService.createSocialUserAccountInfo(info);
 			result = "success";
 		} catch (UnknownAccountException uae) {
 			result = "failure";
