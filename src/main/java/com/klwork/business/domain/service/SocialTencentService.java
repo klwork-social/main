@@ -572,6 +572,11 @@ public class SocialTencentService extends AbstractSocialService {
 		return "1";
 	}
 
+	@Override
+	public void deleteWeibo(SocialUserWeibo userWeibo) {
+		
+	}
+
 
 
 }

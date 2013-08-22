@@ -54,5 +54,9 @@ public interface SocialService {
 	public <T> SocialUserWeibo convertThirdToWeiboEntity(SocialUserWeibo weibo,T thirdInfo
 			);
 	
-
+	/**
+	 * 删除微博
+	 * @param userWeibo
+	 */
+	public void deleteWeibo(SocialUserWeibo userWeibo);
 }

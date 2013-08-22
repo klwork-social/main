@@ -106,4 +106,10 @@ public class SinaWeiboDisplayPage extends AbstractWeiboDisplayPage {
 		}
 		return image;
 	}
+
+
+	@Override
+	public String getSocialType() {
+		return "0";
+	}
 }

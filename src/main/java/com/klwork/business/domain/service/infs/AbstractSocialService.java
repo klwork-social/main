@@ -157,4 +157,6 @@ public abstract class AbstractSocialService implements SocialService,
 		return weiboToDb(ac, 1);
 
 	}
+	
+
 }

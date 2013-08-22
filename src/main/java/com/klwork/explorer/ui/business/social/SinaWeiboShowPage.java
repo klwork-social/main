@@ -1,5 +1,6 @@
 package com.klwork.explorer.ui.business.social;
 
+import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.explorer.ui.base.AbstractTabViewPage;
 import com.klwork.explorer.ui.task.InboxPage;
@@ -16,11 +17,10 @@ public class SinaWeiboShowPage extends AbstractTabViewPage{
 
 	@Override
 	public void initTabData() {
-        addTab(new SinaWeiboDisplayPage(socialUserAccount,0),"全部微博");
-		//t.
-		addTab(new SinaWeiboDisplayPage(socialUserAccount,1),"我的微博");
-        addTab(new InboxPage(),"@我的微博");
-        addTab(new InvolvedPage(),"我的评论");
+		addTab(new SinaWeiboDisplayPage(socialUserAccount,DictDef.dictInt("weibo_public_timeline")),"全部微博");
+		addTab(new SinaWeiboDisplayPage(socialUserAccount,DictDef.dictInt("weibo_user_timeline")),"我的微博");
+        addTab(new SinaWeiboDisplayPage(socialUserAccount,DictDef.dictInt("weibo_mentions_timeline")),"@我的微博");
+        addTab(new SinaWeiboDisplayPage(socialUserAccount,DictDef.dictInt("comment_to_me")),"我收到的评论");
 	}
 
 	public VerticalLayout createTaskCompon(String title) {

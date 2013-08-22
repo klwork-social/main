@@ -2,14 +2,12 @@ package com.klwork.business.domain.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.klwork.common.dto.vo.ViewPage;
 import com.klwork.common.utils.StringDateUtil;
-import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserWeibo;
 import com.klwork.business.domain.model.SocialUserWeiboQuery;
 import com.klwork.business.domain.repository.SocialUserWeiboRepository;
@@ -35,10 +33,13 @@ public class SocialUserWeiboService {
 	}
 
 	public void deleteSocialUserWeibo(SocialUserWeibo socialUserWeibo) {
+		rep.deleteById(socialUserWeibo.getId());
 	}
 
 	public int updateSocialUserWeibo(SocialUserWeibo socialUserWeibo) {
-		return 0;
+		Date now = StringDateUtil.now();
+		socialUserWeibo.setLastUpdate(now);
+		return rep.update(socialUserWeibo);
 	}
 
 	public List<SocialUserWeibo> findSocialUserWeiboByQueryCriteria(SocialUserWeiboQuery query,

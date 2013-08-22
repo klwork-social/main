@@ -207,14 +207,24 @@ public class DictDefRepository extends
 		insertData(dictDef);
 		
 		
-		dictDef = new DictDef("270", "comment_to_me", "6", "我收到的评论", "1");
+		dictDef = new DictDef("270", "weibo_public_timeline", "6", "全部微博", "0");
 		insertData(dictDef);
 		
-		dictDef = new DictDef("271", "at_me_comment", "6", "at@我的评论", "2");
+		dictDef = new DictDef("271", "weibo_user_timeline", "6", "我的微博", "1");
 		insertData(dictDef);
 		
-		dictDef = new DictDef("272", "at_me_status", "6", "at@我的微博状态", "3");
+		dictDef = new DictDef("272", "weibo_mentions_timeline", "6", "@我的微博", "2");
 		insertData(dictDef);
+		
+		dictDef = new DictDef("273", "comment_to_me", "6", "我收到的评论", "3");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("274", "comment_by_me", "6", "我发出的评论", "4");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("275", "at_me_comment", "6", "@我的评论", "5");
+		insertData(dictDef);
+		
 		
 		dictDef = new DictDef("280", "green", "7", "绿", "1");
 		insertData(dictDef);

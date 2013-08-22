@@ -2,13 +2,16 @@ package com.klwork.business.utils;
 
 import java.util.List;
 
+import weibo4j.Comments;
 import weibo4j.Timeline;
 import weibo4j.Weibo;
 import weibo4j.model.Paging;
 import weibo4j.model.Status;
 import weibo4j.model.StatusWapper;
+import weibo4j.model.WeiboException;
 import weibo4j.util.WeiboContentTransLate;
 
+import com.klwork.business.domain.model.WeiboForwardSend;
 import com.klwork.common.utils.UriUtility;
 
 public class SinaSociaTool {
@@ -41,38 +44,39 @@ public class SinaSociaTool {
 		}
 		return list;
 	}
-	
+
 	/**
-	 *  @Enclosing_Method  : findDsrmMentionsAccountWeiboInfo
-	 *  @Written by        : wangsi
-	 *  @Creation Date     : 2012-11-1 上午11:16:02 
-	 *  @version           : v1.00
-	 *  @Description       :  
-	 *  获取最新的提到登录用户的微博列表，即@我的微博
-	 *  @param accessToken
-	 *  @param page
+	 * @Enclosing_Method : findDsrmMentionsAccountWeiboInfo
+	 * @Written by : wangsi
+	 * @Creation Date : 2012-11-1 上午11:16:02
+	 * @version : v1.00
+	 * @Description : 获取最新的提到登录用户的微博列表，即@我的微博
+	 * @param accessToken
+	 * @param page
 	 *            返回结果的页码，默认为1。
-	 *  @param filter_by_author
+	 * @param filter_by_author
 	 *            作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。
-	 *  @param filter_by_source
+	 * @param filter_by_source
 	 *            来源筛选类型，0：全部、1：来自微博、2：来自微群，默认为0。
-	 *  @param filter_by_type
+	 * @param filter_by_type
 	 *            原创筛选类型，0：全部微博、1：原创的微博，默认为0。
-	 *  @return
+	 * @return
 	 **/
-	public static  List<Status> findMentionsAccountWeiboInfo(String accessToken, Paging page, Integer filter_by_author,
-			Integer filter_by_source, Integer filter_by_type){
-		
+	public static List<Status> findMentionsAccountWeiboInfo(String accessToken,
+			Paging page, Integer filter_by_author, Integer filter_by_source,
+			Integer filter_by_type) {
+
 		Timeline timeline = new Timeline();
 		timeline.client.setToken(accessToken);
 		List<Status> list = null;
 		try {
-			
-			StatusWapper statusWapper = timeline.getMentions(page, filter_by_author, filter_by_source, filter_by_type);
+
+			StatusWapper statusWapper = timeline.getMentions(page,
+					filter_by_author, filter_by_source, filter_by_type);
 			if (null != statusWapper) {
 				list = statusWapper.getStatuses();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -110,9 +114,9 @@ public class SinaSociaTool {
 		}
 		return list;
 	}
-	
+
 	public static String textTranslate(String text) {
-		if(text == null || text.trim().length() == 0){
+		if (text == null || text.trim().length() == 0) {
 			return null;
 		}
 		return WeiboContentTransLate.transLateall(text, "blue");
@@ -123,10 +127,74 @@ public class SinaSociaTool {
 		String clinetSecret = SocialConfig.getString("clinet_secret");
 		String redirectUrl = SocialConfig.getString("go_back");
 		//
-//		String r = "http%3a%2f%2f127.0.0.1%2fks%2fuser%2fweibo-login";
-//		r = "http://127.0.0.1/ks/user/weibo-login";
+		// String r = "http%3a%2f%2f127.0.0.1%2fks%2fuser%2fweibo-login";
+		// r = "http://127.0.0.1/ks/user/weibo-login";
 		String r = UriUtility.encode(redirectUrl, "utf-8");
-		String url = "https://api.weibo.com/oauth2/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + r + "&state=SinaWeiBo";
+		String url = "https://api.weibo.com/oauth2/authorize?response_type=code&client_id="
+				+ clientId + "&redirect_uri=" + r + "&state=SinaWeiBo";
 		return url;
+	}
+
+	/**
+	 * 微博转发
+	 * 
+	 * @param weiboForwardSend
+	 * @param assessToken
+	 * @return
+	 */
+	public static int forwardWeibo(WeiboForwardSend weiboForwardSend,
+			String assessToken) {
+		Timeline timeline = new Timeline();
+		timeline.client.setToken(assessToken);
+		try {
+			timeline.Repost(weiboForwardSend.getWeibId(),
+					weiboForwardSend.getContent(),
+					weiboForwardSend.getCommentType());
+		} catch (WeiboException e) {
+
+			e.printStackTrace();
+			return -1;
+		}
+		return 0;
+	}
+
+	/**
+	 * 评论微博
+	 * 
+	 * @param weiboForwardSend
+	 * @param assessToken
+	 * @return
+	 */
+	public static int discussWeibo(WeiboForwardSend weiboForwardSend,
+			String assessToken) {
+		try {
+			Comments comments = new Comments();
+			comments.client.setToken(assessToken);
+			comments.createComment(weiboForwardSend.getContent(),
+					weiboForwardSend.getWeibId(),
+					weiboForwardSend.getCommentType());// 是否评论给原微博
+			if ("1".equals(weiboForwardSend.getRepostType() + "")) {// 同时转发一条微博
+				Timeline timeline = new Timeline();
+				timeline.client.setToken(assessToken);
+				timeline.Repost(weiboForwardSend.getWeibId(),
+						weiboForwardSend.getContent(), 0);
+			}
+		} catch (WeiboException e) {
+			e.printStackTrace();
+			return 0;
+		}
+		return 1;
+	}
+
+	public static int deleteWeibo(String weiboId, String assessToken) {
+		try {
+			Timeline timeline = new Timeline();
+			timeline.client.setToken(assessToken);
+			timeline.Destroy(weiboId);
+		} catch (WeiboException e) {
+			e.printStackTrace();
+			return 0;
+		}
+		return 1;
 	}
 }

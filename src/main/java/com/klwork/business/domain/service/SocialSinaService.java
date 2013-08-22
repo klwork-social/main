@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import weibo4j.Account;
 import weibo4j.Oauth;
+import weibo4j.Timeline;
 import weibo4j.Users;
 import weibo4j.http.AccessToken;
 import weibo4j.model.Paging;
@@ -38,10 +39,10 @@ import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.business.domain.model.SocialUserAccountQuery;
 import com.klwork.business.domain.model.SocialUserWeibo;
+import com.klwork.business.domain.model.WeiboForwardSend;
 import com.klwork.business.domain.service.infs.AbstractSocialService;
 import com.klwork.business.utils.SinaSociaTool;
 import com.klwork.business.utils.SocialConfig;
-import com.klwork.common.dto.vo.ViewPage;
 import com.klwork.common.exception.ThirdPlatformException;
 import com.klwork.common.utils.ReflectionUtils;
 import com.klwork.common.utils.StringTool;
@@ -206,10 +207,7 @@ public class SocialSinaService extends AbstractSocialService {
 	public int weiboToDb(SocialUserAccount ac,int type) {
 		if (ac != null) {
 			String accountId = ac.getId();
-			SocialUserAccountInfo tok = socialUserAccountInfoService
-					.findAccountOfInfoByKey(DictDef.dict("accessToken"),
-							accountId);
-			String assessToken = tok.getValue();
+			String assessToken = findAccessTokenByAccout(accountId);
 			
 			//我的微博
 			myWeiboToDb(ac, type, assessToken);
@@ -221,6 +219,14 @@ public class SocialSinaService extends AbstractSocialService {
 			//homeWeiboToDb(ac, type, assessToken);
 		}
 		return 0;
+	}
+
+	public String findAccessTokenByAccout(String accountId) {
+		SocialUserAccountInfo tok = socialUserAccountInfoService
+				.findAccountOfInfoByKey(DictDef.dict("accessToken"),
+						accountId);
+		String assessToken = tok.getValue();
+		return assessToken;
 	}
 	
 	/**
@@ -394,6 +400,7 @@ public class SocialSinaService extends AbstractSocialService {
 		// 增加一个用户
 		SocialUserAccount socialUserAccount = new SocialUserAccount();
 		initAccountBySinaUser(socialUserAccount, sinaUser);
+		socialUserAccount.setOwnUser(retUser.getId());
 		socialUserAccountService.createSocialUserAccount(socialUserAccount);
 		return socialUserAccount;
 	}
@@ -521,5 +528,29 @@ public class SocialSinaService extends AbstractSocialService {
 		return "0";
 	}
 
+	public int forwardWeibo(WeiboForwardSend weiboForwardSend) {
+		
+		String assessToken = findAccessTokenByAccout(weiboForwardSend.getUserAccountId());
+		return SinaSociaTool.forwardWeibo(weiboForwardSend, assessToken);
+	}
 
+
+	
+	public void discussWeibo(WeiboForwardSend weiboForwardSend) {
+		String assessToken = findAccessTokenByAccout(weiboForwardSend.getUserAccountId());
+		SinaSociaTool.discussWeibo(weiboForwardSend, assessToken);
+	}
+
+	
+	/**
+	 * 删除微博
+	 * @param userWeibo
+	 */
+	@Override
+	public void deleteWeibo(SocialUserWeibo userWeibo) {
+		String assessToken = findAccessTokenByAccout(userWeibo.getUserAccountId());
+		if( 1 == SinaSociaTool.deleteWeibo(userWeibo.getWeiboId(), assessToken)){//成功删除
+			socialUserWeiboService.deleteSocialUserWeibo(userWeibo);
+		}
+	}
 }

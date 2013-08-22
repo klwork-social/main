@@ -112,4 +112,9 @@ public class QQWeiboDisplayPage extends AbstractWeiboDisplayPage {
 	public String getWeiboMainUrl() {
 		return "http://t.qq.com/";
 	}
+
+	@Override
+	public String getSocialType() {
+		return "1";
+	}
 }

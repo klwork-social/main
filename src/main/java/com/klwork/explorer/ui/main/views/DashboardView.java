@@ -76,8 +76,8 @@ public class DashboardView extends VerticalLayout implements View {
         notify.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                ((DashboardUI) getUI()).clearDashboardButtonBadge();
-                event.getButton().removeStyleName("unread");
+               // ((DashboardUI) getUI()).clearDashboardButtonBadge();
+               // event.getButton().removeStyleName("unread");
                 event.getButton().setDescription("Notifications");
 
                 if (notifications != null && notifications.getUI() != null)

@@ -192,19 +192,19 @@ sqlMapConfig:
 <if test="weiboHandleType != null">
  weibo_handle_type_ = #{weiboHandleType,jdbcType=INTEGER},
 </if>
-<if test="lastUpdate != null">
- last_update_ = #{lastUpdate,jdbcType=TIMESTAMP},
-</if>
 <if test="type != null">
- type_ = #{type,jdbcType=INTEGER},
+ type_ = #{type,jdbcType=INTEGER}
+</if>
+<if test="lastUpdate != null">
+ last_update_ = #{lastUpdate,jdbcType=TIMESTAMP}
 </if>
  where id_ = #{id,jdbcType=VARCHAR}
   </update>
-
-  <!-- Delete -->	
-  <!--delete id="deleteSocialUserWeibo" parameterType="string">
-    delete from social_user_weibo where id = #{id}
-  </delete-->
+  
+  <!-- Delete -->
+  <delete id="deleteSocialUserWeibo" parameterType="string">
+    delete from social_user_weibo where id_ = #{id}
+    </delete>
   
   <!-- SELECT -->
   <select id="selectSocialUserWeiboById" parameterType="string" resultMap="SocialUserWeiboMap">

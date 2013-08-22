@@ -106,15 +106,15 @@ public class SocialUserWeibo implements Serializable
 	 */
 	private String userDomain;
 	/**
-	 *  
+	 *  缩略图
 	 */
 	private String thumbnailPic;
 	/**
-	 *  
+	 *  原始
 	 */
 	private String originalPic;
 	/**
-	 *  
+	 *  大
 	 */
 	private String bmiddlePic;
 	/**

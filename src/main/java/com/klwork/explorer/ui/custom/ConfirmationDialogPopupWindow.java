@@ -51,7 +51,7 @@ public class ConfirmationDialogPopupWindow extends PopupWindow {
     setModal(true);
     setResizable(false);
     setHeight("30%");
-	setWidth("50%");
+	setWidth("40%");
 	center();
     
     addStyleName(Reindeer.PANEL_LIGHT);
