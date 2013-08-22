@@ -5936,6 +5936,44 @@ body .dashboard.v-app .v-app-loading {
 	line-height: 16px;
 }
 
+.dashboard .wb_image_css {
+	color: white;
+	position: relative;
+	background-repeat: no-repeat;
+}
+
+.dashboard .wb_image_css .v-label {
+	position: absolute;
+	bottom: 3px;
+	left: 3px;
+	right: 3px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	background-color: rgba(0, 0, 0, 0.4);
+	color: white;
+}
+
+.dashboard .wb_image_css .tile-image {
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
+	right: 5px;
+	top: 5px;
+	width: auto !important;
+	height: auto !important;
+}
+
+.dashboard .wb_image_css .tile-indicator {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 20% !important;
+	height: 20% !important;
+	max-width: 40px;
+	max-height: 40px;
+}
+
 .dashboard .v-calendar .v-calendar-event-green {
 	color: #4f8324;
 }
