@@ -65,7 +65,7 @@ public abstract class AbstractSocialService implements SocialService,
 	 */
 	public String queryMyWeiboTime(SocialUserAccount ac) {
 		String webFetchTime = StringDateUtil.addYear(new Date(), -2).getTime()/1000 + "";
-		SocialUserWeibo lastWeibo = queryLastSpeWeibo(ac,null,ac.getName());
+		SocialUserWeibo lastWeibo = queryLastSpeWeibo(ac,DictDef.dictInt("weibo_user_timeline"),ac.getName());
 		String startTime = StringDateUtil.addDay(new Date(), -1).getTime()/1000 + "";//1347444000
 		if(lastWeibo != null){//数据库中最后一条记录
 			webFetchTime=  String
@@ -99,7 +99,7 @@ public abstract class AbstractSocialService implements SocialService,
 	public String queryHomeWeiboTime(SocialUserAccount ac) {
 		//三天的
 		String webFetchTime = StringDateUtil.addDay(new Date(), -1).getTime()/1000 + "";
-		SocialUserWeibo lastWeibo = queryLastSpeWeibo(ac,null,null);
+		SocialUserWeibo lastWeibo = queryLastSpeWeibo(ac,DictDef.dictInt("weibo_public_timeline"),null);
 		SocialUserAccountInfo lastTime = socialUserAccountInfoService
 				.findAccountOfInfoByKey(DictDef.dict("weibo_last_time"), ac.getId());
 		if(lastTime != null){//数据库中最后一条记录
@@ -120,13 +120,16 @@ public abstract class AbstractSocialService implements SocialService,
 	 * 生成一个新的weibo对象
 	 * @param ownerUserId
 	 * @param ac
+	 * @param weiboType 
 	 * @return
 	 */
-	protected SocialUserWeibo currentNewSocialUserWeibo(String ownerUserId, SocialUserAccount ac) {
+	protected SocialUserWeibo currentNewSocialUserWeibo(String ownerUserId, SocialUserAccount ac, Integer weiboType) {
 		SocialUserWeibo soruceWeibo = new SocialUserWeibo();
 		soruceWeibo.setUserAccountId(ac.getId());
 		soruceWeibo.setOwner(ownerUserId);
 		soruceWeibo.setType(getSocialTypeInt());
+		soruceWeibo.setWeiboType(weiboType);
+		soruceWeibo.setWeiboHandleType(0);//表明正常帖
 		return soruceWeibo;
 	}
 
@@ -154,9 +157,25 @@ public abstract class AbstractSocialService implements SocialService,
 		SocialUserAccount ac = socialUserAccountService.findSocialUserByType(
 				ownerUserId,
 				getSocialTypeInt());
-		return weiboToDb(ac, 1);
+		return handleUserAccountWeibo(ac);
 
 	}
 	
-
+	/**
+	 * 处理指定帐号的微博信息
+	 * @param socialUserAccount
+	 */
+	public int handleUserAccountWeibo(SocialUserAccount socialUserAccount) {
+		String key = "account_data_lock";
+		SocialUserAccountInfo lock = socialUserAccountInfoService
+				.findAccountOfInfoByKey(DictDef.dict(key),
+						socialUserAccount.getId());
+		if(lock != null && StringTool.parseBoolean(lock.getValue())){//如果锁定直接退出
+			return 0;
+		}
+		socialUserAccountInfoService.setSocialUserAccountInfo(socialUserAccount, key, "1");//锁定
+		int ret = weiboToDb(socialUserAccount);
+		socialUserAccountInfoService.setSocialUserAccountInfo(socialUserAccount, key, "0");//解除锁定
+		return ret;
+	}
 }

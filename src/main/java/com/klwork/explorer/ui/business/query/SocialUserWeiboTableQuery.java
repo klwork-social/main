@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserWeibo;
 import com.klwork.business.domain.model.SocialUserWeiboQuery;
@@ -35,7 +36,7 @@ public class SocialUserWeiboTableQuery extends AbstractLazyLoadingQuery {
 	private SocialUserWeiboService socialUserWeiboService;
 	
 	private SocialUserAccount socialUserAccount;
-	private int type = 0;
+	private int weiboType = 0;
 	
 
 
@@ -47,7 +48,7 @@ public class SocialUserWeiboTableQuery extends AbstractLazyLoadingQuery {
 		socialUserWeiboService = (SocialUserWeiboService) SpringApplicationContextUtil
 				.getContext().getBean("socialUserWeiboService");
 		this.socialUserAccount = socialUserAccount;
-		this.type = type;
+		this.weiboType = type;
 	}
 
 	@Override
@@ -59,9 +60,14 @@ public class SocialUserWeiboTableQuery extends AbstractLazyLoadingQuery {
 	protected SocialUserWeiboQuery createQuery() {
 		SocialUserWeiboQuery q = new SocialUserWeiboQuery();
 		q.setUserAccountId(socialUserAccount.getId());
-		if(type == 1){//我的微薄
+		q.setWeiboType(weiboType);
+		if(weiboType == DictDef.dictInt("weibo_user_timeline")){//我的微博
 			q.setUserName(socialUserAccount.getName());
 		}
+		/*if(weiboType == DictDef.dictInt("weibo_public_timeline")){//全部微博
+			q.setWeiboHandleType(0);//非回复贴
+		}*/
+		q.setWeiboHandleType(0);//非回复贴
 		q.setOrderBy("create_at_ desc");
 		return q;
 	}

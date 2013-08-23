@@ -27,6 +27,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
 import com.klwork.explorer.Constants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +94,8 @@ public class ImageUtil {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.info("出错的图片url:" + url + " " + e.getMessage());
+			//e.printStackTrace();
 		} finally {
 			if (is != null) {
 				try {

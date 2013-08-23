@@ -59,16 +59,16 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 	protected transient TaskService taskService;
 
 	protected transient SocialUserWeiboService socialUserWeiboService;
-	
+
 	protected AbstractSocialService socialService;
 
 	protected VerticalLayout centralLayout;
-	
-	//见数据类型为6的数据字典
-	int type = 0;
+
+	// 见数据类型为6的数据字典
+	int weiboType = 0;
 
 	SocialUserAccount socialUserAccount;
-	
+
 	public AbstractWeiboDisplayPage(SocialUserAccount socialUserAccount,
 			int type) {
 		super();
@@ -76,13 +76,14 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 				.getTaskService();
 		this.socialUserWeiboService = ViewToolManager
 				.getBean("socialUserWeiboService");
-		this.socialService = AbstractSocialService.querySocialClass(getSocialType());
+		this.socialService = AbstractSocialService
+				.querySocialClass(getSocialType());
 		this.socialUserAccount = socialUserAccount;
-		this.type = type;
+		this.weiboType = type;
 	}
-	
+
 	abstract public String getSocialType();
-	
+
 	@Override
 	public void attach() {
 		super.attach();
@@ -92,7 +93,7 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 	protected void init() {
 		setSizeFull();
 		addStyleName(Reindeer.LAYOUT_WHITE);
-
+		setSpacing(true);
 		// Central panel: all task data
 		centralLayout = new VerticalLayout();
 		centralLayout.setMargin(true);
@@ -111,7 +112,7 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 		centralLayout.setExpandRatio(listTable, 1);
 
 		LazyLoadingQuery lazyLoadingQuery = new SocialUserWeiboTableQuery(
-				socialUserAccount, type);
+				socialUserAccount, weiboType);
 		LazyLoadingContainer listContainer = new LazyLoadingContainer(
 				lazyLoadingQuery, 10);
 		listTable.setContainerDataSource(listContainer);
@@ -125,7 +126,7 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 		TableHandler.setTableNoHead(listTable);
 		listTable.setImmediate(false);
 		listTable.setSelectable(false);
-		
+
 		CSSInject css = new CSSInject(UI.getCurrent());
 		css.setStyles(".wb_image_css .scale-image{background-repeat: no-repeat; }");
 	}
@@ -153,15 +154,18 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 		}
 		return image;
 	}
-	
+
 	protected String textTranslate(String text) {
 		return text;
 	}
-	
+
 	/**
 	 * 微博操作
-	 * @param orginWeibo 被转发贴
-	 * @param userWeibo  当期贴
+	 * 
+	 * @param orginWeibo
+	 *            被转发贴
+	 * @param userWeibo
+	 *            当期贴
 	 * @return
 	 */
 	public HorizontalLayout getWeboButtonLayOut(final SocialUserWeibo userWeibo) {
@@ -172,29 +176,30 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 				setSpacing(true);
 				addStyleName("social");
 				boolean hasDeleteButton = false;
-				if(type == DictDef.dictInt("weibo_user_timeline")){//删除操作
+				if (weiboType == DictDef.dictInt("weibo_user_timeline")) {// 删除操作
 					Button deletButton = initDeleteButton(userWeibo);
 					addComponent(deletButton);
 					setExpandRatio(deletButton, 1.0f);
 					setComponentAlignment(deletButton, Alignment.BOTTOM_RIGHT);
 					hasDeleteButton = true;
 				}
-				
+
 				String repostsCount = userWeibo.getRepostsCount() + "";
 				String commentsCount = userWeibo.getCommentsCount() + "";
-				
+
 				Button transmitButton = new Button("转发(" + repostsCount + ")");
 				transmitButton.addStyleName(Reindeer.BUTTON_LINK);
 				transmitButton.addClickListener(new ClickListener() {
 					public void buttonClick(ClickEvent event) {
-						//JavaScript.getCurrent().execute("alert('Hello')");
-						TransmitPopupWindow t = new TransmitPopupWindow(userWeibo,AbstractWeiboDisplayPage.this);
-					    ViewToolManager.showPopupWindow(t);
+						// JavaScript.getCurrent().execute("alert('Hello')");
+						TransmitPopupWindow t = new TransmitPopupWindow(
+								userWeibo, AbstractWeiboDisplayPage.this);
+						ViewToolManager.showPopupWindow(t);
 					}
 				});
 				addComponent(transmitButton);
 				setComponentAlignment(transmitButton, Alignment.BOTTOM_RIGHT);
-				if(!hasDeleteButton){
+				if (!hasDeleteButton) {
 					setExpandRatio(transmitButton, 1f);
 				}
 
@@ -202,8 +207,9 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 				commentButton.addStyleName(Reindeer.BUTTON_LINK);
 				commentButton.addClickListener(new ClickListener() {
 					public void buttonClick(ClickEvent event) {
-						DiscussPopupWindow t = new DiscussPopupWindow(userWeibo,AbstractWeiboDisplayPage.this);
-					    ViewToolManager.showPopupWindow(t);
+						DiscussPopupWindow t = new DiscussPopupWindow(
+								userWeibo, AbstractWeiboDisplayPage.this);
+						ViewToolManager.showPopupWindow(t);
 					}
 				});
 				addComponent(commentButton);
@@ -211,13 +217,15 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 			}
 		};
 	}
-	
+
 	/**
 	 * 被转发贴按钮
-	 * @param orginWeibo 
+	 * 
+	 * @param orginWeibo
 	 * @return
 	 */
-	public HorizontalLayout getRetweetWeboButtonLayOut(final SocialUserWeibo orginWeibo) {
+	public HorizontalLayout getRetweetWeboButtonLayOut(
+			final SocialUserWeibo orginWeibo) {
 		return new HorizontalLayout() {
 			{
 				setSizeFull();
@@ -227,13 +235,14 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 
 				String repostsCount = orginWeibo.getRepostsCount() + "";
 				String commentsCount = orginWeibo.getCommentsCount() + "";
-				
+
 				Button transmitButton = new Button("转发(" + repostsCount + ")");
 				transmitButton.addStyleName(Reindeer.BUTTON_LINK);
 				transmitButton.addClickListener(new ClickListener() {
 					public void buttonClick(ClickEvent event) {
-						TransmitPopupWindow t = new TransmitPopupWindow(orginWeibo,AbstractWeiboDisplayPage.this);
-					    ViewToolManager.showPopupWindow(t);
+						TransmitPopupWindow t = new TransmitPopupWindow(
+								orginWeibo, AbstractWeiboDisplayPage.this);
+						ViewToolManager.showPopupWindow(t);
 					}
 				});
 				addComponent(transmitButton);
@@ -253,9 +262,10 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 			}
 		};
 	}
-	
+
 	/**
 	 * 显示发帖的日期和来自贴的图片
+	 * 
 	 * @param userWeibo
 	 * @return
 	 */
@@ -263,16 +273,16 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 		return new VerticalLayout() {
 			{
 				setSizeFull();
-				
-				//增加一个图片的容器
-				CssLayout picLayout = initOriginalPicLayout(userWeibo);
-				if(picLayout != null){
+
+				// 增加一个图片的容器
+				CssLayout picLayout = initPicLayout(userWeibo);
+				if (picLayout != null) {
 					addComponent(picLayout);
 				}
-				/*Image image = initOriginalPic(userWeibo);
-				if (image != null) {
-					addComponent(image);
-				}*/
+				/*
+				 * Image image = initOriginalPic(userWeibo); if (image != null)
+				 * { addComponent(image); }
+				 */
 
 				// 时间 来自2013-07-18 15:19 来自 投资界
 				// setSizeUndefined();
@@ -292,9 +302,10 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 		l.setContentMode(ContentMode.HTML);
 		// l.addStyleName(ExplorerLayout.STYLE_H4);
 	}
-	
+
 	/**
 	 * 处理用户图像
+	 * 
 	 * @param userWeibo
 	 * @return
 	 */
@@ -303,61 +314,62 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 				"img/weibo/head_01.jpg", "/50");
 		return image;
 	}
-	
+
 	/**
 	 * 发帖人连接
+	 * 
 	 * @param userWeibo
 	 * @return
 	 */
 	public Link initUserScreenName(final SocialUserWeibo userWeibo) {
-		Link goToMain = new Link(userWeibo.getUserScreenName()
-				+ ":", new ExternalResource(getWeiboMainUrl()
-				+ userWeibo.getWeiboUid()));
+		Link goToMain = new Link(userWeibo.getUserScreenName() + ":",
+				new ExternalResource(getWeiboMainUrl()
+						+ userWeibo.getWeiboUid()));
 		goToMain.setTargetName("_blank");
 		return goToMain;
 	}
-	
+
 	/**
 	 * 处理微博被转发贴图
+	 * 
 	 * @param orginWeibo
 	 * @return
 	 */
 	public Image initRetweetPic(final SocialUserWeibo orginWeibo) {
 		// 被转发贴图
-		Image image = currentImage(
-				orginWeibo.getThumbnailPic(), null, "");// 小图
+		Image image = currentImage(orginWeibo.getThumbnailPic(), null, "");// 小图
 		return image;
 	}
-	
+
 	public String getWeiboMainUrl() {
 		return "http://weibo.com/";
 	}
-	
+
 	/**
 	 * 处理微博的图片
+	 * 
 	 * @param userWeibo
 	 * @return
 	 */
 	abstract public Image initOriginalPic(final SocialUserWeibo userWeibo);
-	
+
 	/**
 	 * 被转发贴的发帖人链接
+	 * 
 	 * @param orginWeibo
 	 * @return
 	 */
 	public Link initRetweetedUserScreenName(final SocialUserWeibo orginWeibo) {
-		Link link = new Link("@"
-				+ orginWeibo.getUserScreenName(),
-				new ExternalResource(
-						getWeiboMainUrl()
-								+ orginWeibo
-										.getWeiboId()));
+		Link link = new Link("@" + orginWeibo.getUserScreenName(),
+				new ExternalResource(getWeiboMainUrl()
+						+ orginWeibo.getWeiboId()));
 		link.setTargetName("_blank");
 		return link;
 	}
-	
+
 	/**
 	 * 来自组件
+	 * 
 	 * @param userWeibo
 	 * @return
 	 */
@@ -377,24 +389,21 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 				// 微博时间
 				Date date = userWeibo.getCreateAt();
 				if (date != null) {
-					String strDate = StringDateUtil.dateToString(date,
-							9);
-					Link linkDate = new Link(strDate,
-							new ExternalResource(getWeiboMainUrl()
-									+ userWeibo.getWeiboUid()));
+					String strDate = StringDateUtil.dateToString(date, 9);
+					Link linkDate = new Link(strDate, new ExternalResource(
+							getWeiboMainUrl() + userWeibo.getWeiboUid()));
 					addComponent(linkDate);
-					setComponentAlignment(linkDate,
-							Alignment.MIDDLE_LEFT);
-					//setExpandRatio(linkDate, 0.2f);
+					setComponentAlignment(linkDate, Alignment.MIDDLE_LEFT);
+					// setExpandRatio(linkDate, 0.2f);
 				}
 				// 来自
 				Label title = new Label("来自");
 				title.addStyleName("wb_text");
-				//title.addStyleName(ExplorerLayout.STYLE_H3);
+				// title.addStyleName(ExplorerLayout.STYLE_H3);
 				addComponent(title);
 				setComponentAlignment(title, Alignment.MIDDLE_LEFT);
 				setExpandRatio(title, 0.2f);
-				//原url?
+				// 原url?
 				String source = userWeibo.getSource();
 				Link link = new Link(source, new ExternalResource(
 						getWeiboMainUrl() + source));
@@ -411,58 +420,63 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 		deletButton.addStyleName(Reindeer.BUTTON_LINK);
 		deletButton.addClickListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
-				 ConfirmationDialogPopupWindow confirmationPopup = 
-					      new ConfirmationDialogPopupWindow("您确定要删除本条微博?");
-					    confirmationPopup.addListener(new ConfirmationEventListener() {
-					      protected void rejected(ConfirmationEvent event) {
-					      }
-					      protected void confirmed(ConfirmationEvent event) {
-					    	  socialService.deleteWeibo(userWeibo);
-					      }
-					
-					    });
-					    ViewToolManager.showPopupWindow(confirmationPopup);
+				ConfirmationDialogPopupWindow confirmationPopup = new ConfirmationDialogPopupWindow(
+						"您确定要删除本条微博?");
+				confirmationPopup.addListener(new ConfirmationEventListener() {
+					protected void rejected(ConfirmationEvent event) {
+					}
+
+					protected void confirmed(ConfirmationEvent event) {
+						socialService.deleteWeibo(userWeibo);
+					}
+
+				});
+				ViewToolManager.showPopupWindow(confirmationPopup);
 			}
 		});
 		return deletButton;
 	}
 
-	public CssLayout initOriginalPicLayout(final SocialUserWeibo userWeibo) {
+	public CssLayout initOriginalPicLayout2(final SocialUserWeibo userWeibo) {
 		String origPic = userWeibo.getThumbnailPic();
 		if (!StringTool.judgeBlank(origPic)) {
 			return null;
 		}
-		
+
 		final CssLayout tile = new CssLayout();
 		tile.setStyleName("wb_image_css");
 		tile.setWidth(120, Unit.PIXELS);
 		tile.setHeight(120, Unit.PIXELS);
-		
+
 		final ScaleImage tileImage = new ScaleImage();
 		tile.addLayoutClickListener(new LayoutClickListener() {
 			private boolean big = true;
+
 			@Override
 			public void layoutClick(LayoutClickEvent event) {
 				int size = 120;
-				if(big){
+				if (big) {
 					size = 500;
 				}
-				
+
 				tile.setWidth(size, Unit.PIXELS);
 				tile.setHeight(size, Unit.PIXELS);
-				//tileImage.setWidth(size, Unit.PIXELS);
-				//tileImage.setHeight(size, Unit.PIXELS);
-				if(big){
-					tileImage.setSource(new ExternalResource(userWeibo.getOriginalPic() + ""));
-					
-				}else {
-					tileImage.setSource(new ExternalResource(userWeibo.getThumbnailPic() + ""));
+				// tileImage.setWidth(size, Unit.PIXELS);
+				// tileImage.setHeight(size, Unit.PIXELS);
+				if (big) {
+					tileImage.setSource(new ExternalResource(userWeibo
+							.getOriginalPic() + ""));
+
+				} else {
+					tileImage.setSource(new ExternalResource(userWeibo
+							.getThumbnailPic() + ""));
 				}
 				big = !big;
-				//tileImage.setSource(new ExternalResource(userWeibo.getOriginalPic() + ""));
+				// tileImage.setSource(new
+				// ExternalResource(userWeibo.getOriginalPic() + ""));
 			}
 		});
-		
+
 		if (StringTool.judgeBlank(origPic)) {
 			tileImage.setSource(new ExternalResource(origPic + ""));
 			tileImage.setStyleName("tile-image");
@@ -470,50 +484,104 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 		}
 		return tile;
 	}
-	
-	public CssLayout initRetweetPicLayout(final SocialUserWeibo retweetWeibo) {
-		final String origPic = retweetWeibo.getThumbnailPic();
-		final String bigPic = retweetWeibo.getOriginalPic();
-		if (!StringTool.judgeBlank(origPic)) {
+
+	/**
+	 * 初始化图片cssLayout
+	 * 
+	 * @param retweetWeibo
+	 * @return
+	 */
+	public CssLayout initPicLayout(final SocialUserWeibo retweetWeibo) {
+		String smallPic = retweetWeibo.getThumbnailPic();
+		String bigPic = retweetWeibo.getOriginalPic();
+		if (!StringTool.judgeBlank(smallPic)) {
 			return null;
 		}
-		final CssLayout tile = new CssLayout();
-		tile.setStyleName("wb_image_css");
-		//tile.setWidth(100, Unit.PIXELS);
-		//tile.setHeight(100, Unit.PIXELS);
-		tile.setWidth(100, Unit.PIXELS);
-		tile.setHeight(100, Unit.PIXELS);
-		
-		final ScaleImage tileImage = new ScaleImage();
-		tileImage.setStyleName("tile-image");
-		tile.addLayoutClickListener(new LayoutClickListener() {
-			private boolean big = true;
-			@Override
-			public void layoutClick(LayoutClickEvent event) {
-				int size = 100;
-				if(big){
-					size = 500;
-				}
-				
-				tile.setWidth(size, Unit.PIXELS);
-				tile.setHeight(size, Unit.PIXELS);
-				//tileImage.setWidth(size, Unit.PIXELS);
-				//tileImage.setHeight(size, Unit.PIXELS);
-				if(big){
-					tileImage.setSource(new ExternalResource(bigPic + ""));
-				}else {
-					tileImage.setSource(new ExternalResource(origPic + ""));
-				}
-				big = !big;
+		int bigWidth = 100;
+		int bigHeight = 100;
+		int smallWidth = 100;
+		int smallHeight = 100;
+		String smallPicSize = retweetWeibo.getThumbnailPicSize();
+		String bigPicSize = retweetWeibo.getOriginalPicSize();
+		final CssLayout cssLayout = new CssLayout();
+		cssLayout.setStyleName("wb_image_css");
+		// tile.setWidth(100, Unit.PIXELS);
+		// tile.setHeight(100, Unit.PIXELS);
+		if (StringTool.judgeBlank(smallPicSize)) {// 初始化是显示小图
+			String width = smallPicSize.split(",")[0];
+
+			String height = smallPicSize.split(",")[1];
+			smallWidth = Integer.parseInt(width);
+			if (smallWidth < 100) {
+				smallWidth = 100;
 			}
-		});
-		if (StringTool.judgeBlank(origPic)) {
-			
-			tileImage.setSource(new ExternalResource(origPic + ""));
-			tileImage.setStyleName("tile-image");
-			tile.addComponent(tileImage);
+			smallHeight = Integer.parseInt(height);
+			if (smallHeight < 100) {
+				smallHeight = 100;
+			}
 		}
-		return tile;
+
+		if (StringTool.judgeBlank(bigPicSize)) {//
+			String width = bigPicSize.split(",")[0];
+			String height = bigPicSize.split(",")[1];
+			bigWidth = Integer.parseInt(width);
+			bigHeight = Integer.parseInt(height);
+			if (bigWidth > 600) {
+				bigWidth = 600;
+			}
+			if (bigHeight > 800) {
+				bigHeight = 800;
+			}
+		}
+
+		cssLayout.setWidth(smallWidth, Unit.PIXELS);//默认设置为最小的
+		cssLayout.setHeight(smallHeight, Unit.PIXELS);
+
+		ScaleImage tileImage = new ScaleImage();
+		tileImage.setStyleName("tile-image");
+		tileImage.setSource(new ExternalResource(smallPic + ""));
+		cssLayout.addComponent(tileImage);
+		cssLayout.addLayoutClickListener(new MyLayoutClickListener(cssLayout,
+				smallPic, smallWidth, smallHeight, bigPic, bigWidth, bigHeight,
+				tileImage));
+
+		return cssLayout;
+	}
+
+	private final class MyLayoutClickListener implements LayoutClickListener {
+		private final CssLayout cssLayout;
+		private final String smallPic;
+		private final String bigPic;
+		private final ScaleImage tileImage;
+		private boolean big = true;
+		private int smallWidth, smallHeight, bigHeight, bigWidth;
+
+		public MyLayoutClickListener(CssLayout cssLayout, String smallPic,
+				int smallWidth, int smallHeight, String bigPic, int bigWidth,
+				int bigHeight, ScaleImage tileImage) {
+			this.cssLayout = cssLayout;
+			this.smallPic = smallPic;
+			this.bigPic = bigPic;
+			this.tileImage = tileImage;
+			this.smallHeight = smallHeight;
+			this.smallWidth = smallWidth;
+			this.bigHeight = bigHeight;
+			this.bigWidth = bigWidth;
+		}
+
+		@Override
+		public void layoutClick(LayoutClickEvent event) {
+			if (big) {
+				cssLayout.setWidth(bigWidth, Unit.PIXELS);
+				cssLayout.setHeight(bigHeight, Unit.PIXELS);
+				tileImage.setSource(new ExternalResource(bigPic + ""));
+			} else {
+				cssLayout.setWidth(smallWidth, Unit.PIXELS);
+				cssLayout.setHeight(smallHeight, Unit.PIXELS);
+				tileImage.setSource(new ExternalResource(smallPic + ""));
+			}
+			big = !big;
+		}
 	}
 
 	public class SocialHeadColumnGenerator implements ColumnGenerator {
@@ -525,11 +593,11 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 		@Override
 		public Object generateCell(final Table source, final Object itemId,
 				Object columnId) {
-			//当前贴
+			// 当前贴
 			final SocialUserWeibo userWeibo = BinderHandler.getTableBean(
 					source, itemId);
-			//被转发贴对象
-			//final SocialUserWeibo orginWeibo;
+			// 被转发贴对象
+			// final SocialUserWeibo orginWeibo;
 			final GridLayout grid = new GridLayout(3, 1);
 			grid.addStyleName(Reindeer.SPLITPANEL_SMALL);
 			grid.setMargin(true);
@@ -583,7 +651,8 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 					// 微博内容
 					Label descriptionField = new Label();
 					initTextLabel(descriptionField);
-					descriptionField.setValue(textTranslate(userWeibo.getText()));
+					descriptionField
+							.setValue(textTranslate(userWeibo.getText()));
 
 					addComponent(descriptionField);
 
@@ -596,10 +665,11 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 						CustomLayout csslayout = new CustomLayout(
 								"forwardWeibo");
 
-						//Image image = initRetweetPic(orginWeibo);
-						CssLayout imageCssLayout = initRetweetPicLayout(orginWeibo);
+						// Image image = initRetweetPic(orginWeibo);
+						CssLayout imageCssLayout = initPicLayout(orginWeibo);
 						if (imageCssLayout != null) {
-							csslayout.addComponent(imageCssLayout, "imgContent");
+							csslayout
+									.addComponent(imageCssLayout, "imgContent");
 						}
 						// 内容前的@a
 						csslayout.addComponent(new HorizontalLayout() {
@@ -624,40 +694,37 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 						}, "weiboUrlContent");
 
 						// 被转发贴内容
-						Label l = new Label(
-								textTranslate(orginWeibo
-										.getText()));
+						Label l = new Label(textTranslate(orginWeibo.getText()));
 						initOrginTextLable(l);
 						csslayout.addComponent(l, "weiboContent");
-						
-						//下方的评论和转发操作
-						csslayout.addComponent(new HorizontalLayout() 
-							{
 
-								/**
+						// 下方的评论和转发操作
+						csslayout.addComponent(new HorizontalLayout() {
+
+							/**
 								 * 
 								 */
-								private static final long serialVersionUID = 1L;
-								{
-									setSizeFull();
-									setSpacing(true);
-									//
-									HorizontalLayout currentComeFromCompent = currentComeFromCompent(orginWeibo);
-									addComponent(currentComeFromCompent);
-									
-									//currentComeFromCompent.setHeight("26px");
-									//按纽操作
-									HorizontalLayout retweetWeboButtonLayOut = getRetweetWeboButtonLayOut(orginWeibo);
-									//retweetWeboButtonLayOut.setHeight("26px");
-									addComponent(retweetWeboButtonLayOut);
-									
-								}
-	
-							}, "forwardOperContent");
-						
+							private static final long serialVersionUID = 1L;
+							{
+								setSizeFull();
+								setSpacing(true);
+								//
+								HorizontalLayout currentComeFromCompent = currentComeFromCompent(orginWeibo);
+								addComponent(currentComeFromCompent);
 
-						//下方的来自组件
-						//csslayout.addComponent(currentComeFromCompent(orginWeibo), "comFromContent");
+								// currentComeFromCompent.setHeight("26px");
+								// 按纽操作
+								HorizontalLayout retweetWeboButtonLayOut = getRetweetWeboButtonLayOut(orginWeibo);
+								// retweetWeboButtonLayOut.setHeight("26px");
+								addComponent(retweetWeboButtonLayOut);
+
+							}
+
+						}, "forwardOperContent");
+
+						// 下方的来自组件
+						// csslayout.addComponent(currentComeFromCompent(orginWeibo),
+						// "comFromContent");
 
 						addComponent(csslayout);
 					}// 被转发贴完
@@ -679,7 +746,6 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 					});
 				}
 
-		
 			};
 			grid.addComponent(secondLayout, 1, 0);
 

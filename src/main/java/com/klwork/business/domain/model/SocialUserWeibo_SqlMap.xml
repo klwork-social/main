@@ -12,6 +12,7 @@
 	weibo_id_(varchar)	:
 	text_(varchar)	:
 	source_(varchar)	:
+	source_url_(varchar)	:
 	favorited_(int4)	:
 	truncated_(int4)	:
 	in_reply_to_status_id_(varchar)	:
@@ -27,13 +28,17 @@
 	user_profile_image_url_(varchar)	:
 	user_domain_(varchar)	:
 	thumbnail_pic_(varchar)	:
+	thumbnail_pic_size_(varchar)	:
 	original_pic_(varchar)	:
+	original_pic_size_(varchar)	:
 	bmiddle_pic_(varchar)	:
+	bmiddle_pic_size_(varchar)	:
 	user_verified_(int4)	:
 	weibo_type_(int4)	:
 	weibo_handle_type_(int4)	:
-	last_update_(timestamp)	:
 	type_(int4)	:
+	weibo_status_(int4)	:
+	last_update_(timestamp)	:
 sqlMapConfig:
 	<typeAlias alias="SocialUserWeibo" type="com.klwork.business.domain/model.SocialUserWeibo" />
 	<mapper resource="com/klwork/business/domain/model/SocialUserWeibo_SqlMap.xml" />
@@ -51,6 +56,7 @@ sqlMapConfig:
 	weibo_id_,
 	text_,
 	source_,
+	source_url_,
 	favorited_,
 	truncated_,
 	in_reply_to_status_id_,
@@ -66,13 +72,17 @@ sqlMapConfig:
 	user_profile_image_url_,
 	user_domain_,
 	thumbnail_pic_,
+	thumbnail_pic_size_,
 	original_pic_,
+	original_pic_size_,
 	bmiddle_pic_,
+	bmiddle_pic_size_,
 	user_verified_,
 	weibo_type_,
 	weibo_handle_type_,
-	last_update_,
-	type_
+	type_,
+	weibo_status_,
+	last_update_
 	)
     values (
       		#{id,jdbcType=VARCHAR},
@@ -83,6 +93,7 @@ sqlMapConfig:
  		#{weiboId,jdbcType=VARCHAR},
  		#{text,jdbcType=VARCHAR},
  		#{source,jdbcType=VARCHAR},
+ 		#{sourceUrl,jdbcType=VARCHAR},
  		#{favorited,jdbcType=INTEGER},
  		#{truncated,jdbcType=INTEGER},
  		#{inReplyToStatusId,jdbcType=VARCHAR},
@@ -98,13 +109,17 @@ sqlMapConfig:
  		#{userProfileImageUrl,jdbcType=VARCHAR},
  		#{userDomain,jdbcType=VARCHAR},
  		#{thumbnailPic,jdbcType=VARCHAR},
+ 		#{thumbnailPicSize,jdbcType=VARCHAR},
  		#{originalPic,jdbcType=VARCHAR},
+ 		#{originalPicSize,jdbcType=VARCHAR},
  		#{bmiddlePic,jdbcType=VARCHAR},
+ 		#{bmiddlePicSize,jdbcType=VARCHAR},
  		#{userVerified,jdbcType=INTEGER},
  		#{weiboType,jdbcType=INTEGER},
  		#{weiboHandleType,jdbcType=INTEGER},
- 		#{lastUpdate,jdbcType=TIMESTAMP},
-    	#{type,jdbcType=INTEGER}
+ 		#{type,jdbcType=INTEGER},
+ 		#{weiboStatus,jdbcType=INTEGER},
+    	#{lastUpdate,jdbcType=TIMESTAMP}
     	)
   </insert>
   
@@ -131,6 +146,9 @@ sqlMapConfig:
 </if>
 <if test="source != null">
  source_ = #{source,jdbcType=VARCHAR},
+</if>
+<if test="sourceUrl != null">
+ source_url_ = #{sourceUrl,jdbcType=VARCHAR},
 </if>
 <if test="favorited != null">
  favorited_ = #{favorited,jdbcType=INTEGER},
@@ -177,11 +195,20 @@ sqlMapConfig:
 <if test="thumbnailPic != null">
  thumbnail_pic_ = #{thumbnailPic,jdbcType=VARCHAR},
 </if>
+<if test="thumbnailPicSize != null">
+ thumbnail_pic_size_ = #{thumbnailPicSize,jdbcType=VARCHAR},
+</if>
 <if test="originalPic != null">
  original_pic_ = #{originalPic,jdbcType=VARCHAR},
 </if>
+<if test="originalPicSize != null">
+ original_pic_size_ = #{originalPicSize,jdbcType=VARCHAR},
+</if>
 <if test="bmiddlePic != null">
  bmiddle_pic_ = #{bmiddlePic,jdbcType=VARCHAR},
+</if>
+<if test="bmiddlePicSize != null">
+ bmiddle_pic_size_ = #{bmiddlePicSize,jdbcType=VARCHAR},
 </if>
 <if test="userVerified != null">
  user_verified_ = #{userVerified,jdbcType=INTEGER},
@@ -193,15 +220,18 @@ sqlMapConfig:
  weibo_handle_type_ = #{weiboHandleType,jdbcType=INTEGER},
 </if>
 <if test="type != null">
- type_ = #{type,jdbcType=INTEGER}
+ type_ = #{type,jdbcType=INTEGER},
+</if>
+<if test="weiboStatus != null">
+ weibo_status_ = #{weiboStatus,jdbcType=INTEGER},
 </if>
 <if test="lastUpdate != null">
  last_update_ = #{lastUpdate,jdbcType=TIMESTAMP}
 </if>
  where id_ = #{id,jdbcType=VARCHAR}
   </update>
-  
-  <!-- Delete -->
+
+  <!-- Delete -->	
   <delete id="deleteSocialUserWeibo" parameterType="string">
     delete from social_user_weibo where id_ = #{id}
     </delete>
@@ -222,7 +252,8 @@ sqlMapConfig:
 	</if>
   </select>
   
-    <select id="selectLastSocialUserWeibo" parameterType="com.klwork.business.domain.model.SocialUserWeiboQuery" resultMap="SocialUserWeiboMap">
+  <!-- 查询最后一条微博-->
+  <select id="selectLastSocialUserWeibo" parameterType="com.klwork.business.domain.model.SocialUserWeiboQuery" resultMap="SocialUserWeiboMap">
     select U.*
     <include refid="selectSocialUserWeiboByQueryCriteriaSql" />
       order by create_at_ desc
@@ -243,8 +274,17 @@ sqlMapConfig:
     <if test="userAccountId != null">
         AND U.user_account_id_ = #{userAccountId}
     </if>
+    <if test="owner != null">
+        AND U.owner_ = #{owner}
+    </if>
     <if test="weiboId != null">
         AND U.weibo_id_ = #{weiboId}
+    </if>
+    <if test="weiboUid != null">
+        AND U.weibo_uid_ = #{weiboUid}
+    </if>
+    <if test="userName != null">
+        AND U.user_name_ = #{userName}
     </if>
     <if test="weiboType != null">
         AND U.weibo_type_ = #{weiboType}
@@ -255,8 +295,8 @@ sqlMapConfig:
     <if test="type != null">
         AND U.type_ = #{type}
     </if>
-     <if test="userName != null">
-        AND U.user_name_ = #{userName}
+    <if test="weiboStatus != null">
+        AND U.weibo_status_ = #{weiboStatus}
     </if>
     </where>
   </sql>
@@ -270,6 +310,7 @@ sqlMapConfig:
 	<result property="weiboId" column="weibo_id_" />
 	<result property="text" column="text_" />
 	<result property="source" column="source_" />
+	<result property="sourceUrl" column="source_url_" />
 	<result property="favorited" column="favorited_" />
 	<result property="truncated" column="truncated_" />
 	<result property="inReplyToStatusId" column="in_reply_to_status_id_" />
@@ -285,12 +326,16 @@ sqlMapConfig:
 	<result property="userProfileImageUrl" column="user_profile_image_url_" />
 	<result property="userDomain" column="user_domain_" />
 	<result property="thumbnailPic" column="thumbnail_pic_" />
+	<result property="thumbnailPicSize" column="thumbnail_pic_size_" />
 	<result property="originalPic" column="original_pic_" />
+	<result property="originalPicSize" column="original_pic_size_" />
 	<result property="bmiddlePic" column="bmiddle_pic_" />
+	<result property="bmiddlePicSize" column="bmiddle_pic_size_" />
 	<result property="userVerified" column="user_verified_" />
 	<result property="weiboType" column="weibo_type_" />
 	<result property="weiboHandleType" column="weibo_handle_type_" />
-	<result property="lastUpdate" column="last_update_" />
 	<result property="type" column="type_" />
+	<result property="weiboStatus" column="weibo_status_" />
+	<result property="lastUpdate" column="last_update_" />
 </resultMap>
 </mapper>

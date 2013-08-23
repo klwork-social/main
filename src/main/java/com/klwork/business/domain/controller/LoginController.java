@@ -127,6 +127,7 @@ public class LoginController {
 		String result = "login";
 		if (!currentUser.isAuthenticated()) {
 			userService.login(currentUser, username, password);
+			afterLoginSuccess(username);
 		} else {// 重复登录
 			/*
 			 * ShiroUser shiroUser = (ShiroUser) currentUser.getPrincipal();
@@ -136,6 +137,7 @@ public class LoginController {
 			 * login(currentUser,username,password); }
 			 */
 		}
+		
 		String index = request.getContextPath() + "/";
 		response.sendRedirect(index);
 	}
@@ -200,6 +202,7 @@ public class LoginController {
 				.handlerUserAuthorize(thirdUserMap);
 		if (user != null) {// 以前已经登录过
 			userService.doLogin(user);
+			afterLoginSuccess(user.getId());
 			String index = request.getContextPath() + "/";
 			response.sendRedirect(index);
 		} else {// 生成一个用户放到前台
@@ -241,6 +244,7 @@ public class LoginController {
 			}
 
 			userService.doLogin(user);
+			afterLoginSuccess(user.getId());
 			result = new AjaxResult(true);
 			/*
 			 * String index = request.getContextPath() + "/";
@@ -286,10 +290,15 @@ public class LoginController {
 				socialSinaService.addSinaSocialInfo(user, thirdUserMap);
 			}
 			userService.doLogin(user);
+			afterLoginSuccess(user.getId());
 			result = new AjaxResult(true);
 		}
 
 		return result;
+	}
+	
+	private void afterLoginSuccess(String userId) {
+		socialService.handleUserWeibo(userId);
 	}
 
 	/**

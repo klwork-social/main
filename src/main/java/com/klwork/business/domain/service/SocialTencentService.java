@@ -216,8 +216,8 @@ public class SocialTencentService extends AbstractSocialService {
 
 
 	public SocialUserWeibo handlerRetweetedWeibo(String ownerUserId,
-			SocialUserAccount ac, JSONObject source) {
-		SocialUserWeibo soruceWeibo = currentNewSocialUserWeibo(ownerUserId, ac);
+			SocialUserAccount ac, JSONObject source, Integer weiboType) {
+		SocialUserWeibo soruceWeibo = currentNewSocialUserWeibo(ownerUserId, ac,weiboType);
 		convertThirdToWeiboEntity(soruceWeibo,source);
 		return soruceWeibo;
 	}
@@ -230,7 +230,7 @@ public class SocialTencentService extends AbstractSocialService {
 	 * @return
 	 */
 	@Override
-	public int weiboToDb(SocialUserAccount ac, int weiType) {
+	public int weiboToDb(SocialUserAccount ac) {
 		String ownerUserId = ac.getOwnUser();
 		int updateSize = 0;
 		if (ac != null) {
@@ -274,7 +274,7 @@ public class SocialTencentService extends AbstractSocialService {
 				e.printStackTrace();
 			}
 			if(StringTool.judgeBlank(response)){
-				WeiboHandleResult r = weiboSaveDb(response,ac);
+				WeiboHandleResult r = weiboSaveDb(response,ac,DictDef.dictInt("weibo_public_timeline"));
 				if(r.isSuccess() && r.getInfoSize() >0){
 					pBroadcastTime.lastid = r.getLastid();
 					pBroadcastTime.pagetime = r.getPagetime();
@@ -298,7 +298,7 @@ public class SocialTencentService extends AbstractSocialService {
 				e.printStackTrace();
 			}
 			if(StringTool.judgeBlank(response)){
-				WeiboHandleResult r = weiboSaveDb(response,ac);
+				WeiboHandleResult r = weiboSaveDb(response,ac,DictDef.dictInt("weibo_user_timeline"));
 				if(r.isSuccess() && r.getInfoSize() >0){
 					pBroadcastTime.lastid = r.getLastid();
 					pBroadcastTime.pagetime = r.getPagetime();
@@ -322,7 +322,7 @@ public class SocialTencentService extends AbstractSocialService {
 				e.printStackTrace();
 			}
 			if(StringTool.judgeBlank(response)){
-				WeiboHandleResult r = weiboSaveDb(response,ac);
+				WeiboHandleResult r = weiboSaveDb(response,ac,DictDef.dictInt("weibo_type_mention"));
 				if(r.isSuccess() && r.getInfoSize() >0){
 					pBroadcastTime.lastid = r.getLastid();
 					pBroadcastTime.pagetime = r.getPagetime();
@@ -346,15 +346,16 @@ public class SocialTencentService extends AbstractSocialService {
 				e.printStackTrace();
 			}
 			if(StringTool.judgeBlank(response)){
-				WeiboHandleResult r = weiboSaveDb(response,ac);
+				WeiboHandleResult r = weiboSaveDb(response,ac,DictDef.dictInt("weibo_public_timeline"));
 				if(r.isSuccess() && r.getInfoSize() >0){
 					pBroadcastTime.lastid = r.getLastid();
 					pBroadcastTime.pagetime = r.getPagetime();
-					if(!sign){
+					if(!sign){//保存微博的最后时间
 						sign = true;
 						SocialUserAccountInfo info = new SocialUserAccountInfo();
-						info.setKey("weibo_last_time");
+						info.setKey("weibo_last_time");//微博最后更新时间
 						Date d = new Date(Long.parseLong(r.getPagetime()) * 1000);
+						info.setAccountId(ac.getId());
 						info.setType(DictDef.dict("user_account_info_type"));//帐号类型
 						info.setValue(StringDateUtil.parseString(d, 4));
 						info.setValueType(DictDef.dictInt("date"));
@@ -389,7 +390,7 @@ public class SocialTencentService extends AbstractSocialService {
 	 * @param ac
 	 * @return
 	 */
-	private WeiboHandleResult weiboSaveDb(String response,SocialUserAccount ac) {
+	private WeiboHandleResult weiboSaveDb(String response,SocialUserAccount ac,Integer weiboType) {
 		WeiboHandleResult result = new WeiboHandleResult();
 		JSONArray infoList = null;
 		String ownerUserId = ac.getOwnUser();
@@ -405,7 +406,7 @@ public class SocialTencentService extends AbstractSocialService {
 		for (int i = 0; i < infoList.size(); i++) {// 没一条的微博
 			JSONObject infoObj = infoList.getJSONObject(i);
 			SocialUserWeibo dbWeibo = handlerRetweetedWeibo(
-					ownerUserId, ac, infoObj);
+					ownerUserId, ac, infoObj,weiboType);
 			logger.info(i + "+++timestamp:" + infoObj.getString("timestamp") + "++++++++++++++++" +  "id:" + infoObj.getString("id"));
 			if(i == 0 ){//
 				result.setPagetime(infoObj.getString("timestamp"));
@@ -414,8 +415,8 @@ public class SocialTencentService extends AbstractSocialService {
 			JSONObject source = infoObj.getJSONObject("source");
 			if (source != null && !(source.toString().equals("null"))) {//有原帖内容
 				SocialUserWeibo soruceWeibo = handlerRetweetedWeibo(
-						ownerUserId, ac, source);
-				if(saveWeiboUserEntity(soruceWeibo)){
+						ownerUserId, ac, source,weiboType);
+				if(saveWeiboUserEntity(soruceWeibo)){//插入原帖
 					dbWeibo.setRetweetedId(soruceWeibo.getId());
 				}
 			}

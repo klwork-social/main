@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import weibo4j.Account;
 import weibo4j.Oauth;
-import weibo4j.Timeline;
 import weibo4j.Users;
 import weibo4j.http.AccessToken;
 import weibo4j.model.Paging;
@@ -46,6 +45,7 @@ import com.klwork.business.utils.SocialConfig;
 import com.klwork.common.exception.ThirdPlatformException;
 import com.klwork.common.utils.ReflectionUtils;
 import com.klwork.common.utils.StringTool;
+import com.klwork.explorer.ui.util.ImageUtil;
 
 /**
  * The Class SocialSinaService.
@@ -121,21 +121,20 @@ public class SocialSinaService extends AbstractSocialService {
 	}
 
 	private void saveSocialUserWeiboList(SocialUserAccount ac,
-			String ownerUserId, List<Status> list, Integer weiboType,
-			Integer weiboHandleType) {
+			String ownerUserId, List<Status> list, Integer weiboType) {
 		if (null == list) {
 			return;
 		}
 
 		for (int i = 0; i < list.size(); i++) {
-			SocialUserWeibo weibo = currentNewSocialUserWeibo(ownerUserId, ac);
+			SocialUserWeibo weibo = currentNewSocialUserWeibo(ownerUserId, ac,weiboType);
 			Status status = list.get(i);
 			convertThirdToWeiboEntity(weibo, status);
 			// 原创微博信息
 			Status retweetedStatus = status.getRetweetedStatus();
 			if (null != retweetedStatus) {
 				SocialUserWeibo retWeibo = handlerRetweetedWeibo(ac,
-						ownerUserId, weiboType, weiboHandleType,
+						ownerUserId, weiboType,
 						retweetedStatus);
 				if(saveWeiboUserEntity(retWeibo)){
 					weibo.setRetweetedId(retWeibo.getId());
@@ -163,6 +162,8 @@ public class SocialSinaService extends AbstractSocialService {
 		weibo.setText(status.getText());
 		weibo.setSource((status.getSource() == null) ? "" : status.getSource()
 				.getName());
+		weibo.setSourceUrl((status.getSource() == null) ? "" : status.getSource()
+				.getUrl());
 
 		weibo.setInReplyToStatusId(String.valueOf(status.getInReplyToStatusId()));
 		weibo.setInReplyToUserId(String.valueOf(status.getInReplyToUserId()));
@@ -170,9 +171,27 @@ public class SocialSinaService extends AbstractSocialService {
 		weibo.setMid(status.getMid());
 		weibo.setRepostsCount(status.getRepostsCount());
 		weibo.setCommentsCount(status.getCommentsCount());
-		weibo.setThumbnailPic(status.getThumbnailPic());
-		weibo.setBmiddlePic(status.getBmiddlePic());
-		weibo.setOriginalPic(status.getOriginalPic());
+		
+		//微博图片的处理
+		String thumbnailPic = status.getThumbnailPic();
+		weibo.setThumbnailPic(thumbnailPic);
+		if(StringTool.judgeBlank(thumbnailPic)){//取图片的大小
+			String sizeStr = ImageUtil.queryURLImageSize(thumbnailPic);
+			weibo.setThumbnailPicSize(sizeStr);
+		}
+		String bmiddlePic = status.getBmiddlePic();
+		weibo.setBmiddlePic(bmiddlePic);
+		if(StringTool.judgeBlank(bmiddlePic)){//取图片的大小
+			String sizeStr = ImageUtil.queryURLImageSize(bmiddlePic);
+			weibo.setBmiddlePicSize(sizeStr);
+		}
+		String originalPic = status.getOriginalPic();
+		weibo.setOriginalPic(originalPic);
+		if(StringTool.judgeBlank(originalPic)){//取图片的大小
+			String sizeStr = ImageUtil.queryURLImageSize(originalPic);
+			weibo.setOriginalPicSize(sizeStr);
+		}
+		
 		if (null == status.getUser()) {
 			weibo.setWeiboUidFollower(0);
 			weibo.setWeiboUid("");
@@ -193,18 +212,19 @@ public class SocialSinaService extends AbstractSocialService {
 	}
 
 	private SocialUserWeibo handlerRetweetedWeibo(SocialUserAccount ac,
-			String ownerUserId, Integer weiboType, Integer weiboHandleType,
+			String ownerUserId, Integer weiboType,
 			Status retweetedStatus) {
-		SocialUserWeibo retWeibo = currentNewSocialUserWeibo(ownerUserId, ac);
+		SocialUserWeibo retWeibo = currentNewSocialUserWeibo(ownerUserId, ac,weiboType);
 		convertThirdToWeiboEntity(retWeibo, retweetedStatus);
-		retWeibo.setWeiboType(weiboType);// 我的微博
-		retWeibo.setWeiboHandleType(weiboHandleType);// 全部微博
+		//retWeibo.setWeiboType(weiboType);// 我的微博
+		retWeibo.setWeiboHandleType(1);//表明为原始贴
 		return retWeibo;
 	}
 	
 	
 	@Override
-	public int weiboToDb(SocialUserAccount ac,int type) {
+	public int weiboToDb(SocialUserAccount ac) {
+		int type = 1;
 		if (ac != null) {
 			String accountId = ac.getId();
 			String assessToken = findAccessTokenByAccout(accountId);
@@ -216,7 +236,7 @@ public class SocialSinaService extends AbstractSocialService {
 			mentionsWeiboToDb(ac, type, assessToken);
 			
 			//我关注的所有人的微博
-			//homeWeiboToDb(ac, type, assessToken);
+			homeWeiboToDb(ac, type, assessToken);
 		}
 		return 0;
 	}
@@ -243,9 +263,9 @@ public class SocialSinaService extends AbstractSocialService {
 		Integer baseAPP = 0;
 		Integer feature = 0;
 		
-		SocialUserWeibo lastWeibo = queryLastSpeWeibo(ac,null,ac.getName());
+		SocialUserWeibo lastWeibo = queryLastSpeWeibo(ac,DictDef.dictInt("weibo_user_timeline"),ac.getName());
 		if(lastWeibo != null){
-			paging.setSinceId(StringTool.parseInt(lastWeibo.getWeiboId()));
+			paging.setSinceId(StringTool.parseLong(lastWeibo.getWeiboId()));
 		}
 		int i = 0;
 		String uid = ac.getWeiboUid();
@@ -255,7 +275,7 @@ public class SocialSinaService extends AbstractSocialService {
 		// 获取用户发布的微博
 		list = SinaSociaTool.findDsrmAccountWeiboInfo(assessToken, uid,
 				paging, baseAPP, feature);
-		saveSocialUserWeiboList(ac, ac.getOwnUser(), list, 1, 1);
+		saveSocialUserWeiboList(ac, ac.getOwnUser(), list, DictDef.dictInt("weibo_user_timeline"));
 		} while (list != null && list.size() > 0
 				&& paging.getPage() < 5);
 	}
@@ -269,25 +289,25 @@ public class SocialSinaService extends AbstractSocialService {
 	public void homeWeiboToDb(SocialUserAccount ac, int type, String assessToken) {
 		Paging paging = new Paging();
 		paging.setPage(1);// 当前页码
-		paging.setCount(10); // 每页大小
+		paging.setCount(20); // 每页大小
 		//paging.setSinceId(1);
 		Integer baseAPP = 0;
 		Integer feature = 0;
 		
-		SocialUserWeibo lastWeibo = queryLastSpeWeibo(ac,null,null);
-		SocialUserAccountInfo lastTime = socialUserAccountInfoService
-				.findAccountOfInfoByKey(DictDef.dict("weibo_last_time"), ac.getId());
+		SocialUserWeibo lastWeibo = queryLastSpeWeibo(ac,DictDef.dictInt("weibo_public_timeline"),null);
+		/*SocialUserAccountInfo lastTime = socialUserAccountInfoService
+				.findAccountOfInfoByKey(DictDef.dict("weibo_last_time"), ac.getId());*/
 		if(lastWeibo != null){
-			paging.setSinceId(StringTool.parseInt(lastWeibo.getWeiboId()));
+			paging.setSinceId(StringTool.parseLong(lastWeibo.getWeiboId()));
 		}
 		int i = 0;
-		String uid = ac.getWeiboUid();
+		//String uid = ac.getWeiboUid();
 		List<Status> list = null;
 		do {
 			paging.setPage(++i);
 			list = SinaSociaTool.findDsrmAccountRelationWeiboInfo(
 					assessToken, paging, baseAPP, feature);
-			saveSocialUserWeiboList(ac, ac.getOwnUser(), list, 1, 1);
+			saveSocialUserWeiboList(ac, ac.getOwnUser(), list, DictDef.dictInt("weibo_public_timeline"));
 		} while (list != null && list.size() > 0
 				&& paging.getPage() < 5);
 	}
@@ -306,9 +326,9 @@ public class SocialSinaService extends AbstractSocialService {
 		Integer baseAPP = 0;
 		Integer feature = 0;
 		
-		SocialUserWeibo lastWeibo = queryLastSpeWeibo(ac,DictDef.dictInt("weibo_type_mention"),null);
+		SocialUserWeibo lastWeibo = queryLastSpeWeibo(ac,DictDef.dictInt("weibo_mentions_timeline"),null);
 		if(lastWeibo != null){
-			paging.setSinceId(StringTool.parseInt(lastWeibo.getWeiboId()));
+			paging.setSinceId(StringTool.parseLong(lastWeibo.getWeiboId()));
 		}
 		int i = 0;
 		String uid = ac.getWeiboUid();
@@ -317,7 +337,7 @@ public class SocialSinaService extends AbstractSocialService {
 			paging.setPage(++i);
 			list = SinaSociaTool.findMentionsAccountWeiboInfo(
 					assessToken, paging, 0,baseAPP, feature);
-			saveSocialUserWeiboList(ac, ac.getOwnUser(), list, 1, 1);
+			saveSocialUserWeiboList(ac, ac.getOwnUser(), list, DictDef.dictInt("weibo_mentions_timeline"));
 		} while (list != null && list.size() > 0
 				&& paging.getPage() < 5);
 	}

@@ -172,6 +172,8 @@ public class DictDefRepository extends
 		dictDef = new DictDef("236", "at_weibo_last_time", "3", "微博最后更新时间", "at_weibo_last_time");
 		dictDef = new DictDef("237", "at_weibo_first_time", "3", "微博第一次更新时间", "at_weibo_first_time");
 		
+		dictDef = new DictDef("238", "account_data_lock", "3", "帐号数据锁定", "account_data_lock");
+		insertData(dictDef);
 		
 		insertData(dictDef);
 		
@@ -242,6 +244,9 @@ public class DictDefRepository extends
 		
 		dictDef = new DictDef("295", "user_last_logged_time", "9", "用户登录最后时间", "user_last_logged_time");
 		insertData(dictDef);
+		
+		
+		
 		//1-原创发表，2-转载，3-私信，4-回复，5-空回，6-提及，7-评论,
 		dictDef = new DictDef("300", "weibo_type_ori_post", "10", "原创发表", "1");
 		insertData(dictDef);

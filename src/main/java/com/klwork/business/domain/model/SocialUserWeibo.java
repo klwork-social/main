@@ -52,6 +52,10 @@ public class SocialUserWeibo implements Serializable
 	/**
 	 *  
 	 */
+	private String sourceUrl;
+	/**
+	 *  
+	 */
 	private Integer favorited;
 	/**
 	 *  
@@ -106,37 +110,53 @@ public class SocialUserWeibo implements Serializable
 	 */
 	private String userDomain;
 	/**
-	 *  缩略图
+	 *  
 	 */
 	private String thumbnailPic;
 	/**
-	 *  原始
+	 *  
+	 */
+	private String thumbnailPicSize;
+	/**
+	 *  
 	 */
 	private String originalPic;
 	/**
-	 *  大
+	 *  
+	 */
+	private String originalPicSize;
+	/**
+	 *  
 	 */
 	private String bmiddlePic;
 	/**
 	 *  
 	 */
-	private Integer userVerified;
+	private String bmiddlePicSize;
 	/**
 	 *  
+	 */
+	private Integer userVerified;
+	/**
+	 *  微博分类，数据字典6（全部微博，我的微博，@我的微博......
 	 */
 	private Integer weiboType;
 	/**
-	 *  
+	 *  微博处理结果类型，原始贴，还是非原始贴
 	 */
 	private Integer weiboHandleType;
+	/**
+	 * 新浪微博还是腾讯微博
+	 */
+	private Integer type;
+	/**
+	 *  微博的状态
+	 */
+	private Integer weiboStatus;
 	/**
 	 *  
 	 */
 	private java.util.Date lastUpdate;
-	/**
-	 *  
-	 */
-	private Integer type;
 
 	/**
 	 * 
@@ -265,6 +285,22 @@ public class SocialUserWeibo implements Serializable
 	 */	
 	public String getSource(){
 		return source;
+	}
+	/**
+	 * 
+	 *
+	 * @param sourceUrl
+	 */
+	public void setSourceUrl(String sourceUrl){
+		this.sourceUrl = sourceUrl;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getSourceUrl(){
+		return sourceUrl;
 	}
 	/**
 	 * 
@@ -509,6 +545,22 @@ public class SocialUserWeibo implements Serializable
 	/**
 	 * 
 	 *
+	 * @param thumbnailPicSize
+	 */
+	public void setThumbnailPicSize(String thumbnailPicSize){
+		this.thumbnailPicSize = thumbnailPicSize;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getThumbnailPicSize(){
+		return thumbnailPicSize;
+	}
+	/**
+	 * 
+	 *
 	 * @param originalPic
 	 */
 	public void setOriginalPic(String originalPic){
@@ -525,6 +577,22 @@ public class SocialUserWeibo implements Serializable
 	/**
 	 * 
 	 *
+	 * @param originalPicSize
+	 */
+	public void setOriginalPicSize(String originalPicSize){
+		this.originalPicSize = originalPicSize;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getOriginalPicSize(){
+		return originalPicSize;
+	}
+	/**
+	 * 
+	 *
 	 * @param bmiddlePic
 	 */
 	public void setBmiddlePic(String bmiddlePic){
@@ -537,6 +605,22 @@ public class SocialUserWeibo implements Serializable
 	 */	
 	public String getBmiddlePic(){
 		return bmiddlePic;
+	}
+	/**
+	 * 
+	 *
+	 * @param bmiddlePicSize
+	 */
+	public void setBmiddlePicSize(String bmiddlePicSize){
+		this.bmiddlePicSize = bmiddlePicSize;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getBmiddlePicSize(){
+		return bmiddlePicSize;
 	}
 	/**
 	 * 
@@ -589,22 +673,6 @@ public class SocialUserWeibo implements Serializable
 	/**
 	 * 
 	 *
-	 * @param lastUpdate
-	 */
-	public void setLastUpdate(java.util.Date lastUpdate){
-		this.lastUpdate = lastUpdate;
-	}
-	/**
-	 * 
-	 *
-	 * @return
-	 */	
-	public java.util.Date getLastUpdate(){
-		return lastUpdate;
-	}
-	/**
-	 * 
-	 *
 	 * @param type
 	 */
 	public void setType(Integer type){
@@ -617,5 +685,37 @@ public class SocialUserWeibo implements Serializable
 	 */	
 	public Integer getType(){
 		return type;
+	}
+	/**
+	 * 
+	 *
+	 * @param weiboStatus
+	 */
+	public void setWeiboStatus(Integer weiboStatus){
+		this.weiboStatus = weiboStatus;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public Integer getWeiboStatus(){
+		return weiboStatus;
+	}
+	/**
+	 * 
+	 *
+	 * @param lastUpdate
+	 */
+	public void setLastUpdate(java.util.Date lastUpdate){
+		this.lastUpdate = lastUpdate;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public java.util.Date getLastUpdate(){
+		return lastUpdate;
 	}
 }

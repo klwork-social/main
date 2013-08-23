@@ -13,12 +13,12 @@ public interface SocialService {
 	public String getSocialType();
 	
 	/**
-	 * 把微博保存到数据库
+	 * 保存指定的微博数据到数据库
 	 * @param ac
 	 * @param weiType
 	 * @return
 	 */
-	public int weiboToDb(SocialUserAccount ac, int weiType);
+	public int weiboToDb(SocialUserAccount ac);
 	
 	/**
 	 * 查询用户信息通过第三方返回的值

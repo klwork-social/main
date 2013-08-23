@@ -99,4 +99,16 @@ public class SocialUserAccountService {
 		}
 		return null;
 	}
+	
+	/**
+	 * 查询用户下所有帐号
+	 * @param userId
+	 * @return
+	 */
+	public List<SocialUserAccount> queryUserAccountByUserId(String userId) {
+		SocialUserAccountQuery sQuery = new SocialUserAccountQuery();
+		sQuery.setOwnUser(userId);
+		List<SocialUserAccount> sList = findSocialUserAccountByQueryCriteria(sQuery, null);
+		return sList;
+	}
 }

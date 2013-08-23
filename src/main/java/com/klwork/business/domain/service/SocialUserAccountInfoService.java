@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.klwork.business.domain.model.DictDef;
+import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.business.domain.model.SocialUserAccountInfoQuery;
 import com.klwork.business.domain.repository.SocialUserAccountInfoRepository;
@@ -75,5 +77,39 @@ public class SocialUserAccountInfoService {
 	
 	public int count(SocialUserAccountInfoQuery query) {
 		return rep.findSocialUserAccountInfoCountByQueryCriteria(query);
+	}
+	
+	/**
+	 * 查询今天登录的用户的帐号信息
+	 * @return
+	 */
+	public List<SocialUserAccountInfo> queryTodayLoginSocialUserAccountInfo() {
+		SocialUserAccountInfoQuery query = new SocialUserAccountInfoQuery();
+		Date d = new Date();
+		Date aDate = StringDateUtil.dateToYMD(d);
+		query.setDateAfter(aDate);
+		query.setType(DictDef.dict("user_info_type"));
+		query.setKey("user_last_logged_time");
+		query.setOrderBy("value_date_ asc");
+		// 查询今天登录的用户
+		List<SocialUserAccountInfo> list = findSocialUserAccountInfoByQueryCriteria(query, null);
+		return list;
+	}
+	
+	/**
+	 * 设置用户帐号信息
+	 * @param socialUserAccount
+	 * @param key
+	 * @param value
+	 */
+	public void setSocialUserAccountInfo(SocialUserAccount socialUserAccount, String key, String value) {
+		SocialUserAccountInfo info = new SocialUserAccountInfo();
+	    info.setKey( key );//
+	    info.setAccountId(socialUserAccount.getId());
+	    info.setType(DictDef.dict( "user_account_info_type")); //帐号类型
+		info.setValue(value);
+	    info.setValueString(value);
+	    info.setValueType(DictDef. dictInt("string"));
+	    createSocialUserAccountInfo(info);
 	}
 }

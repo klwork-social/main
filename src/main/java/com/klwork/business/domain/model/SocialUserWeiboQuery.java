@@ -29,7 +29,22 @@ public class SocialUserWeiboQuery extends QueryParameter{
 	/**
 	 *  
 	 */
+	private String owner;
+	
+	/**
+	 *  
+	 */
 	private String weiboId;
+	
+	/**
+	 *  
+	 */
+	private String weiboUid;
+	
+	/**
+	 *  
+	 */
+	private String userName;
 	
 	/**
 	 *  
@@ -46,8 +61,11 @@ public class SocialUserWeiboQuery extends QueryParameter{
 	 */
 	private Integer type;
 	
+	/**
+	 *  
+	 */
+	private Integer weiboStatus;
 	
-	String userName;
 
 	/**
 	 * 
@@ -90,6 +108,25 @@ public class SocialUserWeiboQuery extends QueryParameter{
 	/**
 	 * 
 	 *
+	 * @param owner
+	 */
+	public SocialUserWeiboQuery setOwner(String owner){
+		this.owner = owner;
+		return this;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getOwner(){
+		return owner;
+	}
+	
+	/**
+	 * 
+	 *
 	 * @param weiboId
 	 */
 	public SocialUserWeiboQuery setWeiboId(String weiboId){
@@ -104,6 +141,44 @@ public class SocialUserWeiboQuery extends QueryParameter{
 	 */	
 	public String getWeiboId(){
 		return weiboId;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @param weiboUid
+	 */
+	public SocialUserWeiboQuery setWeiboUid(String weiboUid){
+		this.weiboUid = weiboUid;
+		return this;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getWeiboUid(){
+		return weiboUid;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @param userName
+	 */
+	public SocialUserWeiboQuery setUserName(String userName){
+		this.userName = userName;
+		return this;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getUserName(){
+		return userName;
 	}
 	
 	/**
@@ -162,14 +237,25 @@ public class SocialUserWeiboQuery extends QueryParameter{
 	public Integer getType(){
 		return type;
 	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
+	
+	/**
+	 * 
+	 *
+	 * @param weiboStatus
+	 */
+	public SocialUserWeiboQuery setWeiboStatus(Integer weiboStatus){
+		this.weiboStatus = weiboStatus;
+		return this;
 	}
 	
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public Integer getWeiboStatus(){
+		return weiboStatus;
+	}
 	
+
 }

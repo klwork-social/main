@@ -24,8 +24,8 @@ import com.vaadin.ui.Link;
  */
 public class SinaWeiboDisplayPage extends AbstractWeiboDisplayPage {
 
-	public SinaWeiboDisplayPage(SocialUserAccount socialUserAccount, int type) {
-		super(socialUserAccount,type);
+	public SinaWeiboDisplayPage(SocialUserAccount socialUserAccount, int weiboType) {
+		super(socialUserAccount,weiboType);
 	}
 	
 	
