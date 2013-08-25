@@ -56,9 +56,11 @@ public class ProjectService {
 		TodoQuery query = new TodoQuery();
 		query.setProId(project.getId());
 		List<Todo> list = todoService.findTodoByQueryCriteria(query , null);
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-			Todo todo = (Todo) iterator.next();
-			todoService.deleteTodo(todo);
+		if(list.size()>0){
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				Todo todo = (Todo) iterator.next();
+				todoService.deleteTodo(todo);
+			}
 		}
 		rep.deleteById(project.getId());
 	}

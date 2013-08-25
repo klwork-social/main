@@ -1,6 +1,8 @@
 package com.klwork.explorer.ui.handler;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
@@ -8,6 +10,7 @@ import com.vaadin.ui.TextField;
 @SuppressWarnings("rawtypes")
 public class TableFieldCache {
 	private HashMap<Object, HashMap<Object, Field>> fieldCache = new HashMap<Object, HashMap<Object, Field>>();
+	private Set<Object> delFields = new HashSet<Object>();
 
 	public <T> T getPropertyFieldFromCache(Object itemId, Object propertyId) {
 		Field tf = null;
@@ -67,6 +70,19 @@ public class TableFieldCache {
 				fieldCache.put(itemId, propertyMap);
 			}
 			propertyMap.put(propertyId, tf);// 每个属性一个textfield
+			// itemIds.put(tf, itemId);
+		}
+	}
+	
+	public void deletePrppertyFieldToCache(Object itemId, Object propertyId,
+			Field<?> tf) {
+		if (tf != null) {
+			HashMap<Object, Field> propertyMap = fieldCache.get(itemId);// itemId保存多个属性
+			if (propertyMap != null) {// 为空的话，创建一个
+				propertyMap = new HashMap<Object, Field>();
+//				fieldCache.remove(itemId);
+			}
+//			propertyMap.put(propertyId, tf);// 每个属性一个textfield
 			// itemIds.put(tf, itemId);
 		}
 	}

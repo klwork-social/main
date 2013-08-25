@@ -27,10 +27,12 @@ import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.base.AbstractTabViewPage;
+import com.klwork.explorer.ui.custom.DetailPanel;
 import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.event.SubmitEventListener;
 import com.klwork.explorer.ui.handler.CommonFieldHandler;
 import com.klwork.explorer.ui.handler.TableFieldCache;
+import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -47,6 +49,8 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -57,6 +61,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -71,7 +76,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
 
-public class ProjectTreeTable extends CustomComponent {
+public class ProjectTreeTable extends DetailPanel {
 	private static final long serialVersionUID = 7916755916967574384L;
 	private String projectId;
 	protected I18nManager i18nManager;
@@ -85,12 +90,13 @@ public class ProjectTreeTable extends CustomComponent {
 	
 	private TableFieldCache fieldCache = new TableFieldCache();
 	
-	final TreeTable mainTreeTable = new TreeTable("我的周计划");
+	final TreeTable mainTreeTable = new TreeTable();
 
 	private BeanItem<Todo> currentBeanItem;
 	HierarchicalContainer hContainer = null;
 
 	private FieldGroup scheduleEventFieldGroup = new FieldGroup();
+	protected HorizontalLayout projectPlans;
 
 	VerticalLayout bottomLayout;
 	//
@@ -103,18 +109,25 @@ public class ProjectTreeTable extends CustomComponent {
 		this.projectId = prgId;
 		todoService = (TodoService) SpringApplicationContextUtil.getContext()
 				.getBean("todoService");
+//		init();
+	}
+	
+	@Override
+	public void attach() {
+		super.attach();
 		init();
 	}
 
 	protected void init() {
-		VerticalLayout layout = new VerticalLayout();
-		setCompositionRoot(layout);
-		layout.setSizeFull();
+//		VerticalLayout layout = new VerticalLayout();
+//		setCompositionRoot(layout);
+//		layout.setSizeFull();
 
-		initHead(layout);
-
+		initHead();
+		
+//		initAddProjectPlanButton(layout);
 		// 主界面
-		initMain(layout);
+		initMain();
 
 	}
 
@@ -137,11 +150,15 @@ public class ProjectTreeTable extends CustomComponent {
 		}
 	}
 
-	private void initHead(VerticalLayout layout) {
+	private void initHead() {
 		// Header
 		HorizontalLayout header = new HorizontalLayout();
 		header.setWidth(100, Unit.PERCENTAGE);
-		/*
+		header.addStyleName(ExplorerLayout.STYLE_TITLE_BLOCK);
+		header.setSpacing(true);
+		header.setMargin(new MarginInfo(false, false, true, false));
+		addDetailComponent(header);
+		/**
 		 * final Button saveButton = new Button(
 		 * i18nManager.getMessage(Messages.PROFILE_SAVE));
 		 * saveButton.setIcon(Images.SAVE); saveButton.addClickListener(new
@@ -153,18 +170,70 @@ public class ProjectTreeTable extends CustomComponent {
 		 * header.addComponent(saveButton);
 		 * header.setComponentAlignment(saveButton, Alignment.MIDDLE_RIGHT);
 		 */
-		layout.addComponent(header);
-		layout.setSpacing(true);
+		Embedded groupImage = new Embedded(null, Images.GROUP_50);
+		header.addComponent(groupImage);
+		Label groupName = new Label("项目计划");
+		groupName.setSizeUndefined();
+		groupName.addStyleName(Reindeer.LABEL_H2);
+		header.addComponent(groupName);
+		header.setComponentAlignment(groupName, Alignment.MIDDLE_LEFT);
+		header.setExpandRatio(groupName, 1.0f);
+		
+//		layout.addComponent(header);
+//		layout.setSpacing(true);
+	}
+	
+	private void initProjectPlanTitle(HorizontalLayout membersHeader) {
+		Label usersHeader = new Label("项目计划列表");
+		usersHeader.addStyleName(ExplorerLayout.STYLE_H3);
+		membersHeader.addComponent(usersHeader);
+	}
+	
+	private void initAddProjectPlanButton(HorizontalLayout headerLayout) {
+		Button addButton = new Button();
+		addButton.setCaption("快速新加");
+//		 addButton..addStyleName(Alignment.MIDDLE_CENTER);
+		headerLayout.addComponent(addButton);
+//		headerLayout.setComponentAlignment(addButton, Alignment.MIDDLE_CENTER);
+		addButton.addClickListener(new ClickListener() {
+			private static final long serialVersionUID = -8050449471041932066L;
+
+			public void buttonClick(ClickEvent event) {
+				final NewProjectWindow newProjectWindow = new NewProjectWindow(
+						null);
+				ViewToolManager.showPopupWindow(newProjectWindow);
+			}
+		});
 	}
 
-	void initMain(VerticalLayout layout) {
+	private void initMain() {
+		//初始化项目计划列表容器
+		HorizontalLayout projectsHeader = new HorizontalLayout();
+		projectsHeader.setSpacing(true);
+		projectsHeader.setWidth(100, Unit.PERCENTAGE);
+		projectsHeader.addStyleName(ExplorerLayout.STYLE_DETAIL_BLOCK);
+		addDetailComponent(projectsHeader);
+		//增加treeTable标题
+		initProjectPlanTitle(projectsHeader);
+		//增加快速增加任务计划按钮
+		initAddProjectPlanButton(projectsHeader);
+		//实例化项目计划treeTable
+		initMainTreeTable();
+	}
+	
+	private void initMainTreeTable(){
+		projectPlans = new HorizontalLayout();
+		projectPlans.setWidth(100, Unit.PERCENTAGE);
+		addDetailComponent(projectPlans);
+		projectPlans.addComponent(mainTreeTable);
+		
 		// 用一个panel包含，实现快捷键
-		Panel panel = new Panel();
-		panel.addActionHandler(new KbdHandler());
-		// panel.setHeight(-1, Unit.PIXELS);
-		layout.addComponent(panel);
-		layout.setExpandRatio(panel, 1.0f);
-		panel.setContent(mainTreeTable);
+//		Panel panel = new Panel();
+//		panel.addActionHandler(new KbdHandler());
+//		// panel.setHeight(-1, Unit.PIXELS);
+//		layout.addComponent(panel);
+//		layout.setExpandRatio(panel, 1.0f);
+//		panel.setContent(mainTreeTable);
 
 		// init tabletree
 		mainTreeTable.setEditable(true);
@@ -199,7 +268,6 @@ public class ProjectTreeTable extends CustomComponent {
 		mainTreeTable.setImmediate(true);
 		// 展开所有节点
 		collapsedAll(mainTreeTable);
-
 	}
 
 	private void collapsedAll(final TreeTable ttable) {
@@ -286,6 +354,7 @@ public class ProjectTreeTable extends CustomComponent {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void rightClickHandler(final TreeTable ttable) {
 		ContextMenu tableContextMenu = new ContextMenu();
 		tableContextMenu.addContextMenuTableListener(createOpenListener());
@@ -297,6 +366,7 @@ public class ProjectTreeTable extends CustomComponent {
 						Item parentItem = hContainer.getItem(currentBeanItem);
 						Todo newTodo = todoService.newTodo();
 						newTodo.setProId(projectId);
+						@SuppressWarnings("rawtypes")
 						BeanItem newbeanItem = new BeanItem<Todo>(newTodo);
 						Item nItem = hContainer.addItem(newbeanItem);
 

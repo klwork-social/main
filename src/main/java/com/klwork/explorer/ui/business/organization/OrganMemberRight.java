@@ -217,6 +217,8 @@ public class OrganMemberRight extends DetailPanel {
 
 				// Listen to submit events (that contain the selected users)
 				selectUsersPopup.addListener(new SubmitEventListener() {
+					private static final long serialVersionUID = 6081300274433293659L;
+
 					protected void submitted(SubmitEvent event) {
 						Collection<String> userIds = selectUsersPopup
 								.getSelectedUserIds();
