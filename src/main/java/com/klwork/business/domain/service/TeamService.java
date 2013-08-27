@@ -65,6 +65,16 @@ public class TeamService {
 		}
 		return map;
 	}
+	
+	public Map<Object, String> queryTeamOfUser(String userId) {
+		Map<Object, String> map = new HashMap<Object, String>();
+		List<Team> list = queryTeamListOfUser(userId);
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			Team team = (Team) iterator.next();
+			map.put(team.getId(), team.getName());
+		}
+		return map;
+	}
 
 	public List<Team> queryTeamListOfUser(String userId) {
 		TeamQuery query = new TeamQuery();
