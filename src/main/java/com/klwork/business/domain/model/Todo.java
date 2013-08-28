@@ -109,7 +109,11 @@ public class Todo implements Serializable
 	 *  
 	 */
 	private boolean relatedCalendar;
-
+	/**
+	 *  
+	 */
+	private String assignedTeam;
+	
 	/**
 	 * 
 	 *
@@ -477,5 +481,12 @@ public class Todo implements Serializable
 	 */	
 	public boolean getRelatedCalendar(){
 		return relatedCalendar;
+	}
+	
+	public String getAssignedTeam() {
+		return assignedTeam;
+	}
+	public void setAssignedTeam(String assignedTeam) {
+		this.assignedTeam = assignedTeam;
 	}
 }

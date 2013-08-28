@@ -1,18 +1,29 @@
 package com.klwork.explorer.ui.business.project;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.activiti.engine.impl.persistence.entity.UserEntity;
+
+import com.google.gwt.user.client.ui.Widget;
 import com.klwork.business.domain.model.Project;
 import com.klwork.business.domain.service.ProjectService;
 import com.klwork.explorer.I18nManager;
+import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.data.LazyLoadingContainer;
 import com.klwork.explorer.data.LazyLoadingQuery;
+import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.base.AbstractTabViewPage;
 import com.klwork.explorer.ui.business.query.ProjectListQuery;
+import com.klwork.explorer.ui.custom.ConfirmationDialogPopupWindow;
 import com.klwork.explorer.ui.custom.DetailPanel;
+import com.klwork.explorer.ui.event.ConfirmationEvent;
+import com.klwork.explorer.ui.event.ConfirmationEventListener;
 import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.event.SubmitEventListener;
 import com.klwork.explorer.ui.handler.BinderHandler;
@@ -53,6 +64,7 @@ public class ProjectList extends DetailPanel {
 	final HashMap<Object, String> projectNames = new HashMap<Object, String>();
 
 	private TableFieldCache fieldCache = new TableFieldCache();
+	private TableFieldCache delFields = new TableFieldCache();
 	// 当前table id
 	private String currentProjectId;
 	private Object currentItemId;
@@ -60,11 +72,14 @@ public class ProjectList extends DetailPanel {
 	AbstractTabViewPage  mainPage;
 	ProjectService projectService;
 	protected HorizontalLayout projectsLayout;
+	protected Table listTable;
 
 	public ProjectList(AbstractTabViewPage tabPage) {
 		this.i18nManager = ViewToolManager.getI18nManager();
 		this.mainPage = tabPage;
 		projectService = ViewToolManager.getBean("projectService");
+		String userId = LoginHandler.getLoggedInUser().getId();
+		System.out.println();
 	}
 
 	/*
@@ -106,17 +121,14 @@ public class ProjectList extends DetailPanel {
 	}
 
 	public void initProjectsTable() {
-		final Table listTable = new Table();
+		listTable = new Table();
 		/*listTable.addStyleName(ExplorerLayout.STYLE_TASK_LIST);
 		listTable.addStyleName(ExplorerLayout.STYLE_SCROLLABLE);*/
-		
 		listTable.setWidth(100, Unit.PERCENTAGE);
 		listTable.setHeight(400, Unit.PIXELS);
-
 		listTable.setEditable(false);
 		listTable.setSelectable(false);
 		listTable.setSortEnabled(true);
-		
 		projectsLayout.addComponent(listTable);
 		/*
 		 * layout.addComponent(listTable); layout.setExpandRatio(listTable, 1);
@@ -149,12 +161,12 @@ public class ProjectList extends DetailPanel {
 				final Object key = itemId.toString() + propertyId.toString();
 
 				if ("name".equals(propertyId)) {
-					if (fieldCache
-							.getPropertyFieldFromCache(itemId, propertyId) != null) {
-						tf = fieldCache.getPropertyFieldFromCache(itemId,
-								propertyId);
-						return tf;
-					}
+//					if (fieldCache
+//							.getPropertyFieldFromCache(itemId, propertyId) != null) {
+//						tf = fieldCache.getPropertyFieldFromCache(itemId,
+//								propertyId);
+//						return tf;
+//					}
 
 					tf = new TextField((String) propertyId);
 					tf.setImmediate(true);
@@ -203,7 +215,7 @@ public class ProjectList extends DetailPanel {
 		listTable.setContainerDataSource(listContainer);
 		
 		listTable.addContainerProperty("id", String.class, null);
-		listTable.addContainerProperty("name", String.class, "");
+		listTable.addContainerProperty("name", String.class, null);
 		listTable.addGeneratedColumn("edit", new ProjectEditColumnGenerator());
 	}
 
@@ -228,21 +240,24 @@ public class ProjectList extends DetailPanel {
 				public void buttonClick(ClickEvent event) {
 					// WW_TODO 后台进行修改
 					Item item = source.getItem(itemId);
-					String id = (String) item.getItemProperty("id").getValue();
-					NewProjectWindow newProjectWindow = new NewProjectWindow(id);
+					String pid = (String) item.getItemProperty("id").getValue();
+					NewProjectWindow newProjectWindow = new NewProjectWindow(pid);
 
 					newProjectWindow.addListener(new SubmitEventListener() {
 						private static final long serialVersionUID = 1L;
-
 						@Override
 						protected void cancelled(SubmitEvent event) {
 
 						}
-
 						@Override
 						protected void submitted(SubmitEvent event) {
 							if (event.getData() != null) {
-
+								Item item = source.getItem(itemId);
+								String id = (String) item.getItemProperty("id").getValue();
+								Project project = new Project();
+						    	  project.setId(id);
+								projectService.updateProject(project);
+								notifyProjectListChanged();
 							}
 						}
 					});
@@ -250,9 +265,38 @@ public class ProjectList extends DetailPanel {
 					ViewToolManager.showPopupWindow(newProjectWindow);
 				}
 			});
-			
 			buttonLayout.addComponent(editButton);
 			
+			final Project userEntity = BinderHandler.getTableBean(
+					source, itemId);
+			Embedded deleteIcon = new Embedded(null, Images.DELETE);
+			deleteIcon.addStyleName(ExplorerLayout.STYLE_CLICKABLE);
+			deleteIcon.addClickListener(new com.vaadin.event.MouseEvents.ClickListener() {
+				@Override
+				public void click(com.vaadin.event.MouseEvents.ClickEvent event) {
+					 ConfirmationDialogPopupWindow confirmationPopup = 
+						      new ConfirmationDialogPopupWindow(i18nManager.getMessage(Messages.USER_CONFIRM_DELETE_GROUP, userEntity.getId(),userEntity.getName()));
+						    confirmationPopup.addListener(new ConfirmationEventListener() {
+						      protected void rejected(ConfirmationEvent event) {
+						      }
+						      protected void confirmed(ConfirmationEvent event) {
+						    	  Item item = source.getItem(itemId);
+						    	  String id = (String) item.getItemProperty("id").getValue();
+						    	  Project project = new Project();
+						    	  project.setId(id);
+						    	  projectService.deleteProject(project);
+						    	  TextField tf = fieldCache.getPropertyFieldFromCache(itemId,
+											"name");
+						    	  fieldCache.deletePrppertyFieldToCache(itemId, "name", tf);
+						    	  notifyProjectListChanged();
+						        //membershipChangeListener.notifyMembershipChanged();
+						      }
+						    });
+						    ViewToolManager.showPopupWindow(confirmationPopup);
+				}
+				
+			});
+			buttonLayout.addComponent(deleteIcon);
 			
 			editButton = new Button("项目计划");
 			editButton.addStyleName(Reindeer.BUTTON_LINK);
@@ -262,6 +306,7 @@ public class ProjectList extends DetailPanel {
 					Item item = source.getItem(itemId);
 					String id = (String) item.getItemProperty("id").getValue();
 					String name = (String) item.getItemProperty("name").getValue();
+					//点击项目计划弹出新页签
 					selectedHandle(id, name);
 				
 				}
@@ -332,8 +377,8 @@ public class ProjectList extends DetailPanel {
 
 	protected void initAddProjectButton(HorizontalLayout headerLayout) {
 		
-		Button addButton = new Button();
-		addButton.setCaption("新增");
+		Button addButton = new Button("新增");
+//		addButton.setCaption("新增");
 		// addButton.addStyleName(ExplorerLayout.STYLE_ADD);
 		headerLayout.addComponent(addButton);
 
@@ -344,8 +389,24 @@ public class ProjectList extends DetailPanel {
 				final NewProjectWindow newProjectWindow = new NewProjectWindow(
 						null);
 				ViewToolManager.showPopupWindow(newProjectWindow);
+				// 这个弹出窗口提交时，进行一些操作。
+				newProjectWindow.addListener(new SubmitEventListener() {
+					private static final long serialVersionUID = 6081300274433293659L;
+
+					protected void submitted(SubmitEvent event) {
+						notifyProjectListChanged();
+					}
+
+					protected void cancelled(SubmitEvent event) {
+					}
+				});
 			}
 		});
+	}
+	
+	public void notifyProjectListChanged(){
+		projectsLayout.removeAllComponents();
+		initProjectsTable();
 	}
 
 	public void openEdit() {

@@ -20,6 +20,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
 public class NewProjectForm extends CustomComponent {
@@ -59,6 +60,7 @@ public class NewProjectForm extends CustomComponent {
 			edit = true;
 		}
 		if (edit) {
+			//删除项目
 			Button deleteButton = new Button(
 					i18nManager.getMessage(Messages.BUTTON_DELETE));
 			buttonLayout.addComponent(deleteButton);
@@ -68,13 +70,14 @@ public class NewProjectForm extends CustomComponent {
 				public void buttonClick(ClickEvent event) {
 					handleDelete(projectItem);
 					opener.close();
-
+					ViewToolManager.getMainView().showProjectPage();
 				}
 			});
 		}
 
+		//保存项目
 		Button createButton = new Button(
-				i18nManager.getMessage(Messages.BUTTON_CREATE));
+				i18nManager.getMessage(Messages.BUTTON_SAVE));
 		buttonLayout.addComponent(createButton);
 		buttonLayout
 				.setComponentAlignment(createButton, Alignment.BOTTOM_RIGHT);
@@ -103,8 +106,7 @@ public class NewProjectForm extends CustomComponent {
 	}
 
 	/**
-	 * 保存到数据库
-	 * 
+	 * 从数据库增加或者更新项目
 	 * @param projectItem
 	 */
 	private void handleFormSubmit(BeanItem<Project> projectItem) {
@@ -119,8 +121,7 @@ public class NewProjectForm extends CustomComponent {
 	};
 
 	/**
-	 * 保存到数据库
-	 * 
+	 * 从数据库删除项目
 	 * @param projectItem
 	 */
 	private void handleDelete(BeanItem<Project> projectItem) {

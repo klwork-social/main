@@ -13,8 +13,13 @@
 
 package com.klwork.explorer.ui.business.project;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.klwork.business.domain.model.Project;
+import com.klwork.business.domain.model.ProjectQuery;
 import com.klwork.business.domain.service.ProjectService;
+import com.klwork.common.dto.vo.ViewPage;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
@@ -56,6 +61,8 @@ public class NewProjectWindow extends PopupWindow {
 	boolean edit = false;
 	ProjectService projectService;
 	
+	protected boolean multiSelect = true;
+	
 	public NewProjectWindow(String currentProjectId) {
 		this.i18nManager = ViewToolManager.getI18nManager();
 		this.projectService = ViewToolManager.getBean("projectService");
@@ -63,6 +70,15 @@ public class NewProjectWindow extends PopupWindow {
 			this.currentProjectId = currentProjectId;
 			edit = true;
 		}
+	}
+	
+	@Override
+	public void attach() {
+		super.attach();
+		initNewProjectWindow();
+	}
+
+	private void initNewProjectWindow(){
 		setModal(true);
 		center();
 		setResizable(false);
@@ -72,22 +88,7 @@ public class NewProjectWindow extends PopupWindow {
 		setHeight(320, Unit.PIXELS);
 		final BeanItem pItem = getProjectBeanItem();
 		initForm(pItem);
-		
-		// 这个弹出窗口提交时，进行一些操作。
-		addListener(new SubmitEventListener() {
-			private static final long serialVersionUID = 4294753752316281159L;
-
-			protected void submitted(SubmitEvent event) {
-				// 上面先保存，然后进行任务查询，进行刷新操作
-				System.out.println("提交完成" + pItem);
-			}
-
-			protected void cancelled(SubmitEvent event) {
-			}
-		});
 	}
-
-
 
 	private void initForm(BeanItem pItem) {
 		NewProjectForm form = new NewProjectForm(this,pItem);
@@ -108,5 +109,6 @@ public class NewProjectWindow extends PopupWindow {
 		BeanItem pItem = new BeanItem<Project>(p);
 		return pItem;
 	}
+	
 
 }
