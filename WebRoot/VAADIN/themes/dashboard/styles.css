@@ -4804,6 +4804,18 @@ body .dashboard.v-app .v-app-loading {
 	color: #c9ccce;
 }
 
+.dashboard .v-select-optiongroup-horizontal .v-select-option {
+	display: inline-block;
+}
+
+.dashboard .v-select-optiongroup-horizontal {
+	white-space: nowrap;
+}
+
+.dashboard .v-select-optiongroup-horizontal .v-select-option.v-radiobutton {
+	padding-right: 10px;
+}
+
 .dashboard .v-button {
 	color: #5a6066;
 	padding: 0.3em 1.4em;
@@ -5890,6 +5902,10 @@ body .dashboard.v-app .v-app-loading {
 
 .dashboard .reports .transaction .seats {
 	left: 60%;
+}
+
+.dashboard .my-no-scroll .v-scrollable {
+	overflow-y: scroll;
 }
 
 .dashboard .forward {

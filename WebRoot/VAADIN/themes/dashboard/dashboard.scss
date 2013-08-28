@@ -16,6 +16,7 @@
 @import "components/button.scss";
 @import "components/textfield.scss";
 @import "components/combobox.scss";
+@import "components/checkbox.scss";
 @import "components/tabsheet.scss";
 @import "components/label.scss";
 @import "components/common-table.scss";
@@ -35,6 +36,7 @@
 	@include dashboard-loading-indicator;
 	@include dashboard-common;
 	@include dashboard-combobox;
+	@include dashboard-checkbox;
 	@include dashboard-button;
 	@include dashboard-label;
 	@include dashboard-notification;
