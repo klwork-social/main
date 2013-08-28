@@ -212,6 +212,25 @@ public class LoginController {
 		retMap.put("user", user);
 		return new ModelAndView("oauthPage", retMap);
 	}
+	
+	
+	/**
+	 * 微盘的回调
+	 * 
+	 * @param request
+	 * @param response
+	 * @param code
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "vdisk")
+	public ModelAndView vdisk(HttpServletRequest request,
+			HttpServletResponse response, String code) throws IOException {
+		ModelMap retMap = new ModelMap();
+		retMap.put("code", code);
+		socialSinaService.queryVidiskInfoByCode(code,null,null);
+		return new ModelAndView("vdiskPage", retMap);
+	}
 
 	/**
 	 * 用户绑定进行提交

@@ -12,6 +12,8 @@
  */
 package com.klwork.business.domain.service;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,6 +48,16 @@ import com.klwork.common.exception.ThirdPlatformException;
 import com.klwork.common.utils.ReflectionUtils;
 import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.ui.util.ImageUtil;
+import com.vdisk.net.ProgressListener;
+import com.vdisk.net.VDiskAPI;
+import com.vdisk.net.VDiskAPI.DeltaEntry;
+import com.vdisk.net.VDiskAPI.DeltaPage;
+import com.vdisk.net.VDiskAPI.Entry;
+import com.vdisk.net.VDiskAPI.UploadRequest;
+import com.vdisk.net.exception.VDiskException;
+import com.vdisk.net.session.AppKeyPair;
+import com.vdisk.net.session.MySession;
+import com.vdisk.net.session.Session.AccessType;
 
 /**
  * The Class SocialSinaService.
@@ -572,5 +584,85 @@ public class SocialSinaService extends AbstractSocialService {
 		if( 1 == SinaSociaTool.deleteWeibo(userWeibo.getWeiboId(), assessToken)){//成功删除
 			socialUserWeiboService.deleteSocialUserWeibo(userWeibo);
 		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public void queryVidiskInfoByCode(String code,String openid, String openkey) {
+		HashMap map = new HashMap();
+		String clientId = SocialConfig.getString("vidisk_client_id");
+		String clinetSecret = SocialConfig.getString("vidisk_clinet_secret");
+		String redirectUrl = SocialConfig.getString("vidisk_go_back");
+		/*AccessToken accessToken = null;
+		 String url = "https://auth.sina.com.cn/oauth2/access_token";
+		try {
+			accessToken = new Oauth().getAccessTokenByCode(url,code,
+					clientId, clinetSecret, redirectUrl);
+		} catch (WeiboException e) {
+			e.printStackTrace();
+			throw new ThirdPlatformException(e.getMessage());
+		}*/
+		
+		File mFile = new File("F:/temp/a.jpg");
+		java.io.FileInputStream fis = null;
+		try {
+			fis = new java.io.FileInputStream(mFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String mPath = "";
+		if (!mPath.endsWith("/")) {
+			mPath = mPath + "/";
+		}
+		
+		AppKeyPair appKeyPair = new AppKeyPair(clientId,clinetSecret);
+		MySession mySession = new MySession(appKeyPair,AccessType.APP_FOLDER);
+		//MySession mySession = new MySession(appKeyPair,AccessType.VDISK);
+		mySession.setRedirectUrl(redirectUrl);
+		VDiskAPI<MySession> mApi = new VDiskAPI(mySession);
+		
+		
+		String path = mPath + mFile.getName();
+		UploadRequest mRequest = null;
+		try {
+			mySession.getOAuth2AccessToken(code);
+			//com.vdisk.net.VDiskAPI.Account s =  mApi.accountInfo();
+			/*mRequest = mApi.putFileOverwriteRequest(path, fis, mFile.length(),
+					new ProgressListener() {
+						@Override
+						public long progressInterval() {
+							// Update the progress bar every half-second or so
+							return super.progressInterval();
+						}
+
+						@Override
+						public void onProgress(long bytes, long total) {
+							//publishProgress(bytes);
+						}
+					});
+			if (mRequest != null) {
+				Entry uploadBackEntry = mRequest.upload();
+			}*/
+			Entry cr = mApi.createFolder("good");
+			String s = mApi.share("good");
+			
+			
+			DeltaPage<Entry> deltaPage = mApi.delta(null);
+			List<DeltaEntry<Entry>> entries = deltaPage.entries;
+
+			if (entries != null) {
+				for (DeltaEntry<Entry> entry : entries) {
+					String entryInfo = entry.metadata == null ? "null"
+							: entry.metadata.modified;
+					System.out.println((entry.lcPath + ": " + entryInfo));
+				}
+			}
+		} catch (VDiskException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 	}
 }
