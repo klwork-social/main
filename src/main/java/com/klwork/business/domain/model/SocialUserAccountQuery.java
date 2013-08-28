@@ -1,5 +1,8 @@
 package com.klwork.business.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.klwork.common.dao.QueryParameter;
 
 /**
@@ -45,6 +48,8 @@ public class SocialUserAccountQuery extends QueryParameter{
 	 *  
 	 */
 	private Integer type;
+	
+	private List teams;
 	
 
 	/**
@@ -160,6 +165,16 @@ public class SocialUserAccountQuery extends QueryParameter{
 	public Integer getType(){
 		return type;
 	}
-	
 
+	public List getTeams() {
+		return teams;
+	}
+
+	public void setTeams(List<String> teams) {
+		if(teams == null || teams.isEmpty()){
+			teams = new ArrayList<String>();
+			teams.add("-1");
+		}
+		this.teams = teams;
+	}
 }

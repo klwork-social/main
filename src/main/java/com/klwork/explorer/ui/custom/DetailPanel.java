@@ -50,7 +50,6 @@ public class DetailPanel extends VerticalLayout {
     super.addComponent(cssLayout);
     
     mainPanel = new Panel();
-    mainPanel.setScrollLeft(33);
     mainPanel.addStyleName(Reindeer.PANEL_LIGHT);
     mainPanel.setSizeFull();
     cssLayout.addComponent(mainPanel);

@@ -20,11 +20,12 @@ import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserAccountQuery;
 import com.klwork.business.domain.service.SocialUserAccountService;
+import com.klwork.business.domain.service.TeamService;
 import com.klwork.common.dto.vo.ViewPage;
-import com.klwork.common.utils.spring.SpringApplicationContextUtil;
+import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.data.AbstractLazyLoadingQuery;
 import com.klwork.explorer.security.LoginHandler;
-import com.klwork.explorer.ui.business.social.SocialAccountList;
+import com.klwork.explorer.ui.business.social.TeamSocialAccountList;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.ObjectProperty;
@@ -36,14 +37,14 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-public class SocialListQuery extends AbstractLazyLoadingQuery {
-
-	SocialUserAccountService saService;
-	SocialAccountList socialAccountList;
-	public SocialListQuery(SocialAccountList socialAccountList) {
-		saService = (SocialUserAccountService) SpringApplicationContextUtil
-				.getContext().getBean("socialUserAccountService");
-		this.socialAccountList = socialAccountList;
+public class TeamSocialListQuery extends AbstractLazyLoadingQuery {
+	protected transient TeamService teamService;
+	protected transient SocialUserAccountService saService;
+	TeamSocialAccountList socialAccountList;
+	public TeamSocialListQuery(TeamSocialAccountList teamSocialAccountList) {
+		teamService =ViewToolManager. getBean("teamService");
+		saService = ViewToolManager. getBean("socialUserAccountService");
+		this.socialAccountList = teamSocialAccountList;
 	}
 
 	@Override
@@ -54,8 +55,9 @@ public class SocialListQuery extends AbstractLazyLoadingQuery {
 
 	private SocialUserAccountQuery createQuery() {
 		String userId = LoginHandler.getLoggedInUser().getId();
+		List<String> groups = teamService.queryUserInTeamIds(userId);
 		SocialUserAccountQuery q = new SocialUserAccountQuery();
-		q.setOwnUser(userId);
+		q.setTeams(groups);
 		return q;
 	}
 
@@ -112,7 +114,7 @@ public class SocialListQuery extends AbstractLazyLoadingQuery {
 			addItemProperty("actions", new ObjectProperty<Component>(buttonLayout, Component.class));
 			buttonLayout.setSpacing(true);
 			buttonLayout.addStyleName("social");
-			Button editButton  = new Button("微博");
+			Button editButton  = new Button("查看微博");
 			editButton.addStyleName(Reindeer.BUTTON_LINK);
 			editButton.addClickListener(new ClickListener() {
 				public void buttonClick(ClickEvent event) {
@@ -121,14 +123,6 @@ public class SocialListQuery extends AbstractLazyLoadingQuery {
 			});
 			buttonLayout.addComponent(editButton);
 			
-			Button permitButton  = new Button("权限分配");
-			permitButton.addStyleName(Reindeer.BUTTON_LINK);
-			permitButton.addClickListener(new ClickListener() {
-				public void buttonClick(ClickEvent event) {
-					socialAccountList.openAuthorityWindow(sc);
-				}
-			});
-			buttonLayout.addComponent(permitButton);
 		}
 	}
 }

@@ -115,6 +115,9 @@ sqlMapConfig:
   
   <sql id="selectSocialUserAccountByQueryCriteriaSql">
     from social_user_account U
+    <if test="teams != null"><!-- entity_type_ = 1表示社交账号-->
+      inner join resources_assign_manager R on R.entity_id_ = U.ID_ and R.entity_type_ = '1'
+    </if>
     <where>
         <if test="weiboUid != null">
         AND U.weibo_uid_ = #{weiboUid}
@@ -134,6 +137,13 @@ sqlMapConfig:
     <if test="type != null">
         AND U.type_ = #{type}
     </if>
+     <if test="teams != null &amp;&amp; teams.size() &gt; 0">
+            and R.team_id_ IN
+            <foreach item="team" index="index" collection="teams" 
+                     open="(" separator="," close=")">
+              #{team}
+            </foreach>
+      </if>
     </where>
   </sql>
   

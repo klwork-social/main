@@ -1,5 +1,6 @@
 package com.klwork.explorer.ui.handler;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,6 +16,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
@@ -164,5 +166,25 @@ public class CommonFieldHandler {
 		}
 		return label;
 		
+	}
+	
+	/**
+	 * 
+	 * @param list
+	 * @param caption
+	 * @param mut true为checkbox, false为radio
+	 * @return
+	 */
+	public static OptionGroup createCheckBoxs(List<DictDef> list,String caption,boolean mut) {
+		OptionGroup group = new OptionGroup(caption);
+		group.setMultiSelect(mut);
+		group.setStyleName("horizontal");
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			DictDef dictDef = (DictDef) iterator.next();
+			String p = dictDef.getValue();
+			Item i = group.addItem(p);
+			group.setItemCaption(p, dictDef.getName());
+		}
+		return group;
 	}
 }

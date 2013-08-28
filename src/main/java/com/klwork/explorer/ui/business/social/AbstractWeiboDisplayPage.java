@@ -92,6 +92,7 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 
 	protected void init() {
 		setSizeFull();
+		//addStyleName("social");
 		addStyleName(Reindeer.LAYOUT_WHITE);
 		setSpacing(true);
 		// Central panel: all task data
@@ -105,7 +106,7 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 
 		Table listTable = new Table();
 		listTable.addStyleName(ExplorerLayout.STYLE_TASK_LIST);
-		listTable.addStyleName(ExplorerLayout.STYLE_SCROLLABLE);
+		listTable.addStyleName("my-no-scroll");
 		listTable.setWidth(100, Unit.PERCENTAGE);
 		listTable.setHeight(100, Unit.PERCENTAGE);
 		centralLayout.addComponent(listTable);
@@ -117,7 +118,12 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 				lazyLoadingQuery, 10);
 		listTable.setContainerDataSource(listContainer);
 		if (lazyLoadingQuery.size() < 10) {
-			listTable.setPageLength(0);
+			listTable.setPageLength(listContainer.size());
+			int pageLength = listContainer.size()/2;
+			listTable.setPageLength(pageLength);
+			//listTable.setSizeFull();
+			//listTable.setSizeUndefined();
+			//listTable.removeStyleName("my-no-scroll");
 		} else {
 			listTable.setPageLength(10);
 		}
@@ -129,6 +135,8 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 
 		CSSInject css = new CSSInject(UI.getCurrent());
 		css.setStyles(".wb_image_css .scale-image{background-repeat: no-repeat; }");
+		//css.setStyles(".v-panel-content.v-scrollable {overflow-y:hidden}");
+		//css.setStyles(".v-scrollable.v-table-body-wrapper.v-table-body {overflow-y:scroll}");
 	}
 
 	/**

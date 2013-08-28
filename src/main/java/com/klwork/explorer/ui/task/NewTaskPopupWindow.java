@@ -12,7 +12,6 @@
  */
 package com.klwork.explorer.ui.task;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,10 +31,9 @@ import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.base.AbstractFormPoputWindow;
+import com.klwork.explorer.ui.handler.BusinessComponetHelp;
 import com.klwork.explorer.ui.handler.CommonFieldHandler;
-import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.Action;
@@ -72,7 +70,9 @@ public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 	ComboBox userGroupComboBox;
 	ComboBox userComboBox;
 	protected Button createTaskButton;
-
+	
+	BusinessComponetHelp help = new BusinessComponetHelp();
+	
 	public NewTaskPopupWindow() {
 		this.taskService = ProcessEngines.getDefaultProcessEngine()
 				.getTaskService();
@@ -117,13 +117,7 @@ public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 		priorityComboBox = new PriorityComboBox(i18nManager);
 		// form.addField("priority", priorityComboBox);
 		getForm().addComponent(priorityComboBox);
-		Map<String, String> groupsMap = teamService.queryTeamMapOfUser(LoginHandler
-				.getLoggedInUser().getId());
-		groupsMap.put("", i18nManager
-				.getMessage(Messages.SELECT_DEFAULT));
-		//"用户组"
-		userGroupComboBox = CommonFieldHandler.createComBox(i18nManager
-				.getMessage(Messages.TEAM_SELECT), groupsMap, "null");
+		userGroupComboBox = help.getUserOfTeamComboBox();
 		//userGroupComboBox.
 		userGroupComboBox.addValueChangeListener(new com.vaadin.data.Property.ValueChangeListener() {
 			/**
@@ -150,6 +144,8 @@ public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 		initCreateTaskButton();
 		initEnterKeyListener();
 	}
+
+
 	
 	/**
 	 * 重新改变用户的选择

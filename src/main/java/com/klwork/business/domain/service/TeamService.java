@@ -55,7 +55,13 @@ public class TeamService {
 			ViewPage<Team> page) {
 		return rep.findTeamByQueryCriteria(query, page);
 	}
-
+	
+	
+	/**
+	 * 查询用户创建的团队
+	 * @param userId
+	 * @return map
+	 */
 	public Map<String, String> queryTeamMapOfUser(String userId) {
 		Map<String, String> map = new HashMap<String, String>();
 		List<Team> list = queryTeamListOfUser(userId);
@@ -65,7 +71,12 @@ public class TeamService {
 		}
 		return map;
 	}
-
+	
+	/**
+	 * 查询用户创建的团队
+	 * @param userId
+	 * @return
+	 */
 	public List<Team> queryTeamListOfUser(String userId) {
 		TeamQuery query = new TeamQuery();
 		query.setOwnUser(userId);
@@ -73,7 +84,13 @@ public class TeamService {
 		List<Team> list = rep.findTeamByQueryCriteria(query, null);
 		return list;
 	}
-
+	
+	
+	/**
+	 * 查询用户创建的团队
+	 * @param userId
+	 * @return 团队的id集合
+	 */
 	public List<String> queryTeamsOfUser(String userId) {
 		List<String> ret = new ArrayList<String>();
 		List<Team> list = queryTeamListOfUser(userId);
@@ -84,6 +101,13 @@ public class TeamService {
 		return ret;
 	}
 
+	
+	/**
+	 * 查询用户创建的指定类型的团队
+	 * @param userId
+	 * @param type
+	 * @return
+	 */
 	public Team findTeamByUserAndType(String userId, String type) {
 		TeamQuery query = new TeamQuery();
 		query.setOwnUser(userId);
@@ -94,7 +118,14 @@ public class TeamService {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * 创建一个团队
+	 * @param userId 团队的所有人
+	 * @param type 团队类型
+	 * @param teamName 团队名称
+	 * @return
+	 */
 	public Team createTeamByUserAndType(String userId, String type,
 			String teamName) {
 		TeamQuery query = new TeamQuery();
@@ -120,7 +151,13 @@ public class TeamService {
 	public int count(TeamQuery query) {
 		return rep.findTeamCountByQueryCriteria(query);
 	}
-
+	
+	/**
+	 * 查询用户下是否存在指定名称的团队
+	 * @param userId
+	 * @param name
+	 * @return
+	 */
 	public boolean checkExistName(String userId, String name) {
 		TeamQuery query = new TeamQuery();
 		query.setOwnUser(userId);
@@ -131,5 +168,34 @@ public class TeamService {
 			return true;
 		}
 		return false;
+	}
+	
+	
+	/**
+	 * 查询用户所在的团队
+	 * @param userId
+	 * @return
+	 */
+	public List<Team> queryUserInTeams(String userId) {
+		TeamQuery query = new TeamQuery();
+		query.setInUser(userId);
+		query.setType(EntityDictionary.TEAM_GROUP_TYPE_COMM);
+		List<Team> list = rep.findTeamByQueryCriteria(query, null);
+		return list;
+	}
+	
+	/**
+	 * 查询用户创建的团队
+	 * @param userId
+	 * @return 团队的id集合
+	 */
+	public List<String> queryUserInTeamIds(String userId) {
+		List<String> ret = new ArrayList<String>();
+		List<Team> list = queryUserInTeams(userId);
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			Team team = (Team) iterator.next();
+			ret.add(team.getId());
+		}
+		return ret;
 	}
 }

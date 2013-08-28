@@ -1,4 +1,5 @@
-package com.klwork.business.domain.service;
+package com.klwork.business.domain.repository;
+import java.io.Serializable;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -7,9 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.klwork.test.base.BaseTxWebTests;
 import com.klwork.common.dao.QueryParameter;
 import com.klwork.common.dto.vo.ViewPage;
-import com.klwork.business.domain.model.TeamMembership;
-import com.klwork.business.domain.repository.TeamMembershipRepository;
-import com.klwork.business.domain.service.TeamMembershipService;
+import com.klwork.business.domain.model.ResourcesAssignManager;
+import com.klwork.business.domain.repository.ResourcesAssignManagerRepository;
 
 /**
  * 
@@ -18,12 +18,12 @@ import com.klwork.business.domain.service.TeamMembershipService;
  * @author ww
  */
  
-public class TeamMembershipServiceTest extends BaseTxWebTests {
+public class ResourcesAssignManagerRepositoryTest extends BaseTxWebTests {
 	@Autowired
-	TeamMembershipService teamMembershipService;
+	private ResourcesAssignManagerRepository rep;
 
 	@Test
-	public void testService() {
+	public void testCrud() {
 		
 	}
 

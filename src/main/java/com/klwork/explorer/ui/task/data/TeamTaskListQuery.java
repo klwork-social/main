@@ -16,14 +16,19 @@ import java.util.List;
 
 import org.activiti.engine.task.TaskQuery;
 
+import com.klwork.business.domain.service.TeamService;
+import com.klwork.explorer.ViewToolManager;
+
 /**
  * The Class TeamTaskListQuery.
  */
 public class TeamTaskListQuery extends AbstractTaskListQuery {
+	protected transient TeamService teamService;
 	private List<String> candidateGroups;
-
+	
 	public TeamTaskListQuery(List<String> groups) {
 		this.candidateGroups = groups;
+		 teamService =ViewToolManager. getBean("teamService");
 	}
 
 	@Override

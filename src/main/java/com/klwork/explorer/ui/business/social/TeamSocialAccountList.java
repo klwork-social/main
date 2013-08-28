@@ -12,6 +12,7 @@ import com.klwork.explorer.data.LazyLoadingQuery;
 import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.base.AbstractTabViewPage;
 import com.klwork.explorer.ui.business.query.SocialListQuery;
+import com.klwork.explorer.ui.business.query.TeamSocialListQuery;
 import com.klwork.explorer.ui.custom.DetailPanel;
 import com.klwork.explorer.ui.handler.BinderHandler;
 import com.klwork.explorer.ui.handler.TableFieldCache;
@@ -33,7 +34,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.themes.Reindeer;
 
-public class SocialAccountList extends DetailPanel {
+public class TeamSocialAccountList extends DetailPanel {
 	private static final long serialVersionUID = 7916755916967574384L;
 	protected I18nManager i18nManager;
 
@@ -48,7 +49,7 @@ public class SocialAccountList extends DetailPanel {
 	ProjectService projectService;
 	protected HorizontalLayout projectsLayout;
 
-	public SocialAccountList(AbstractTabViewPage tabPage) {
+	public TeamSocialAccountList(AbstractTabViewPage tabPage) {
 		this.i18nManager = ViewToolManager.getI18nManager();
 		this.mainPage = tabPage;
 		projectService = ViewToolManager.getBean("projectService");
@@ -106,7 +107,7 @@ public class SocialAccountList extends DetailPanel {
 		listTable.setSortEnabled(true);
 		projectsLayout.addComponent(listTable);
 		listTable.addValueChangeListener(getListSelectionListener(listTable));
-		LazyLoadingQuery lazyLoadingQuery = new SocialListQuery(this);
+		LazyLoadingQuery lazyLoadingQuery = new TeamSocialListQuery(this);
 		LazyLoadingContainer listContainer = new LazyLoadingContainer(
 				lazyLoadingQuery, 10);
 		listTable.setContainerDataSource(listContainer);

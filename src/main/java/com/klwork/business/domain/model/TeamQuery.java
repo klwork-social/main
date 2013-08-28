@@ -24,6 +24,11 @@ public class TeamQuery extends QueryParameter{
 	/**
 	 *  
 	 */
+	private String inUser;
+	
+	/**
+	 *  
+	 */
 	private String type;
 	
 	
@@ -76,6 +81,12 @@ public class TeamQuery extends QueryParameter{
 		this.name = name;
 		return this;
 	}
-	
-	
+
+	public String getInUser() {
+		return inUser;
+	}
+
+	public void setInUser(String inUser) {
+		this.inUser = inUser;
+	}
 }

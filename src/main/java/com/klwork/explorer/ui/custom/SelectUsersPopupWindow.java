@@ -201,9 +201,6 @@ public class SelectUsersPopupWindow extends PopupWindow {
 	}
 	
 	
-
-
-
 	public void handleQueryUserList(List<User> results) {
 		for (User user : results) {
 			if (!multiSelect

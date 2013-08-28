@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	(social_use_authority_list) :${table.comment}
+字段:
+	id_(varchar)	:
+	manager_group_id_(varchar)	:
+	key_(varchar)	:
+	last_update_(timestamp)	:
+sqlMapConfig:
+	<typeAlias alias="SocialUseAuthorityList" type="com.klwork.business.domain/model.SocialUseAuthorityList" />
+	<mapper resource="com/klwork/business/domain/model/SocialUseAuthorityList_SqlMap.xml" />
+-->
+<mapper namespace="com.klwork.business.domain.model.SocialUseAuthorityList">
+
+  <!-- INSERT -->
+  <insert id="insertSocialUseAuthorityList" parameterType="com.klwork.business.domain.model.SocialUseAuthorityList">
+    insert into social_use_authority_list (
+    	id_,
+	manager_group_id_,
+	key_,
+	last_update_
+	)
+    values (
+      		#{id,jdbcType=VARCHAR},
+ 		#{managerGroupId,jdbcType=VARCHAR},
+ 		#{key,jdbcType=VARCHAR},
+    	#{lastUpdate,jdbcType=TIMESTAMP}
+    	)
+  </insert>
+  
+  <!-- UPDATE -->
+  <update id="updateSocialUseAuthorityList" parameterType="com.klwork.business.domain.model.SocialUseAuthorityList">
+    update social_use_authority_list set
+    	<if test="managerGroupId != null">
+ manager_group_id_ = #{managerGroupId,jdbcType=VARCHAR},
+</if>
+<if test="key != null">
+ key_ = #{key,jdbcType=VARCHAR},
+</if>
+<if test="lastUpdate != null">
+ last_update_ = #{lastUpdate,jdbcType=TIMESTAMP}
+</if>
+ where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- Delete -->	
+  <!--delete id="deleteSocialUseAuthorityList" parameterType="string">
+    delete from social_use_authority_list where id = #{id}
+  </delete-->
+  
+  <!-- Delete -->	
+  <delete id="deleteSocialUseAuthorityListByReId" parameterType="string">
+    delete from social_use_authority_list where manager_group_id_ = #{reId}
+  </delete>
+  
+  <!-- SELECT -->
+  <select id="selectSocialUseAuthorityListById" parameterType="string" resultMap="SocialUseAuthorityListMap">
+    select * from social_use_authority_list where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectSocialUseAuthorityListByQueryCriteria" parameterType="com.klwork.business.domain.model.SocialUseAuthorityListQuery" resultMap="SocialUseAuthorityListMap">
+    select U.*
+    <include refid="selectSocialUseAuthorityListByQueryCriteriaSql" />
+    <if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+	</if>
+    <!--if test="orderBy != null">
+      order by ${orderBy}
+    </if> -->
+  </select>
+  
+   <select id="selectSocialUseAuthorityListCountByQueryCriteria" parameterType="com.klwork.business.domain.model.SocialUseAuthorityListQuery" resultType="int">
+    select count(U.id_)
+    <include refid="selectSocialUseAuthorityListByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="selectSocialUseAuthorityListByQueryCriteriaSql">
+    from social_use_authority_list U
+    <where>
+        <if test="managerGroupId != null">
+        AND U.manager_group_id_ = #{managerGroupId}
+    </if>
+    <if test="key != null">
+        AND U.key_ = #{key}
+    </if>
+    </where>
+  </sql>
+  
+	<resultMap id="SocialUseAuthorityListMap" type="com.klwork.business.domain.model.SocialUseAuthorityList">
+	<result property="id" column="id_" />
+	<result property="managerGroupId" column="manager_group_id_" />
+	<result property="key" column="key_" />
+	<result property="lastUpdate" column="last_update_" />
+</resultMap>
+</mapper>

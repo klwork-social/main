@@ -108,6 +108,12 @@ public class DictDefRepository extends
 		dictDef = new DictDef("11", "social_weibo_status", "-1", "微博状态", "11");
 		insertData(dictDef);
 		
+		dictDef = new DictDef("15", "user_weibo_authority", "-1", "用户微博的权限", "15");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("16", "resources_team_type", "-1", "组的类型", "16");
+		insertData(dictDef);
+		
 		insertData(dictDef);
 		dictDef = new DictDef("100", "sina", "2", "新浪", "0");
 		insertData(dictDef);
@@ -274,6 +280,23 @@ public class DictDefRepository extends
 		insertData(dictDef);
 		dictDef = new DictDef("404", "weibo_status_root_delete", "11", "根删除", "4");
 		insertData(dictDef);
+		
+		
+		dictDef = new DictDef("500", "weibo_authority_new", "15", "发微博", "0");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("501", "weibo_authority_transmit", "15", "微博转发", "1");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("502", "weibo_authority_revert", "15", "微博回复", "2");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("503", "weibo_authority_comment_revert", "15", "评论回复", "3");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("600", "team_type_weibo_permit", "16", "组的类型-微博权限分配", "0");
+		insertData(dictDef);
+		
 	}
 
 	private void insertData(DictDef dictDef) {

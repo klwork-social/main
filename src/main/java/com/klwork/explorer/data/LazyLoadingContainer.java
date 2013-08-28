@@ -39,7 +39,7 @@ public class LazyLoadingContainer implements Container.Indexed, Container.Sortab
   private static final long serialVersionUID = 1L;
   
   protected LazyLoadingQuery lazyLoadingQuery;
-  protected int batchSize;
+  protected int batchSize = 10;
   protected int size = -1;
   
   protected List<Object> containerPropertyIds = new ArrayList<Object>();

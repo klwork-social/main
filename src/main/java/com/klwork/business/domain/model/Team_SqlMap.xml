@@ -79,6 +79,9 @@ sqlMapConfig:
   
 	<sql id="selectTeamByQueryCriteriaSql">
     from team U
+    <if test="inUser != null">
+      inner join team_membership tm on tm.team_id_ = U.ID_ and tm.user_id_ = #{inUser}
+    </if>
 		<where>
 			<if test="ownUser != null">
         AND U.own_user_ = #{ownUser}
