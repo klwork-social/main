@@ -73,34 +73,27 @@ public class TAPI extends BasicAPI{
 	 */
 	public String add(OAuth oAuth, String format, String content,
 			String clientip) throws Exception {
-		return this.add(oAuth, format, content, clientip, "", "", "");
+		return this.add(new AddParameter(oAuth, format, content, clientip, "", "", ""));
 	}
 
 	/**
 	 * 发表一条微博
+	 * @param parameterObject TODO
 	 * 
-	 * @param oAuth
-	 * @param format 返回数据的格式 是（json或xml）
-	 * @param content  微博内容
-	 * @param clientip 用户IP(以分析用户所在地)
-	 * @param jing 经度（可以填空）
-	 * @param wei 纬度（可以填空）
-	 * @param syncflag  微博同步到空间分享标记（可选，0-同步，1-不同步，默认为0）  
 	 * @return
 	 * @throws Exception
 	 * @see <a href="http://wiki.open.t.qq.com/index.php/%E5%BE%AE%E5%8D%9A%E7%9B%B8%E5%85%B3/%E5%8F%91%E8%A1%A8%E4%B8%80%E6%9D%A1%E5%BE%AE%E5%8D%9A">腾讯微博开放平台上关于此条API的文档</a>
 	 */
-	public String add(OAuth oAuth, String format, String content,
-			String clientip, String jing, String wei, String syncflag) throws Exception {
+	public String add(AddParameter parameterObject) throws Exception {
 		QArrayList paramsList = new QArrayList();
-		paramsList.add(new BasicNameValuePair("format", format));
-		paramsList.add(new BasicNameValuePair("content", content));
-		paramsList.add(new BasicNameValuePair("clientip", clientip));
-		paramsList.add(new BasicNameValuePair("jing", jing));
-		paramsList.add(new BasicNameValuePair("wei", wei));
-        paramsList.add(new BasicNameValuePair("syncflag", syncflag));
+		paramsList.add(new BasicNameValuePair("format", parameterObject.format));
+		paramsList.add(new BasicNameValuePair("content", parameterObject.content));
+		paramsList.add(new BasicNameValuePair("clientip", parameterObject.clientip));
+		paramsList.add(new BasicNameValuePair("jing", parameterObject.jing));
+		paramsList.add(new BasicNameValuePair("wei", parameterObject.wei));
+        paramsList.add(new BasicNameValuePair("syncflag", parameterObject.syncflag));
 		
-		return requestAPI.postContent(tAddUrl, paramsList, oAuth);
+		return requestAPI.postContent(tAddUrl, paramsList, parameterObject.oAuth);
 	}
 
 	/**

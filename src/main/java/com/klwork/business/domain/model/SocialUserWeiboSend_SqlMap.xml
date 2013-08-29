@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	(social_user_weibo_send) :${table.comment}
+字段:
+	id_(varchar)	:
+	user_account_id_(varchar)	:
+	owner_(varchar)	:
+	create_time_(timestamp)	:
+	weibo_id_(varchar)	:
+	short_text_(varchar)	:
+	text_(varchar)	:
+	weibo_type_(int4)	:
+	type_(int4)	:
+	status_(int4)	:
+	plan_send_time_(timestamp)	:
+	send_time_(timestamp)	:
+	last_update_(timestamp)	:
+sqlMapConfig:
+	<typeAlias alias="SocialUserWeiboSend" type="com.klwork.business.domain/model.SocialUserWeiboSend" />
+	<mapper resource="com/klwork/business/domain/model/SocialUserWeiboSend_SqlMap.xml" />
+-->
+<mapper namespace="com.klwork.business.domain.model.SocialUserWeiboSend">
+
+  <!-- INSERT -->
+  <insert id="insertSocialUserWeiboSend" parameterType="com.klwork.business.domain.model.SocialUserWeiboSend">
+    insert into social_user_weibo_send (
+    	id_,
+	user_account_id_,
+	owner_,
+	create_time_,
+	weibo_id_,
+	short_text_,
+	text_,
+	weibo_type_,
+	type_,
+	status_,
+	plan_send_time_,
+	send_time_,
+	last_update_
+	)
+    values (
+      		#{id,jdbcType=VARCHAR},
+ 		#{userAccountId,jdbcType=VARCHAR},
+ 		#{owner,jdbcType=VARCHAR},
+ 		#{createTime,jdbcType=TIMESTAMP},
+ 		#{weiboId,jdbcType=VARCHAR},
+ 		#{shortText,jdbcType=VARCHAR},
+ 		#{text,jdbcType=VARCHAR},
+ 		#{weiboType,jdbcType=INTEGER},
+ 		#{type,jdbcType=INTEGER},
+ 		#{status,jdbcType=INTEGER},
+ 		#{planSendTime,jdbcType=TIMESTAMP},
+ 		#{sendTime,jdbcType=TIMESTAMP},
+    	#{lastUpdate,jdbcType=TIMESTAMP}
+    	)
+  </insert>
+  
+  <!-- UPDATE -->
+  <update id="updateSocialUserWeiboSend" parameterType="com.klwork.business.domain.model.SocialUserWeiboSend">
+    update social_user_weibo_send set
+    	<if test="userAccountId != null">
+ user_account_id_ = #{userAccountId,jdbcType=VARCHAR},
+</if>
+<if test="owner != null">
+ owner_ = #{owner,jdbcType=VARCHAR},
+</if>
+<if test="createTime != null">
+ create_time_ = #{createTime,jdbcType=TIMESTAMP},
+</if>
+<if test="weiboId != null">
+ weibo_id_ = #{weiboId,jdbcType=VARCHAR},
+</if>
+<if test="shortText != null">
+ short_text_ = #{shortText,jdbcType=VARCHAR},
+</if>
+<if test="text != null">
+ text_ = #{text,jdbcType=VARCHAR},
+</if>
+<if test="weiboType != null">
+ weibo_type_ = #{weiboType,jdbcType=INTEGER},
+</if>
+<if test="type != null">
+ type_ = #{type,jdbcType=INTEGER},
+</if>
+<if test="status != null">
+ status_ = #{status,jdbcType=INTEGER},
+</if>
+<if test="planSendTime != null">
+ plan_send_time_ = #{planSendTime,jdbcType=TIMESTAMP},
+</if>
+<if test="sendTime != null">
+ send_time_ = #{sendTime,jdbcType=TIMESTAMP},
+</if>
+<if test="lastUpdate != null">
+ last_update_ = #{lastUpdate,jdbcType=TIMESTAMP},
+</if>
+ where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- Delete -->	
+  <!--delete id="deleteSocialUserWeiboSend" parameterType="string">
+    delete from social_user_weibo_send where id = #{id}
+  </delete-->
+  
+  <!-- SELECT -->
+  <select id="selectSocialUserWeiboSendById" parameterType="string" resultMap="SocialUserWeiboSendMap">
+    select * from social_user_weibo_send where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectSocialUserWeiboSendByQueryCriteria" parameterType="com.klwork.business.domain.model.SocialUserWeiboSendQuery" resultMap="SocialUserWeiboSendMap">
+    select U.*
+    <include refid="selectSocialUserWeiboSendByQueryCriteriaSql" />
+    <if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+	</if>
+    <!--if test="orderBy != null">
+      order by ${orderBy}
+    </if> -->
+  </select>
+  
+   <select id="selectSocialUserWeiboSendCountByQueryCriteria" parameterType="com.klwork.business.domain.model.SocialUserWeiboSendQuery" resultType="int">
+    select count(U.id_)
+    <include refid="selectSocialUserWeiboSendByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="selectSocialUserWeiboSendByQueryCriteriaSql">
+    from social_user_weibo_send U
+    <where>
+        <if test="userAccountId != null">
+        AND U.user_account_id_ = #{userAccountId}
+    </if>
+    <if test="owner != null">
+        AND U.owner_ = #{owner}
+    </if>
+    <if test="weiboId != null">
+        AND U.weibo_id_ = #{weiboId}
+    </if>
+    <if test="weiboType != null">
+        AND U.weibo_type_ = #{weiboType}
+    </if>
+    <if test="type != null">
+        AND U.type_ = #{type}
+    </if>
+    <if test="status != null">
+        AND U.status_ = #{status}
+    </if>
+    </where>
+  </sql>
+  
+	<resultMap id="SocialUserWeiboSendMap" type="com.klwork.business.domain.model.SocialUserWeiboSend">
+	<result property="id" column="id_" />
+	<result property="userAccountId" column="user_account_id_" />
+	<result property="owner" column="owner_" />
+	<result property="createTime" column="create_time_" />
+	<result property="weiboId" column="weibo_id_" />
+	<result property="shortText" column="short_text_" />
+	<result property="text" column="text_" />
+	<result property="weiboType" column="weibo_type_" />
+	<result property="type" column="type_" />
+	<result property="status" column="status_" />
+	<result property="planSendTime" column="plan_send_time_" />
+	<result property="sendTime" column="send_time_" />
+	<result property="lastUpdate" column="last_update_" />
+</resultMap>
+</mapper>

@@ -11,6 +11,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.CloseHandler;
 import com.vaadin.ui.TabSheet.Tab;
+import com.vaadin.ui.VerticalLayout;
 
 public class AbstractTabViewPage extends CustomComponent {
 	
@@ -25,7 +26,7 @@ public class AbstractTabViewPage extends CustomComponent {
 	 */
 	private static final long serialVersionUID = 8872314577819805067L;
 	private TabSheet tabSheet = new TabSheet();
-
+	VerticalLayout mainLayout;
 	public TabSheet getTabSheet() {
 		return tabSheet;
 	}
@@ -51,7 +52,12 @@ public class AbstractTabViewPage extends CustomComponent {
 	}
 
 	private void initMainLayout() {
-		setCompositionRoot(tabSheet);
+		mainLayout = new VerticalLayout();
+		mainLayout.setSizeFull();
+		setCompositionRoot(mainLayout);
+		
+		mainLayout.addComponent(tabSheet);
+		mainLayout.setExpandRatio(tabSheet, 1.0f);
 		tabSheet.setSizeFull();
 		tabSheet.addStyleName("borderless");
 		tabSheet.addStyleName("editors");
@@ -105,5 +111,15 @@ public class AbstractTabViewPage extends CustomComponent {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public VerticalLayout getMainLayout() {
+		return mainLayout;
+	}
+
+	public void setMainLayout(VerticalLayout mainLayout) {
+		this.mainLayout = mainLayout;
+	}
+
+	
 	
 }

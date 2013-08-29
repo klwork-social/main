@@ -1,5 +1,6 @@
 package com.klwork.business.domain.service;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -61,6 +62,16 @@ public class SocialMainService {
 					}
 				}.start();
 			}
+		}
+	}
+	
+	
+	public void sendWeibo(Collection list, String value, String type) {
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			String accountId = (String) iterator.next();
+			SocialUserAccount socialUserAccount = socialUserAccountService.findSocialUserAccountById(accountId);
+			AbstractSocialService service =AbstractSocialService.querySocialClass(socialUserAccount.getType() + "");
+			service.sendWeibo(socialUserAccount,value,type);
 		}
 	}
 

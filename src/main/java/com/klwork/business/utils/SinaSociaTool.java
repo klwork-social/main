@@ -197,4 +197,17 @@ public class SinaSociaTool {
 		}
 		return 1;
 	}
+
+	public static int sendWeibo(String text, String assessToken) {
+		try {
+			Timeline timeline = new Timeline();
+			timeline.client.setToken(assessToken);
+			Status status = timeline.UpdateStatus(text);
+		} catch (WeiboException e) {
+			e.printStackTrace();
+			return 0;
+		}
+		return 1;
+		
+	}
 }

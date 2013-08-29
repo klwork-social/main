@@ -22,6 +22,7 @@ public class QQWeiboShowPage extends AbstractTabViewPage{
 		addTab(new QQWeiboDisplayPage(socialUserAccount,DictDef.dictInt("weibo_user_timeline")),"我的微博");
         addTab(new QQWeiboDisplayPage(socialUserAccount,DictDef.dictInt("weibo_mentions_timeline")),"@我的微博");
         addTab(new QQWeiboDisplayPage(socialUserAccount,DictDef.dictInt("comment_to_me")),"我收到的评论");
+        
 	}
 
 	public VerticalLayout createTaskCompon(String title) {

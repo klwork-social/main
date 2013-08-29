@@ -112,15 +112,7 @@ public class SocialListQuery extends AbstractLazyLoadingQuery {
 			addItemProperty("actions", new ObjectProperty<Component>(buttonLayout, Component.class));
 			buttonLayout.setSpacing(true);
 			buttonLayout.addStyleName("social");
-			Button editButton  = new Button("微博");
-			editButton.addStyleName(Reindeer.BUTTON_LINK);
-			editButton.addClickListener(new ClickListener() {
-				public void buttonClick(ClickEvent event) {
-					socialAccountList.selectedHandle(sc);
-				}
-			});
-			buttonLayout.addComponent(editButton);
-			
+		
 			Button permitButton  = new Button("权限分配");
 			permitButton.addStyleName(Reindeer.BUTTON_LINK);
 			permitButton.addClickListener(new ClickListener() {
@@ -129,6 +121,15 @@ public class SocialListQuery extends AbstractLazyLoadingQuery {
 				}
 			});
 			buttonLayout.addComponent(permitButton);
+			
+			Button editButton  = new Button("查看微博");
+			editButton.addStyleName(Reindeer.BUTTON_LINK);
+			editButton.addClickListener(new ClickListener() {
+				public void buttonClick(ClickEvent event) {
+					socialAccountList.selectedHandle(sc);
+				}
+			});
+			buttonLayout.addComponent(editButton);
 		}
 	}
 }
