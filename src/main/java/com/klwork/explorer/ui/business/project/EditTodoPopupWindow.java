@@ -68,7 +68,7 @@ public class EditTodoPopupWindow extends PopupWindow {
 ////	private static NativeSelect sectOwnGrp;
 //	/**任务处理人*/
 //	private static Label lbOwner;
-	protected ComboBox sectOwner = new ComboBox();
+	protected ComboBox sectOwner = createComboBox(null,"150px");;
 
 	// 到期时间
 	DateField completionDateField;
@@ -144,7 +144,9 @@ public class EditTodoPopupWindow extends PopupWindow {
 		line.setComponentAlignment(label3, Alignment.MIDDLE_RIGHT);
 		HorizontalLayout hlay = new HorizontalLayout() ;
 		final TextField estimateField = new TextField();
+		estimateField.setInputPrompt("");
 		estimateField.setWidth("60px");
+		estimateField.setNullSettingAllowed(false);
 		BlurListener timeReCountListener = createTimeReCountListener();
 		estimateField.addBlurListener(timeReCountListener);
 		scheduleEventFieldGroup.bind(estimateField, "estimate");
@@ -346,7 +348,7 @@ public class EditTodoPopupWindow extends PopupWindow {
 				.memberOfTeam(groupId).list();
 		sectOwner.removeAllItems();
 		for (User user : users) {
-			usersMap.put(user.getId(), user.getLastName());
+			usersMap.put(user.getId(), user.getId());
 		}
 		return usersMap;
 	}
@@ -423,7 +425,14 @@ public class EditTodoPopupWindow extends PopupWindow {
 				// TODO Auto-generated method stub
 				Object o  = event.getProperty().getValue();
 				Map<Object,String> userMap = changeUserSelect(o.toString());
-				sectOwner=createComboBox(userMap, "150");
+				sectOwner.setNullSelectionAllowed(false);
+				//s.setImmediate(true);
+				for (Object p : userMap.keySet()) {
+					String title = userMap.get(p);
+					Item i = sectOwner.addItem(p);
+					sectOwner.setItemCaption(p, title);
+					
+				}
 			}
 		};
 		return valueChangeListener;

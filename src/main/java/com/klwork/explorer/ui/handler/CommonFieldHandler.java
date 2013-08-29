@@ -132,12 +132,14 @@ public class CommonFieldHandler {
 		if (StringTool.judgeBlank(caption)) {
 			s.setCaption(caption);
 		}
-		for (Object p : data.keySet()) {
-			String title = data.get(p);
-			Item i = s.addItem(p);
-			s.setItemCaption(p, title);
-			if(p.equals(defaultValue)){
-				firstItemId = p;
+		if(data != null){
+			for (Object p : data.keySet()) {
+				String title = data.get(p);
+				Item i = s.addItem(p);
+				s.setItemCaption(p, title);
+				if(p.equals(defaultValue)){
+					firstItemId = p;
+				}
 			}
 		}
 		// Select first element
