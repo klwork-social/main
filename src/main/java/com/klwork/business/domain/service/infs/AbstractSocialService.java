@@ -12,8 +12,10 @@ import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.business.domain.model.SocialUserWeibo;
 import com.klwork.business.domain.model.SocialUserWeiboQuery;
+import com.klwork.business.domain.model.SocialUserWeiboSend;
 import com.klwork.business.domain.service.SocialUserAccountInfoService;
 import com.klwork.business.domain.service.SocialUserAccountService;
+import com.klwork.business.domain.service.SocialUserWeiboSendService;
 import com.klwork.business.domain.service.SocialUserWeiboService;
 import com.klwork.common.utils.StringDateUtil;
 import com.klwork.common.utils.StringTool;
@@ -30,6 +32,9 @@ public abstract class AbstractSocialService implements SocialService,
 	
 	@Autowired
 	public SocialUserAccountService socialUserAccountService;
+	
+	@Autowired
+	public SocialUserWeiboSendService socialUserWeiboSendService;
 	
 	private static Map<String, AbstractSocialService> socialServiceMaps = new HashMap<String, AbstractSocialService>();
 
@@ -177,5 +182,31 @@ public abstract class AbstractSocialService implements SocialService,
 		int ret = weiboToDb(socialUserAccount);
 		socialUserAccountInfoService.setSocialUserAccountInfo(socialUserAccount, key, "0");//解除锁定
 		return ret;
+	}
+
+	public void saveSendWeiboRecord(SocialUserAccount socialUserAccount,
+			String text, String type) {
+		SocialUserWeiboSend s = new SocialUserWeiboSend();
+		Date now = StringDateUtil.now();
+		s.setCreateTime(now);
+		s.setText(text);
+		if(text.length() > 50){
+			s.setShortText(text.substring(0,50));
+		}else {
+			s.setShortText(text);
+		}
+		s.setType(StringTool.parseInt(type));
+		s.setUserAccountId(socialUserAccount.getId());
+		s.setStatus(1);//已经完成
+		s.setOwner(socialUserAccount.getOwnUser());
+		socialUserWeiboSendService.createSocialUserWeiboSend(s);
+	}
+	
+	public String findAccessTokenByAccout(String accountId) {
+		SocialUserAccountInfo tok = socialUserAccountInfoService
+				.findAccountOfInfoByKey(DictDef.dict("accessToken"),
+						accountId);
+		String assessToken = tok.getValue();
+		return assessToken;
 	}
 }

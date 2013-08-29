@@ -59,4 +59,13 @@ public interface SocialService {
 	 * @param userWeibo
 	 */
 	public void deleteWeibo(SocialUserWeibo userWeibo);
+	
+	/**
+	 * 发送微博
+	 * @param socialUserAccount
+	 * @param value
+	 * @param type
+	 */
+	public void sendWeibo(SocialUserAccount socialUserAccount, String value,
+			String type);
 }

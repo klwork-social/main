@@ -238,4 +238,12 @@ public class SocialUserAccount implements Serializable
 	public String getUrl(){
 		return url;
 	}
+	
+	public String queryTypeName(){
+		DictDef d = DictDef.dictValue(DictDef.dict("social_type"), type + "");
+		if(d != null){
+			return d.getName();
+		}
+		return "";
+	}
 }

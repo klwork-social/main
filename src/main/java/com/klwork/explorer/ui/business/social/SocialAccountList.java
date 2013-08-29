@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.service.ProjectService;
+import com.klwork.business.domain.service.SocialUserAccountService;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.data.LazyLoadingContainer;
@@ -15,6 +16,7 @@ import com.klwork.explorer.ui.business.query.SocialListQuery;
 import com.klwork.explorer.ui.custom.DetailPanel;
 import com.klwork.explorer.ui.handler.BinderHandler;
 import com.klwork.explorer.ui.handler.TableFieldCache;
+import com.klwork.explorer.ui.main.views.SocialMainPage;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -44,14 +46,17 @@ public class SocialAccountList extends DetailPanel {
 	private String currentProjectId;
 	private Object currentItemId;
 
-	AbstractTabViewPage  mainPage;
+	public AbstractTabViewPage  mainPage;
 	ProjectService projectService;
+	
+	
 	protected HorizontalLayout projectsLayout;
 
 	public SocialAccountList(AbstractTabViewPage tabPage) {
 		this.i18nManager = ViewToolManager.getI18nManager();
 		this.mainPage = tabPage;
 		projectService = ViewToolManager.getBean("projectService");
+		
 	}
 
 	/*
@@ -64,6 +69,7 @@ public class SocialAccountList extends DetailPanel {
 		initPageTitle();
 		// 项目table
 		initProjectList();
+		
 	}
 
 	private void initProjectList() {
@@ -231,11 +237,7 @@ public class SocialAccountList extends DetailPanel {
 
 
 	public void selectedHandle(SocialUserAccount socialUserAccount) {
-		if(socialUserAccount.getType() == 0){//新浪微博
-			mainPage.addTabSpecial(new SinaWeiboShowPage(socialUserAccount,mainPage), "新浪_" + socialUserAccount.getUserScreenName());
-		}else {
-			mainPage.addTabSpecial(new QQWeiboShowPage(socialUserAccount,mainPage), "腾讯_" +  socialUserAccount.getUserScreenName());
-		}
+		((SocialMainPage)mainPage).openWeiboTab(socialUserAccount);
 	}
 
 	public void openAuthorityWindow(SocialUserAccount sc) {

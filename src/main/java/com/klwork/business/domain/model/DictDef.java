@@ -154,11 +154,11 @@ public class DictDef implements Serializable
 	
 	/**
 	 * 得到一种类型的所有数据字典
-	 * @param type
+	 * @param code 为
 	 * @return
 	 */
-	public static DictDef dictValue(String type,String value){
-		List<DictDef> list =  DictDefRepository.getDefTypeMap().get(type);
+	public static DictDef dictValue(String code,String value){
+		List<DictDef> list =  DictDefRepository.getDefTypeMap().get(code);
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			DictDef dictDef = (DictDef) iterator.next();
 			if(dictDef.getValue().equals(value)){
@@ -171,11 +171,11 @@ public class DictDef implements Serializable
 	
 	/**
 	 * 得到一种类型的所有数据字典
-	 * @param type
+	 * @param code
 	 * @return
 	 */
-	public static List<DictDef> queryDictsByType(String type){
-		return DictDefRepository.getDefTypeMap().get(type);
+	public static List<DictDef> queryDictsByType(String code){
+		return DictDefRepository.getDefTypeMap().get(code);
 	}
 	
 	/**

@@ -54,7 +54,10 @@ public class WeiboPopupWindow extends PopupWindow {
 		setModal(true);
 		setHeight("55%");
 		setWidth("45%");
-		center();
+		setPositionX(500);
+		setPositionY(55);
+		//center();
+		//top();
 	}
 	
 	private void buildNotifications(
@@ -66,7 +69,7 @@ public class WeiboPopupWindow extends PopupWindow {
 		factWindows.addStyleName("notifications");
 		factWindows.setClosable(false);
 		factWindows.setResizable(false);
-		factWindows.setDraggable(false);
+		factWindows.setDraggable(true);
 		factWindows.setPositionX(event.getClientX() - event.getRelativeX()
 				- 12);
 		factWindows.setPositionY(event.getClientY() - event.getRelativeY()

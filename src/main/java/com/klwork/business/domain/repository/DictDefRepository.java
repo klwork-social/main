@@ -26,9 +26,15 @@ import com.klwork.common.dto.vo.ViewPage;
 public class DictDefRepository extends
 		MbDomainRepositoryImp<DictDef, Serializable> implements
 		InitializingBean {
-
+	
+	/**
+	 * 可以code值,code值必须为一
+	 */
 	public static Map<String, DictDef> defMaps = null;
 	
+	/**
+	 * key为类型值
+	 */
 	public static Map<String, List<DictDef>> defTypeMaps = new HashMap<String, List<DictDef>>();
 
 	public static Map<String, DictDef> getDefMaps() {

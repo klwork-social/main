@@ -14,6 +14,7 @@ package com.klwork.business.domain.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,12 +41,14 @@ import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.business.domain.model.SocialUserAccountQuery;
 import com.klwork.business.domain.model.SocialUserWeibo;
+import com.klwork.business.domain.model.SocialUserWeiboSend;
 import com.klwork.business.domain.model.WeiboForwardSend;
 import com.klwork.business.domain.service.infs.AbstractSocialService;
 import com.klwork.business.utils.SinaSociaTool;
 import com.klwork.business.utils.SocialConfig;
 import com.klwork.common.exception.ThirdPlatformException;
 import com.klwork.common.utils.ReflectionUtils;
+import com.klwork.common.utils.StringDateUtil;
 import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.ui.util.ImageUtil;
 import com.vdisk.net.ProgressListener;
@@ -81,6 +84,8 @@ public class SocialSinaService extends AbstractSocialService {
 
 	@Autowired
 	UserService userService;
+	
+	
 	
 	@Override
 	@SuppressWarnings("rawtypes")
@@ -253,13 +258,7 @@ public class SocialSinaService extends AbstractSocialService {
 		return 0;
 	}
 
-	public String findAccessTokenByAccout(String accountId) {
-		SocialUserAccountInfo tok = socialUserAccountInfoService
-				.findAccountOfInfoByKey(DictDef.dict("accessToken"),
-						accountId);
-		String assessToken = tok.getValue();
-		return assessToken;
-	}
+
 	
 	/**
 	 * 我的微博
@@ -665,4 +664,17 @@ public class SocialSinaService extends AbstractSocialService {
 
 		
 	}
+
+	@Override
+	public void sendWeibo(SocialUserAccount socialUserAccount, String text,
+			String type) {
+		String assessToken = findAccessTokenByAccout(socialUserAccount.getId());
+		int ret = SinaSociaTool.sendWeibo(text, assessToken);
+		if(ret == 1){
+			saveSendWeiboRecord(socialUserAccount, text, type);
+		}
+	}
+
+	
+
 }

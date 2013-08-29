@@ -33,11 +33,14 @@ import com.klwork.business.domain.model.SocialUserAccountQuery;
 import com.klwork.business.domain.model.SocialUserWeibo;
 import com.klwork.business.domain.model.WeiboHandleResult;
 import com.klwork.business.domain.service.infs.AbstractSocialService;
+import com.klwork.business.utils.SinaSociaTool;
 import com.klwork.business.utils.TencentSociaTool;
 import com.klwork.common.exception.ApplicationException;
 import com.klwork.common.utils.StringDateUtil;
 import com.klwork.common.utils.StringTool;
+import com.tencent.weibo.api.AddParameter;
 import com.tencent.weibo.api.StatusesAPI;
+import com.tencent.weibo.api.TAPI;
 import com.tencent.weibo.api.TimelineParameter;
 import com.tencent.weibo.api.UserAPI;
 import com.tencent.weibo.oauthv2.OAuthV2;
@@ -578,6 +581,22 @@ public class SocialTencentService extends AbstractSocialService {
 		
 	}
 
-
+	@Override
+	public void sendWeibo(SocialUserAccount socialUserAccount, String text,
+			String type) {
+		String accountId = socialUserAccount.getId();
+		OAuthV2 oAuth = queryAccountToken(accountId);
+		int ret = 0;
+		TAPI tAPI=new TAPI(oAuth.getOauthVersion());//根据oAuth配置对应的连接管理器
+		try {
+			String response=tAPI.add(new AddParameter(oAuth, text));
+			 ret = 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(ret == 1){
+			saveSendWeiboRecord(socialUserAccount, text, type);
+		}
+	}
 
 }
