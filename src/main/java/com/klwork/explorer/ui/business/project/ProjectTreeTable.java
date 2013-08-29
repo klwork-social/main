@@ -199,9 +199,19 @@ public class ProjectTreeTable extends DetailPanel {
 			private static final long serialVersionUID = -8050449471041932066L;
 
 			public void buttonClick(ClickEvent event) {
-				final NewProjectWindow newProjectWindow = new NewProjectWindow(
-						null);
-				ViewToolManager.showPopupWindow(newProjectWindow);
+//				final NewProjectWindow newProjectWindow = new NewProjectWindow(
+//						null);
+//				ViewToolManager.showPopupWindow(newProjectWindow);
+				if(projectId!=null){
+					Todo newTodo = todoService.newTodo();
+					newTodo.setProId(projectId);
+					BeanItem newbeanItem = new BeanItem<Todo>(newTodo);
+					Item nItem = hContainer.addItem(newbeanItem);
+					hContainer.setChildrenAllowed(newbeanItem, false);
+					copyBeanValueToContainer(hContainer, newbeanItem);
+					// 设置父节点
+					hContainer.setParent(newbeanItem, null);
+				}
 			}
 		});
 	}
