@@ -137,11 +137,7 @@ public class TransmitPopupWindow extends WeiboPopupWindow {
 						setExpandRatio(image, 1.2f);
 						setComponentAlignment(image, Alignment.MIDDLE_LEFT);*/
 						//
-						Label inputFontField = new Label();
-						inputFontField.addStyleName("wb_text");
-						inputFontField.setContentMode(ContentMode.HTML);
-						inputFontField
-								.setValue("还可输入<span class=\"number\">128</span>字");
+						Label inputFontField = initInputFontField();
 						addComponent(inputFontField);
 						// setExpandRatio(image, 1.0f);
 						setComponentAlignment(inputFontField,

@@ -38,6 +38,7 @@ import com.klwork.business.utils.TencentSociaTool;
 import com.klwork.common.exception.ApplicationException;
 import com.klwork.common.utils.StringDateUtil;
 import com.klwork.common.utils.StringTool;
+import com.klwork.explorer.ui.util.ImageUtil;
 import com.tencent.weibo.api.AddParameter;
 import com.tencent.weibo.api.StatusesAPI;
 import com.tencent.weibo.api.TAPI;
@@ -218,7 +219,7 @@ public class SocialTencentService extends AbstractSocialService {
 	}
 
 
-	public SocialUserWeibo handlerRetweetedWeibo(String ownerUserId,
+	public SocialUserWeibo handlerNewSocialUserWeibo(String ownerUserId,
 			SocialUserAccount ac, JSONObject source, Integer weiboType) {
 		SocialUserWeibo soruceWeibo = currentNewSocialUserWeibo(ownerUserId, ac,weiboType);
 		convertThirdToWeiboEntity(soruceWeibo,source);
@@ -325,7 +326,7 @@ public class SocialTencentService extends AbstractSocialService {
 				e.printStackTrace();
 			}
 			if(StringTool.judgeBlank(response)){
-				WeiboHandleResult r = weiboSaveDb(response,ac,DictDef.dictInt("weibo_type_mention"));
+				WeiboHandleResult r = weiboSaveDb(response,ac,DictDef.dictInt("weibo_mentions_timeline"));
 				if(r.isSuccess() && r.getInfoSize() >0){
 					pBroadcastTime.lastid = r.getLastid();
 					pBroadcastTime.pagetime = r.getPagetime();
@@ -408,7 +409,7 @@ public class SocialTencentService extends AbstractSocialService {
 		boolean sign = false;
 		for (int i = 0; i < infoList.size(); i++) {// 没一条的微博
 			JSONObject infoObj = infoList.getJSONObject(i);
-			SocialUserWeibo dbWeibo = handlerRetweetedWeibo(
+			SocialUserWeibo dbWeibo = handlerNewSocialUserWeibo(
 					ownerUserId, ac, infoObj,weiboType);
 			logger.info(i + "+++timestamp:" + infoObj.getString("timestamp") + "++++++++++++++++" +  "id:" + infoObj.getString("id"));
 			if(i == 0 ){//
@@ -417,10 +418,14 @@ public class SocialTencentService extends AbstractSocialService {
 			}
 			JSONObject source = infoObj.getJSONObject("source");
 			if (source != null && !(source.toString().equals("null"))) {//有原帖内容
-				SocialUserWeibo soruceWeibo = handlerRetweetedWeibo(
+				SocialUserWeibo soruceWeibo = handlerNewSocialUserWeibo(
 						ownerUserId, ac, source,weiboType);
-				if(saveWeiboUserEntity(soruceWeibo)){//插入原帖
+				soruceWeibo.setWeiboHandleType(1);//表明为原始贴
+				if(saveWeiboUserEntity(soruceWeibo)){//插入原帖id
 					dbWeibo.setRetweetedId(soruceWeibo.getId());
+				}else {
+					SocialUserWeibo queryWeibo = socialUserWeiboService.queryByAccountAndWeiboId(soruceWeibo.getUserAccountId(),soruceWeibo.getWeiboId());
+					dbWeibo.setRetweetedId(queryWeibo.getId());
 				}
 			}
 			
@@ -462,6 +467,7 @@ public class SocialTencentService extends AbstractSocialService {
 		weibo.setCreateAt(new Date(jsonInfo.getLong("timestamp") * 1000));
 		
 		weibo.setSource(jsonInfo.getString("from"));// 来源
+		weibo.setSourceUrl(jsonInfo.getString("fromurl"));
 		weibo.setUserDomain(jsonInfo.getString("fromurl"));// 来源
 		
 		// 微博内容
@@ -481,7 +487,7 @@ public class SocialTencentService extends AbstractSocialService {
 		weibo.setCommentsCount(jsonInfo.getInt("mcount"));
 		//微博类型 type : 微博类型，1-原创发表，2-转载，3-私信，4-回复，5-空回，6-提及，7-评论
 		
-		weibo.setWeiboType(jsonInfo.getInt("type"));
+		//weibo.setWeiboType(jsonInfo.getInt("type"));
 		//用户粉丝说
 		//weibo.setWeiboUidFollower(weiboUidFollower);
 		// 微博userid
@@ -495,8 +501,27 @@ public class SocialTencentService extends AbstractSocialService {
 		JSONArray arrays  = jsonInfo.getJSONArray("image");
 			for (int i = 0; i < arrays.size(); i++) {// 没一条的微博
 				Object infoObj = arrays.get(i);
-				System.out.println(infoObj);
-				weibo.setOriginalPic(infoObj.toString());
+				//System.out.println(infoObj);
+				String thumbnailPic = infoObj.toString() + "/120";
+				weibo.setThumbnailPic(thumbnailPic);
+				if(StringTool.judgeBlank(thumbnailPic)){//取图片的大小
+					String sizeStr = ImageUtil.queryURLImageSize(thumbnailPic);
+					weibo.setThumbnailPicSize(sizeStr);
+				}
+				
+				String bmiddlePic = infoObj.toString() + "/2000";
+				weibo.setBmiddlePic(bmiddlePic);
+				if(StringTool.judgeBlank(bmiddlePic)){//取图片的大小
+					String sizeStr = ImageUtil.queryURLImageSize(bmiddlePic);
+					weibo.setBmiddlePicSize(sizeStr);
+				}
+				
+				String originalPic = infoObj.toString() + "/460";
+				weibo.setOriginalPic(originalPic);
+				if(StringTool.judgeBlank(originalPic)){//取图片的大小
+					String sizeStr = ImageUtil.queryURLImageSize(originalPic);
+					weibo.setOriginalPicSize(sizeStr);
+				}
 			}
 		}
 		

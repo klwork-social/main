@@ -200,7 +200,7 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 				transmitButton.addClickListener(new ClickListener() {
 					public void buttonClick(ClickEvent event) {
 						// JavaScript.getCurrent().execute("alert('Hello')");
-						TransmitPopupWindow t = new TransmitPopupWindow(
+						WeiboPopupWindow t = new TransmitPopupWindow(
 								userWeibo, AbstractWeiboDisplayPage.this);
 						ViewToolManager.showPopupWindow(t);
 					}
@@ -248,7 +248,7 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 				transmitButton.addStyleName(Reindeer.BUTTON_LINK);
 				transmitButton.addClickListener(new ClickListener() {
 					public void buttonClick(ClickEvent event) {
-						TransmitPopupWindow t = new TransmitPopupWindow(
+						WeiboPopupWindow t = new TransmitPopupWindow(
 								orginWeibo, AbstractWeiboDisplayPage.this);
 						ViewToolManager.showPopupWindow(t);
 					}

@@ -71,10 +71,16 @@ public class SocialUserWeiboService {
 	}
 
 	public boolean existWeibo(String userAccountId, String weiboId) {
+		SocialUserWeibo r = queryByAccountAndWeiboId(userAccountId, weiboId);
+		return r != null;
+	}
+
+	public SocialUserWeibo queryByAccountAndWeiboId(String userAccountId,
+			String weiboId) {
 		SocialUserWeiboQuery query = new SocialUserWeiboQuery();
 		query.setUserAccountId(userAccountId).setWeiboId(weiboId);
 		List<SocialUserWeibo> list = rep.findSocialUserWeiboByQueryCriteria(query, null);
 		SocialUserWeibo r = rep.getOnlyOne(list);
-		return r != null;
+		return r;
 	}
 }

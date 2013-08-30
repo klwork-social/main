@@ -4,14 +4,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.ui.custom.PopupWindow;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.FieldEvents.TextChangeEvent;
+import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Image;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -22,7 +30,7 @@ public class WeiboPopupWindow extends PopupWindow {
 	private Window factWindows;
 	private VerticalLayout mainLayout;
 	private TextArea webboContentTextArea = new TextArea("");
-	
+	private Label inputFontField;
 	
 	
 	public Window getFactWindows() {
@@ -47,6 +55,28 @@ public class WeiboPopupWindow extends PopupWindow {
 
 	public void setWeiboContentTextArea(TextArea weiboContentTA) {
 		this.webboContentTextArea = weiboContentTA;
+		webboContentTextArea.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focus(FocusEvent event) {
+				handlerTextChange(webboContentTextArea.getValue());
+			}
+			
+		});
+		//webboContentTextArea.setTextChangeEventMode(TextChangeEventMode.EAGER);
+		webboContentTextArea.addTextChangeListener(new TextChangeListener(){
+			private static final long serialVersionUID = 2887114440246353008L;
+
+			@Override
+			public void textChange(TextChangeEvent event) {
+				String s = event.getText();
+				handlerTextChange(s);
+			}
+			
+		});
+		
+		System.out.println(webboContentTextArea.getTextChangeTimeout());
+		System.out.println();
 	}
 
 	public WeiboPopupWindow() {
@@ -56,6 +86,7 @@ public class WeiboPopupWindow extends PopupWindow {
 		setWidth("45%");
 		setPositionX(500);
 		setPositionY(55);
+		
 		//center();
 		//top();
 	}
@@ -160,6 +191,33 @@ public class WeiboPopupWindow extends PopupWindow {
 		if(factWindows !=null)
 			factWindows.close();
 	}
-	
 
+	public Label initInputFontField() {
+		inputFontField = new Label();
+		inputFontField.addStyleName("wb_text");
+		inputFontField.setContentMode(ContentMode.HTML);
+		inputFontField
+				.setValue(getInputTitle(140));
+		return inputFontField;
+	}
+
+	public String getInputTitle(int count) {
+		return "还可输入<span class=\"number\">" + count + " </span>字";
+	}
+	
+	public String getPassInputTitle(int count) {
+		return "已经超过<span class=\"number\">" + count + " </span>字";
+	}
+
+	public void handlerTextChange(String s) {
+		int totalChineseWords = StringTool.totalChineseWords(s);
+		int count = 140 - totalChineseWords;
+		if(count >= 0){
+			inputFontField
+			.setValue(getInputTitle(count));
+		}else {
+			inputFontField
+			.setValue(getPassInputTitle(-count));
+		}
+	}
 }

@@ -155,6 +155,9 @@ public class SocialSinaService extends AbstractSocialService {
 						retweetedStatus);
 				if(saveWeiboUserEntity(retWeibo)){
 					weibo.setRetweetedId(retWeibo.getId());
+				}else {
+					SocialUserWeibo queryWeibo = socialUserWeiboService.queryByAccountAndWeiboId(retWeibo.getUserAccountId(),retWeibo.getWeiboId());
+					weibo.setRetweetedId(queryWeibo.getId());
 				}
 				
 			}

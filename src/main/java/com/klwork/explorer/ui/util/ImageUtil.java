@@ -34,10 +34,6 @@ import org.slf4j.LoggerFactory;
 //import com.thebuzzmedia.imgscalr.Scalr;
 //import com.thebuzzmedia.imgscalr.Scalr.Mode;
 
-
-/**
- * @author Joram Barrez
- */
 public class ImageUtil {
   
   protected static final Logger LOGGER = LoggerFactory.getLogger(ImageUtil.class.getName());
@@ -82,10 +78,17 @@ public class ImageUtil {
 		InputStream is = null;
 		try {
 			is = new URL(url).openStream();
-			Iterator<ImageReader> readers = ImageIO
-					.getImageReadersByFormatName("jpg");
-			ImageReader reader = (ImageReader) readers.next();
+			
+			/*Iterator<ImageReader> readers = ImageIO
+					.getImageReadersByFormatName("png");
+			ImageReader reader = (ImageReader) readers.next();*/
 			ImageInputStream iis = ImageIO.createImageInputStream(is);
+			Iterator iter = ImageIO.getImageReaders(iis);
+			if (!iter.hasNext()) {
+				// No readers found
+				return null;
+			}
+			ImageReader reader = (ImageReader)iter.next();
 			reader.setInput(iis, true);
 			System.out.println("width:" + reader.getWidth(0));
 			System.out.println("height:" + reader.getHeight(0));

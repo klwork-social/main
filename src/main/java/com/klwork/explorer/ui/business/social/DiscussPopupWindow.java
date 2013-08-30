@@ -124,11 +124,7 @@ public class DiscussPopupWindow extends WeiboPopupWindow {
 						setWidth("100%");
 					
 						//
-						Label inputFontField = new Label();
-						inputFontField.addStyleName("wb_text");
-						inputFontField.setContentMode(ContentMode.HTML);
-						inputFontField
-								.setValue("还可输入<span class=\"number\">128</span>字");
+						Label inputFontField = initInputFontField();
 						addComponent(inputFontField);
 						// setExpandRatio(image, 1.0f);
 						setComponentAlignment(inputFontField,

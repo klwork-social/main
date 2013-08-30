@@ -1024,12 +1024,20 @@ public class StringTool {
 		return source;
 	}
 	
-	public static String qudaoStatus(Integer status){
-		String[]  str = {"待审核","正式合作","暂停使用","审核未通过","停用","测试"};
-		return str[status];
-	}
-	public static String platType(Integer platType){
-		String[]  str = {"立即推","微立聚","自助推"};
-		return str[platType];
+	public static int totalChineseWords(String str) {
+		String anotherString = null;
+		try {
+			anotherString = new String(str.getBytes("GBK"), "ISO8859_1");
+		} catch (UnsupportedEncodingException ex) {
+		}
+
+		if (str == null || str.length() <= 0) {
+			return 0;
+		}
+		int lengh = anotherString.length();
+		if (lengh % 2 != 0) {
+			lengh += 1;
+		}
+		return lengh/2;
 	}
 }

@@ -87,7 +87,7 @@ public abstract class AbstractSocialService implements SocialService,
 	 */
 	public String queryMentionWeiboTime(SocialUserAccount ac) {
 		String webFetchTime = StringDateUtil.addYear(new Date(), -2).getTime()/1000 + "";
-		SocialUserWeibo lastWeibo = queryLastSpeWeibo(ac,DictDef.dictInt("weibo_type_mention"),null);
+		SocialUserWeibo lastWeibo = queryLastSpeWeibo(ac,DictDef.dictInt("weibo_mentions_timeline"),null);
 		if(lastWeibo != null){//数据库中最后一条记录
 			webFetchTime=  String
 				.valueOf(lastWeibo.getCreateAt().getTime() / 1000);
