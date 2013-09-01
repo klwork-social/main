@@ -49,6 +49,7 @@ import com.klwork.business.utils.SocialConfig;
 import com.klwork.common.exception.ThirdPlatformException;
 import com.klwork.common.utils.ReflectionUtils;
 import com.klwork.common.utils.StringTool;
+import com.klwork.explorer.ui.business.social.DataProvider;
 import com.klwork.explorer.ui.util.ImageUtil;
 import com.vdisk.net.VDiskAPI;
 import com.vdisk.net.VDiskAPI.DeltaEntry;
@@ -679,18 +680,21 @@ public class SocialSinaService extends AbstractSocialService {
 	public String getSocialType() {
 		return "0";
 	}
-
+	
+	/**
+	 * 转发微博
+	 */
+	@Override
 	public int forwardWeibo(WeiboForwardSend weiboForwardSend) {
-		
 		String assessToken = findAccessTokenByAccout(weiboForwardSend.getUserAccountId());
 		return SinaSociaTool.forwardWeibo(weiboForwardSend, assessToken);
 	}
 
 
-	
-	public void discussWeibo(WeiboForwardSend weiboForwardSend) {
+	@Override
+	public int discussWeibo(WeiboForwardSend weiboForwardSend) {
 		String assessToken = findAccessTokenByAccout(weiboForwardSend.getUserAccountId());
-		SinaSociaTool.discussWeibo(weiboForwardSend, assessToken);
+		return SinaSociaTool.discussWeibo(weiboForwardSend, assessToken);
 	}
 
 	
@@ -795,6 +799,8 @@ public class SocialSinaService extends AbstractSocialService {
 		}
 	}
 
-	
+	public List<Map<String, String>> queryFaces() {
+		return DataProvider.getFacesList();
+	}
 
 }

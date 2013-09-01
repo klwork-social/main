@@ -21,6 +21,7 @@ import com.klwork.business.domain.model.SocialUserWeibo;
 import com.klwork.business.domain.model.WeiboForwardSend;
 import com.klwork.business.domain.service.SocialSinaService;
 import com.klwork.business.domain.service.SocialUserWeiboService;
+import com.klwork.business.domain.service.infs.AbstractSocialService;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
@@ -47,6 +48,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -59,7 +61,7 @@ import com.vaadin.ui.themes.Reindeer;
 public class TransmitPopupWindow extends WeiboPopupWindow {
 
 	protected transient SocialUserWeiboService socialUserWeiboService;
-	private transient SocialSinaService socialSinaService;
+	private transient AbstractSocialService socialService;
 	protected transient I18nManager i18nManager;
 
 	private SocialUserWeibo userWeibo;
@@ -83,10 +85,10 @@ public class TransmitPopupWindow extends WeiboPopupWindow {
 
 	public TransmitPopupWindow(final SocialUserWeibo userWeibo,
 			final AbstractWeiboDisplayPage mainPage) {
-		super();
+		super(mainPage.getSocialType());
 		this.socialUserWeiboService = ViewToolManager
 				.getBean("socialUserWeiboService");
-		this.socialSinaService = ViewToolManager.getBean("socialSinaService");
+		this.socialService = AbstractSocialService.querySocialClass(mainPage.getSocialType());
 
 		this.i18nManager = ViewToolManager.getI18nManager();
 
@@ -256,8 +258,11 @@ public class TransmitPopupWindow extends WeiboPopupWindow {
 						okButton.addClickListener(new ClickListener() {
 							public void buttonClick(ClickEvent event) {
 								BinderHandler.commit(scheduleEventFieldGroup);
-								socialSinaService
+								int ret = socialService
 										.forwardWeibo(weiboForwardSend);
+								if(ret == 1){
+									Notification.show("操作成功", Notification.Type.HUMANIZED_MESSAGE);
+								}
 								close();
 							}
 						});

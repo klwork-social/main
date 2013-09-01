@@ -32,6 +32,7 @@ import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.business.domain.model.SocialUserAccountQuery;
 import com.klwork.business.domain.model.SocialUserWeibo;
 import com.klwork.business.domain.model.SocialUserWeiboComment;
+import com.klwork.business.domain.model.WeiboForwardSend;
 import com.klwork.business.domain.model.WeiboHandleResult;
 import com.klwork.business.domain.service.infs.AbstractSocialService;
 import com.klwork.business.utils.TencentSociaTool;
@@ -46,6 +47,7 @@ import com.tencent.weibo.api.TimelineParameter;
 import com.tencent.weibo.api.UserAPI;
 import com.tencent.weibo.oauthv2.OAuthV2;
 import com.tencent.weibo.oauthv2.OAuthV2Client;
+import com.tencent.weibo.utils.TencentWeiboContentTransLate;
 
 /**
  * The Class SocialSinaService.
@@ -682,4 +684,51 @@ public class SocialTencentService extends AbstractSocialService {
 		}
 	}
 
+	/**
+	 * 回复
+	 */
+	@Override
+	public int forwardWeibo(WeiboForwardSend weiboForwardSend) {
+		String accountId = weiboForwardSend.getUserAccountId();
+		OAuthV2 oAuth = queryAccountToken(accountId);
+		int ret = 0;
+		TAPI tAPI=new TAPI(oAuth.getOauthVersion());//根据oAuth配置对应的连接管理器
+		try {
+			String response=tAPI.reAdd(new AddParameter(oAuth, weiboForwardSend.getContent(),weiboForwardSend.getWeibId()));
+			boolean isRplyOk = JSONObject.fromObject(response).getString("msg")
+					.equals("ok");
+			if(isRplyOk){
+			  ret = 1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+	
+	/**
+	 * 评论
+	 */
+	@Override
+	public int discussWeibo(WeiboForwardSend weiboForwardSend) {
+		String accountId = weiboForwardSend.getUserAccountId();
+		OAuthV2 oAuth = queryAccountToken(accountId);
+		int ret = 0;
+		TAPI tAPI=new TAPI(oAuth.getOauthVersion());//根据oAuth配置对应的连接管理器
+		try {
+			String response=tAPI.comment(new AddParameter(oAuth, weiboForwardSend.getContent(),weiboForwardSend.getWeibId()));
+			boolean isRplyOk = JSONObject.fromObject(response).getString("msg")
+					.equals("ok");
+			if(isRplyOk){
+			  ret = 1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+	
+	public List<Map<String, String>> queryFaces() {
+		return TencentWeiboContentTransLate.getFacesList();
+	}
 }

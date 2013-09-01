@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.klwork.business.domain.service.infs.AbstractSocialService;
 import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.ui.custom.PopupWindow;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -31,7 +32,14 @@ public class WeiboPopupWindow extends PopupWindow {
 	private VerticalLayout mainLayout;
 	private TextArea webboContentTextArea = new TextArea("");
 	private Label inputFontField;
+	private List<Map<String, String>> faces = null;
+	private String weiboType;
 	
+	private transient AbstractSocialService socialService;
+	
+	public List<Map<String, String>> initFaces() {
+		return DataProvider.getFacesList();
+	}
 	
 	public Window getFactWindows() {
 		return factWindows;
@@ -79,7 +87,10 @@ public class WeiboPopupWindow extends PopupWindow {
 		System.out.println();
 	}
 
-	public WeiboPopupWindow() {
+	public WeiboPopupWindow(String weiboType) {
+		this.weiboType = weiboType;
+		this.socialService = AbstractSocialService.querySocialClass(weiboType);
+		this.faces = socialService.queryFaces();
 		addStyleName(Reindeer.WINDOW_LIGHT);
 		setModal(true);
 		setHeight("55%");
@@ -116,7 +127,7 @@ public class WeiboPopupWindow extends PopupWindow {
 		peopleGrid.setColumns(16);
 		peopleGrid.setSizeFull();
 		l.addComponent(peopleGrid);
-		List<Map<String, String>> faces = DataProvider.getFacesList();
+		
 		for (Iterator iterator = faces.iterator(); iterator.hasNext();) {
 			Map<String, String> map = (Map<String, String>) iterator.next();
 			peopleGrid.addComponent(currentImage(map.get("phrase"),map.get("url")));

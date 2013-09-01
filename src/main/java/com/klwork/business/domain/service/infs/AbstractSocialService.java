@@ -2,6 +2,7 @@ package com.klwork.business.domain.service.infs;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -15,6 +16,7 @@ import com.klwork.business.domain.model.SocialUserWeiboComment;
 import com.klwork.business.domain.model.SocialUserWeiboCommentQuery;
 import com.klwork.business.domain.model.SocialUserWeiboQuery;
 import com.klwork.business.domain.model.SocialUserWeiboSend;
+import com.klwork.business.domain.model.WeiboForwardSend;
 import com.klwork.business.domain.service.SocialUserAccountInfoService;
 import com.klwork.business.domain.service.SocialUserAccountService;
 import com.klwork.business.domain.service.SocialUserWeiboCommentService;
@@ -233,4 +235,11 @@ public abstract class AbstractSocialService implements SocialService,
 		String assessToken = tok.getValue();
 		return assessToken;
 	}
+
+	public List<Map<String, String>> queryFaces() {
+		return null;
+	}
+
+
+	
 }

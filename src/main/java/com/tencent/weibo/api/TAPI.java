@@ -73,7 +73,7 @@ public class TAPI extends BasicAPI{
 	 */
 	public String add(OAuth oAuth, String format, String content,
 			String clientip) throws Exception {
-		return this.add(new AddParameter(oAuth, format, content, clientip, "", "", ""));
+		return this.add(new AddParameter(oAuth, format, content, clientip, "", "", "",null));
 	}
 
 	/**
@@ -128,35 +128,28 @@ public class TAPI extends BasicAPI{
 	 */
 	public String reAdd(OAuth oAuth, String format, String content,
 			String clientip, String reid) throws Exception {
-		return this.reAdd(oAuth, format, content, clientip, "", "", reid);
+		return this.reAdd(new AddParameter(oAuth, format, content, clientip, "", "", "",reid));
 	}
 
 	/**
 	 * 转播一条微博
+	 * @param parameterObject TODO
 	 * 
-	 * @param oAuth
-	 * @param format 返回数据的格式 是（json或xml）
-	 * @param content  微博内容
-	 * @param clientip 用户IP(以分析用户所在地)
-	 * @param jing 经度（可以填空）
-	 * @param wei 纬度（可以填空）
-	 * @param reid 转播父结点微博id
 	 * @return
 	 * @throws Exception
      * @see <a href="http://wiki.open.t.qq.com/index.php/%E5%BE%AE%E5%8D%9A%E7%9B%B8%E5%85%B3/%E8%BD%AC%E6%92%AD%E4%B8%80%E6%9D%A1%E5%BE%AE%E5%8D%9A">腾讯微博开放平台上关于此条API的文档</a>
 	 */
-	public String reAdd(OAuth oAuth, String format, String content,
-			String clientip, String jing, String wei, String reid)
+	public String reAdd(AddParameter parameterObject)
 			throws Exception {
 		QArrayList paramsList = new QArrayList();
-		paramsList.add(new BasicNameValuePair("format", format));
-		paramsList.add(new BasicNameValuePair("content", content));
-		paramsList.add(new BasicNameValuePair("clientip", clientip));
-		paramsList.add(new BasicNameValuePair("jing", jing));
-		paramsList.add(new BasicNameValuePair("wei", wei));
-		paramsList.add(new BasicNameValuePair("reid", reid));
+		paramsList.add(new BasicNameValuePair("format", parameterObject.format));
+		paramsList.add(new BasicNameValuePair("content", parameterObject.content));
+		paramsList.add(new BasicNameValuePair("clientip", parameterObject.clientip));
+		paramsList.add(new BasicNameValuePair("jing", parameterObject.jing));
+		paramsList.add(new BasicNameValuePair("wei", parameterObject.wei));
+		paramsList.add(new BasicNameValuePair("reid", parameterObject.reid));
 		
-		return requestAPI.postContent(tReAddUrl, paramsList, oAuth);
+		return requestAPI.postContent(tReAddUrl, paramsList, parameterObject.oAuth);
 	}
 
 	/**
@@ -173,36 +166,30 @@ public class TAPI extends BasicAPI{
 	 */
 	public String comment(OAuth oAuth, String format, String content,
 			String clientip, String reid) throws Exception {
-		return this.comment(oAuth, format, content, clientip, "", "", reid);
+		return this.comment(new AddParameter(oAuth, format, content, clientip, "", "",null,
+				reid));
 	}
 
 	/**
 	 * 点评一条微博
+	 * @param parameterObject TODO
 	 * 
-	 * @param oAuth
-	 * @param format 返回数据的格式 是（json或xml）
-	 * @param content  微博内容
-	 * @param clientip 用户IP(以分析用户所在地)
-	 * @param jing 经度（可以填空）
-	 * @param wei 纬度（可以填空）
-	 * @param reid 点评父结点微博id
 	 * @return
 	 * @throws Exception
      * @see <a href="http://wiki.open.t.qq.com/index.php/%E5%BE%AE%E5%8D%9A%E7%9B%B8%E5%85%B3/%E7%82%B9%E8%AF%84%E4%B8%80%E6%9D%A1%E5%BE%AE%E5%8D%9A">腾讯微博开放平台上关于此条API的文档</a>
 	 */
-	public String comment(OAuth oAuth, String format, String content,
-			String clientip, String jing, String wei, String reid)
+	public String comment(AddParameter parameterObject)
 			throws Exception {
 		QArrayList paramsList = new QArrayList();
-		paramsList.add(new BasicNameValuePair("format", format));
-		paramsList.add(new BasicNameValuePair("content", content));
-		paramsList.add(new BasicNameValuePair("clientip", clientip));
-		paramsList.add(new BasicNameValuePair("jing", jing));
-		paramsList.add(new BasicNameValuePair("wei", wei));
-		paramsList.add(new BasicNameValuePair("reid", reid));
+		paramsList.add(new BasicNameValuePair("format", parameterObject.format));
+		paramsList.add(new BasicNameValuePair("content", parameterObject.content));
+		paramsList.add(new BasicNameValuePair("clientip", parameterObject.clientip));
+		paramsList.add(new BasicNameValuePair("jing", parameterObject.jing));
+		paramsList.add(new BasicNameValuePair("wei", parameterObject.wei));
+		paramsList.add(new BasicNameValuePair("reid", parameterObject.reid));
 		
 		return requestAPI.postContent(tCommentUrl, paramsList,
-				oAuth);
+				parameterObject.oAuth);
 	}
 	
 	/**

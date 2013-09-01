@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserWeibo;
+import com.klwork.business.domain.model.WeiboForwardSend;
 
 public interface SocialService {
 	/**
@@ -68,4 +69,17 @@ public interface SocialService {
 	 */
 	public void sendWeibo(SocialUserAccount socialUserAccount, String value,
 			String type);
+	
+	/**
+	 * 转发微博
+	 * @param weiboForwardSend
+	 */
+	public int forwardWeibo(WeiboForwardSend weiboForwardSend);
+	
+	/**
+	 * 评论微博
+	 * @param weiboForwardSend
+	 * @return
+	 */
+	public int discussWeibo(WeiboForwardSend weiboForwardSend);
 }

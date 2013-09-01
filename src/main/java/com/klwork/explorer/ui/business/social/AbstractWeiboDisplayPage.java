@@ -162,10 +162,13 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 		}
 		return image;
 	}
-
-	protected String textTranslate(String text) {
-		return text;
-	}
+	
+	/**
+	 * 微博文字转化
+	 * @param text
+	 * @return
+	 */
+	protected abstract String textTranslate(String text);
 
 	/**
 	 * 微博操作

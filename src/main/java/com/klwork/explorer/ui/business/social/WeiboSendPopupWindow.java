@@ -41,6 +41,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
@@ -79,7 +80,7 @@ public class WeiboSendPopupWindow extends WeiboPopupWindow {
 	
 
 	public WeiboSendPopupWindow(final SocialUserAccount socialUserAccount) {
-		super();
+		super(socialUserAccount.getType().toString());
 		this.socialUserWeiboService = ViewToolManager
 				.getBean("socialUserWeiboService");
 		this.socialSinaService = ViewToolManager.getBean("socialSinaService");
@@ -176,6 +177,7 @@ public class WeiboSendPopupWindow extends WeiboPopupWindow {
 							public void buttonClick(ClickEvent event) {
 								BinderHandler.commit(scheduleEventFieldGroup);
 								handlerSendWeibo();
+								Notification.show("操作成功", Notification.Type.HUMANIZED_MESSAGE);
 								close();
 							}
 						});

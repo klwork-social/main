@@ -11,9 +11,10 @@ public class AddParameter {
 	public String jing = "";
 	public String wei = "";
 	public String syncflag = "";
+	public String reid;
 
 	public AddParameter(OAuth oAuth, String format, String content,
-			String clientip, String jing, String wei, String syncflag) {
+			String clientip, String jing, String wei, String syncflag,String reid) {
 		this.oAuth = oAuth;
 		this.format = format;
 		this.content = content;
@@ -21,10 +22,17 @@ public class AddParameter {
 		this.jing = jing;
 		this.wei = wei;
 		this.syncflag = syncflag;
+		this.reid = reid;
 	}
 
 	public AddParameter(OAuthV2 oAuth2, String text) {
 		this.oAuth = oAuth2;
 		this.content = text;
+	}
+	
+	public AddParameter(OAuthV2 oAuth2, String text,String reid) {
+		this.oAuth = oAuth2;
+		this.content = text;
+		this.reid = reid;
 	}
 }
