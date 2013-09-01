@@ -60,6 +60,7 @@ import com.vaadin.ui.themes.Reindeer;
 public class ProjectList extends DetailPanel {
 	private static final long serialVersionUID = 7916755916967574384L;
 	protected I18nManager i18nManager;
+	protected Button addButton;
 
 	final HashMap<Object, String> projectNames = new HashMap<Object, String>();
 
@@ -245,20 +246,11 @@ public class ProjectList extends DetailPanel {
 
 					newProjectWindow.addListener(new SubmitEventListener() {
 						private static final long serialVersionUID = 1L;
-						@Override
 						protected void cancelled(SubmitEvent event) {
 
 						}
-						@Override
 						protected void submitted(SubmitEvent event) {
-							if (event.getData() != null) {
-								Item item = source.getItem(itemId);
-								String id = (String) item.getItemProperty("id").getValue();
-								Project project = new Project();
-						    	  project.setId(id);
-								projectService.updateProject(project);
-								notifyProjectListChanged();
-							}
+							notifyProjectListChanged();
 						}
 					});
 
@@ -377,8 +369,7 @@ public class ProjectList extends DetailPanel {
 
 	protected void initAddProjectButton(HorizontalLayout headerLayout) {
 		
-		Button addButton = new Button("新增");
-//		addButton.setCaption("新增");
+		addButton = new Button("新增");
 		// addButton.addStyleName(ExplorerLayout.STYLE_ADD);
 		headerLayout.addComponent(addButton);
 
@@ -391,7 +382,7 @@ public class ProjectList extends DetailPanel {
 				ViewToolManager.showPopupWindow(newProjectWindow);
 				// 这个弹出窗口提交时，进行一些操作。
 				newProjectWindow.addListener(new SubmitEventListener() {
-					private static final long serialVersionUID = 6081300274433293659L;
+					private static final long serialVersionUID = 7552100154342002000L;
 
 					protected void submitted(SubmitEvent event) {
 						notifyProjectListChanged();

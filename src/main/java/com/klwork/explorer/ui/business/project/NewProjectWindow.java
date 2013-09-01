@@ -62,6 +62,7 @@ public class NewProjectWindow extends PopupWindow {
 	ProjectService projectService;
 	
 	protected boolean multiSelect = true;
+	protected NewProjectForm form;
 	
 	public NewProjectWindow(String currentProjectId) {
 		this.i18nManager = ViewToolManager.getI18nManager();
@@ -91,7 +92,17 @@ public class NewProjectWindow extends PopupWindow {
 	}
 
 	private void initForm(BeanItem pItem) {
-		NewProjectForm form = new NewProjectForm(this,pItem);
+		form = new NewProjectForm(this,pItem);
+		form.addListener(new SubmitEventListener() {
+			private static final long serialVersionUID = 7552100154342002000L;
+
+			protected void submitted(SubmitEvent event) {
+				fireEvent(new SubmitEvent(form, SubmitEvent.SUBMITTED));
+			}
+
+			protected void cancelled(SubmitEvent event) {
+			}
+		});
 		setContent(form);
 	}
 
