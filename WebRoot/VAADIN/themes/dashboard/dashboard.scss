@@ -28,6 +28,7 @@
 @import "views/sales.scss";
 @import "views/reports.scss";
 @import "views/weibo.scss";
+@import "views/project.scss";
 
 
 @mixin dashboard {
@@ -48,6 +49,7 @@
 	@include dashboard-reports-view;
 	
 	@include weibo;
+	@include project;
 	@include custom-calendar;
 
 	.v-view {
