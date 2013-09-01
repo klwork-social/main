@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	(social_user_weibo_comment) :${table.comment}
+字段:
+	id_(varchar)	:
+	user_account_id_(varchar)	:
+	owner_(varchar)	:
+	create_at_(timestamp)	:
+	comment_id_(varchar)	:
+	text_(varchar)	:
+	source_(varchar)	:
+	mid_(varchar)	:
+	comment_uid_(varchar)	:
+	user_screen_name_(varchar)	:
+	user_name_(varchar)	:
+	user_profile_image_url_(varchar)	:
+	user_domain_(varchar)	:
+	user_verified_(int4)	:
+	rel_user_weibo_id_(varchar)	:
+	status_weibo_id_(varchar)	:
+	status_created_at_(timestamp)	:
+	status_text_(varchar)	:
+	status_source_(varchar)	:
+	status_mid_(varchar)	:
+	status_user_uid_(varchar)	:
+	status_user_screen_name_(varchar)	:
+	status_user_name_(varchar)	:
+	status_user_domain_(varchar)	:
+	status_user_verified_(int4)	:
+	comment_type_(int4)	:
+	type_(int4)	:
+sqlMapConfig:
+	<typeAlias alias="SocialUserWeiboComment" type="com.klwork.business.domain/model.SocialUserWeiboComment" />
+	<mapper resource="com/klwork/business/domain/model/SocialUserWeiboComment_SqlMap.xml" />
+-->
+<mapper namespace="com.klwork.business.domain.model.SocialUserWeiboComment">
+
+  <!-- INSERT -->
+  <insert id="insertSocialUserWeiboComment" parameterType="com.klwork.business.domain.model.SocialUserWeiboComment">
+    insert into social_user_weibo_comment (
+    	id_,
+	user_account_id_,
+	owner_,
+	create_at_,
+	comment_id_,
+	text_,
+	source_,
+	mid_,
+	comment_uid_,
+	user_screen_name_,
+	user_name_,
+	user_profile_image_url_,
+	user_domain_,
+	user_verified_,
+	rel_user_weibo_id_,
+	status_weibo_id_,
+	status_created_at_,
+	status_text_,
+	status_source_,
+	status_mid_,
+	status_user_uid_,
+	status_user_screen_name_,
+	status_user_name_,
+	status_user_domain_,
+	status_user_verified_,
+	comment_type_,
+	type_
+	)
+    values (
+      		#{id,jdbcType=VARCHAR},
+ 		#{userAccountId,jdbcType=VARCHAR},
+ 		#{owner,jdbcType=VARCHAR},
+ 		#{createAt,jdbcType=TIMESTAMP},
+ 		#{commentId,jdbcType=VARCHAR},
+ 		#{text,jdbcType=VARCHAR},
+ 		#{source,jdbcType=VARCHAR},
+ 		#{mid,jdbcType=VARCHAR},
+ 		#{commentUid,jdbcType=VARCHAR},
+ 		#{userScreenName,jdbcType=VARCHAR},
+ 		#{userName,jdbcType=VARCHAR},
+ 		#{userProfileImageUrl,jdbcType=VARCHAR},
+ 		#{userDomain,jdbcType=VARCHAR},
+ 		#{userVerified,jdbcType=INTEGER},
+ 		#{relUserWeiboId,jdbcType=VARCHAR},
+ 		#{statusWeiboId,jdbcType=VARCHAR},
+ 		#{statusCreatedAt,jdbcType=TIMESTAMP},
+ 		#{statusText,jdbcType=VARCHAR},
+ 		#{statusSource,jdbcType=VARCHAR},
+ 		#{statusMid,jdbcType=VARCHAR},
+ 		#{statusUserUid,jdbcType=VARCHAR},
+ 		#{statusUserScreenName,jdbcType=VARCHAR},
+ 		#{statusUserName,jdbcType=VARCHAR},
+ 		#{statusUserDomain,jdbcType=VARCHAR},
+ 		#{statusUserVerified,jdbcType=INTEGER},
+ 		#{commentType,jdbcType=INTEGER},
+    	#{type,jdbcType=INTEGER}
+    	)
+  </insert>
+  
+  <!-- UPDATE -->
+  <update id="updateSocialUserWeiboComment" parameterType="com.klwork.business.domain.model.SocialUserWeiboComment">
+    update social_user_weibo_comment set
+    	<if test="userAccountId != null">
+ user_account_id_ = #{userAccountId,jdbcType=VARCHAR},
+</if>
+<if test="owner != null">
+ owner_ = #{owner,jdbcType=VARCHAR},
+</if>
+<if test="createAt != null">
+ create_at_ = #{createAt,jdbcType=TIMESTAMP},
+</if>
+<if test="commentId != null">
+ comment_id_ = #{commentId,jdbcType=VARCHAR},
+</if>
+<if test="text != null">
+ text_ = #{text,jdbcType=VARCHAR},
+</if>
+<if test="source != null">
+ source_ = #{source,jdbcType=VARCHAR},
+</if>
+<if test="mid != null">
+ mid_ = #{mid,jdbcType=VARCHAR},
+</if>
+<if test="commentUid != null">
+ comment_uid_ = #{commentUid,jdbcType=VARCHAR},
+</if>
+<if test="userScreenName != null">
+ user_screen_name_ = #{userScreenName,jdbcType=VARCHAR},
+</if>
+<if test="userName != null">
+ user_name_ = #{userName,jdbcType=VARCHAR},
+</if>
+<if test="userProfileImageUrl != null">
+ user_profile_image_url_ = #{userProfileImageUrl,jdbcType=VARCHAR},
+</if>
+<if test="userDomain != null">
+ user_domain_ = #{userDomain,jdbcType=VARCHAR},
+</if>
+<if test="userVerified != null">
+ user_verified_ = #{userVerified,jdbcType=INTEGER},
+</if>
+<if test="relUserWeiboId != null">
+ rel_user_weibo_id_ = #{relUserWeiboId,jdbcType=VARCHAR},
+</if>
+<if test="statusWeiboId != null">
+ status_weibo_id_ = #{statusWeiboId,jdbcType=VARCHAR},
+</if>
+<if test="statusCreatedAt != null">
+ status_created_at_ = #{statusCreatedAt,jdbcType=TIMESTAMP},
+</if>
+<if test="statusText != null">
+ status_text_ = #{statusText,jdbcType=VARCHAR},
+</if>
+<if test="statusSource != null">
+ status_source_ = #{statusSource,jdbcType=VARCHAR},
+</if>
+<if test="statusMid != null">
+ status_mid_ = #{statusMid,jdbcType=VARCHAR},
+</if>
+<if test="statusUserUid != null">
+ status_user_uid_ = #{statusUserUid,jdbcType=VARCHAR},
+</if>
+<if test="statusUserScreenName != null">
+ status_user_screen_name_ = #{statusUserScreenName,jdbcType=VARCHAR},
+</if>
+<if test="statusUserName != null">
+ status_user_name_ = #{statusUserName,jdbcType=VARCHAR},
+</if>
+<if test="statusUserDomain != null">
+ status_user_domain_ = #{statusUserDomain,jdbcType=VARCHAR},
+</if>
+<if test="statusUserVerified != null">
+ status_user_verified_ = #{statusUserVerified,jdbcType=INTEGER},
+</if>
+<if test="commentType != null">
+ comment_type_ = #{commentType,jdbcType=INTEGER},
+</if>
+<if test="type != null">
+ type_ = #{type,jdbcType=INTEGER},
+</if>
+ where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <!-- Delete -->	
+  <delete id="deleteSocialUserWeiboComment" parameterType="string">
+    delete from social_user_weibo_comment where id_ = #{id}
+    </delete>
+  <!-- SELECT -->
+  <select id="selectSocialUserWeiboCommentById" parameterType="string" resultMap="SocialUserWeiboCommentMap">
+    select * from social_user_weibo_comment where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectSocialUserWeiboCommentByQueryCriteria" parameterType="com.klwork.business.domain.model.SocialUserWeiboCommentQuery" resultMap="SocialUserWeiboCommentMap">
+    select U.*
+    <include refid="selectSocialUserWeiboCommentByQueryCriteriaSql" />
+    <if test="orderBy != null">
+      order by ${orderBy}
+    </if>
+   <if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+	</if>
+  </select>
+  
+    <!-- 查询最后一条-->
+  <select id="selectLastSocialUserWeiboComment" parameterType="com.klwork.business.domain.model.SocialUserWeiboCommentQuery" resultMap="SocialUserWeiboCommentMap">
+    select U.*
+    <include refid="selectSocialUserWeiboCommentByQueryCriteriaSql" />
+      order by create_at_ desc
+	  limit 1 offset 0
+  </select>
+  
+   <select id="selectSocialUserWeiboCommentCountByQueryCriteria" parameterType="com.klwork.business.domain.model.SocialUserWeiboCommentQuery" resultType="int">
+    select count(U.id_)
+    <include refid="selectSocialUserWeiboCommentByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="selectSocialUserWeiboCommentByQueryCriteriaSql">
+    from social_user_weibo_comment U
+    <where>
+        <if test="userAccountId != null">
+        AND U.user_account_id_ = #{userAccountId}
+    </if>
+    <if test="owner != null">
+        AND U.owner_ = #{owner}
+    </if>
+    <if test="commentUid != null">
+        AND U.comment_uid_ = #{commentUid}
+    </if>
+    <if test="userName != null">
+        AND U.user_name_ = #{userName}
+    </if>
+    <if test="statusWeiboId != null">
+        AND U.status_weibo_id_ = #{statusWeiboId}
+    </if>
+    <if test="statusUserUid != null">
+        AND U.status_user_uid_ = #{statusUserUid}
+    </if>
+    <if test="commentType != null">
+        AND U.comment_type_ = #{commentType}
+    </if>
+    <if test="type != null">
+        AND U.type_ = #{type}
+    </if>
+    </where>
+  </sql>
+  
+	<resultMap id="SocialUserWeiboCommentMap" type="com.klwork.business.domain.model.SocialUserWeiboComment">
+	<result property="id" column="id_" />
+	<result property="userAccountId" column="user_account_id_" />
+	<result property="owner" column="owner_" />
+	<result property="createAt" column="create_at_" />
+	<result property="commentId" column="comment_id_" />
+	<result property="text" column="text_" />
+	<result property="source" column="source_" />
+	<result property="mid" column="mid_" />
+	<result property="commentUid" column="comment_uid_" />
+	<result property="userScreenName" column="user_screen_name_" />
+	<result property="userName" column="user_name_" />
+	<result property="userProfileImageUrl" column="user_profile_image_url_" />
+	<result property="userDomain" column="user_domain_" />
+	<result property="userVerified" column="user_verified_" />
+	<result property="relUserWeiboId" column="rel_user_weibo_id_" />
+	<result property="statusWeiboId" column="status_weibo_id_" />
+	<result property="statusCreatedAt" column="status_created_at_" />
+	<result property="statusText" column="status_text_" />
+	<result property="statusSource" column="status_source_" />
+	<result property="statusMid" column="status_mid_" />
+	<result property="statusUserUid" column="status_user_uid_" />
+	<result property="statusUserScreenName" column="status_user_screen_name_" />
+	<result property="statusUserName" column="status_user_name_" />
+	<result property="statusUserDomain" column="status_user_domain_" />
+	<result property="statusUserVerified" column="status_user_verified_" />
+	<result property="commentType" column="comment_type_" />
+	<result property="type" column="type_" />
+</resultMap>
+</mapper>

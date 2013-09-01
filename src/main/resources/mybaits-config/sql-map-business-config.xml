@@ -21,5 +21,6 @@
 		<mapper resource="com/klwork/business/domain/model/ResourcesAssignManager_SqlMap.xml" />
 		<mapper resource="com/klwork/business/domain/model/SocialUseAuthorityList_SqlMap.xml" />
 		<mapper resource="com/klwork/business/domain/model/SocialUserWeiboSend_SqlMap.xml" />
+		<mapper resource="com/klwork/business/domain/model/SocialUserWeiboComment_SqlMap.xml" />
 	</mappers>
 </configuration>

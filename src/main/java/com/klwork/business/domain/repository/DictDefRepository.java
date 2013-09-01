@@ -120,6 +120,9 @@ public class DictDefRepository extends
 		dictDef = new DictDef("16", "resources_team_type", "-1", "组的类型", "16");
 		insertData(dictDef);
 		
+		dictDef = new DictDef("17", "outsourcing_type", "-1", "外包分类", "17");
+		insertData(dictDef);
+		
 		insertData(dictDef);
 		dictDef = new DictDef("100", "sina", "2", "新浪", "0");
 		insertData(dictDef);
@@ -301,6 +304,13 @@ public class DictDefRepository extends
 		insertData(dictDef);
 		
 		dictDef = new DictDef("600", "team_type_weibo_permit", "16", "组的类型-微博权限分配", "0");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("605", "out_ad_originality", "17", "广告创意", "0");
+		insertData(dictDef);
+		dictDef = new DictDef("606", "out_art_design ", "17", "美工设计", "1");
+		insertData(dictDef);
+		dictDef = new DictDef("607", "out_system_develop", "17", "系统开发", "2");
 		insertData(dictDef);
 		
 	}

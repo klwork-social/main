@@ -253,6 +253,11 @@ public class DashboardUI extends UI implements ErrorHandler{
         menuLayout.addComponent(b);
         viewNameToMenuButton.put("/" + view, b);
         
+        view = "newPublicProject";
+        b = createViewButton(view,"公共项目");
+        menuLayout.addComponent(b);
+        viewNameToMenuButton.put("/" + view, b);
+        
 	}
 
 	public Button createViewButton(final String view,String caption) {

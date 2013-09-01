@@ -6,12 +6,15 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
+import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserWeibo;
 import com.klwork.business.domain.model.SocialUserWeiboQuery;
 import com.klwork.business.domain.service.infs.AbstractSocialService;
 import com.klwork.explorer.security.LoggedInUserImpl;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.test.base.BaseTxWebTests;
+import com.tencent.weibo.api.TimelineParameter;
+import com.tencent.weibo.oauthv2.OAuthV2;
 
 /**
  * 
@@ -26,13 +29,16 @@ public class SocialServiceTest extends BaseTxWebTests {
 	@Autowired
 	SocialTencentService socialTencentService;
 	@Autowired 
-	AbstractSocialService socialSinaService;
+	SocialSinaService socialSinaService;
 	@Autowired
 	IdentityService identityService;
 	@Autowired
 	UserService userService;
 	@Autowired
 	SocialMainService socialService;
+	
+	@Autowired
+	public SocialUserAccountService socialUserAccountService;
 	
 	@Test
 	public void testService() {
@@ -64,5 +70,29 @@ public class SocialServiceTest extends BaseTxWebTests {
 		LoggedInUserImpl u = userService.subjectToUserEntity("wangwei", "123456");
 		LoginHandler.setUser(u);
 		socialSinaService.myWeiboToDb();
+	}
+	
+	@Test
+	public void testSinaCommentToDb() {
+		SocialUserAccount ac = socialUserAccountService.findSocialUserByType(
+				"wangwei",
+				0);
+		String accountId = ac.getId();
+		String assessToken = socialSinaService.findAccessTokenByAccout(accountId);
+		socialSinaService.commentToMeToDb(ac, 1, assessToken);
+	}
+	
+	@Test
+	public void testQQMyWeiboToDb() {
+		SocialUserAccount ac = socialUserAccountService.findSocialUserByType(
+				"wangwei",
+				1);
+		String accountId = ac.getId();
+		OAuthV2 oAuth = socialTencentService.queryAccountToken(accountId);
+		//我的微博
+		String webFetchTime = socialTencentService.queryMyWeiboTime(ac);
+		TimelineParameter pBroadcastTime = new TimelineParameter(oAuth);
+		pBroadcastTime.pagetime = webFetchTime;
+		socialTencentService.myWeiboToDb(ac, oAuth,pBroadcastTime);
 	}
 }

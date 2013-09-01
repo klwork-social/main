@@ -22,7 +22,8 @@ public class SinaWeiboShowPage extends AbstractTabViewPage{
 		addTab(new SinaWeiboDisplayPage(socialUserAccount,DictDef.dictInt("weibo_public_timeline")),"全部微博");
 		addTab(new SinaWeiboDisplayPage(socialUserAccount,DictDef.dictInt("weibo_user_timeline")),"我的微博");
         addTab(new SinaWeiboDisplayPage(socialUserAccount,DictDef.dictInt("weibo_mentions_timeline")),"@我的微博");
-        addTab(new SinaWeiboDisplayPage(socialUserAccount,DictDef.dictInt("comment_to_me")),"我收到的评论");
+        addTab(new SinaCommentDisplayPage(socialUserAccount,DictDef.dictInt("comment_to_me")),"我收到的评论");
+        addTab(new SinaCommentDisplayPage(socialUserAccount,DictDef.dictInt("comment_by_me")),"我发出的评论");
         //addTab(new WeiboSendMainPage(),"微博发送管理");
         initAddNewWeiboButton();
 	}

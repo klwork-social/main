@@ -5,6 +5,8 @@ import java.util.List;
 import weibo4j.Comments;
 import weibo4j.Timeline;
 import weibo4j.Weibo;
+import weibo4j.model.Comment;
+import weibo4j.model.CommentWapper;
 import weibo4j.model.Paging;
 import weibo4j.model.Status;
 import weibo4j.model.StatusWapper;
@@ -46,10 +48,6 @@ public class SinaSociaTool {
 	}
 
 	/**
-	 * @Enclosing_Method : findDsrmMentionsAccountWeiboInfo
-	 * @Written by : wangsi
-	 * @Creation Date : 2012-11-1 上午11:16:02
-	 * @version : v1.00
 	 * @Description : 获取最新的提到登录用户的微博列表，即@我的微博
 	 * @param accessToken
 	 * @param page
@@ -185,7 +183,13 @@ public class SinaSociaTool {
 		}
 		return 1;
 	}
-
+	
+	/**
+	 * 删除微博
+	 * @param weiboId
+	 * @param assessToken
+	 * @return
+	 */
 	public static int deleteWeibo(String weiboId, String assessToken) {
 		try {
 			Timeline timeline = new Timeline();
@@ -197,7 +201,13 @@ public class SinaSociaTool {
 		}
 		return 1;
 	}
-
+	
+	/**
+	 * 发送微博
+	 * @param text
+	 * @param assessToken
+	 * @return
+	 */
 	public static int sendWeibo(String text, String assessToken) {
 		try {
 			Timeline timeline = new Timeline();
@@ -209,5 +219,119 @@ public class SinaSociaTool {
 		}
 		return 1;
 		
+	}
+	
+	/**
+	 * 
+	 *  获取当前登录用户所接收到的评论列表
+	 *  @param accessToken
+	 *  @param page
+	 *            返回结果的页码，默认为1。
+	 *  @param filter_by_author
+	 *            作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。
+	 *  @param filter_by_source
+	 *            来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。
+	 *  @return
+	 **/
+	public static List<Comment> findCommentToMeWeiboInfo(String accessToken,Paging page, Integer filter_by_source,
+			Integer filter_by_author){
+		
+		Comments comments = new Comments();
+		comments.client.setToken(accessToken);
+		List<Comment> list = null;
+		try {
+			CommentWapper commentWapper = comments.getCommentToMe(page, filter_by_source, filter_by_author);
+			if (null != commentWapper) {
+				list = commentWapper.getComments();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	/**
+	 *  获取当前登录用户所发出的评论列表
+	 *  @param accessToken
+	 *  @param page
+	 *            返回结果的页码，默认为1
+	 *  @param filter_by_source
+	 *            来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0
+	 *  @return
+	 **/
+	public static List<Comment> findCommentByMeWeiboInfo(String accessToken,Paging page, Integer filter_by_source){
+		
+		Comments comments = new Comments();
+		comments.client.setToken(accessToken);
+		List<Comment> list = null;
+		try {
+			CommentWapper commentWapper = comments.getCommentByMe(page, filter_by_source);
+			if (null != commentWapper) {
+				list = commentWapper.getComments();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	/**
+	 *  根据微博ID返回某条微博的评论列表
+	 *  @param accessToken
+	 *  @param weiboId
+	 *            需要查询的微博ID
+	 *  @param count
+	 *            单页返回的记录条数，默认为50。
+	 *  @param page
+	 *            返回结果的页码，默认为1。
+	 *  @param filter_by_author
+	 *            作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。
+	 *  @return
+	 **/
+	public static List<Comment> findCommentByWeiboId(String accessToken,String weiboId, Paging page,
+			Integer filter_by_author){
+		
+		Comments comments = new Comments();
+		comments.client.setToken(accessToken);
+		List<Comment> list = null;
+		try {
+			CommentWapper commentWapper = comments.getCommentById(weiboId, page, filter_by_author);
+			if (null != commentWapper) {
+				list = commentWapper.getComments();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	/**
+	 *  对一条微博进行评论
+	 *  @param accessToken
+	 *  @param comment
+	 *  @param weiboId
+	 *  @return
+	 **/
+	public static Boolean CreateDsrmAccountWeibo(String accessToken,String content, String weiboId){
+		
+		Boolean result = false;
+		Comments comments = new Comments();
+		comments.client.setToken(accessToken);
+		try {
+			
+			Comment comment = comments.createComment(content,weiboId);
+			if (null == comment) {
+				System.out.println("新浪评论微博失败");
+			}else {
+				System.out.println("新浪评论微博成功");
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

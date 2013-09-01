@@ -14,7 +14,6 @@ package com.klwork.business.domain.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,6 +28,7 @@ import weibo4j.Account;
 import weibo4j.Oauth;
 import weibo4j.Users;
 import weibo4j.http.AccessToken;
+import weibo4j.model.Comment;
 import weibo4j.model.Paging;
 import weibo4j.model.Status;
 import weibo4j.model.User;
@@ -41,17 +41,15 @@ import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.business.domain.model.SocialUserAccountQuery;
 import com.klwork.business.domain.model.SocialUserWeibo;
-import com.klwork.business.domain.model.SocialUserWeiboSend;
+import com.klwork.business.domain.model.SocialUserWeiboComment;
 import com.klwork.business.domain.model.WeiboForwardSend;
 import com.klwork.business.domain.service.infs.AbstractSocialService;
 import com.klwork.business.utils.SinaSociaTool;
 import com.klwork.business.utils.SocialConfig;
 import com.klwork.common.exception.ThirdPlatformException;
 import com.klwork.common.utils.ReflectionUtils;
-import com.klwork.common.utils.StringDateUtil;
 import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.ui.util.ImageUtil;
-import com.vdisk.net.ProgressListener;
 import com.vdisk.net.VDiskAPI;
 import com.vdisk.net.VDiskAPI.DeltaEntry;
 import com.vdisk.net.VDiskAPI.DeltaPage;
@@ -85,6 +83,8 @@ public class SocialSinaService extends AbstractSocialService {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	SocialUserWeiboCommentService socialUserWeiboCommentService;
 	
 	
 	@Override
@@ -165,8 +165,61 @@ public class SocialSinaService extends AbstractSocialService {
 		}
 
 	}
+	
+	private void saveSocialUserCommentList(SocialUserAccount ac,
+			 List<Comment> list, Integer weiboType) {
+		if (null == list) {
+			return;
+		}
+
+		for (int i = 0; i < list.size(); i++) {
+			Comment comment = list.get(i);
+			SocialUserWeiboComment socialUserWeiboComment = tranlateThirdToCommentEntity(comment,weiboType);
+			initWeiboCommentByAccount(socialUserWeiboComment,ac);
+			socialUserWeiboCommentService.createSocialUserWeiboComment(socialUserWeiboComment );
+		}
+
+	}
 
 	
+
+	private void initWeiboCommentByAccount(SocialUserWeiboComment socialUserWeiboComment, SocialUserAccount ac) {
+		socialUserWeiboComment.setUserAccountId(ac.getId());
+		socialUserWeiboComment.setOwner(ac.getOwnUser());
+		socialUserWeiboComment.setType(ac.getType());
+	}
+
+	private SocialUserWeiboComment tranlateThirdToCommentEntity(
+			Comment comment, Integer weiboType) {
+		SocialUserWeiboComment myComment = new SocialUserWeiboComment();
+		myComment.setCommentId(comment.getIdstr());
+		myComment.setCommentType(weiboType);
+		myComment.setCommentUid(comment.getUser().getId());
+		myComment.setCreateAt(comment.getCreatedAt());
+		myComment.setMid(comment.getMid());
+		myComment.setSource(comment.getSource());
+		if(comment.getStatus() == null){
+			return myComment;
+		}
+		myComment.setStatusCreatedAt(comment.getStatus().getCreatedAt());
+		myComment.setStatusMid(comment.getStatus().getMid());
+		myComment.setStatusSource(comment.getStatus().getSource().getName());
+		//myComment.setStatusSourceUrl(comment.getStatus().getSource().getUrl());
+		myComment.setStatusText(comment.getStatus().getText());
+		myComment.setStatusUserDomain(comment.getStatus().getUser().getUserDomain());
+		myComment.setStatusUserName(comment.getStatus().getUser().getName());
+		myComment.setStatusUserScreenName(comment.getStatus().getUser().getScreenName());
+		myComment.setStatusUserVerified((comment.getStatus().getUser().isVerified()) ? 0 : 1);
+		myComment.setStatusWeiboId(comment.getStatus().getId());
+		myComment.setStatusUserUid(comment.getStatus().getUser().getId());
+		myComment.setText(comment.getText());
+		myComment.setUserDomain(comment.getUser().getUserDomain());
+		myComment.setUserName(comment.getUser().getName());
+		myComment.setUserProfileImageUrl(comment.getUser().getProfileImageUrl());
+		myComment.setUserScreenName(comment.getUser().getScreenName());
+		myComment.setUserVerified((comment.getUser().isVerified()) ? 1 :0);
+		return myComment;
+	}
 
 	/**
 	 * 微博对象转换为实体对象
@@ -257,6 +310,11 @@ public class SocialSinaService extends AbstractSocialService {
 			
 			//我关注的所有人的微博
 			homeWeiboToDb(ac, type, assessToken);
+			
+			//品论
+			commentToMeToDb(ac, type, assessToken);
+			
+			commentByMeToDb(ac, type, assessToken);
 		}
 		return 0;
 	}
@@ -326,6 +384,66 @@ public class SocialSinaService extends AbstractSocialService {
 				&& paging.getPage() < 5);
 	}
 	
+	/**
+	 * 我收到的评论
+	 * @param ac
+	 * @param type
+	 * @param assessToken
+	 */
+	public void commentToMeToDb(SocialUserAccount ac, int type, String assessToken) {
+		Paging paging = new Paging();
+		paging.setPage(1);// 当前页码
+		paging.setCount(20); // 每页大小
+		//paging.setSinceId(1);
+		Integer filter_by_source = 0;
+		Integer filter_by_author = 0;
+		
+		SocialUserWeiboComment lastComment = queryLastComment(ac,DictDef.dictInt("comment_to_me"),null);
+		if(lastComment != null){
+			paging.setSinceId(StringTool.parseLong(lastComment.getCommentId()));
+		}
+		int i = 0;
+		List<Comment> list = null;
+		do {
+			paging.setPage(++i);
+			list = SinaSociaTool.findCommentToMeWeiboInfo(
+					assessToken, paging, filter_by_source, filter_by_author);
+			saveSocialUserCommentList(ac,list, DictDef.dictInt("comment_to_me"));
+		} while (list != null && list.size() > 0
+				&& paging.getPage() < 5);
+	}
+	
+	
+	/**
+	 * 我发出的评论
+	 * @param ac
+	 * @param type
+	 * @param assessToken
+	 */
+	public void commentByMeToDb(SocialUserAccount ac, int type, String assessToken) {
+		Paging paging = new Paging();
+		paging.setPage(1);// 当前页码
+		paging.setCount(20); // 每页大小
+		//paging.setSinceId(1);
+		Integer filter_by_source = 0;
+		
+		SocialUserWeiboComment lastComment = queryLastComment(ac,DictDef.dictInt("comment_by_me"),null);
+		if(lastComment != null){
+			paging.setSinceId(StringTool.parseLong(lastComment.getCommentId()));
+		}
+		int i = 0;
+		List<Comment> list = null;
+		do {
+			paging.setPage(++i);
+			list = SinaSociaTool.findCommentByMeWeiboInfo(
+					assessToken, paging, filter_by_source);
+			saveSocialUserCommentList(ac,list, DictDef.dictInt("comment_by_me"));
+		} while (list != null && list.size() > 0
+				&& paging.getPage() < 5);
+	}
+	
+
+
 	/**
 	 *  @我的微博
 	 * @param ac
@@ -661,7 +779,6 @@ public class SocialSinaService extends AbstractSocialService {
 				}
 			}
 		} catch (VDiskException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

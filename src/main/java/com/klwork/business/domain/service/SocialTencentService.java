@@ -31,9 +31,9 @@ import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.business.domain.model.SocialUserAccountQuery;
 import com.klwork.business.domain.model.SocialUserWeibo;
+import com.klwork.business.domain.model.SocialUserWeiboComment;
 import com.klwork.business.domain.model.WeiboHandleResult;
 import com.klwork.business.domain.service.infs.AbstractSocialService;
-import com.klwork.business.utils.SinaSociaTool;
 import com.klwork.business.utils.TencentSociaTool;
 import com.klwork.common.exception.ApplicationException;
 import com.klwork.common.utils.StringDateUtil;
@@ -69,6 +69,9 @@ public class SocialTencentService extends AbstractSocialService {
 
 	@Autowired
 	public SocialUserWeiboService socialUserWeiboService;
+	
+	@Autowired
+	SocialUserWeiboCommentService socialUserWeiboCommentService;
 	
 	@Override
 	public Map queryUserInfoByCode(String code,
@@ -416,9 +419,11 @@ public class SocialTencentService extends AbstractSocialService {
 				result.setPagetime(infoObj.getString("timestamp"));
 				result.setLastid(infoObj.getString("id"));
 			}
+			String type = infoObj.getString("type");
+			SocialUserWeibo soruceWeibo = null;
 			JSONObject source = infoObj.getJSONObject("source");
 			if (source != null && !(source.toString().equals("null"))) {//有原帖内容
-				SocialUserWeibo soruceWeibo = handlerNewSocialUserWeibo(
+				soruceWeibo = handlerNewSocialUserWeibo(
 						ownerUserId, ac, source,weiboType);
 				soruceWeibo.setWeiboHandleType(1);//表明为原始贴
 				if(saveWeiboUserEntity(soruceWeibo)){//插入原帖id
@@ -427,6 +432,13 @@ public class SocialTencentService extends AbstractSocialService {
 					SocialUserWeibo queryWeibo = socialUserWeiboService.queryByAccountAndWeiboId(soruceWeibo.getUserAccountId(),soruceWeibo.getWeiboId());
 					dbWeibo.setRetweetedId(queryWeibo.getId());
 				}
+			}
+			
+			if(type.equals("7")){//7-评论
+				dbWeibo.setWeiboHandleType(2);//表明为品论贴
+				SocialUserWeiboComment comment = tranlateWeiboToComment(dbWeibo,soruceWeibo,weiboType);
+				initWeiboCommentByAccount(comment,ac);
+				socialUserWeiboCommentService.createSocialUserWeiboComment(comment);
 			}
 			
 			//插进本帖
@@ -439,6 +451,52 @@ public class SocialTencentService extends AbstractSocialService {
 		return result;
 	}
 	
+	private void initWeiboCommentByAccount(SocialUserWeiboComment socialUserWeiboComment, SocialUserAccount ac) {
+		socialUserWeiboComment.setUserAccountId(ac.getId());
+		socialUserWeiboComment.setOwner(ac.getOwnUser());
+		socialUserWeiboComment.setType(ac.getType());
+	}
+	
+	private SocialUserWeiboComment tranlateWeiboToComment(
+			SocialUserWeibo dbWeibo, SocialUserWeibo soruceWeibo, int weiboType) {
+		SocialUserWeiboComment myComment = new SocialUserWeiboComment();
+		myComment.setCommentId(dbWeibo.getWeiboId());
+		int factWeiboType = -1;
+		if(DictDef.dictInt("weibo_mentions_timeline") == weiboType){
+			factWeiboType = DictDef.dictInt("comment_to_me");
+		}
+		if(DictDef.dictInt("weibo_user_timeline") == weiboType){//我的微博就是我发出的品论
+			factWeiboType = DictDef.dictInt("comment_by_me");
+		}
+		myComment.setCommentType(factWeiboType);
+		myComment.setCommentUid(dbWeibo.getWeiboUid());
+		myComment.setCreateAt(dbWeibo.getCreateAt());
+		myComment.setMid(dbWeibo.getMid());
+		myComment.setSource(dbWeibo.getSource());
+		myComment.setText(dbWeibo.getText());
+		myComment.setUserDomain(dbWeibo.getUserDomain());
+		myComment.setUserName(dbWeibo.getUserName());
+		myComment.setUserProfileImageUrl(dbWeibo.getUserProfileImageUrl());
+		myComment.setUserScreenName(dbWeibo.getUserScreenName());
+		myComment.setUserVerified(dbWeibo.getUserVerified());
+		if(soruceWeibo == null){
+			return myComment;
+		}
+		myComment.setStatusCreatedAt(soruceWeibo.getCreateAt());
+		myComment.setStatusMid(soruceWeibo.getMid());
+		myComment.setStatusSource(soruceWeibo.getSource());
+		//myComment.setStatusSourceUrl(comment.getStatus().getSource().getUrl());
+		myComment.setStatusText(soruceWeibo.getText());
+		myComment.setStatusUserDomain(soruceWeibo.getUserDomain());
+		myComment.setStatusUserName(soruceWeibo.getUserName());
+		myComment.setStatusUserScreenName(soruceWeibo.getUserScreenName());
+		myComment.setStatusUserVerified(soruceWeibo.getUserVerified());
+		myComment.setStatusWeiboId(soruceWeibo.getWeiboId());
+		System.out.println(soruceWeibo.getWeiboUid()   + "----" + dbWeibo.getWeiboUid());
+		myComment.setStatusUserUid(soruceWeibo.getWeiboUid());
+		return myComment;
+	}
+
 	public boolean judgeNull(Object responseJsonObject) {
 		if(responseJsonObject == null){
 			return true;

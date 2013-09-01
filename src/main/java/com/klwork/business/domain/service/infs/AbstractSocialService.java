@@ -11,10 +11,13 @@ import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.business.domain.model.SocialUserWeibo;
+import com.klwork.business.domain.model.SocialUserWeiboComment;
+import com.klwork.business.domain.model.SocialUserWeiboCommentQuery;
 import com.klwork.business.domain.model.SocialUserWeiboQuery;
 import com.klwork.business.domain.model.SocialUserWeiboSend;
 import com.klwork.business.domain.service.SocialUserAccountInfoService;
 import com.klwork.business.domain.service.SocialUserAccountService;
+import com.klwork.business.domain.service.SocialUserWeiboCommentService;
 import com.klwork.business.domain.service.SocialUserWeiboSendService;
 import com.klwork.business.domain.service.SocialUserWeiboService;
 import com.klwork.common.utils.StringDateUtil;
@@ -35,6 +38,9 @@ public abstract class AbstractSocialService implements SocialService,
 	
 	@Autowired
 	public SocialUserWeiboSendService socialUserWeiboSendService;
+	
+	@Autowired
+	SocialUserWeiboCommentService socialUserWeiboCommentService;
 	
 	private static Map<String, AbstractSocialService> socialServiceMaps = new HashMap<String, AbstractSocialService>();
 
@@ -62,6 +68,24 @@ public abstract class AbstractSocialService implements SocialService,
 		SocialUserWeibo lastWeibo = socialUserWeiboService.queryLastWeibo(query);
 		return lastWeibo;
 	}
+	
+	/**
+	 * 查询指定帐号按照时间排列的最后一条评论
+	 * @param ac
+	 * @param commentType
+	 * @param weiboUserName
+	 * @return
+	 */
+	protected SocialUserWeiboComment queryLastComment(SocialUserAccount ac, Integer commentType, String weiboUserName) {
+		SocialUserWeiboCommentQuery query = new SocialUserWeiboCommentQuery();
+		query.setUserAccountId(ac.getId());
+		query.setUserName(weiboUserName);
+		query.setCommentType(commentType);
+		SocialUserWeiboComment lastComment = socialUserWeiboCommentService.queryLastComment(query);
+		return lastComment;
+	}
+	
+	
 
 	/**
 	 * 我的微博的时间
