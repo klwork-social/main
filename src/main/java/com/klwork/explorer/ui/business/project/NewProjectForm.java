@@ -6,6 +6,7 @@ import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
+import com.klwork.explorer.ui.event.SubmitEvent;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
@@ -25,6 +26,9 @@ import com.vaadin.ui.Window;
 
 public class NewProjectForm extends CustomComponent {
 	protected I18nManager i18nManager;
+	protected HorizontalLayout buttonLayout;
+	protected Button createButton;
+	protected Button deleteButton;
 
 	@PropertyId("name")
 	TextField nameField = null;
@@ -54,14 +58,14 @@ public class NewProjectForm extends CustomComponent {
 				i18nManager.getMessage(Messages.TASK_DESCRIPTION));
 		descriptionArea.setColumns(25);
 
-		HorizontalLayout buttonLayout = new HorizontalLayout();
+		buttonLayout = new HorizontalLayout();
 		buttonLayout.setWidth(100, Unit.PERCENTAGE);
 		if (projectItem.getBean().getId() != null) {
 			edit = true;
 		}
 		if (edit) {
 			//删除项目
-			Button deleteButton = new Button(
+			deleteButton = new Button(
 					i18nManager.getMessage(Messages.BUTTON_DELETE));
 			buttonLayout.addComponent(deleteButton);
 			buttonLayout.setComponentAlignment(deleteButton,
@@ -69,6 +73,7 @@ public class NewProjectForm extends CustomComponent {
 			deleteButton.addClickListener(new ClickListener() {
 				public void buttonClick(ClickEvent event) {
 					handleDelete(projectItem);
+					fireEvent(new SubmitEvent(deleteButton, SubmitEvent.SUBMITTED));
 					opener.close();
 					ViewToolManager.getMainView().showProjectPage();
 				}
@@ -76,7 +81,7 @@ public class NewProjectForm extends CustomComponent {
 		}
 
 		//保存项目
-		Button createButton = new Button(
+		createButton = new Button(
 				i18nManager.getMessage(Messages.BUTTON_SAVE));
 		buttonLayout.addComponent(createButton);
 		buttonLayout
@@ -94,6 +99,7 @@ public class NewProjectForm extends CustomComponent {
 				try {
 					binder.commit();
 					handleFormSubmit(projectItem);
+					fireEvent(new SubmitEvent(createButton, SubmitEvent.SUBMITTED));
 					opener.close();
 					ViewToolManager.getMainView().showProjectPage();
 				} catch (CommitException e) {
