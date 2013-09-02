@@ -1,48 +1,46 @@
 package com.klwork.explorer.ui.business.outproject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.klwork.business.domain.model.EntityDictionary;
+import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.model.OutsourcingProject;
+import com.klwork.business.domain.service.ProjectManagerService;
 import com.klwork.business.domain.service.TeamService;
 import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 import com.klwork.explorer.I18nManager;
-import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.data.LazyLoadingContainer;
 import com.klwork.explorer.data.LazyLoadingQuery;
-import com.klwork.explorer.security.LoginHandler;
-import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.base.AbstractVCustomComponent;
-import com.klwork.explorer.ui.business.organization.OrganMemberLeft.MemberType;
-import com.klwork.explorer.ui.business.query.OutProjectAddInQuery;
-import com.klwork.explorer.ui.handler.CommonFieldHandler;
+import com.klwork.explorer.ui.business.project.NewProjectWindow;
+import com.klwork.explorer.ui.business.query.PublicProjectListQuery;
+import com.klwork.explorer.ui.event.SubmitEvent;
+import com.klwork.explorer.ui.event.SubmitEventListener;
+import com.klwork.explorer.ui.handler.BinderHandler;
 import com.klwork.explorer.ui.handler.TableHandler;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
-import com.klwork.explorer.ui.util.ThemeImageColumnGenerator;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.server.Sizeable.Unit;
-import com.vaadin.ui.Alignment;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 public class NewPublicProjectDetail extends AbstractVCustomComponent {
 	private static final long serialVersionUID = 7916755916967574384L;
 	protected I18nManager i18nManager;
+	protected transient ProjectManagerService projectManagerService;
 
 	final HashMap<Object, HashMap<Object, Field>> fields = new HashMap<Object, HashMap<Object, Field>>();
 	FieldGroup fieldGroup = new FieldGroup();
@@ -50,11 +48,16 @@ public class NewPublicProjectDetail extends AbstractVCustomComponent {
 	VerticalLayout tableLayout;
 	TeamService teamService;
 	OutsourcingProject outsourcingProject;
+	private DictDef dictDef;
 
-	public NewPublicProjectDetail(String id) {
+	public NewPublicProjectDetail(DictDef def) {
 		this.i18nManager = ViewToolManager.getI18nManager();
 		teamService = (TeamService) SpringApplicationContextUtil.getContext()
 				.getBean("teamService");
+		projectManagerService = ViewToolManager
+				.getBean("projectManagerService");
+
+		this.dictDef = def;
 	}
 
 	@Override
@@ -64,142 +67,238 @@ public class NewPublicProjectDetail extends AbstractVCustomComponent {
 			{
 				setSizeFull();
 				addStyleName("content");
-				CustomLayout cusLayout = new CustomLayout(
-						"project");
-				addComponent(cusLayout);
-			}
-		});
-		// table
-		//initTableList();
+				CustomLayout cusLayout = new CustomLayout("project");
+				// cusLayout.addStyleName("social");
+				Label nameLabel = new Label(dictDef.getName());
+				nameLabel.addStyleName("c_span1");
+				cusLayout.addComponent(nameLabel, "m_title");
 
-	}
+				// 推荐项目
+				final Button commendButton = new Button("推荐项目");
+				commendButton.addStyleName(Reindeer.BUTTON_LINK);
+				commendButton.addStyleName("new_button");
+				commendButton.addStyleName("w_current");
+				commendButton.addClickListener(new ClickListener() {
+					public void buttonClick(ClickEvent event) {
+						Notification.show("推荐项目",
+								Notification.Type.HUMANIZED_MESSAGE);
+					}
+				});
+				cusLayout.addComponent(commendButton, "m_recommend");
 
-	public void initLabelOfGrid(GridLayout taskDetails, Label nameLabel) {
-		nameLabel.addStyleName(ExplorerLayout.STYLE_PROFILE_FIELD);
-		nameLabel.setSizeUndefined();
-		taskDetails.setComponentAlignment(nameLabel, Alignment.MIDDLE_RIGHT);
-	}
+				final Button newestButton = new Button("最新项目");
+				newestButton.addStyleName(Reindeer.BUTTON_LINK);
+				newestButton.addStyleName("new_button");
+				newestButton.addClickListener(new ClickListener() {
+					public void buttonClick(ClickEvent event) {
+						newestButton.addStyleName("w_current");
+						commendButton.removeStyleName("w_current");
+						Notification.show("最新项目",
+								Notification.Type.HUMANIZED_MESSAGE);
+					}
+				});
+				cusLayout.addComponent(newestButton, "m_newest");
 
-	private void initTableList() {
-		tableLayout = new VerticalLayout();
-		tableLayout.setSizeFull();
-		tableLayout.setSpacing(true);
-		getMainLayout().addComponent(tableLayout);
-		getMainLayout().setExpandRatio(tableLayout, 0.5f);
-		// tab
-		//initProjectTable(tableLayout);
+				Table listTable = new Table();
+				listTable.addStyleName(ExplorerLayout.STYLE_TASK_LIST);
+				listTable.addStyleName(ExplorerLayout.STYLE_SCROLLABLE);
+				listTable.setWidth(100, Unit.PERCENTAGE);
+				listTable.setHeight(100, Unit.PERCENTAGE);
 
-	}
-
-	public void initProjectTable(VerticalLayout tableLayout) {
-		listTable = new Table();
-		tableLayout.addComponent(listTable);
-		listTable.addStyleName(ExplorerLayout.STYLE_TASK_LIST);
-		listTable.addStyleName(ExplorerLayout.STYLE_SCROLLABLE);
-		// Listener to change right panel when clicked on a task
-		
-		BeanItemContainer<MemberType> container = new BeanItemContainer<MemberType>(
-				MemberType.class);
-		MemberType first = new MemberType("直接发送", "0");
-		container.addBean(first);
-		
-		first = new MemberType("定时发送", "1");
-		container.addBean(first);
-		listTable.setContainerDataSource(container);
-		
-		listTable.addValueChangeListener(new Property.ValueChangeListener() {
-			private static final long serialVersionUID = -2889453697674379998L;
-
-			public void valueChange(ValueChangeEvent event) {
-				Item item = listTable.getItem(event.getProperty().getValue());
-				if (item != null) {
-					String code = (String) item.getItemProperty("code")
-							.getValue();
-					MemberType type = ((BeanItem<MemberType>)item).getBean();
-					
+				LazyLoadingQuery lazyLoadingQuery = new PublicProjectListQuery();
+				LazyLoadingContainer listContainer = new LazyLoadingContainer(
+						lazyLoadingQuery, 10);
+				listTable.setContainerDataSource(listContainer);
+				if (lazyLoadingQuery.size() < 10) {
+					listTable.setPageLength(0);
 				} else {
-					System.out.println("erro....null?");
+					listTable.setPageLength(10);
 				}
+
+				listTable.addGeneratedColumn("",
+						new ProjectHeadColumnGenerator());
+				TableHandler.setTableNoHead(listTable);
+				listTable.setImmediate(false);
+				listTable.setSelectable(false);
+
+				cusLayout.addComponent(listTable, "m_project_table");
+
+				addComponent(cusLayout);
+
 			}
 		});
 
-		listTable.setEditable(false);
-		ArrayList<Object> visibleColumnIds = new ArrayList<Object>();
-		visibleColumnIds.add("name");
-		//visibleColumnIds.add("count");
-		listTable.setVisibleColumns(visibleColumnIds.toArray());
-		TableHandler.setTableNoHead(listTable);
-		// 默认选择第一个table
-		TableHandler.selectElement(listTable, 0);
-		listTable.select(first);
 	}
 
-	private void reflashTable() {
-		tableLayout.removeAllComponents();
-		initProjectTable(tableLayout);
+	public void initLinkButton(Button addButton) {
+		addButton.addStyleName(Reindeer.BUTTON_LINK);
+		addButton.addStyleName("new_button");
+		addButton.addStyleName("w_current");
 	}
 
-	private void initHead() {
-		HorizontalLayout headerLayout = new HorizontalLayout();
-		headerLayout.setWidth(100, Unit.PERCENTAGE);
-		headerLayout.setMargin(true);
-		getMainLayout().addComponent(headerLayout);
-		initTitle(headerLayout);
-	}
-
-	protected void initTitle(HorizontalLayout headerLayout) {
-		Label title = new Label("微博发送管理");
-		title.addStyleName(ExplorerLayout.STYLE_H3);
-		title.setWidth(100, Unit.PERCENTAGE);
-		headerLayout.addComponent(title);
-		headerLayout.setExpandRatio(title, 1.0f);
-	}
-
-	/**
-	 * 选择table的下一行
-	 */
-	public void refreshSelectNext() {
-		if(listTable != null)
-		TableHandler.refreshSelectNext(listTable);
-	}
-
-	public void refreshRightContent() {
-		if(listTable != null){
-			initRight();
-		}
+	public GridLayout initSecondGrid(final Table source, final Object itemId,
+			final OutsourcingProject project) {
+		GridLayout secondGrid = new GridLayout(2, 3);
+		secondGrid.setSizeFull();
+		secondGrid.setMargin(true);
+		secondGrid.setSpacing(true);
+		secondGrid.addStyleName(Reindeer.SPLITPANEL_SMALL);
 		
+
+		Label desLabel = new Label(project.getName());
+		desLabel.addStyleName("label_title_head");
+		secondGrid.addComponent(desLabel, 0, 0, 1, 0);
+
+		secondGrid.addComponent(new HorizontalLayout() {
+			{
+				setSizeFull();
+				//setSpacing(true);
+				Label desLabel = new Label("金额：");
+				addComponent(desLabel);
+				String amontTitle = project.getBounty() + "元";
+				Label amontLabel = new Label(amontTitle);
+				amontLabel.addStyleName("label_red");
+				addComponent(amontLabel);
+			}
+		}, 0, 1);
+
+		secondGrid.addComponent(new HorizontalLayout() {
+			{
+				setSizeFull();
+				//setSpacing(true);
+				Label desLabel = new Label("目前参与人数：");
+				addComponent(desLabel);
+				String amontTitle = "20人";
+				Label amontLabel = new Label(amontTitle);
+				amontLabel.addStyleName("label_red");
+				addComponent(amontLabel);
+			}
+		}, 1, 1);
+
+		secondGrid.addComponent(new HorizontalLayout() {
+			{
+				setSizeFull();
+				//setSpacing(true);
+			    setMargin(true);
+				String caption = "加入";
+				Button addButton = new Button(caption);
+				initLinkButton(addButton);
+
+				addButton.addClickListener(new ClickListener() {
+					public void buttonClick(ClickEvent event) {
+						projectManagerService
+								.participateProject(project);
+						// noticeNewTask(project.getProcInstId());
+					}
+
+				});
+				addComponent(addButton);
+			}
+		}, 0, 2);
+
+		secondGrid.addComponent(new HorizontalLayout() {
+			{
+				setSizeFull();
+				setMargin(true);
+				//setSpacing(true);
+				Button pubInWorkButton = new Button("提交作品");
+				initLinkButton(pubInWorkButton);
+
+				pubInWorkButton.addStyleName(Reindeer.BUTTON_SMALL);
+				// editButton.setDisableOnClick(true);
+				pubInWorkButton
+						.addClickListener(new ClickListener() {
+							public void buttonClick(ClickEvent event) {
+								// WW_TODO 后台进行修改
+								Item item = source.getItem(itemId);
+								String id = (String) item
+										.getItemProperty("id")
+										.getValue();
+								NewProjectWindow newProjectWindow = new NewProjectWindow(
+										id);
+
+								newProjectWindow
+										.addListener(new SubmitEventListener() {
+											private static final long serialVersionUID = 1L;
+
+											@Override
+											protected void cancelled(
+													SubmitEvent event) {
+
+											}
+
+											@Override
+											protected void submitted(
+													SubmitEvent event) {
+												if (event.getData() != null) {
+
+												}
+											}
+										});
+
+								// ViewToolManager.showPopupWindow(newProjectWindow);
+							}
+						});
+				addComponent(pubInWorkButton);
+			}
+		}, 1, 2);
+		return secondGrid;
 	}
 
-	public void initRight() {
-	
-	}
-	
-	public class MemberType {
-		private String name;
-		private String code;
+	public class ProjectHeadColumnGenerator implements ColumnGenerator {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -5950078454864053894L;
 
-		public String getCode() {
-			return code;
+		@Override
+		public Object generateCell(final Table source, final Object itemId,
+				Object columnId) {
+			CustomLayout cusLayout = new CustomLayout("one-project");
+			final OutsourcingProject project = BinderHandler.getTableBean(
+					source, itemId);
+			final GridLayout grid = new GridLayout(2, 2);
+			grid.addStyleName(Reindeer.SPLITPANEL_SMALL);
+			//grid.setSizeFull();
+			// grid.setMargin(true);
+			grid.setColumnExpandRatio(0, 0.7f);
+			grid.setColumnExpandRatio(1, 0.3f);
+
+			VerticalLayout firstLayout = new VerticalLayout();
+			// firstLayout.setMargin(true);
+			// 头像
+			Image image = new Image(null, new ThemeResource(
+					"img/project/exm.jpg"));
+			firstLayout.addComponent(image);
+			grid.addComponent(firstLayout, 0, 0);
+
+			// 第二档
+			VerticalLayout secondLayout = new VerticalLayout() {
+				{
+					setSizeFull();
+					setSpacing(true);
+					setMargin(true);
+
+					GridLayout secondGrid = initSecondGrid(source, itemId,
+							project);
+					addComponent(secondGrid);
+					setExpandRatio(secondGrid, 1);
+					secondGrid.setRowExpandRatio(0, 0.4f);
+					secondGrid.setRowExpandRatio(1, 0.4f);
+					secondGrid.setRowExpandRatio(2, 0.6f);
+				}
+			};
+			grid.addComponent(secondLayout, 1, 0);
+			
+			grid.addComponent(new HorizontalLayout() {
+				{
+					setHeight("20px");
+					setWidth("100%");
+					
+					addStyleName("layout_blank");
+				}
+			}, 0, 1,1,1);
+			return grid;
 		}
-
-		public void setCode(String code) {
-			this.code = code;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-
-		public MemberType(String name, String code) {
-			super();
-			this.name = name;
-			this.code = code;
-		}
-
 	}
 }

@@ -21,6 +21,7 @@ import com.klwork.explorer.data.LazyLoadingContainer;
 import com.klwork.explorer.data.LazyLoadingQuery;
 import com.klwork.explorer.ui.base.AbstractSecondTablePage;
 import com.klwork.explorer.ui.business.query.DictLazyQuery;
+import com.klwork.explorer.ui.handler.BinderHandler;
 import com.klwork.explorer.ui.mainlayout.DashBoardLayout;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -28,7 +29,6 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.VerticalLayout;
 
 
 public  class NewPublicMainPage extends AbstractSecondTablePage {
@@ -101,10 +101,11 @@ protected ValueChangeListener getListSelectionListener() {
       private static final long serialVersionUID = 1L;
       public void valueChange(ValueChangeEvent event) {
         Item item = taskTable.getItem(event.getProperty().getValue()); // the value of the property is the itemId of the table entry
-        
+       
         if(item != null) {
-          String id = (String) item.getItemProperty("id").getValue();
-          setDetailComponent(createDetailComponent(id));
+         // String id = (String) item.getItemProperty("id").getValue();
+        	DictDef def = BinderHandler.getTableBean(taskTable,event.getProperty().getValue());
+          setDetailComponent(createDetailComponent(def));
         } else {
           setDetailComponent(null);
         }
@@ -112,7 +113,7 @@ protected ValueChangeListener getListSelectionListener() {
     };
   }
   
-  protected Component createDetailComponent(String id) {
-    return new NewPublicProjectDetail(id);
+  protected Component createDetailComponent(DictDef def) {
+    return new NewPublicProjectDetail(def);
   }
 }
