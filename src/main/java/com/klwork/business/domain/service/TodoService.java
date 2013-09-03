@@ -121,7 +121,7 @@ public class TodoService {
 		}
 	}
 
-	public Todo newTodo() {
-		return rep.newTodo();
+	public Todo newTodo(String title) {
+		return rep.newTodo(title);
 	}
 }

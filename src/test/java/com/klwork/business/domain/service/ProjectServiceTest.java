@@ -38,10 +38,10 @@ public class ProjectServiceTest extends BaseTxWebTests {
 		
 		
 		List<Todo> beanList = new ArrayList<Todo>();
-		Todo a = todoService.newTodo();
+		Todo a = todoService.newTodo(project.getName());
 		a.setName("sdfsdf");
 		a.setProId(project.getId());
-		Todo t = todoService.newTodo();
+		Todo t = todoService.newTodo(project.getName());
 		t.setPid("11");
 		t.setStartDate(StringDateUtil.now());
 		//关联一个日程

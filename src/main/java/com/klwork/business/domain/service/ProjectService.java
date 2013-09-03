@@ -45,7 +45,7 @@ public class ProjectService {
 		project.setLastupdate(now);
 		rep.insert(project);
 		// 默认在项目下创建一个todo
-		Todo t = todoRep.newTodo();
+		Todo t = todoRep.newTodo(project.getName());
 		t.setProId(project.getId());
 		todoRep.insert(t);
 
