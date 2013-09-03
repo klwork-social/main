@@ -42,25 +42,11 @@ public class TasksView extends VerticalLayout implements View {
 		initUi();
 	}
 	
-	protected void initAddButton() {
-	    Button newCaseButton = new Button();
-	    newCaseButton.setStyleName("myTabButton");
-	    newCaseButton.setCaption(i18nManager.getMessage(Messages.TASK_NEW));
-	    newCaseButton.setIcon(Images.TASK_16);
-	    addComponent(newCaseButton);
-	    
-	    newCaseButton.addClickListener(new ClickListener() {
-	      public void buttonClick(ClickEvent event) {
-	        NewTaskPopupWindow newTaskPopupWindow = new NewTaskPopupWindow();
-	        ViewToolManager.showPopupWindow(newTaskPopupWindow);
-	      }
-	    });
-	  }
+
 	
     public void initUi() {
     	setSizeFull();
         addStyleName("reports");
-        initAddButton();
         TaskMainPage c = new TaskMainPage();
 		addComponent(c);
 		setExpandRatio(c, 1.0f);

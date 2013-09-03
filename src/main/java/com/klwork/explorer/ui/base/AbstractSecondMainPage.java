@@ -47,8 +47,8 @@ public abstract class AbstractSecondMainPage extends AbstractHCustomComponent {
 
 	protected void initMainLayout() {
 		grid = new GridLayout(2, 1);
-		grid.setColumnExpandRatio(0, .15f);
-		grid.setColumnExpandRatio(1, .85f);
+		grid.setColumnExpandRatio(0, .10f);
+		grid.setColumnExpandRatio(1, .90f);
 		// setCompositionRoot(grid);
 		getMainLayout().addComponent(grid);
 		grid.setSizeFull();

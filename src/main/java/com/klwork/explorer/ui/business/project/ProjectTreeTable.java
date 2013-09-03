@@ -22,7 +22,6 @@ import com.klwork.common.utils.StringDateUtil;
 import com.klwork.common.utils.StringTool;
 import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 import com.klwork.explorer.I18nManager;
-import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
@@ -30,16 +29,16 @@ import com.klwork.explorer.ui.base.AbstractTabViewPage;
 import com.klwork.explorer.ui.custom.DetailPanel;
 import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.event.SubmitEventListener;
-import com.klwork.explorer.ui.handler.CommonFieldHandler;
+import com.klwork.explorer.ui.handler.BinderHandler;
 import com.klwork.explorer.ui.handler.TableFieldCache;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
+import com.klwork.explorer.ui.task.NewTodoToTaskPopupWindow;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.Action;
@@ -49,32 +48,23 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.ui.themes.Runo;
 
 public class ProjectTreeTable extends DetailPanel {
 	private static final long serialVersionUID = 7916755916967574384L;
@@ -251,6 +241,8 @@ public class ProjectTreeTable extends DetailPanel {
 		mainTreeTable.setWidth("100%");
 		mainTreeTable.setHeight("500px");
 		mainTreeTable.setColumnExpandRatio("name", 1);
+		//mainTreeTable.setColumnExpandRatio("edit", 0.1f);
+		//mainTreeTable.setColumnExpandRatio("edit", 0.2f);
 		mainTreeTable.setSelectable(true);
 		mainTreeTable.setColumnReorderingAllowed(true);
 
@@ -723,6 +715,10 @@ public class ProjectTreeTable extends DetailPanel {
 
 		@Override
 		public Object generateCell(Table source, final Object itemId, Object columnId) {
+			HorizontalLayout h = new HorizontalLayout();
+			h.setSizeUndefined();
+			//h.setSpacing(true);
+			//h.setMargin(true);
 			
 			Button editButton = new Button("");
 			editButton.addStyleName(Reindeer.BUTTON_LINK);
@@ -753,7 +749,23 @@ public class ProjectTreeTable extends DetailPanel {
 					ViewToolManager.showPopupWindow(editTodoPop);
 				}
 			});
-			return editButton;
+			h.addComponent(editButton);
+			final Todo relTodo = ((BeanItem<Todo>) itemId).getBean();
+			//新增任务
+			 Button newCaseButton = new Button();
+			 newCaseButton.addStyleName(Reindeer.BUTTON_LINK);
+			 newCaseButton.setCaption("生成任务");
+			    
+			 newCaseButton.addClickListener(new ClickListener() {
+			      public void buttonClick(ClickEvent event) {
+			    	NewTodoToTaskPopupWindow newTaskPopupWindow = new NewTodoToTaskPopupWindow(relTodo);
+			        ViewToolManager.showPopupWindow(newTaskPopupWindow);
+			      }
+			    });
+			    
+		    h.addComponent(newCaseButton);
+			
+			return h;
 		}
 
 	}

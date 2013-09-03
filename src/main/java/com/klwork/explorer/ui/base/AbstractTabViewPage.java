@@ -77,7 +77,11 @@ public class AbstractTabViewPage extends CustomComponent {
 	}
 	
 	public Tab addTab(Component c, String caption) {
-		return addTab(c, caption,null);
+		return addTab(c, caption,caption,null);
+	}
+	
+	public Tab addTab(Component c,String key, String caption) {
+		return addTab(c,key, caption,null);
 	}
 	
 	public Tab addTabSpecial(Component c, String caption) {
@@ -96,6 +100,11 @@ public class AbstractTabViewPage extends CustomComponent {
 
 	public Tab addTab(Component c, String caption,Resource icon) {
 		tabCache.put(caption, c);
+		return tabSheet.addTab(c, caption,icon);
+	}
+	
+	public Tab addTab(Component c, String key,String caption,Resource icon) {
+		tabCache.put(key, c);
 		return tabSheet.addTab(c, caption,icon);
 	}
 	

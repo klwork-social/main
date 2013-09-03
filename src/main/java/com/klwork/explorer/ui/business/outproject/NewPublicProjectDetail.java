@@ -261,8 +261,8 @@ public class NewPublicProjectDetail extends AbstractVCustomComponent {
 			grid.addStyleName(Reindeer.SPLITPANEL_SMALL);
 			//grid.setSizeFull();
 			// grid.setMargin(true);
-			grid.setColumnExpandRatio(0, 0.7f);
-			grid.setColumnExpandRatio(1, 0.3f);
+			grid.setColumnExpandRatio(0, 0.6f);
+			grid.setColumnExpandRatio(1, 0.4f);
 
 			VerticalLayout firstLayout = new VerticalLayout();
 			// firstLayout.setMargin(true);
