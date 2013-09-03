@@ -22,7 +22,7 @@ ul{list-style-type:none;}
 .w_ul2{width:100%;background:url(../img/project/t_txt.gif) no-repeat right top;height:28px;padding-top:21px;border-top:2px solid #3a3d3f;}
 .w_ul2 li{color:#434c4f;float:left;margin-right:15px;font-family:"Microsoft YaHei";font-size:14px;height:28px;line-height:28px;cursor:pointer;}
 .w_ul2 > div.w_current .v-button-caption{background:#585b60;color:#fff;}
-.c_c_list{margin-top:25px;width:100%;height:500px;overflow-y:scroll;}
+.c_c_list{margin-top:25px;width:100%;height:500px;overflow:auto;}
 
 .list_c{width:98%;height:145px;background:#fefbf6;margin-bottom:20px;-webkit-box-shadow:0px 2px 6px #666;-moz-box-shadow:0px 2px 6px #666;}
 .list_img{width:675px;height:141px;margin-top:2px;display:block;float:left;margin-left:2px;}
