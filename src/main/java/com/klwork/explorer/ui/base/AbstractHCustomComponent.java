@@ -1,16 +1,21 @@
 package com.klwork.explorer.ui.base;
 
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.VerticalLayout;
 
-public abstract class AbstractHCustomComponent extends CustomComponent {
+public abstract class AbstractHCustomComponent extends BaseCustomComponent{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private HorizontalLayout mainLayout;
+
+	public AbstractHCustomComponent(boolean b) {
+		super(b);
+	}
+	
+	public AbstractHCustomComponent() {
+	}
 
 	public HorizontalLayout getMainLayout() {
 		return mainLayout;
@@ -20,13 +25,11 @@ public abstract class AbstractHCustomComponent extends CustomComponent {
 		this.mainLayout = mainLayout;
 	}
 
-	@Override
-	public void attach() {
-		super.attach();
-		init();
-	}
 
-	private void init() {
+	
+
+	@Override
+	public void startInit() {
 		HorizontalLayout layout = new HorizontalLayout();
 		layout.setSizeFull();
 		layout.setSpacing(true);
@@ -37,4 +40,6 @@ public abstract class AbstractHCustomComponent extends CustomComponent {
 	}
 
 	protected abstract void initUi();
+
+	
 }

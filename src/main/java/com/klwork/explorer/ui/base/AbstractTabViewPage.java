@@ -10,10 +10,11 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.CloseHandler;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.VerticalLayout;
 
-public class AbstractTabViewPage extends CustomComponent {
+public class AbstractTabViewPage extends CustomComponent implements TabSheet.SelectedTabChangeListener{
 	
 	protected I18nManager i18nManager;
 	protected Map<String,Component> tabCache = new HashMap<String, Component>();
@@ -61,6 +62,7 @@ public class AbstractTabViewPage extends CustomComponent {
 		tabSheet.setSizeFull();
 		tabSheet.addStyleName("borderless");
 		tabSheet.addStyleName("editors");
+		tabSheet.addSelectedTabChangeListener(this);
 		tabSheet.setCloseHandler(new CloseHandler() {
 			private static final long serialVersionUID = -1764556772862038086L;
 
@@ -127,6 +129,21 @@ public class AbstractTabViewPage extends CustomComponent {
 
 	public void setMainLayout(VerticalLayout mainLayout) {
 		this.mainLayout = mainLayout;
+	}
+
+	@Override
+	public void selectedTabChange(SelectedTabChangeEvent event) {
+		final TabSheet source = (TabSheet) event.getSource();
+		Component c = source.getSelectedTab();
+		if( c instanceof  TabLayLoadComponent ){
+			TabLayLoadComponent s = (TabLayLoadComponent)c;
+			if(s.isLazyload() && !s.isStartInit()){//没有进行初始化
+				//System.out.println("laz init...");
+				s.startInit();
+				s.setStartInit(true);//设置已经初始化完成了
+			}
+	     }
+		//System.out.println("tab:" + c);
 	}
 
 	

@@ -66,6 +66,7 @@ public class OrganMemberRight extends DetailPanel {
 	protected OrganizationMemberMainPage mainPage;
 
 	public OrganMemberRight(OrganizationMemberMainPage page,Object leftParameter) {
+		super(false);
 		teamService = (TeamService) SpringApplicationContextUtil.getContext()
 				.getBean("teamService");
 		teamMembershipService = (TeamMembershipService) SpringApplicationContextUtil
@@ -89,13 +90,9 @@ public class OrganMemberRight extends DetailPanel {
 		mainPage = page;
 	}
 
+	
 	@Override
-	public void attach() {
-		super.attach();
-		init();
-	}
-
-	private void init() {
+	protected void initUI() {
 		setSizeFull();
 		addStyleName(Reindeer.PANEL_LIGHT);
 		// 组名称显示

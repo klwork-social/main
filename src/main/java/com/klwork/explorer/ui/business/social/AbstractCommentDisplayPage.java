@@ -70,7 +70,7 @@ public abstract class AbstractCommentDisplayPage extends DetailPanel {
 
 	public AbstractCommentDisplayPage(SocialUserAccount socialUserAccount,
 			int type) {
-		super();
+		super(true);
 		this.taskService = ProcessEngines.getDefaultProcessEngine()
 				.getTaskService();
 		this.socialUserWeiboService = ViewToolManager
@@ -83,13 +83,9 @@ public abstract class AbstractCommentDisplayPage extends DetailPanel {
 
 	abstract public String getSocialType();
 
-	@Override
-	public void attach() {
-		super.attach();
-		init();
-	}
 
-	protected void init() {
+	@Override
+	protected void initUI() {
 		setSizeFull();
 		// addStyleName("social");
 		addStyleName(Reindeer.LAYOUT_WHITE);

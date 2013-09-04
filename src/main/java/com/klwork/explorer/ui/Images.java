@@ -43,6 +43,7 @@ public class Images {
   public static final Resource TASK_16 =  new ThemeResource("img/task-16.png");;
   public static final Resource TASK_22 = new ThemeResource("img/task-22.png");
   public static final Resource TASK_50 = new ThemeResource("img/task-50.png");
+  public static final Resource TASK_LIST = new ThemeResource("img/z_right_t.png");
   public static final Resource TASK_FINISHED_22 = new ThemeResource("img/task-finished-22.png");
   public static final Resource TASK_DUE_DATE_16 = new ThemeResource("img/duedate-16.png");
   

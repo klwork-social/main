@@ -34,6 +34,8 @@ public class WeiboPopupWindow extends PopupWindow {
 	private Label inputFontField;
 	private List<Map<String, String>> faces = null;
 	private String weiboType;
+	private int faceWidth = 400;
+	private int faceHeight = 280;
 	
 	private transient AbstractSocialService socialService;
 	
@@ -106,16 +108,20 @@ public class WeiboPopupWindow extends PopupWindow {
 			com.vaadin.event.MouseEvents.ClickEvent event) {
 		factWindows = new Window("表情");
 	
-		factWindows.setWidth("400px");
-		factWindows.setHeight("280px");
-		factWindows.addStyleName("notifications");
+		
+		factWindows.setWidth(faceWidth + "px");
+		factWindows.setHeight(faceHeight + "px");
+		//factWindows.addStyleName("notifications");
 		factWindows.setClosable(false);
 		factWindows.setResizable(false);
 		factWindows.setDraggable(true);
-		factWindows.setPositionX(event.getClientX() - event.getRelativeX()
-				- 12);
-		factWindows.setPositionY(event.getClientY() - event.getRelativeY()
-				- 12);
+		System.out.println("x---" + event.getClientX() + " relative: " + event.getRelativeX());
+		System.out.println("y---" + event.getClientY() + " relative: " + event.getRelativeY() + "w " +  this.getFactWindows().getHeight() + "py " +  this.getPositionY());
+		//
+		factWindows.setPositionX(event.getClientX() - faceWidth - event.getRelativeX() -12);
+		//factWindows.setPositionY(event.getClientY() - faceHeight/2);
+		float f = this.getHeight()+ faceHeight/2;
+		factWindows.setPositionY((int) (this.getPositionY() + f));
 		factWindows.setCloseShortcut(KeyCode.ESCAPE, null);
 		VerticalLayout l = new VerticalLayout();
 		l.setMargin(true);

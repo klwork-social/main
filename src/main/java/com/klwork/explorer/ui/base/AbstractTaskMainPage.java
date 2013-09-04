@@ -18,6 +18,7 @@ import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
@@ -36,6 +37,12 @@ public abstract class AbstractTaskMainPage extends AbstractHCustomComponent {
 	protected AbstractSelect select;
 	protected boolean showEvents;
 	protected GridLayout grid;
+	
+	
+	
+	public AbstractTaskMainPage() {
+		super(true);
+	}
 
 	@Override
 	protected void initUi() {
@@ -72,22 +79,33 @@ public abstract class AbstractTaskMainPage extends AbstractHCustomComponent {
 		VerticalLayout vLayout = new VerticalLayout();
 		vLayout.addStyleName("sidebar");
 		vLayout.addStyleName("menu");
+		vLayout.addStyleName("tasks");
 		vLayout.setMargin(new MarginInfo(true,false,false,false));
 		vLayout.setSizeFull();
 
 		HorizontalLayout tableHeadLayout = new HorizontalLayout();
-		Resource pictureResource = Images.USER_50;
+		//tableHeadLayout.setSizeFull();
+		tableHeadLayout.setSpacing(true);
+		tableHeadLayout.setMargin(true);
+		vLayout.addComponent(tableHeadLayout);
+		vLayout.setComponentAlignment(tableHeadLayout, Alignment.MIDDLE_CENTER);
+		
+		Resource pictureResource = Images.TASK_LIST;
 		Embedded picture = new Embedded(null, pictureResource);
 		picture.addStyleName(ExplorerLayout.STYLE_TASK_EVENT_PICTURE);
 		 picture.setType(Embedded.TYPE_IMAGE);
 		tableHeadLayout.addComponent(picture);
+		tableHeadLayout.setComponentAlignment(picture,Alignment.BOTTOM_CENTER);
 		
 		 Label nameLabel = null;
 		 nameLabel = new Label("任务列表");
+		 nameLabel.addStyleName("taskListLabel");
 	     //nameLabel.addStyleName(ExplorerLayout.STYLE_LABEL_BOLD);
 	     tableHeadLayout.addComponent(nameLabel);
+	     tableHeadLayout.setComponentAlignment(nameLabel,Alignment.MIDDLE_CENTER );
 	     
-		vLayout.addComponent(tableHeadLayout);
+		
+		
 		AbstractSelect select = createSelectComponent();
 		vLayout.addComponent(select);
 		vLayout.setExpandRatio(select, 1.0f);

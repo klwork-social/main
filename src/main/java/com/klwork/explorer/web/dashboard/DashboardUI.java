@@ -140,7 +140,7 @@ public class DashboardUI extends UI implements ErrorHandler{
                             {
                                 addStyleName("branding");//商标
                                 Label logo = new Label(
-                                        "<span>KLWORK</span> 控制面板",
+                                        "<span>KLWORK</span>",
                                         ContentMode.HTML);
                                 logo.setSizeUndefined();
                                 addComponent(logo);
@@ -223,6 +223,7 @@ public class DashboardUI extends UI implements ErrorHandler{
 
 	public void initViewButton() {
 		String view = "dashboard";
+		//每个按钮可以有一个图片
         Button b = createViewButton(view,i18nManager.getMessage(Messages.MAIN_MENU_PUBLIC_TASK));
         menuLayout.addComponent(b);
         viewNameToMenuButton.put("/" + view, b);

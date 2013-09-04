@@ -53,23 +53,19 @@ public class SocialAccountList extends DetailPanel {
 	protected HorizontalLayout projectsLayout;
 
 	public SocialAccountList(AbstractTabViewPage tabPage) {
+		super(false);
 		this.i18nManager = ViewToolManager.getI18nManager();
 		this.mainPage = tabPage;
 		projectService = ViewToolManager.getBean("projectService");
 		
 	}
 
-	/*
-	 * public ProjectList(ProjectMain projectMain, String projectId) {
-	 * this(projectMain); this.projectId = projectId; }
-	 */
+
 	@Override
-	public void attach() {
-		super.attach();
+	protected void initUI() {
 		initPageTitle();
 		// 项目table
 		initProjectList();
-		
 	}
 
 	private void initProjectList() {

@@ -93,6 +93,7 @@ public class ProjectTreeTable extends DetailPanel {
 	TodoService todoService;
 
 	public ProjectTreeTable(String prgId, AbstractTabViewPage projectMain) {
+		super(true);
 		System.out.println("ProjectTreeTable 初始化");
 		this.i18nManager = ViewToolManager.getI18nManager();
 		this.mainPage = projectMain;
@@ -103,12 +104,7 @@ public class ProjectTreeTable extends DetailPanel {
 	}
 	
 	@Override
-	public void attach() {
-		super.attach();
-		init();
-	}
-
-	protected void init() {
+	protected void initUI() {
 //		VerticalLayout layout = new VerticalLayout();
 //		setCompositionRoot(layout);
 //		layout.setSizeFull();

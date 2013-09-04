@@ -36,6 +36,8 @@ public abstract class AbstractSecondMainPage extends AbstractHCustomComponent {
 	protected ToolBar toolBar;
 	protected AbstractSelect select;
 	protected GridLayout grid;
+	
+
 
 	@Override
 	protected void initUi() {

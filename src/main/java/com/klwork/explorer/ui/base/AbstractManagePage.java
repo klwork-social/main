@@ -24,9 +24,19 @@ import com.vaadin.ui.themes.Reindeer;
  * @author ww
  * @author Frederik Heremans
  */
-public abstract class AbstractManagePage extends CustomComponent {
+public abstract class AbstractManagePage extends BaseCustomComponent {
+	
+	
+	public AbstractManagePage() {
+		super(true);
+	}
+	
+	public AbstractManagePage(boolean b) {
+		super(b);
+	}
 
 	private static final long serialVersionUID = 1L;
+	
 	VerticalLayout mainLayout;
 	final HorizontalSplitPanel mainSplit = new HorizontalSplitPanel();
 	protected Object leftParameter;
@@ -63,18 +73,10 @@ public abstract class AbstractManagePage extends CustomComponent {
 	public void setLeftParameter(Object leftParameter) {
 		this.leftParameter = leftParameter;
 	}
-
+	
+	
 	@Override
-	public void attach() {
-		super.attach();
-		initUi();
-	}
-
-	/**
-	 * Override this method (and call super()) when you want to influence the
-	 * UI.
-	 */
-	protected void initUi() {
+	public void startInit() {
 		setSizeFull();
 		initMainLayout();
 		//头部

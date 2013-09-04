@@ -16,6 +16,8 @@ public class SocialMainPage extends AbstractTabViewPage{
 		super();
 		saService = ViewToolManager.getBean("socialUserAccountService");
 	}
+	
+	@Override
 	public void initTabData() {
 		addTab(new SocialAccountList(this),"社交账号管理");
 		addTab(new TeamSocialAccountList(this),"团队账号");

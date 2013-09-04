@@ -76,6 +76,7 @@ public class ProjectList extends DetailPanel {
 	protected Table listTable;
 
 	public ProjectList(AbstractTabViewPage tabPage) {
+		super(true);
 		this.i18nManager = ViewToolManager.getI18nManager();
 		this.mainPage = tabPage;
 		projectService = ViewToolManager.getBean("projectService");
@@ -87,9 +88,9 @@ public class ProjectList extends DetailPanel {
 	 * public ProjectList(ProjectMain projectMain, String projectId) {
 	 * this(projectMain); this.projectId = projectId; }
 	 */
+
 	@Override
-	public void attach() {
-		super.attach();
+	protected void initUI() {
 		initPageTitle();
 		// 项目table
 		initProjectList();
