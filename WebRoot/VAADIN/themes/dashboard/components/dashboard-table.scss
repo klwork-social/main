@@ -7,7 +7,9 @@
 .board .v-table-row-odd, .board .v-table-row {
  	background-color: #414243;
 	overflow:hidden;
+	color: #fff;
 	font:12px/14px Arial, Helvetica, sans-serif;
+	text-align: center;
 }
 
 .board .v-table-row-odd.v-selected, .board .v-table-row.v-selected {
@@ -16,6 +18,7 @@
 	font-weight: bold;
 	text-shadow: none;
 }
+
 
 .board .v-table-row-odd .v-table-cell-content,.board .v-table-row .v-table-cell-content {
 	border: none;

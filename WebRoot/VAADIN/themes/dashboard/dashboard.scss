@@ -29,7 +29,7 @@
 @import "views/reports.scss";
 @import "views/weibo.scss";
 @import "views/project.scss";
-
+@import "views/tasks.scss";
 
 @mixin dashboard {
 	@include base;
@@ -50,6 +50,7 @@
 	
 	@include weibo;
 	@include project;
+	@include tasks;
 	@include custom-calendar;
 
 	.v-view {
