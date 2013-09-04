@@ -49,14 +49,14 @@ public class TodoRepository extends MbDomainRepositoryImp<Todo, Serializable> {
 	 * 生成一个新的todo,id也进行生成
 	 * @return
 	 */
-	public Todo newTodo() {
+	public Todo newTodo(String title) {
 		Todo oEntity = new Todo();
 		oEntity.setPriority(3);
 		oEntity.setType(0);
 		oEntity.setId(getNextId());
 		oEntity.setStatus(0);
 		oEntity.setPid("-1");
-		oEntity.setName("新任务");
+		oEntity.setName(title);
 		return oEntity;
 	}
 }

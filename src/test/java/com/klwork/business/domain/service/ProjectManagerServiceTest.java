@@ -52,7 +52,7 @@ public class ProjectManagerServiceTest extends BaseTxWebTests {
 	public void testAll() {
 		String starter = "ww";
 		userLogin(starter);
-		Todo todo = todoService.newTodo();
+		Todo todo = todoService.newTodo("新任务");
 		todoService.createTodo(todo);
 		ProcessInstance processInstance = projectManagerService
 				.startProcessInstanceRelateTodo(todo.getId(),

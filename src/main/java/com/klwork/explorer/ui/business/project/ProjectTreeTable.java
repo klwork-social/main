@@ -87,6 +87,7 @@ public class ProjectTreeTable extends DetailPanel {
 
 	private FieldGroup scheduleEventFieldGroup = new FieldGroup();
 	protected HorizontalLayout projectPlans;
+	protected TextField addTxt;
 
 	VerticalLayout bottomLayout;
 	//
@@ -176,11 +177,15 @@ public class ProjectTreeTable extends DetailPanel {
 	}
 	
 	private void initAddProjectPlanButton(HorizontalLayout headerLayout) {
+		addTxt = new TextField();
+		addTxt.setInputPrompt("在这里快速输入你的计划");
+		headerLayout.addComponent(addTxt);
+		headerLayout.setComponentAlignment(addTxt, Alignment.BOTTOM_RIGHT);
 		Button addButton = new Button();
 		addButton.setCaption("快速新加");
 //		 addButton..addStyleName(Alignment.MIDDLE_CENTER);
 		headerLayout.addComponent(addButton);
-//		headerLayout.setComponentAlignment(addButton, Alignment.MIDDLE_CENTER);
+		headerLayout.setComponentAlignment(addButton, Alignment.MIDDLE_LEFT);
 		addButton.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = -8050449471041932066L;
 
@@ -189,7 +194,7 @@ public class ProjectTreeTable extends DetailPanel {
 //						null);
 //				ViewToolManager.showPopupWindow(newProjectWindow);
 				if(projectId!=null){
-					Todo newTodo = todoService.newTodo();
+					Todo newTodo = todoService.newTodo(addTxt.getValue());
 					newTodo.setProId(projectId);
 					BeanItem newbeanItem = new BeanItem<Todo>(newTodo);
 					Item nItem = hContainer.addItem(newbeanItem);
@@ -362,7 +367,7 @@ public class ProjectTreeTable extends DetailPanel {
 					public void contextMenuItemClicked(
 							ContextMenuItemClickEvent event) {
 						Item parentItem = hContainer.getItem(currentBeanItem);
-						Todo newTodo = todoService.newTodo();
+						Todo newTodo = todoService.newTodo("子任务");
 						newTodo.setProId(projectId);
 						@SuppressWarnings("rawtypes")
 						BeanItem newbeanItem = new BeanItem<Todo>(newTodo);
@@ -391,7 +396,7 @@ public class ProjectTreeTable extends DetailPanel {
 					@Override
 					public void contextMenuItemClicked(
 							ContextMenuItemClickEvent event) {
-						Todo newTodo = todoService.newTodo();
+						Todo newTodo = todoService.newTodo("新任务");
 						newTodo.setProId(projectId);
 						BeanItem newbeanItem = new BeanItem<Todo>(newTodo);
 						Item nItem = hContainer.addItem(newbeanItem);
