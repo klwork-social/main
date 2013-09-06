@@ -4,6 +4,13 @@ import com.klwork.explorer.ui.base.AbstractManagePage;
 import com.vaadin.ui.Component;
 
 public class ProjectOfMyAddInMainPage extends AbstractManagePage{
+	
+	
+	public ProjectOfMyAddInMainPage() {
+		//不进行加载
+		super(false);
+	}
+
 	/**
 	 * 
 	 */

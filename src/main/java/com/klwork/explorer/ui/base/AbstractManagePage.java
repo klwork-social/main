@@ -27,7 +27,7 @@ import com.vaadin.ui.themes.Reindeer;
 public abstract class AbstractManagePage extends BaseCustomComponent {
 	
 	
-	public AbstractManagePage() {
+	public AbstractManagePage() {//默认进行tab懒加载
 		super(true);
 	}
 	

@@ -49,7 +49,9 @@ public class ProjectManagerAddInRight extends AbstractTabPage {
 	protected ProjectOfMyAddInMainPage mainPage;
 	HistoricTaskInstance historicTaskInstance;
 	private OutsourcingProject relateOutSourceingProject;
-
+	
+	
+	
 	public ProjectManagerAddInRight(ProjectOfMyAddInMainPage page,Object parameter) {
 		identityService = ProcessEngines.getDefaultProcessEngine()
 				.getIdentityService();

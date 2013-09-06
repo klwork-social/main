@@ -47,12 +47,7 @@ public class OutProjectDetail extends DetailPanel {
 	}
 
 	@Override
-	public void attach() {
-		super.attach();
-		init();
-	}
-
-	private void init() {
+	protected void initUI() {
 		setSizeFull();
 		//addStyleName(Reindeer.PANEL_LIGHT);
 		addStyleName("social");

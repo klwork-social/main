@@ -19,8 +19,15 @@ public class AbstractTabViewPage extends CustomComponent implements TabSheet.Sel
 	protected I18nManager i18nManager;
 	protected Map<String,Component> tabCache = new HashMap<String, Component>();
 	
+	private boolean forceLazLoad = true;
+	
 	public AbstractTabViewPage() {
 		 this.i18nManager = ViewToolManager.getI18nManager();
+	}
+	
+	public AbstractTabViewPage(boolean forceLazLoad) {
+		 this();
+		 this.forceLazLoad = forceLazLoad;
 	}
 	/**
 	 * 
@@ -137,7 +144,7 @@ public class AbstractTabViewPage extends CustomComponent implements TabSheet.Sel
 		Component c = source.getSelectedTab();
 		if( c instanceof  TabLayLoadComponent ){
 			TabLayLoadComponent s = (TabLayLoadComponent)c;
-			if(s.isLazyload() && !s.isStartInit()){//没有进行初始化
+			if(forceLazLoad && s.isLazyload() && !s.isStartInit()){//没有进行初始化
 				//System.out.println("laz init...");
 				s.startInit();
 				s.setStartInit(true);//设置已经初始化完成了

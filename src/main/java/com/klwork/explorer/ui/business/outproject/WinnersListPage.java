@@ -41,7 +41,6 @@ public class WinnersListPage extends DetailPanel {
 	private OutsourcingProject relateOutSourceingProject;
 
 	public WinnersListPage(OutsourcingProject relateOutSourceingProject) {
-		super();
 		this.taskService = ProcessEngines.getDefaultProcessEngine()
 				.getTaskService();
 		this.projectParticipantService = ViewToolManager
@@ -53,12 +52,7 @@ public class WinnersListPage extends DetailPanel {
 	}
 
 	@Override
-	public void attach() {
-		super.attach();
-		init();
-	}
-
-	private void init() {
+	protected void initUI() {
 		setSizeFull();
 		addStyleName(ExplorerLayout.THEME);
 		addStyleName(Reindeer.LAYOUT_WHITE);

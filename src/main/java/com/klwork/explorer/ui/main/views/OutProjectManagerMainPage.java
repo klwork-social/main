@@ -8,6 +8,10 @@ import com.klwork.explorer.ui.business.outproject.PublicProjectListPage;
 
 public class OutProjectManagerMainPage extends AbstractTabViewPage{
 	
+	public OutProjectManagerMainPage() {
+		super(false);
+	}
+
 	@Override
 	public void initTabData() {
 		 //addTab(new PublicProjectListPage(),i18nManager.getMessage(Messages.MAIN_MENU_PUBLIC_TASK));
