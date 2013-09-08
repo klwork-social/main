@@ -113,8 +113,8 @@ public class TaskRelatedContentComponent extends VerticalLayout implements
 		actionsContainer.setExpandRatio(processTitle, 1.0f);
 
 		// Add content button
-		Button addRelatedContentButton = new Button();
-		addRelatedContentButton.addStyleName(ExplorerLayout.STYLE_ADD);
+		Button addRelatedContentButton = new Button("上传");
+		//addRelatedContentButton.addStyleName(ExplorerLayout.STYLE_ADD);
 		addRelatedContentButton
 				.addClickListener(new com.vaadin.ui.Button.ClickListener() {
 					private static final long serialVersionUID = 1L;

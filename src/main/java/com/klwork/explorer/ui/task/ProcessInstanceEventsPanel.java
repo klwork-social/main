@@ -50,12 +50,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-/**
- * Component containing all events for a given task.
- * 
- * @author Joram Barrez
- */
-public class TaskEventsPanel extends Panel {
+public class ProcessInstanceEventsPanel extends Panel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -75,7 +70,7 @@ public class TaskEventsPanel extends Panel {
 	protected TextField commentInputField;
 	protected GridLayout eventGrid;
 
-	public TaskEventsPanel() {
+	public ProcessInstanceEventsPanel() {
 		addStyleName(ExplorerLayout.THEME);
 		pMainContent = new VerticalLayout();
 		this.setContent(pMainContent);
@@ -145,17 +140,18 @@ public class TaskEventsPanel extends Panel {
 	}
 
 	protected void addTaskEvents() {
-	    if(taskId != null) {
-	        //WW_TODO 查询任务的实践
-	        taskEvents = taskService.getTaskEvents(taskId);
-	        for (final org.activiti.engine.task.Event event : taskEvents) {
-	          addTaskEventPicture(event, eventGrid);
-	          addTaskEventText(event, eventGrid);
-	        }
-	     }
+		if (processInstanceId != null) {
+			// WW_TODO 查询任务的实践
+			List<Comment> list = taskService
+					.getProcessInstanceComments(processInstanceId);
+			for (final Comment event : list) {
+				addTaskEventPicture(event, eventGrid);
+				addTaskEventText(event, eventGrid);
+			}
+		}
 	}
 
-	protected void addTaskEventPicture(final org.activiti.engine.task.Event taskEvent,
+	protected void addTaskEventPicture(final Comment taskEvent,
 			GridLayout eventGrid) {
 		final Picture userPicture = identityService.getUserPicture(taskEvent
 				.getUserId());
@@ -187,7 +183,7 @@ public class TaskEventsPanel extends Panel {
 		eventGrid.addComponent(authorPicture);
 	}
 
-	protected void addTaskEventText(final org.activiti.engine.task.Event taskEvent,
+	protected void addTaskEventText(final Comment taskEvent,
 			final GridLayout eventGrid) {
 		VerticalLayout layout = new VerticalLayout();
 		layout.addStyleName(ExplorerLayout.STYLE_TASK_EVENT);
@@ -255,11 +251,11 @@ public class TaskEventsPanel extends Panel {
 		});
 	}
 
-	  protected void addNewComment(String text) {
-		    taskService.addComment(taskId, null, text);
-		    refreshTaskEvents();
-		    commentInputField.setValue("");
-		    commentInputField.focus();
-		  }
+	protected void addNewComment(String text) {
+		taskService.addComment(null, processInstanceId, text);
+		refreshTaskEvents();
+		commentInputField.setValue("");
+		commentInputField.focus();
+	}
 
 }

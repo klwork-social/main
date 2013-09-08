@@ -105,8 +105,8 @@ public class TaskInvolvedPeopleComponent extends CustomComponent {
   }
 
   protected void initAddPeopleButton(HorizontalLayout headerLayout) {
-    addPeopleButton = new Button();
-    addPeopleButton.addStyleName(ExplorerLayout.STYLE_ADD);
+    addPeopleButton = new Button("添加");
+    //addPeopleButton.addStyleName(ExplorerLayout.STYLE_ADD);
     headerLayout.addComponent(addPeopleButton);
     
     addPeopleButton.addClickListener(new ClickListener() {

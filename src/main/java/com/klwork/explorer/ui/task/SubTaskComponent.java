@@ -69,6 +69,8 @@ public class SubTaskComponent extends CustomComponent {
   protected Button addSubTaskButton;
   protected TextField newTaskTextField;
   protected GridLayout subTaskLayout;
+  
+  VerticalLayout mainContentLayout;
 
   public SubTaskComponent(Task parentTask) {
     this.parentTask = parentTask;
@@ -116,7 +118,8 @@ public class SubTaskComponent extends CustomComponent {
   protected void initAddSubTaskPanel(HorizontalLayout headerLayout) {
     // The add button is placed in a panel, so we can catch 'enter' and 'escape' events
     addSubTaskPanel = new Panel();
-    addSubTaskPanel.setContent(new VerticalLayout());
+    mainContentLayout = new VerticalLayout();
+	addSubTaskPanel.setContent(mainContentLayout);
     addSubTaskPanel.setSizeUndefined();
     addSubTaskPanel.addStyleName(Reindeer.PANEL_LIGHT);
     addSubTaskPanel.addStyleName("no-border");
@@ -172,16 +175,16 @@ public class SubTaskComponent extends CustomComponent {
   }
   
   protected void initAddButton() {
-    addSubTaskButton = new Button();
+    addSubTaskButton = new Button("新增");
     addSubTaskButton.addStyleName(ExplorerLayout.STYLE_ADD);
     addToSubTaskPanel(addSubTaskButton);
-    addSubTaskButton.addListener(new ClickListener() {
+    addSubTaskButton.addClickListener(new ClickListener() {
       public void buttonClick(ClickEvent event) {
         // Remove button
         //addSubTaskPanel.removeAllComponents();
         clearPanelAllComponents();
         // And add textfield
-        Label createSubTaskLabel = new Label("Create new subtask:");
+        Label createSubTaskLabel = new Label("新增一个子任务:");
         createSubTaskLabel.addStyleName(Reindeer.LABEL_SMALL);
         addToSubTaskPanel(createSubTaskLabel);
         newTaskTextField = new TextField();
@@ -193,7 +196,7 @@ public class SubTaskComponent extends CustomComponent {
   }
 
 private void addToSubTaskPanel(Component c) {
-	((VerticalLayout)(addSubTaskPanel.getContent())).addComponent(c);
+	mainContentLayout.addComponent(c);
 }
   
   protected void resetAddButton() {

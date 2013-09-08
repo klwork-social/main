@@ -60,6 +60,7 @@ public abstract class AbstractTaskMainPage extends AbstractHCustomComponent {
 	protected void initMainLayout() {
 		grid = new GridLayout(2, 1);
 		grid.setColumnExpandRatio(0, .85f);
+		//任务导航
 		grid.setColumnExpandRatio(1, .15f);
 		// setCompositionRoot(grid);
 		getMainLayout().addComponent(grid);

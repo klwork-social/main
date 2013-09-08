@@ -55,7 +55,7 @@ public class TaskEventTextResolver implements Serializable {
           + user.getFirstName() + " " + user.getLastName() + "</span> ";
     
     String text = null;
-    /*if (Event.ACTION_ADD_USER_LINK.equals(event.getAction())) {
+  if (Event.ACTION_ADD_USER_LINK.equals(event.getAction())) {
       User involvedUser = userCache.findUser(event.getMessageParts().get(0));
       text = i18nManager.getMessage(Messages.EVENT_ADD_USER_LINK, 
               eventAuthor, 
@@ -85,8 +85,8 @@ public class TaskEventTextResolver implements Serializable {
       text = i18nManager.getMessage(Messages.EVENT_COMMENT, eventAuthor, event.getMessage());
     } else { // default: just show the message
       text += i18nManager.getMessage(Messages.EVENT_DEFAULT, eventAuthor, event.getMessage());
-    }*/
-    text = "hello,baidu";
+    }
+    //text = "hello,baidu";
     return new Label(text, ContentMode.HTML);
   }
 

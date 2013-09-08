@@ -34,6 +34,9 @@ import com.klwork.explorer.NotificationManager;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
+import com.klwork.explorer.ui.business.social.AbstractWeiboDisplayPage;
+import com.klwork.explorer.ui.business.social.TransmitPopupWindow;
+import com.klwork.explorer.ui.business.social.WeiboPopupWindow;
 import com.klwork.explorer.ui.custom.DetailPanel;
 import com.klwork.explorer.ui.custom.PrettyTimeLabel;
 import com.klwork.explorer.ui.event.SubmitEvent;
@@ -41,6 +44,7 @@ import com.klwork.explorer.ui.event.SubmitEventListener;
 import com.klwork.explorer.ui.form.FormPropertiesEvent;
 import com.klwork.explorer.ui.form.FormPropertiesEventListener;
 import com.klwork.explorer.ui.form.FormPropertiesForm;
+import com.klwork.explorer.ui.handler.CommonFieldHandler;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.klwork.explorer.ui.task.listener.ClaimTaskClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -94,6 +98,7 @@ public class TaskDetailPanel extends DetailPanel {
   protected TaskRelatedContentComponent relatedContent;
   protected Button completeButton;
   protected Button claimButton;
+  protected  GridLayout eventGrid;
   private boolean showEvent = false;
   
   public TaskDetailPanel(Task task, TaskPage taskPage) {
@@ -111,14 +116,10 @@ public class TaskDetailPanel extends DetailPanel {
     	taskDefinition = taskService.queryTaskDefinition(task);
     }
   }
+ 
   
   @Override
-  public void attach() {
-    super.attach();
-    init();
-  }
-  
-  protected void init() {
+  protected void initUI() {
     setSizeFull();
     addStyleName("social");
     addStyleName(Reindeer.LAYOUT_WHITE);
@@ -141,7 +142,7 @@ public class TaskDetailPanel extends DetailPanel {
 	    //任务参与者
 	    initPeopleDetails();
 	    //子任务
-	    initSubTasks();
+	    //initSubTasks();
     
     //关联的任务的内容
     initRelatedContent();
@@ -149,7 +150,11 @@ public class TaskDetailPanel extends DetailPanel {
     //任务的orm
     initTaskForm();
     
+    initTasksEvent();
   }
+
+
+
 
 public boolean judgeInnerTask() {
 	if(taskDefinition == null)
@@ -191,7 +196,7 @@ public boolean judgeInnerTask() {
     //创建于多少之前
     initCreateTime(propertiesLayout);
     initTaskNo(propertiesLayout);
-    initShowEvent(propertiesLayout);
+    //initShowEvent(propertiesLayout);
   }
   
   private void initTaskNo(HorizontalLayout propertiesLayout) {
@@ -202,23 +207,28 @@ public boolean judgeInnerTask() {
 
 private String getShowEventButtonTitle() {
 	  if(showEvent)
-		  return "隐藏任务留言";
-	  return "显示任务留言";
+		  return "-隐藏任务处理历史";
+	  return "+任务处理历史";
   }
   private void initShowEvent(HorizontalLayout propertiesLayout) {
 	final Button updateSave = new Button(getShowEventButtonTitle());
+	updateSave.addStyleName(Reindeer.BUTTON_LINK);
+	updateSave.addStyleName(Reindeer.BUTTON_LINK);
+	updateSave.addStyleName("wb_text");
+	updateSave.addStyleName("wb_name");
 		updateSave.addClickListener(new ClickListener() {
 			@SuppressWarnings("unchecked")
 			public void buttonClick(ClickEvent event) {
 				showEvent = !showEvent;
-				taskPage.setEventHiden(showEvent);
+				//taskPage.setEventHiden(showEvent);
+				eventGrid.setVisible(showEvent);
 				updateSave.setCaption(getShowEventButtonTitle());
 				
 			}
 		}
 			);
 	  propertiesLayout.addComponent(updateSave);
-	  
+	  propertiesLayout.setComponentAlignment(updateSave, Alignment.BOTTOM_RIGHT);
   }
 
 protected void initCreateTime(HorizontalLayout propertiesLayout) {
@@ -283,7 +293,7 @@ protected void initCreateTime(HorizontalLayout propertiesLayout) {
           editLayout.addComponent(descriptionTextArea);
           
           // ok button
-          Button okButton = new Button(i18nManager.getMessage(Messages.BUTTON_OK));
+          Button okButton = new Button(i18nManager.getMessage(Messages.BUTTON_SAVE));
           editLayout.addComponent(okButton);
           editLayout.setComponentAlignment(okButton, Alignment.BOTTOM_RIGHT);
           
@@ -462,6 +472,27 @@ protected void initCreateTime(HorizontalLayout propertiesLayout) {
       completeButton.setEnabled(isCurrentUserAssignee() || isCurrentUserOwner());
       buttonLayout.addComponent(completeButton);
     }
+  }
+  
+  private void initTasksEvent() {
+	  HorizontalLayout head = new HorizontalLayout();
+	  head.setSizeFull();
+	 
+	  centralLayout.addComponent(head);
+	  //Button eButton = new Button("任务处理历史");
+	 
+	  initShowEvent(head);
+	  
+	  eventGrid = new GridLayout(1, 2);
+	  eventGrid.setVisible(false);
+	  centralLayout.addComponent(eventGrid);
+	 // centralLayout.setExpandRatio(eventGrid, 0);
+	  TaskEventsPanel taskEventPanel = new TaskEventsPanel();
+	  taskEventPanel.setTaskId(task.getId());
+	  eventGrid.addComponent(CommonFieldHandler.getSpacer());
+	  eventGrid.addComponent(taskEventPanel);
+	  eventGrid.setSizeFull();
+	  //eventGrid.setColumnExpandRatio(1, 0f);
   }
 
   protected boolean isCurrentUserAssignee() {
