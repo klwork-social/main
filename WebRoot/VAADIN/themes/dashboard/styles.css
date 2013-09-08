@@ -5089,7 +5089,6 @@ body .dashboard.v-app .v-app-loading {
 	overflow: hidden;
 	color: #fff;
 	font: 12px / 14px Arial, Helvetica, sans-serif;
-	text-align: center;
 }
 
 .dashboard .board .v-table-row-odd.v-selected, .dashboard .board .v-table-row.v-selected {
@@ -13958,12 +13957,12 @@ body .dashboard .social.v-app .v-app-loading {
 }
 
 .dashboard .social .v-panel-task-event-panel .v-panel-content > div {
-	background: #f2f2f2 url(../social/img/bg-sidebar.gif) repeat-y;
+	background: #FAFAFA;
 }
 
 .dashboard .social .v-panel-task-event-panel .v-label-h2 {
-	color: #007dc3;
-	font: 18px Arial, Helvetica, sans-serif;
+	color: #33463F;
+	font: 12px Arial, Helvetica, sans-serif;
 }
 
 .dashboard .social .v-panel-task-event-panel .v-verticallayout .v-verticallayout-margin-top {
