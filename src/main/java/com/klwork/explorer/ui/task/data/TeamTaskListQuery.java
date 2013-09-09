@@ -12,6 +12,7 @@
  */
 package com.klwork.explorer.ui.task.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.activiti.engine.task.TaskQuery;
@@ -24,17 +25,22 @@ import com.klwork.explorer.ViewToolManager;
  */
 public class TeamTaskListQuery extends AbstractTaskListQuery {
 	protected transient TeamService teamService;
-	private List<String> candidateGroups;
+	private List<String> teams;
 	
-	public TeamTaskListQuery(List<String> groups) {
-		this.candidateGroups = groups;
+	public TeamTaskListQuery(List<String> teams) {
+		if(teams == null || teams.isEmpty() ){
+			teams = new ArrayList<String>();
+			teams.add("-99");
+		}
+		this.teams = teams;
 		 teamService =ViewToolManager. getBean("teamService");
 	}
 
 	@Override
 	protected TaskQuery getQuery() {
+		//act_ru_identitylink中的组当成team来使用
 		return taskService.createTaskQuery()
-				.taskCandidateGroupIn(candidateGroups).taskUnassigned().orderByTaskId().asc();
+				.taskCandidateGroupIn(teams).taskUnassigned().orderByTaskId().asc();
 	}
 
 }

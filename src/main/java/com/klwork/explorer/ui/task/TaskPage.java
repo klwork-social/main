@@ -98,6 +98,7 @@ public abstract class TaskPage extends AbstractTablePage {
     taskTable.addValueChangeListener(getListSelectionListener());
     
     this.lazyLoadingQuery = createLazyLoadingQuery();
+    System.out.println(lazyLoadingQuery.size());
     this.taskListContainer = new LazyLoadingContainer(lazyLoadingQuery, 10);
     taskTable.setContainerDataSource(taskListContainer);
     
@@ -105,7 +106,7 @@ public abstract class TaskPage extends AbstractTablePage {
    /* taskTable.addGeneratedColumn("icon", new ThemeImageColumnGenerator(Images.TASK_22));
     taskTable.setColumnWidth("icon", 22);*/
     
-    taskTable.addContainerProperty("name", String.class, null);
+    taskTable.addContainerProperty("name", String.class, "");
     taskTable.setColumnHeaderMode(Table.ColumnHeaderMode.HIDDEN);
     
     return taskTable;

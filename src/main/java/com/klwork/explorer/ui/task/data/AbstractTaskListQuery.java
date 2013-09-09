@@ -20,6 +20,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
 
+import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.data.AbstractLazyLoadingQuery;
 import com.klwork.explorer.security.LoginHandler;
 import com.vaadin.data.Item;
@@ -46,6 +47,9 @@ public abstract class AbstractTaskListQuery extends AbstractLazyLoadingQuery {
     List<Task> tasks = getQuery().listPage(start, count);
     List<Item> items = new ArrayList<Item>();
     for (Task task : tasks) {
+    	if(!StringTool.judgeBlank(task.getName())){
+    		task.setName("未知");
+    	}
       items.add(new TaskListItem(task));
     }
     return items;

@@ -89,21 +89,21 @@ public abstract class AbstractTaskMainPage extends AbstractHCustomComponent {
 		tableHeadLayout.setSpacing(true);
 		tableHeadLayout.setMargin(true);
 		vLayout.addComponent(tableHeadLayout);
-		vLayout.setComponentAlignment(tableHeadLayout, Alignment.MIDDLE_CENTER);
+		vLayout.setComponentAlignment(tableHeadLayout, Alignment.MIDDLE_LEFT);
 		
 		Resource pictureResource = Images.TASK_LIST;
 		Embedded picture = new Embedded(null, pictureResource);
 		picture.addStyleName(ExplorerLayout.STYLE_TASK_EVENT_PICTURE);
 		 picture.setType(Embedded.TYPE_IMAGE);
 		tableHeadLayout.addComponent(picture);
-		tableHeadLayout.setComponentAlignment(picture,Alignment.BOTTOM_CENTER);
+		tableHeadLayout.setComponentAlignment(picture,Alignment.MIDDLE_LEFT);
 		
 		 Label nameLabel = null;
 		 nameLabel = new Label("任务列表");
 		 nameLabel.addStyleName("taskListLabel");
 	     //nameLabel.addStyleName(ExplorerLayout.STYLE_LABEL_BOLD);
 	     tableHeadLayout.addComponent(nameLabel);
-	     tableHeadLayout.setComponentAlignment(nameLabel,Alignment.MIDDLE_CENTER );
+	     tableHeadLayout.setComponentAlignment(nameLabel,Alignment.MIDDLE_LEFT );
 	     
 		
 		

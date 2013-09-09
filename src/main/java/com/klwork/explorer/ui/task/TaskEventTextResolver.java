@@ -25,7 +25,6 @@ import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
-import com.klwork.explorer.ui.user.UserCache;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 
@@ -47,8 +46,8 @@ public class TaskEventTextResolver implements Serializable {
   }
   
   public Label resolveText(Event event) {
-    UserCache userCache = ViewToolManager.getUserCache();
-    User user = userCache.findUser(event.getUserId());
+	  IdentityService identityService = ProcessEngines.getDefaultProcessEngine().getIdentityService();
+	  User user = identityService.createUserQuery().userId(event.getUserId()).singleResult();
     
    // User user = LoginHandler.findUser(event.getUserId());
     String eventAuthor = "<span class='" + ExplorerLayout.STYLE_TASK_EVENT_AUTHOR + "'>" 
@@ -56,13 +55,13 @@ public class TaskEventTextResolver implements Serializable {
     
     String text = null;
   if (Event.ACTION_ADD_USER_LINK.equals(event.getAction())) {
-      User involvedUser = userCache.findUser(event.getMessageParts().get(0));
+	  User involvedUser = identityService.createUserQuery().userId(event.getMessageParts().get(0)).singleResult();
       text = i18nManager.getMessage(Messages.EVENT_ADD_USER_LINK, 
               eventAuthor, 
               involvedUser.getFirstName() + " " + involvedUser.getLastName(),
               event.getMessageParts().get(1)); // second msg part = role
     } else if (Event.ACTION_DELETE_USER_LINK.equals(event.getAction())) {
-      User involvedUser = userCache.findUser(event.getMessageParts().get(0));
+    	User involvedUser = identityService.createUserQuery().userId(event.getMessageParts().get(0)).singleResult();
       text = i18nManager.getMessage(Messages.EVENT_DELETE_USER_LINK, 
               eventAuthor, 
               involvedUser.getFirstName() + " " + involvedUser.getLastName(),

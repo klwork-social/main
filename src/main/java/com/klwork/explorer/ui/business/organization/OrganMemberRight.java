@@ -210,6 +210,7 @@ public class OrganMemberRight extends DetailPanel {
 				final SelectUsersPopupWindow selectUsersPopup = new SelectUsersPopupWindow(
 						i18nManager.getMessage(Messages.GROUP_SELECT_MEMBERS,
 								team.getName()), true, false, getCurrentMembers());
+				selectUsersPopup.setType(1);//查询所有用户
 				ViewToolManager.showPopupWindow(selectUsersPopup);
 
 				// Listen to submit events (that contain the selected users)

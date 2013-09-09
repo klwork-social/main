@@ -54,6 +54,9 @@ public class TrieBasedUserCache implements UserCache {
   
   protected transient IdentityService identityService;
   protected RadixTree<List<User>> userTrie = new RadixTreeImpl<List<User>>();
+  /**
+   * 用户id -- key
+   */
   protected Map<String, List<String>> keyCache = new HashMap<String, List<String>>();
   protected Map<String, User> userCache = new HashMap<String, User>();
   
@@ -106,16 +109,16 @@ public class TrieBasedUserCache implements UserCache {
     key = key.toLowerCase();
 
     // Trie update
-    List<User> value = null;
+    List<User> userList = null;
     if (!userTrie.contains(key)) {
-      value = new ArrayList<User>();
+      userList = new ArrayList<User>();
     } else {
-      value = userTrie.find(key);
+      userList = userTrie.find(key);
     }
     
-    value.add(user);
+    userList.add(user);
     userTrie.delete(key);
-    userTrie.insert(key, value);
+    userTrie.insert(key, userList);
     
     // Key map update
     if (!keyCache.containsKey(user.getId())) {

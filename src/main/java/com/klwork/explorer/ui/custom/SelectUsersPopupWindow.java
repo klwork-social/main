@@ -18,8 +18,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.identity.User;
+import org.activiti.engine.identity.UserQuery;
 
+import com.klwork.business.domain.model.EntityDictionary;
+import com.klwork.business.domain.model.Team;
+import com.klwork.business.domain.service.TeamService;
+import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
@@ -75,6 +81,8 @@ public class SelectUsersPopupWindow extends PopupWindow {
 	protected Button selectUserButton;
 	protected Table selectedUsersTable;
 	protected Button doneButton;
+	
+	private int type = 0;//0只查询本组用户，1查询所有用户
 
 	public SelectUsersPopupWindow(String title, boolean multiSelect) {
 		this.title = title;
@@ -193,11 +201,41 @@ public class SelectUsersPopupWindow extends PopupWindow {
 	protected void searchPeople(String searchText) {
 		if (searchText != null && searchText.length() >= 2) {
 			matchingUsersTable.removeAllItems();
-			List<User> results =
-					ViewToolManager.getUserCache().findMatchingUsers(searchText);
+//			List<User> results =
+//					ViewToolManager.getUserCache().findMatchingUsers(searchText);
+			 List<User> results = null;
+			if(type == 1){
+		      results = queryAllUser(searchText);
+			}else {
+				results = queryTeamUser(searchText);
+			}
 			//List<User> results = new ArrayList<User>();
 			handleQueryUserList(results);
 		}
+	}
+	
+	protected List<User> queryTeamUser(String searchText) {
+		TeamService teamService =ViewToolManager.getBean("teamService");
+		//查询正式成员组
+		Team t = teamService.createTeamByUserAndType(LoginHandler.getLoggedInUser().getId(), EntityDictionary.TEAM_GROUP_TYPE_FORMAL,"default");
+		UserQuery u = ProcessEngines.getDefaultProcessEngine()
+        .getIdentityService().createUserQuery()
+		.memberOfTeam(t.getId());
+		if(StringTool.judgeBlank(searchText)){
+			u.userFullNameLike("%" + searchText + "%");
+		}
+		List<User> users = u.list();
+		return users;
+	}
+	
+	public List<User> queryAllUser(String searchText) {
+		List<User> results;
+		results = ProcessEngines.getDefaultProcessEngine()
+		          .getIdentityService()
+		          .createUserQuery()
+		          .userFullNameLike("%" + searchText + "%")
+		          .list();
+		return results;
 	}
 	
 	
@@ -426,4 +464,11 @@ public class SelectUsersPopupWindow extends PopupWindow {
 				.getItemProperty("role").getValue()).getValue();
 	}
 
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
 }
