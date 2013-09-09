@@ -16,6 +16,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
@@ -146,6 +147,29 @@ public class CommonFieldHandler {
 	    if (isDefault == true && firstItemId != null) {
 	      s.select(firstItemId);
 	    }
+		return s;
+	}
+	
+	public static NativeSelect createNativeSelect(String caption ,Map<Object, String> data,Object defaultValue){
+		NativeSelect s = new NativeSelect();
+		s.setNullSelectionAllowed(false);
+		if(StringTool.judgeBlank(caption)){
+			s.setCaption(caption);
+		}
+		Object firstItemId=null;
+		if(data != null){
+			for(Object o : data.keySet()){
+				String title = data.get(o);
+				Item i = s.addItem(o);
+				s.setItemCaption(o, title);
+				if(o.equals(defaultValue)){
+					firstItemId = o;
+				}
+			}
+		}
+		if(firstItemId != null){
+			s.select(firstItemId);
+		}
 		return s;
 	}
 	

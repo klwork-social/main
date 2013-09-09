@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.vaadin.peter.contextmenu.ContextMenu;
 import org.vaadin.peter.contextmenu.ContextMenu.ContextMenuItemClickEvent;
@@ -15,6 +16,7 @@ import org.vaadin.peter.contextmenu.ContextMenu.ContextMenuOpenedOnTableFooterEv
 import org.vaadin.peter.contextmenu.ContextMenu.ContextMenuOpenedOnTableHeaderEvent;
 import org.vaadin.peter.contextmenu.ContextMenu.ContextMenuOpenedOnTableRowEvent;
 
+import com.klwork.business.domain.model.Project;
 import com.klwork.business.domain.model.Todo;
 import com.klwork.business.domain.model.TodoQuery;
 import com.klwork.business.domain.service.TodoService;
@@ -22,14 +24,19 @@ import com.klwork.common.utils.StringDateUtil;
 import com.klwork.common.utils.StringTool;
 import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 import com.klwork.explorer.I18nManager;
+import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.base.AbstractTabViewPage;
+import com.klwork.explorer.ui.custom.ConfirmationDialogPopupWindow;
 import com.klwork.explorer.ui.custom.DetailPanel;
+import com.klwork.explorer.ui.event.ConfirmationEvent;
+import com.klwork.explorer.ui.event.ConfirmationEventListener;
 import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.event.SubmitEventListener;
 import com.klwork.explorer.ui.handler.BinderHandler;
+import com.klwork.explorer.ui.handler.CommonFieldHandler;
 import com.klwork.explorer.ui.handler.TableFieldCache;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.klwork.explorer.ui.task.NewTodoToTaskPopupWindow;
@@ -53,11 +60,14 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TableFieldFactory;
@@ -88,6 +98,8 @@ public class ProjectTreeTable extends DetailPanel {
 	private FieldGroup scheduleEventFieldGroup = new FieldGroup();
 	protected HorizontalLayout projectPlans;
 	protected TextField addTxt;
+	protected NativeSelect changeRoot;
+	private String todoId;
 
 	VerticalLayout bottomLayout;
 	//
@@ -106,13 +118,8 @@ public class ProjectTreeTable extends DetailPanel {
 	
 	@Override
 	protected void initUI() {
-//		VerticalLayout layout = new VerticalLayout();
-//		setCompositionRoot(layout);
-//		layout.setSizeFull();
-
+		//初始化头部
 		initHead();
-		
-//		initAddProjectPlanButton(layout);
 		// 主界面
 		initMain();
 
@@ -166,42 +173,83 @@ public class ProjectTreeTable extends DetailPanel {
 		header.setComponentAlignment(groupName, Alignment.MIDDLE_LEFT);
 		header.setExpandRatio(groupName, 1.0f);
 		
-//		layout.addComponent(header);
-//		layout.setSpacing(true);
 	}
 	
 	private void initProjectPlanTitle(HorizontalLayout membersHeader) {
 		Label usersHeader = new Label("项目计划列表");
 		usersHeader.addStyleName(ExplorerLayout.STYLE_H3);
 		membersHeader.addComponent(usersHeader);
+		membersHeader.setComponentAlignment(usersHeader, Alignment.MIDDLE_RIGHT);
+		membersHeader.setExpandRatio(usersHeader, 1.0f);
+		membersHeader.setMargin(true);
 	}
 	
 	private void initAddProjectPlanButton(HorizontalLayout headerLayout) {
+		Map<Object, String> data = new HashMap<Object, String>();
+		data.put("1", "给根节点处增加子节点");
+		data.put("2", "给选中的根节点增加子节点");
+		changeRoot = CommonFieldHandler.createNativeSelect(null, data,"1");
+		headerLayout.addComponent(changeRoot);
+		headerLayout.setComponentAlignment(changeRoot, Alignment.MIDDLE_LEFT);
 		addTxt = new TextField();
+		addTxt.setWidth("200px");
 		addTxt.setInputPrompt("在这里快速输入你的计划");
 		headerLayout.addComponent(addTxt);
-		headerLayout.setComponentAlignment(addTxt, Alignment.BOTTOM_RIGHT);
+		headerLayout.setComponentAlignment(addTxt, Alignment.MIDDLE_LEFT);
 		Button addButton = new Button();
 		addButton.setCaption("快速新加");
-//		 addButton..addStyleName(Alignment.MIDDLE_CENTER);
 		headerLayout.addComponent(addButton);
 		headerLayout.setComponentAlignment(addButton, Alignment.MIDDLE_LEFT);
+		headerLayout.setExpandRatio(addButton, 0.4f);
+		headerLayout.setSpacing(true);
 		addButton.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = -8050449471041932066L;
 
+			@SuppressWarnings("unchecked")
 			public void buttonClick(ClickEvent event) {
-//				final NewProjectWindow newProjectWindow = new NewProjectWindow(
-//						null);
-//				ViewToolManager.showPopupWindow(newProjectWindow);
-				if(projectId!=null){
-					Todo newTodo = todoService.newTodo(addTxt.getValue());
-					newTodo.setProId(projectId);
-					BeanItem newbeanItem = new BeanItem<Todo>(newTodo);
-					Item nItem = hContainer.addItem(newbeanItem);
-					hContainer.setChildrenAllowed(newbeanItem, false);
-					copyBeanValueToContainer(hContainer, newbeanItem);
-					// 设置父节点
-					hContainer.setParent(newbeanItem, null);
+				if(changeRoot.getValue().equals("1")){
+					if(projectId!=null){
+						Todo newTodo = todoService.newTodo(addTxt.getValue());
+						newTodo.setProId(projectId);
+						initTodoProId(newTodo);
+						BeanItem<Todo> newbeanItem = new BeanItem<Todo>(newTodo);
+						Item nItem = hContainer.addItem(newbeanItem);
+						hContainer.setChildrenAllowed(newbeanItem, false);
+						copyBeanValueToContainer(hContainer, newbeanItem);
+						// 设置父节点
+						hContainer.setParent(newbeanItem, null);
+						//快速新增计划后，将计划保存到数据库
+						List<Todo> todos = new ArrayList<Todo>();
+						todos.add(newTodo);
+						todoService.saveTodoList(todos);
+					}
+				}else if (changeRoot.getValue().equals("2")){
+					if(StringTool.judgeBlank(todoId)){
+//						Item parentItem = hContainer.getItem(currentBeanItem);
+						Todo newTodo = todoService.newTodo(addTxt.getValue());
+						initTodoProId(newTodo);
+						@SuppressWarnings("rawtypes")
+						BeanItem newbeanItem = new BeanItem<Todo>(newTodo);
+						Item nItem = hContainer.addItem(newbeanItem);
+						hContainer.setChildrenAllowed(newbeanItem, false);
+						hContainer.setChildrenAllowed(currentBeanItem, true);
+						copyBeanValueToContainer(hContainer, newbeanItem);
+						// 设置父节点
+						hContainer.setParent(newbeanItem, currentBeanItem);
+						Todo paretTodo = currentBeanItem.getBean();
+						// 新的记录设置为
+						newTodo.setPid(todoId);
+						hContainer.getContainerProperty(newbeanItem, "pid")
+								.setValue(paretTodo.getId());
+						// 老的记录
+						paretTodo.setIsContainer(1);
+						hContainer.getContainerProperty(currentBeanItem,
+								"isContainer").setValue(1);
+						List<Todo> todos = new ArrayList<Todo>();
+						todos.add(newTodo);
+						todos.add(paretTodo);
+						todoService.saveTodoList(todos);
+					}
 				}
 			}
 		});
@@ -227,15 +275,6 @@ public class ProjectTreeTable extends DetailPanel {
 		projectPlans.setWidth(100, Unit.PERCENTAGE);
 		addDetailComponent(projectPlans);
 		projectPlans.addComponent(mainTreeTable);
-		
-		// 用一个panel包含，实现快捷键
-//		Panel panel = new Panel();
-//		panel.addActionHandler(new KbdHandler());
-//		// panel.setHeight(-1, Unit.PIXELS);
-//		layout.addComponent(panel);
-//		layout.setExpandRatio(panel, 1.0f);
-//		panel.setContent(mainTreeTable);
-
 		// init tabletree
 		mainTreeTable.setEditable(true);
 		mainTreeTable.setImmediate(true);
@@ -295,9 +334,11 @@ public class ProjectTreeTable extends DetailPanel {
 
 			@Override
 			public void itemClick(ItemClickEvent event) {
+				Object source = event.getItemId();
+				todoId = event.getItem().getItemProperty("id").getValue().toString();
 				if (event.isDoubleClick()) {
 					// Notification.show(event.getSource().toString());
-					Object source = event.getItemId();
+//					Object source = event.getItemId();
 					fieldCache.setFieldFocus(source);
 				}
 			}
@@ -326,37 +367,6 @@ public class ProjectTreeTable extends DetailPanel {
 		});
 	}
 
-	private void setTableHeadDisplay(final TreeTable ttable) {
-
-		visibleColumnIds.add("name");
-		visibleColumnIds.add("priority");
-		visibleColumnIds.add("complete");
-		visibleColumnIds.add("endTime");
-		visibleColumnIds.add("useUp");
-		visibleColumnIds.add("due");
-		visibleColumnIds.add("status");
-		visibleColumnIds.add("tags");
-		visibleColumnIds.add("type");
-		visibleColumnIds.add("edit");
-
-		visibleColumnLabels.add("标题");
-		visibleColumnLabels.add("！");
-		visibleColumnLabels.add("%");
-		visibleColumnLabels.add("结束时间");
-		visibleColumnLabels.add("耗尽");
-		visibleColumnLabels.add("到期");
-		visibleColumnLabels.add("状态");
-		visibleColumnLabels.add("标签");
-		visibleColumnLabels.add("类型");
-		visibleColumnLabels.add("操作");
-
-		ttable.addGeneratedColumn("edit", new ValueEditColumnGenerator());
-
-		ttable.setVisibleColumns(visibleColumnIds.toArray());
-		ttable.setColumnHeaders(visibleColumnLabels.toArray(new String[0]));
-
-	}
-
 	@SuppressWarnings("unchecked")
 	private void rightClickHandler(final TreeTable ttable) {
 		ContextMenu tableContextMenu = new ContextMenu();
@@ -367,12 +377,11 @@ public class ProjectTreeTable extends DetailPanel {
 					public void contextMenuItemClicked(
 							ContextMenuItemClickEvent event) {
 						Item parentItem = hContainer.getItem(currentBeanItem);
-						Todo newTodo = todoService.newTodo("子任务");
-						newTodo.setProId(projectId);
+						Todo newTodo = todoService.newTodo(addTxt.getValue());
+						initTodoProId(newTodo);
 						@SuppressWarnings("rawtypes")
 						BeanItem newbeanItem = new BeanItem<Todo>(newTodo);
 						Item nItem = hContainer.addItem(newbeanItem);
-
 						hContainer.setChildrenAllowed(newbeanItem, false);
 						hContainer.setChildrenAllowed(currentBeanItem, true);
 						copyBeanValueToContainer(hContainer, newbeanItem);
@@ -380,14 +389,17 @@ public class ProjectTreeTable extends DetailPanel {
 						hContainer.setParent(newbeanItem, currentBeanItem);
 						Todo paretTodo = currentBeanItem.getBean();
 						// 新的记录设置为
+						newTodo.setPid(todoId);
 						hContainer.getContainerProperty(newbeanItem, "pid")
 								.setValue(paretTodo.getId());
 						// 老的记录
+						paretTodo.setIsContainer(1);
 						hContainer.getContainerProperty(currentBeanItem,
 								"isContainer").setValue(1);
-
-						ttable.setCollapsed(currentBeanItem, false);
-						ttable.setImmediate(true);
+						List<Todo> todos = new ArrayList<Todo>();
+						todos.add(newTodo);
+						todos.add(paretTodo);
+						todoService.saveTodoList(todos);
 					}
 
 				});
@@ -396,14 +408,19 @@ public class ProjectTreeTable extends DetailPanel {
 					@Override
 					public void contextMenuItemClicked(
 							ContextMenuItemClickEvent event) {
-						Todo newTodo = todoService.newTodo("新任务");
+						Todo newTodo = todoService.newTodo(addTxt.getValue());
 						newTodo.setProId(projectId);
-						BeanItem newbeanItem = new BeanItem<Todo>(newTodo);
+						initTodoProId(newTodo);
+						BeanItem<Todo> newbeanItem = new BeanItem<Todo>(newTodo);
 						Item nItem = hContainer.addItem(newbeanItem);
 						hContainer.setChildrenAllowed(newbeanItem, false);
 						copyBeanValueToContainer(hContainer, newbeanItem);
 						// 设置父节点
 						hContainer.setParent(newbeanItem, null);
+						//快速新增计划后，将计划保存到数据库
+						List<Todo> todos = new ArrayList<Todo>();
+						todos.add(newTodo);
+						todoService.saveTodoList(todos);
 
 					}
 
@@ -516,6 +533,36 @@ public class ProjectTreeTable extends DetailPanel {
 		}
 
 		);
+
+	}
+	
+	private void setTableHeadDisplay(final TreeTable ttable) {
+
+		visibleColumnIds.add("name");
+		visibleColumnIds.add("priority");
+		visibleColumnIds.add("complete");
+		visibleColumnIds.add("endTime");
+		visibleColumnIds.add("useUp");
+		visibleColumnIds.add("due");
+		visibleColumnIds.add("status");
+		visibleColumnIds.add("tags");
+		visibleColumnIds.add("type");
+		visibleColumnIds.add("edit");
+
+		visibleColumnLabels.add("标题");
+		visibleColumnLabels.add("！");
+		visibleColumnLabels.add("%");
+		visibleColumnLabels.add("结束时间");
+		visibleColumnLabels.add("耗尽");
+		visibleColumnLabels.add("到期");
+		visibleColumnLabels.add("状态");
+		visibleColumnLabels.add("标签");
+		visibleColumnLabels.add("类型");
+		visibleColumnLabels.add("操作");
+
+		ttable.addGeneratedColumn("edit", new ValueEditColumnGenerator());
+		ttable.setVisibleColumns(visibleColumnIds.toArray());
+		ttable.setColumnHeaders(visibleColumnLabels.toArray(new String[0]));
 
 	}
 
@@ -709,22 +756,25 @@ public class ProjectTreeTable extends DetailPanel {
 	}
 
 	public class ValueEditColumnGenerator implements ColumnGenerator {
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -5950078454864053894L;
 
 		@Override
-		public Object generateCell(Table source, final Object itemId, Object columnId) {
+		public Object generateCell(final Table source, final Object itemId, Object columnId) {
 			HorizontalLayout h = new HorizontalLayout();
+			getEditButtonClick(itemId, h);//修改事件
+			getDeleteButtonClick(source, itemId, h);//删除事件
+			getAddActHref(itemId, h);//生成任务
+			return h;
+		}
+
+		private HorizontalLayout getEditButtonClick(final Object itemId, final HorizontalLayout h) {
 			h.setSizeUndefined();
-			//h.setSpacing(true);
-			//h.setMargin(true);
-			
 			Button editButton = new Button("");
 			editButton.addStyleName(Reindeer.BUTTON_LINK);
 			editButton.setIcon(Images.EDIT);
 			editButton.addClickListener(new ClickListener() {
+				private static final long serialVersionUID = -590705173775423620L;
+
 				public void buttonClick(ClickEvent event) {
 					// WW_TODO 后台进行修改
 					EditTodoPopupWindow editTodoPop = new EditTodoPopupWindow(
@@ -751,6 +801,49 @@ public class ProjectTreeTable extends DetailPanel {
 				}
 			});
 			h.addComponent(editButton);
+			return h;
+		}
+		
+		private HorizontalLayout getDeleteButtonClick(final Table source, final Object itemId ,final HorizontalLayout h){
+			h.setSizeUndefined();
+			Button deleteButton = new Button("");
+			deleteButton.addStyleName(Reindeer.BUTTON_LINK);
+			deleteButton.setIcon(Images.DELETE);
+			
+			deleteButton.addClickListener(new ClickListener() {
+				private static final long serialVersionUID = 2341078230127917348L;
+
+				@Override
+				public void buttonClick(ClickEvent event) {
+					// TODO Auto-generated method stub
+					ConfirmationDialogPopupWindow confirmationPopup = 
+						      new ConfirmationDialogPopupWindow(i18nManager.getMessage(Messages.USER_CONFIRM_DELETE_GROUP, itemId,itemId));
+						    confirmationPopup.addListener(new ConfirmationEventListener() {
+							private static final long serialVersionUID = -3914283089571615862L;
+							protected void rejected(ConfirmationEvent event) {
+						      }
+						      protected void confirmed(ConfirmationEvent event) {
+						    	  Item item = source.getItem(itemId);
+						    	  String id = (String) item.getItemProperty("id").getValue();
+						    	  Todo todo = new Todo();
+						    	  todo.setId(id);
+						    	  todoService.deleteTodo(todo);
+						    	  TextField tf = fieldCache.getPropertyFieldFromCache(itemId,
+											"name");
+						    	  fieldCache.deletePrppertyFieldToCache(itemId, "name", tf);
+						    	  hContainer.removeItem(itemId);
+//						    	  notifyProjectListChanged();
+						      }
+						    });
+						    ViewToolManager.showPopupWindow(confirmationPopup);
+				}
+			});
+			h.addComponent(deleteButton);
+			return h;
+		}
+
+		@SuppressWarnings("unchecked")
+		private void getAddActHref(final Object itemId, HorizontalLayout h) {
 			final Todo relTodo = ((BeanItem<Todo>) itemId).getBean();
 			//新增任务
 			 Button newCaseButton = new Button();
@@ -758,16 +851,22 @@ public class ProjectTreeTable extends DetailPanel {
 			 newCaseButton.setCaption("生成任务");
 			    
 			 newCaseButton.addClickListener(new ClickListener() {
-			      public void buttonClick(ClickEvent event) {
+				private static final long serialVersionUID = 3068522358824686916L;
+
+				public void buttonClick(ClickEvent event) {
 			    	NewTodoToTaskPopupWindow newTaskPopupWindow = new NewTodoToTaskPopupWindow(relTodo);
 			        ViewToolManager.showPopupWindow(newTaskPopupWindow);
 			      }
 			    });
 			    
 		    h.addComponent(newCaseButton);
-			
-			return h;
+		}
+		
+		public void notifyProjectListChanged(){
+			projectPlans.removeAllComponents();
+			initMainTreeTable();
 		}
 
 	}
+	
 }

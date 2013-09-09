@@ -144,7 +144,7 @@ public class EditTodoPopupWindow extends PopupWindow {
 		line.setComponentAlignment(label3, Alignment.MIDDLE_RIGHT);
 		HorizontalLayout hlay = new HorizontalLayout() ;
 		final TextField estimateField = new TextField();
-		estimateField.setInputPrompt("");
+		estimateField.setValue("1");
 		estimateField.setWidth("60px");
 		estimateField.setNullSettingAllowed(false);
 		BlurListener timeReCountListener = createTimeReCountListener();
@@ -175,6 +175,7 @@ public class EditTodoPopupWindow extends PopupWindow {
 		line.addComponent(label6,2,2,2,2);
 		line.setComponentAlignment(label6, Alignment.MIDDLE_RIGHT);
 		TextField gs1 = new TextField();
+		gs1.setValue("20%");
 		gs1.setInputPrompt("50%");
 		scheduleEventFieldGroup.bind(gs1, "useup");
 		line.addComponent(gs1,3,2,3,2);
