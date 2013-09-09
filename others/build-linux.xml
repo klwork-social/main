@@ -122,6 +122,9 @@
 		<copy todir="${deploy}/${war_type}" overwrite="true">
 			<fileset dir="${basedir}/environment/${war_type}" />
 		</copy>
+		<copy todir="/mydata/static/vaadin/VAADIN" overwrite="true">
+			<fileset dir="${deploy}/${war_type}/VAADIN" />
+		</copy>
 		<!-- 
 		<war warfile="${deploy}/${war_type}.war" webxml="${deploy}/${war_type}/WEB-INF/web.xml">
 			<fileset dir="${deploy}/${war_type}" />
