@@ -5098,6 +5098,12 @@ body .dashboard.v-app .v-app-loading {
 	text-shadow: none;
 }
 
+.dashboard .board .v-table-cell-wrapper {
+	margin-top: -1px;
+	margin-bottom: -1px;
+	margin-left: 15px;
+}
+
 .dashboard .board .v-table-row-odd .v-table-cell-content, .dashboard .board .v-table-row .v-table-cell-content {
 	border: none;
 	height: 35px;

@@ -19,6 +19,12 @@
 	text-shadow: none;
 }
 
+.board .v-table-cell-wrapper {
+	margin-top: -1px;
+	margin-bottom: -1px;
+	margin-left: 15px;
+}
+
 
 .board .v-table-row-odd .v-table-cell-content,.board .v-table-row .v-table-cell-content {
 	border: none;
