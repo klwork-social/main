@@ -236,4 +236,12 @@ public class DiscoveryNavigator extends Navigator implements ViewCacheContainer
 
         return (View) SpringApplicationContext.getApplicationContext().getBean(beanName);
     }
+    
+    public View getScopedView(String name){
+        if (viewScoped.containsKey(name))
+        {
+            return viewScoped.get(name);
+        }
+        return null;
+    }
 }

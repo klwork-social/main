@@ -10,27 +10,26 @@
 
 package com.klwork.explorer.ui.main.views;
 
+import java.util.Map;
+
 import org.springframework.context.annotation.Scope;
 
 import com.klwork.explorer.I18nManager;
-import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
-import com.klwork.explorer.ui.Images;
-import com.klwork.explorer.ui.task.NewTaskPopupWindow;
 import com.klwork.explorer.web.VaadinView;
+import com.klwork.explorer.web.dashboard.DashboardUI;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.Button;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 @org.springframework.stereotype.Component
 @Scope("prototype")
 @VaadinView(value = TasksView.NAME, cached = false)
-public class TasksView extends VerticalLayout implements View {
+public class TasksView extends VerticalLayout implements View,PushUpdateInterface {
 	public static final String NAME = "tasks";
 	protected I18nManager i18nManager;
+	TaskMainPage mainPage = null;
 	
 	public TasksView() {
 		this.i18nManager = ViewToolManager.getI18nManager();
@@ -47,15 +46,31 @@ public class TasksView extends VerticalLayout implements View {
     public void initUi() {
     	setSizeFull();
         addStyleName("reports");
-        TaskMainPage c = new TaskMainPage();
-		addComponent(c);
-		setExpandRatio(c, 1.0f);
+        mainPage = new TaskMainPage();
+		addComponent(mainPage);
+		setExpandRatio(mainPage, 1.0f);
        
     }
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		System.out.println("sdfdf");
+		View v = event.getNewView();
+		((DashboardUI)UI.getCurrent()).setCurrentView(v);
+	}
+
+	@Override
+	public PushDataResult getPushData() {
+		return mainPage.getPushData();
+	}
+
+	@Override
+	public void reflashUIByPush() {
+		mainPage.reflashUIByPush();
+	}
+
+	@Override
+	public String getViewName() {
+		return NAME;
 	}
 
 }

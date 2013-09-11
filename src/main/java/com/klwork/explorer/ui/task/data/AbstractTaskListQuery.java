@@ -31,13 +31,18 @@ import com.vaadin.data.Item;
  */
 public abstract class AbstractTaskListQuery extends AbstractLazyLoadingQuery {
   
-  protected String userId;
+  private String userId;
   protected transient TaskService taskService;
   
   public AbstractTaskListQuery() {
     this.userId = LoginHandler.getLoggedInUser().getId();
     this.taskService = ProcessEngines.getDefaultProcessEngine().getTaskService();
   }
+  
+  public AbstractTaskListQuery(String userId) {
+	    this.userId = userId;
+	    this.taskService = ProcessEngines.getDefaultProcessEngine().getTaskService();
+	  }
 
   public int size() {
     return (int) getQuery().count();
@@ -68,5 +73,15 @@ public abstract class AbstractTaskListQuery extends AbstractLazyLoadingQuery {
   }
   
   protected abstract TaskQuery getQuery();
+
+public String getUserId() {
+	return userId;
+}
+
+public void setUserId(String userId) {
+	this.userId = userId;
+}
+  
+  
   
 }

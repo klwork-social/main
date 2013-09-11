@@ -14,15 +14,20 @@ package com.klwork.explorer.ui.task.data;
 
 import org.activiti.engine.task.TaskQuery;
 
-
-/**
- * @author Joram Barrez
- */
 public class InvolvedListQuery extends AbstractTaskListQuery {
-  
-  @Override
-  protected TaskQuery getQuery() {
-    return taskService.createTaskQuery().taskInvolvedUser(userId).orderByTaskId().asc();
-  }
-  
+
+	public InvolvedListQuery(String userId) {
+		super(userId);
+	}
+
+	public InvolvedListQuery() {
+		super();
+	}
+
+	@Override
+	protected TaskQuery getQuery() {
+		return taskService.createTaskQuery().taskInvolvedUser(getUserId())
+				.orderByTaskId().asc();
+	}
+
 }

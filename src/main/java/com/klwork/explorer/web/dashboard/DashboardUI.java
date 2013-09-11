@@ -13,6 +13,8 @@ package com.klwork.explorer.web.dashboard;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -25,10 +27,14 @@ import com.klwork.explorer.security.LoggedInUser;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.security.ShiroSecurityNavigator;
 import com.klwork.explorer.ui.main.views.DashboardView;
+import com.klwork.explorer.ui.main.views.PushDataResult;
+import com.klwork.explorer.ui.main.views.PushUpdateInterface;
+import com.klwork.explorer.ui.main.views.TasksView;
 import com.klwork.explorer.ui.main.views.TodoListView;
 import com.klwork.explorer.ui.user.ChangePasswordPopupWindow;
 import com.klwork.explorer.ui.user.ProfilePopupWindow;
 import com.vaadin.annotations.PreserveOnRefresh;
+import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.event.Transferable;
@@ -66,6 +72,7 @@ import com.vaadin.ui.VerticalLayout;
 @Theme("dashboard")
 @Title("KLWORK Dashboard")
 @PreserveOnRefresh
+@Push
 public class DashboardUI extends UI implements ErrorHandler{
 
 
@@ -78,14 +85,15 @@ public class DashboardUI extends UI implements ErrorHandler{
 
     CssLayout menuLayout = new CssLayout();
     CssLayout contentLayout = new CssLayout();
-
-    /*HashMap<String, Class<? extends View>> routes = new HashMap<String, Class<? extends View>>() {
+    
+    //此UI当前打开的视图
+    private View currentView; 
+   HashMap<String, String> routes = new HashMap<String, String>() {
         {
-            put("/dashboard", DashboardView.class);
-            put("/sales", TasksView.class);
-            put("/reports", TodoListView.class);
+            put(DashboardView.NAME, "dashboardView");
+            put(TasksView.NAME, "tasksView");
         }
-    };*/
+    };
 
     HashMap<String, Button> viewNameToMenuButton = new HashMap<String, Button>();
 
@@ -113,7 +121,8 @@ public class DashboardUI extends UI implements ErrorHandler{
 
        // buildLoginView(false);
         buildMainView();
-
+        //进行push线程的初始化
+        new PushThread().start();
     }
 
     private void buildMainView() {
@@ -186,10 +195,7 @@ public class DashboardUI extends UI implements ErrorHandler{
         viewNameToMenuButton.get("/dashboard").setCaption(
                 "Dashboard<span class=\"badge\">2</span>");
 
-        String f = Page.getCurrent().getUriFragment();
-        if (f != null && f.startsWith("!")) {
-            f = f.substring(1);
-        }
+        String f = queryViewName();
         if (f == null || f.equals("") || f.equals("/")) {
             nav.navigateTo("/dashboard");
             menuLayout.getComponent(0).addStyleName("selected");
@@ -220,6 +226,18 @@ public class DashboardUI extends UI implements ErrorHandler{
         });
 
     }
+    
+    /**
+     * 得到视图的名称
+     * @return
+     */
+	public String queryViewName() {
+		String f = Page.getCurrent().getUriFragment();
+        if (f != null && f.startsWith("!")) {
+            f = f.substring(1);
+        }
+		return f;
+	}
 
 	public void initViewButton() {
 		String view = "dashboard";
@@ -442,4 +460,58 @@ public class DashboardUI extends UI implements ErrorHandler{
 		    }
 		});
 	}
+	
+	class PushThread extends Thread {
+		int count = 0;
+		public PushThread() {
+		}
+
+		@Override
+		public void run() {
+			try {
+				// Update the data for a while
+				while (true) {
+					Thread.sleep(5000);
+					 final View cView = getCurrentView();
+					 PushDataResult r = null;
+					 if( cView !=null && cView instanceof PushUpdateInterface){
+						 PushUpdateInterface in = ((PushUpdateInterface)cView);
+						 if(!queryViewName().equals(in.getViewName())){//不是当前视图
+								 continue;
+						 }
+						  r = in.getPushData();
+						  //数据是最新的，不需要更新
+						  if(!r.isNeedUpdate()){
+								 continue;
+						   }
+					 }else {
+						 continue;
+					 }
+					 
+					//WW_TODO push提醒
+					UI.getCurrent().access(new Runnable() {
+						@Override
+						public void run() {
+							 if( cView !=null && cView instanceof PushUpdateInterface){
+								 ((PushUpdateInterface)cView).reflashUIByPush();
+							 }
+						}
+					});
+				}
+				
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public View getCurrentView() {
+		return currentView;
+	}
+
+	public void setCurrentView(View currentView) {
+		this.currentView = currentView;
+	}
+	
+	
 }

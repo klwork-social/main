@@ -14,8 +14,8 @@ import java.text.DecimalFormat;
 
 import org.springframework.context.annotation.Scope;
 
+import com.klwork.explorer.ui.task.TaskRemindComponent;
 import com.klwork.explorer.web.VaadinView;
-import com.klwork.explorer.web.dashboard.DashboardUI;
 import com.vaadin.data.Property;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
@@ -59,7 +59,7 @@ public class DashboardView extends VerticalLayout implements View {
         top.setSpacing(true);
         top.addStyleName("toolbar");
         addComponent(top);
-        final Label title = new Label("My Dashboard");
+        final Label title = new Label("我的面板");
         title.setSizeUndefined();
         title.addStyleName("h1");
         top.addComponent(title);
@@ -174,15 +174,16 @@ public class DashboardView extends VerticalLayout implements View {
             }
         });
         top.setComponentAlignment(edit, Alignment.MIDDLE_LEFT);
-
+        
+        //下面的布局
         HorizontalLayout row = new HorizontalLayout();
         row.setSizeFull();
         row.setMargin(new MarginInfo(true, true, false, true));
         row.setSpacing(true);
         addComponent(row);
         setExpandRatio(row, 1.5f);
-
-        //row.addComponent(createPanel(new TopGrossingMoviesChart()));
+        
+        row.addComponent(createPanel(new TaskRemindComponent()));
 
         TextArea notes = new TextArea("Notes");
         notes.setValue("Remember to:\n· Zoom in and out in the Sales view\n· Filter the transactions and drag a set of them to the Reports tab\n· Create a new report\n· Change the schedule of the movie theater");

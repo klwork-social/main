@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!--
+	(user_data_statistics_) :${table.comment}
+字段:
+	user_id_(varchar)	:
+	todo_task_total_(int4)	:
+	overdue_todo_task_total_(int4)	:
+	my_task_total_(int4)	:
+	overdue_my_task_total_(int4)	:
+	team_task_total_(int4)	:
+	overdue_team_task_total_(int4)	:
+	involved_task_total_(int4)	:
+	overdue_involved_task_total_(int4)	:
+	dirty_(bool)	:
+	last_update_(timestamp)	:
+sqlMapConfig:
+	<typeAlias alias="UserDataStatistic" type="com.klwork.business.domain/model.UserDataStatistic" />
+	<mapper resource="com/klwork/business/domain/model/UserDataStatistic_SqlMap.xml" />
+-->
+<mapper namespace="com.klwork.business.domain.model.UserDataStatistic">
+
+  <!-- INSERT -->
+  <insert id="insertUserDataStatistic" parameterType="com.klwork.business.domain.model.UserDataStatistic">
+    insert into user_data_statistics_ (
+    	user_id_,
+	todo_task_total_,
+	overdue_todo_task_total_,
+	my_task_total_,
+	overdue_my_task_total_,
+	team_task_total_,
+	overdue_team_task_total_,
+	involved_task_total_,
+	overdue_involved_task_total_,
+	dirty_,
+	last_update_
+	)
+    values (
+      		#{userId,jdbcType=VARCHAR},
+ 		#{todoTaskTotal,jdbcType=INTEGER},
+ 		#{overdueTodoTaskTotal,jdbcType=INTEGER},
+ 		#{myTaskTotal,jdbcType=INTEGER},
+ 		#{overdueMyTaskTotal,jdbcType=INTEGER},
+ 		#{teamTaskTotal,jdbcType=INTEGER},
+ 		#{overdueTeamTaskTotal,jdbcType=INTEGER},
+ 		#{involvedTaskTotal,jdbcType=INTEGER},
+ 		#{overdueInvolvedTaskTotal,jdbcType=INTEGER},
+ 		#{dirty,jdbcType=BOOLEAN},
+    	#{lastUpdate,jdbcType=TIMESTAMP}
+    	)
+  </insert>
+  
+  <!-- UPDATE -->
+  <update id="updateUserDataStatistic" parameterType="com.klwork.business.domain.model.UserDataStatistic">
+    update user_data_statistics_ set
+<if test="todoTaskTotal != null">
+ todo_task_total_ = #{todoTaskTotal,jdbcType=INTEGER},
+</if>
+<if test="overdueTodoTaskTotal != null">
+ overdue_todo_task_total_ = #{overdueTodoTaskTotal,jdbcType=INTEGER},
+</if>
+<if test="myTaskTotal != null">
+ my_task_total_ = #{myTaskTotal,jdbcType=INTEGER},
+</if>
+<if test="overdueMyTaskTotal != null">
+ overdue_my_task_total_ = #{overdueMyTaskTotal,jdbcType=INTEGER},
+</if>
+<if test="teamTaskTotal != null">
+ team_task_total_ = #{teamTaskTotal,jdbcType=INTEGER},
+</if>
+<if test="overdueTeamTaskTotal != null">
+ overdue_team_task_total_ = #{overdueTeamTaskTotal,jdbcType=INTEGER},
+</if>
+<if test="involvedTaskTotal != null">
+ involved_task_total_ = #{involvedTaskTotal,jdbcType=INTEGER},
+</if>
+<if test="overdueInvolvedTaskTotal != null">
+ overdue_involved_task_total_ = #{overdueInvolvedTaskTotal,jdbcType=INTEGER},
+</if>
+<if test="dirty != null">
+ dirty_ = #{dirty,jdbcType=BOOLEAN},
+</if>
+<if test="lastUpdate != null">
+ last_update_ = #{lastUpdate,jdbcType=TIMESTAMP}
+</if>
+ where user_id_ = #{userId,jdbcType=VARCHAR}
+  </update>
+
+  <!-- Delete -->	
+  <!--delete id="deleteUserDataStatistic" parameterType="string">
+    delete from user_data_statistics_ where id = #{id}
+  </delete-->
+  
+  <!-- SELECT -->
+  <select id="selectUserDataStatisticById" parameterType="string" resultMap="UserDataStatisticMap">
+    select * from user_data_statistics_ where user_id_ = #{userId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectUserDataStatisticByQueryCriteria" parameterType="com.klwork.business.domain.model.UserDataStatisticQuery" resultMap="UserDataStatisticMap">
+    select U.*
+    <include refid="selectUserDataStatisticByQueryCriteriaSql" />
+    <if test="start !=0 or limit!=0">
+    limit #{limit} offset #{start}
+	</if>
+    <!--if test="orderBy != null">
+      order by ${orderBy}
+    </if> -->
+  </select>
+  
+   <select id="selectUserDataStatisticCountByQueryCriteria" parameterType="com.klwork.business.domain.model.UserDataStatisticQuery" resultType="int">
+    select count(U.id_)
+    <include refid="selectUserDataStatisticByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="selectUserDataStatisticByQueryCriteriaSql">
+    from user_data_statistics_ U
+    <where>
+        <if test="userId != null">
+        AND U.user_id_ = #{userId}
+    </if>
+    <if test="dirty != null">
+        AND U.dirty_ = #{dirty}
+    </if>
+    </where>
+  </sql>
+  
+	<resultMap id="UserDataStatisticMap" type="com.klwork.business.domain.model.UserDataStatistic">
+	<result property="userId" column="user_id_" />
+	<result property="todoTaskTotal" column="todo_task_total_" />
+	<result property="overdueTodoTaskTotal" column="overdue_todo_task_total_" />
+	<result property="myTaskTotal" column="my_task_total_" />
+	<result property="overdueMyTaskTotal" column="overdue_my_task_total_" />
+	<result property="teamTaskTotal" column="team_task_total_" />
+	<result property="overdueTeamTaskTotal" column="overdue_team_task_total_" />
+	<result property="involvedTaskTotal" column="involved_task_total_" />
+	<result property="overdueInvolvedTaskTotal" column="overdue_involved_task_total_" />
+	<result property="dirty" column="dirty_" />
+	<result property="lastUpdate" column="last_update_" />
+</resultMap>
+</mapper>

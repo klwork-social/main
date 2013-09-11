@@ -24,10 +24,15 @@ import com.klwork.explorer.ViewToolManager;
  * The Class TeamTaskListQuery.
  */
 public class TeamTaskListQuery extends AbstractTaskListQuery {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3804565709985213751L;
 	protected transient TeamService teamService;
 	private List<String> teams;
 	
 	public TeamTaskListQuery(List<String> teams) {
+		super(null);
 		if(teams == null || teams.isEmpty() ){
 			teams = new ArrayList<String>();
 			teams.add("-99");

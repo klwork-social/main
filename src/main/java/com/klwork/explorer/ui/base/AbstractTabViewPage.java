@@ -153,6 +153,14 @@ public class AbstractTabViewPage extends CustomComponent implements TabSheet.Sel
 		//System.out.println("tab:" + c);
 	}
 
+	public Map<String, Component> getTabCache() {
+		return tabCache;
+	}
+
+	public void setTabCache(Map<String, Component> tabCache) {
+		this.tabCache = tabCache;
+	}
+
 	
 	
 }
