@@ -36,7 +36,6 @@ public class ProjectServiceTest extends BaseTxWebTests {
 		project.setDescription("descript");
 		projectService.createProject(project);
 		
-		
 		List<Todo> beanList = new ArrayList<Todo>();
 		Todo a = todoService.newTodo(project.getName());
 		a.setName("sdfsdf");
@@ -52,9 +51,7 @@ public class ProjectServiceTest extends BaseTxWebTests {
 		beanList.add(a);
 		beanList.add(t);
 		todoService.saveTodoList(beanList);
-		
 		//加上默认的一共3个
-		
 		MyCalendarEvent event = todoService.queryRelatedEvent(t);
 		assertNotNull(event);
 		

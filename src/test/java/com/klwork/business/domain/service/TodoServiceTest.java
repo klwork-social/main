@@ -21,10 +21,10 @@ public class TodoServiceTest extends BaseTxWebTests {
 
 	@Test
 	public void testService() {
-		Todo a = todoService.newTodo("新任务");
+		Todo a = todoService.newTodo("新任务1");
 		todoService.createTodo(a);
 		List<Todo> beanList = new ArrayList<Todo>();
-		Todo t = todoService.newTodo("新任务");
+		Todo t = todoService.newTodo("新任务2");
 		t.setPid("11");
 		t.setName("sdfsdf");
 		t.setId("123");

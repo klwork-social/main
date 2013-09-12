@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.vaadin.peter.contextmenu.ContextMenu;
 import org.vaadin.peter.contextmenu.ContextMenu.ContextMenuItemClickEvent;
+import org.vaadin.peter.contextmenu.ContextMenu.ContextMenuItemClickListener;
 import org.vaadin.peter.contextmenu.ContextMenu.ContextMenuOpenedListener;
 import org.vaadin.peter.contextmenu.ContextMenu.ContextMenuOpenedListener.TableListener;
 import org.vaadin.peter.contextmenu.ContextMenu.ContextMenuOpenedOnTableFooterEvent;
@@ -209,46 +210,11 @@ public class ProjectTreeTable extends DetailPanel {
 			public void buttonClick(ClickEvent event) {
 				if(changeRoot.getValue().equals("1")){
 					if(projectId!=null){
-						Todo newTodo = todoService.newTodo(addTxt.getValue());
-						newTodo.setProId(projectId);
-						initTodoProId(newTodo);
-						BeanItem<Todo> newbeanItem = new BeanItem<Todo>(newTodo);
-						Item nItem = hContainer.addItem(newbeanItem);
-						hContainer.setChildrenAllowed(newbeanItem, false);
-						copyBeanValueToContainer(hContainer, newbeanItem);
-						// 设置父节点
-						hContainer.setParent(newbeanItem, null);
-						//快速新增计划后，将计划保存到数据库
-						List<Todo> todos = new ArrayList<Todo>();
-						todos.add(newTodo);
-						todoService.saveTodoList(todos);
+						createNewAct();
 					}
 				}else if (changeRoot.getValue().equals("2")){
 					if(StringTool.judgeBlank(todoId)){
-//						Item parentItem = hContainer.getItem(currentBeanItem);
-						Todo newTodo = todoService.newTodo(addTxt.getValue());
-						initTodoProId(newTodo);
-						@SuppressWarnings("rawtypes")
-						BeanItem newbeanItem = new BeanItem<Todo>(newTodo);
-						Item nItem = hContainer.addItem(newbeanItem);
-						hContainer.setChildrenAllowed(newbeanItem, false);
-						hContainer.setChildrenAllowed(currentBeanItem, true);
-						copyBeanValueToContainer(hContainer, newbeanItem);
-						// 设置父节点
-						hContainer.setParent(newbeanItem, currentBeanItem);
-						Todo paretTodo = currentBeanItem.getBean();
-						// 新的记录设置为
-						newTodo.setPid(todoId);
-						hContainer.getContainerProperty(newbeanItem, "pid")
-								.setValue(paretTodo.getId());
-						// 老的记录
-						paretTodo.setIsContainer(1);
-						hContainer.getContainerProperty(currentBeanItem,
-								"isContainer").setValue(1);
-						List<Todo> todos = new ArrayList<Todo>();
-						todos.add(newTodo);
-						todos.add(paretTodo);
-						todoService.saveTodoList(todos);
+						createNewSubAct();
 					}
 				}
 			}
@@ -372,60 +338,72 @@ public class ProjectTreeTable extends DetailPanel {
 		ContextMenu tableContextMenu = new ContextMenu();
 		tableContextMenu.addContextMenuTableListener(createOpenListener());
 		tableContextMenu.addItem("新建子任务").addItemClickListener(
-				new ContextMenu.ContextMenuItemClickListener() {
-					@Override
-					public void contextMenuItemClicked(
-							ContextMenuItemClickEvent event) {
-						Item parentItem = hContainer.getItem(currentBeanItem);
-						Todo newTodo = todoService.newTodo(addTxt.getValue());
-						initTodoProId(newTodo);
-						@SuppressWarnings("rawtypes")
-						BeanItem newbeanItem = new BeanItem<Todo>(newTodo);
-						Item nItem = hContainer.addItem(newbeanItem);
-						hContainer.setChildrenAllowed(newbeanItem, false);
-						hContainer.setChildrenAllowed(currentBeanItem, true);
-						copyBeanValueToContainer(hContainer, newbeanItem);
-						// 设置父节点
-						hContainer.setParent(newbeanItem, currentBeanItem);
-						Todo paretTodo = currentBeanItem.getBean();
-						// 新的记录设置为
-						newTodo.setPid(todoId);
-						hContainer.getContainerProperty(newbeanItem, "pid")
-								.setValue(paretTodo.getId());
-						// 老的记录
-						paretTodo.setIsContainer(1);
-						hContainer.getContainerProperty(currentBeanItem,
-								"isContainer").setValue(1);
-						List<Todo> todos = new ArrayList<Todo>();
-						todos.add(newTodo);
-						todos.add(paretTodo);
-						todoService.saveTodoList(todos);
-					}
-
-				});
+				createNewSubActItemClick());
 		tableContextMenu.addItem("新建任务").addItemClickListener(
-				new ContextMenu.ContextMenuItemClickListener() {
-					@Override
-					public void contextMenuItemClicked(
-							ContextMenuItemClickEvent event) {
-						Todo newTodo = todoService.newTodo(addTxt.getValue());
-						newTodo.setProId(projectId);
-						initTodoProId(newTodo);
-						BeanItem<Todo> newbeanItem = new BeanItem<Todo>(newTodo);
-						Item nItem = hContainer.addItem(newbeanItem);
-						hContainer.setChildrenAllowed(newbeanItem, false);
-						copyBeanValueToContainer(hContainer, newbeanItem);
-						// 设置父节点
-						hContainer.setParent(newbeanItem, null);
-						//快速新增计划后，将计划保存到数据库
-						List<Todo> todos = new ArrayList<Todo>();
-						todos.add(newTodo);
-						todoService.saveTodoList(todos);
-
-					}
-
-				});
+				createNewActItemClick());
 		tableContextMenu.setAsTableContextMenu(ttable);
+	}
+
+	private ContextMenuItemClickListener createNewActItemClick() {
+		return new ContextMenu.ContextMenuItemClickListener() {
+			@Override
+			public void contextMenuItemClicked(
+					ContextMenuItemClickEvent event) {
+				createNewAct();
+			}
+		};
+	}
+
+	private ContextMenuItemClickListener createNewSubActItemClick() {
+		return new ContextMenu.ContextMenuItemClickListener() {
+			@Override
+			public void contextMenuItemClicked(
+					ContextMenuItemClickEvent event) {
+				createNewSubAct();
+			}
+		};
+	}
+	
+	private void createNewAct() {
+		Todo newTodo = todoService.newTodo(addTxt.getValue());
+		newTodo.setProId(projectId);
+		initTodoProId(newTodo);
+		BeanItem<Todo> newbeanItem = new BeanItem<Todo>(newTodo);
+		Item nItem = hContainer.addItem(newbeanItem);
+		hContainer.setChildrenAllowed(newbeanItem, false);
+		copyBeanValueToContainer(hContainer, newbeanItem);
+		// 设置父节点
+		hContainer.setParent(newbeanItem, null);
+		//快速新增计划后，将计划保存到数据库
+		List<Todo> todos = new ArrayList<Todo>();
+		todos.add(newTodo);
+		todoService.saveTodoList(todos);
+	}
+	private void createNewSubAct() {
+		Item parentItem = hContainer.getItem(currentBeanItem);
+		Todo newTodo = todoService.newTodo(addTxt.getValue());
+		initTodoProId(newTodo);
+		@SuppressWarnings("rawtypes")
+		BeanItem newbeanItem = new BeanItem<Todo>(newTodo);
+		Item nItem = hContainer.addItem(newbeanItem);
+		hContainer.setChildrenAllowed(newbeanItem, false);
+		hContainer.setChildrenAllowed(currentBeanItem, true);
+		copyBeanValueToContainer(hContainer, newbeanItem);
+		// 设置父节点
+		hContainer.setParent(newbeanItem, currentBeanItem);
+		Todo paretTodo = currentBeanItem.getBean();
+		// 新的记录设置为
+		newTodo.setPid(todoId);
+		hContainer.getContainerProperty(newbeanItem, "pid")
+				.setValue(paretTodo.getId());
+		// 老的记录
+		paretTodo.setIsContainer(1);
+		hContainer.getContainerProperty(currentBeanItem,
+				"isContainer").setValue(1);
+		List<Todo> todos = new ArrayList<Todo>();
+		todos.add(newTodo);
+		todos.add(paretTodo);
+		todoService.saveTodoList(todos);
 	}
 
 	private TableListener createOpenListener() {
