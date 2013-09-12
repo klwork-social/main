@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	id="WebApp_ID" version="2.5">
-	<display-name>Vaadin Widget Test Application</display-name>
-
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+      version="3.0" metadata-complete="true"> 
+	<display-name>KLWORK</display-name>
 	<!-- Spring -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -33,6 +32,7 @@
 			<param-name>widgetset</param-name>
 			<param-value>org.vaadin.peter.contextmenu.ContextmenuWidgetset</param-value>
 		</init-param>
+		<async-supported>true</async-supported>
 		<load-on-startup>10</load-on-startup>
 	</servlet>
 	<servlet-mapping>
@@ -40,8 +40,8 @@
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>Vaadin Application</servlet-name>
-		<url-pattern>/VAADIN/*</url-pattern>
+	    <servlet-name>Vaadin Application</servlet-name>
+	    <url-pattern>/VAADIN/*</url-pattern>
 	</servlet-mapping>
 
 	<context-param>
@@ -85,6 +85,7 @@
 			<param-name>targetFilterLifecycle</param-name>
 			<param-value>true</param-value>
 		</init-param>
+		<async-supported>true</async-supported>
 	</filter>
 
 	<filter-mapping>
@@ -95,6 +96,7 @@
 	<filter>
 		<filter-name>messageFilter</filter-name>
 		<filter-class>com.klwork.explorer.web.MessageFilter</filter-class>
+		<async-supported>true</async-supported>
 	</filter>
 	<filter-mapping>
 		<filter-name>messageFilter</filter-name>
