@@ -77,7 +77,7 @@
 			<tx:method name="*" propagation="REQUIRED" />
 		</tx:attributes>
 	</tx:advice-->
-  
+  	
 	<bean id="processEngineConfiguration" class="com.klwork.explorer.web.CusSpringProcessEngineConfiguration">
 		<property name="dataSource" ref="dataSource" />
 		<property name="transactionManager" ref="transactionManager" />

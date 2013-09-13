@@ -15,7 +15,7 @@
 		<property name="environment" value="${activiti.ui.environment}" />
 	</bean>
   
-	<bean name="i18nManager" class="com.klwork.explorer.I18nManager" scope="session">
+	<bean name="i18nManager" class="com.klwork.explorer.I18nManager" scope="singleton">
 		<property name="messageSource" ref="messageSource" />
 	</bean>
   
@@ -28,7 +28,7 @@
 		<aop:scoped-proxy proxy-target-class="false" /> <!-- Needed for session serialization -->
 	</bean>
   
-	<bean name="notificationManager" class="com.klwork.explorer.NotificationManager" scope="session">
+	<bean name="notificationManager" class="com.klwork.explorer.NotificationManager" scope="singleton">
 		<property name="i18nManager" ref="i18nManager" />
 	</bean>
   

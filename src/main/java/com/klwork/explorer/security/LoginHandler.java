@@ -9,7 +9,7 @@ public class LoginHandler {
 	
 	public static final String LOGIN_USER_KEY = "social_login_user";
 	// Thread local storage of instance for each user
-	private static final ThreadLocal<LoggedInUser> loginHandler_currentUser = new ThreadLocal<LoggedInUser>();
+	private static  ThreadLocal<LoggedInUser> loginHandler_currentUser = new ThreadLocal<LoggedInUser>();
 
 	public static LoggedInUser getLoggedInUser() {
 		return getUser();
