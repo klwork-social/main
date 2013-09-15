@@ -57,6 +57,14 @@ public class ViewToolManager {
 		}
 		return null;
 	}
+	
+	public static void navigateTo(String view) {
+		Navigator nav = UI.getCurrent().getNavigator();
+		if (nav.getState().equals("/" + view))
+            nav.navigateTo(nav.getState().substring(1));
+        else 
+        	nav.navigateTo(view);
+	}
 
 	/**
 	 * 在当前窗口弹出一个窗口

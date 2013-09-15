@@ -44,7 +44,7 @@ import com.vaadin.ui.Window;
 
 @org.springframework.stereotype.Component
 @Scope("prototype")
-@VaadinView(value = DashboardView.NAME, cached = true)
+@VaadinView(value = DashboardView.NAME, cached = false)
 public class DashboardView extends VerticalLayout implements View {
 	public static final String NAME = "dashboard";
 	
@@ -182,7 +182,7 @@ public class DashboardView extends VerticalLayout implements View {
         row.setSpacing(true);
         addComponent(row);
         setExpandRatio(row, 1.5f);
-        
+        //任务提醒
         row.addComponent(createPanel(new TaskRemindComponent()));
 
         TextArea notes = new TextArea("Notes");

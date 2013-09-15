@@ -6,6 +6,7 @@ import java.util.Random;
 import com.klwork.business.domain.model.UserDataStatistic;
 import com.klwork.business.domain.service.TeamService;
 import com.klwork.business.domain.service.UserDataStatisticService;
+import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoggedInUser;
@@ -36,14 +37,26 @@ public class TaskMainPage extends AbstractTabViewPage {
 	private Tab teamTab;
 	private Tab involvedTab;
 	private UserDataStatistic cUserDataStatistic;
-	
+	private String parameter;
 	private UserDataStatisticService userDataStatisticService;
 	
-	public TaskMainPage() {
+	public TaskMainPage(String parameter) {
 		super();
+		this.parameter = parameter;
 		userDataStatisticService = ViewToolManager.getBean("userDataStatisticService");
 	}
 	
+	
+	public String getParameter() {
+		return parameter;
+	}
+
+
+	public void setParameter(String parameter) {
+		this.parameter = parameter;
+	}
+
+
 	@Override
 	public void initTabData() {
 		
@@ -52,29 +65,29 @@ public class TaskMainPage extends AbstractTabViewPage {
 		
 		//代办
 		InboxPage inboxPage = new InboxPage();
-		todoTab = addTab(inboxPage, "inBoxTask", queryTodoTabCaption());
-		setDefaultTab(cUserDataStatistic.getTodoTaskTotal(), inboxPage);
+		todoTab = addTab(inboxPage, "todoTask", queryTodoTabCaption());
+		setDefaultTab("todoTask",cUserDataStatistic.getTodoTaskTotal(), inboxPage);
 
 		//String myTaskTitle = "我的任务";
 		TasksPage taskPage = new TasksPage();
 		LoggedInUser user = LoginHandler.getLoggedInUser();
 		myTab = addTab(taskPage, "myTask",
 				queryMyTabCaption());
-		setDefaultTab(cUserDataStatistic.getMyTaskTotal(), taskPage);
+		setDefaultTab("myTask",cUserDataStatistic.getMyTaskTotal(), taskPage);
 
 		//String teamTitle = "团队任务";
 		TeamService teamService = ViewToolManager.getBean("teamService");
 		List<String> teams = teamService.queryUserInTeamIds(user.getId());
 		TeamTaskPage teamPage = new TeamTaskPage(teams);
 		teamTab = addTab(teamPage, "teamTask", queryTeamTabCaption());
-		setDefaultTab(cUserDataStatistic.getTeamTaskTotal(), teamPage);
+		setDefaultTab("teamTask",cUserDataStatistic.getTeamTaskTotal(), teamPage);
 		
 		//
 		//final String involvedTitle = "参与任务";
 		InvolvedPage involvedPage = new InvolvedPage();
-		 involvedTab = addTab(involvedPage, "InvolvedTask",
+		 involvedTab = addTab(involvedPage, "involvedTask",
 				queryInvolvedTabCaption());
-		setDefaultTab(cUserDataStatistic.getInvolvedTaskTotal(), involvedPage);
+		setDefaultTab("involvedTask",cUserDataStatistic.getInvolvedTaskTotal(), involvedPage);
 		
 		// 新增任务
 		initAddButton();
@@ -108,11 +121,20 @@ public class TaskMainPage extends AbstractTabViewPage {
 		return currentTableTitle(cUserDataStatistic.getTodoTaskTotal(), tabTitle);
 	}
 
-	private void setDefaultTab(long inboxCount, Component inboxPage) {
+	private void setDefaultTab(String sign, long inboxCount, Component inboxPage) {
+		if(paramMatching(sign)){//传入了参数，和tab进行匹配，则显示这个tab
+			setSelectedTab(inboxPage);
+			defaultSign = true;
+			return;
+		}
 		if (inboxCount > 0 && !defaultSign) {
 			setSelectedTab(inboxPage);
 			defaultSign = true;
 		}
+	}
+
+	public boolean paramMatching(String sign) {
+		return StringTool.judgeBlank(parameter) && sign.equals(parameter);
 	}
 
 	private String currentTableTitle(long inboxCount, String tabTitle) {

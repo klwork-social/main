@@ -12,6 +12,8 @@
  */
 package com.klwork.explorer.ui.base;
 
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.custom.ToolBar;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
@@ -37,7 +39,7 @@ public abstract class AbstractTaskMainPage extends AbstractHCustomComponent {
 	protected AbstractSelect select;
 	protected boolean showEvents;
 	protected GridLayout grid;
-	
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
 	
 	public AbstractTaskMainPage() {

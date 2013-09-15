@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.common.utils.StringDateUtil;
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.Constants;
 import com.klwork.explorer.security.LoggedInUserImpl;
 import com.klwork.explorer.security.LoginHandler;
@@ -35,6 +37,8 @@ import com.klwork.explorer.security.LoginHandler;
 
 @Service
 public class UserService {
+	private transient Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	IdentityService identityService;
 	
@@ -106,6 +110,7 @@ public class UserService {
 
 		if (loggedInUser != null) {
 			// WW_TODO 登录成功设置用户信息
+			logger.info("用户:" + loggedInUser.getId() + "登录成功");
 			LoginHandler.setUser(loggedInUser);
 			Subject subject = SecurityUtils.getSubject();
 			Session session = subject.getSession();

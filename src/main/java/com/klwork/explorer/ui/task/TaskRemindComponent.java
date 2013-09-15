@@ -8,13 +8,23 @@ import com.klwork.business.domain.service.UserDataStatisticService;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.base.AbstractVCustomComponent;
+import com.klwork.explorer.ui.custom.ConfirmationDialogPopupWindow;
+import com.klwork.explorer.ui.event.ConfirmationEvent;
+import com.klwork.explorer.ui.event.ConfirmationEventListener;
 import com.klwork.explorer.ui.handler.BinderHandler;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.Table.RowHeaderMode;
+import com.vaadin.ui.themes.Reindeer;
 
 public class TaskRemindComponent extends AbstractVCustomComponent {
 	private UserDataStatistic cUserDataStatistic;
@@ -36,7 +46,8 @@ public class TaskRemindComponent extends AbstractVCustomComponent {
 		@Override
 		public Object generateCell(Table source, Object itemId, Object columnId) {
 			TaskRemindEntity e = BinderHandler.getTableBean(source,itemId);
-			Label s = new Label(e.getOverdueCount() + "");
+			String title = "<span style='color:red'>" + e.getOverdueCount() + "</span>";
+			Label s = new Label(title + "",ContentMode.HTML);
 			return s;
 		}
 	}
@@ -51,8 +62,14 @@ public class TaskRemindComponent extends AbstractVCustomComponent {
 
 		@Override
 		public Object generateCell(Table source, Object itemId, Object columnId) {
-			TaskRemindEntity e = BinderHandler.getTableBean(source,itemId);
-			Label s = new Label(e.getCount() + "");
+			final TaskRemindEntity e = BinderHandler.getTableBean(source,itemId);
+			Button s = new Button(e.getCount() + "");
+			s.addStyleName(Reindeer.BUTTON_LINK);
+			s.addClickListener(new ClickListener() {
+				public void buttonClick(ClickEvent event) {
+					ViewToolManager.navigateTo("tasks" + "/" + e.getType());
+				}
+			});
 			return s;
 		}
 
@@ -99,16 +116,16 @@ public class TaskRemindComponent extends AbstractVCustomComponent {
         t.setRowHeaderMode(RowHeaderMode.INDEX);
         BeanItemContainer<TaskRemindEntity> container = new BeanItemContainer<TaskRemindEntity>(
 				TaskRemindEntity.class);
-		TaskRemindEntity first = new TaskRemindEntity("代办任务", cUserDataStatistic.getTodoTaskTotal(),cUserDataStatistic.getOverdueTodoTaskTotal());
+		TaskRemindEntity first = new TaskRemindEntity("代办任务", cUserDataStatistic.getTodoTaskTotal(),cUserDataStatistic.getOverdueTodoTaskTotal(),"todoTask");
 		container.addBean(first);
 		
-		first = new TaskRemindEntity("我的任务", cUserDataStatistic.getMyTaskTotal(),cUserDataStatistic.getOverdueMyTaskTotal());
+		first = new TaskRemindEntity("我的任务", cUserDataStatistic.getMyTaskTotal(),cUserDataStatistic.getOverdueMyTaskTotal(),"myTask");
 		container.addBean(first);
 		
-		first = new TaskRemindEntity("团队任务", cUserDataStatistic.getTeamTaskTotal(),cUserDataStatistic.getOverdueTeamTaskTotal());
+		first = new TaskRemindEntity("团队任务", cUserDataStatistic.getTeamTaskTotal(),cUserDataStatistic.getOverdueTeamTaskTotal(),"teamTask");
 		container.addBean(first);
 		
-		first = new TaskRemindEntity("参与任务", cUserDataStatistic.getInvolvedTaskTotal(),cUserDataStatistic.getOverdueInvolvedTaskTotal());
+		first = new TaskRemindEntity("参与任务", cUserDataStatistic.getInvolvedTaskTotal(),cUserDataStatistic.getOverdueInvolvedTaskTotal(),"involvedTask");
 		container.addBean(first);
 		//container.addBean(new MemberType("正在邀请..", "13",EntityDictionary.TEAM_GROUP_TYPE_INVITE));
 		t.setContainerDataSource(container);
@@ -136,11 +153,13 @@ public class TaskRemindComponent extends AbstractVCustomComponent {
 		private String name;
 		private Integer count;
 		private Integer overdueCount;
-		public TaskRemindEntity(String name, Integer count, Integer overdueCount) {
+		private String type;
+		public TaskRemindEntity(String name, Integer count, Integer overdueCount,String type) {
 			super();
 			this.name = name;
 			this.count = count;
 			this.overdueCount = overdueCount;
+			this.type = type;
 		}
 		public String getName() {
 			return name;
@@ -160,7 +179,11 @@ public class TaskRemindComponent extends AbstractVCustomComponent {
 		public void setOverdueCount(Integer overdueCount) {
 			this.overdueCount = overdueCount;
 		}
-		
-		
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
 	}
 }

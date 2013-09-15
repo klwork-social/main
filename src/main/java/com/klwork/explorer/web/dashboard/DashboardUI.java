@@ -81,7 +81,7 @@ public class DashboardUI extends UI implements ErrorHandler{
     protected I18nManager i18nManager;
     
     CssLayout rootLayout = new CssLayout();
-
+    private LoggedInUser loggedInUser;
 
     CssLayout menuLayout = new CssLayout();
     CssLayout contentLayout = new CssLayout();
@@ -103,6 +103,7 @@ public class DashboardUI extends UI implements ErrorHandler{
 
     @Override
     protected void init(VaadinRequest request) {
+    	loggedInUser = LoginHandler.querySecurityUser();
     	 VaadinSession.getCurrent().setErrorHandler(this);
         helpManager = new HelpManager(this);
         
@@ -511,6 +512,14 @@ public class DashboardUI extends UI implements ErrorHandler{
 
 	public void setCurrentView(View currentView) {
 		this.currentView = currentView;
+	}
+
+	public LoggedInUser getLoggedInUser() {
+		return loggedInUser;
+	}
+
+	public void setLoggedInUser(LoggedInUser loggedInUser) {
+		this.loggedInUser = loggedInUser;
 	}
 	
 	

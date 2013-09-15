@@ -268,7 +268,7 @@ public class ProjectManagerService {
 		String participantsType = EntityDictionary.PARTICIPANTS_TYPE_SCORER;
 		//WW_TODO 怎么从流程变量得到值
 		Object assessedTaskId = runtimeService.getVariable(task.getExecutionId(), EntityDictionary.UP_LOADTASK_ID);
-		System.out.println("查询出的任务 id: " + assessedTaskId);
+		//System.out.println("查询出的任务 id: " + assessedTaskId);
 		if(assessedTaskId == null){
 			return null;
 		}

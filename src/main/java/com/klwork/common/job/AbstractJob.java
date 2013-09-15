@@ -2,14 +2,15 @@ package com.klwork.common.job;
 
 import java.util.Date;
 
-import org.apache.log4j.Logger;
 import org.springframework.util.StopWatch;
 
 import com.klwork.common.utils.StringDateUtil;
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 
 
 public abstract class AbstractJob implements Job {
-	private Logger logger = Logger.getLogger(getClass());
+	private transient Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 

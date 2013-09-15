@@ -22,7 +22,6 @@ import net.sf.json.JSONObject;
 
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.User;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +38,8 @@ import com.klwork.business.utils.TencentSociaTool;
 import com.klwork.common.exception.ApplicationException;
 import com.klwork.common.utils.StringDateUtil;
 import com.klwork.common.utils.StringTool;
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.ui.util.ImageUtil;
 import com.tencent.weibo.api.AddParameter;
 import com.tencent.weibo.api.StatusesAPI;
@@ -55,7 +56,7 @@ import com.tencent.weibo.utils.TencentWeiboContentTransLate;
 @Service
 public class SocialTencentService extends AbstractSocialService {
 	
-	private Logger logger = Logger.getLogger(getClass());
+	private transient Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
 	public SocialUserAccountService socialUserAccountService;

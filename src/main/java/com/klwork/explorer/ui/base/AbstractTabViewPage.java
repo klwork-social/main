@@ -3,6 +3,8 @@ package com.klwork.explorer.ui.base;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.ViewToolManager;
 import com.vaadin.server.Resource;
@@ -18,7 +20,7 @@ public class AbstractTabViewPage extends CustomComponent implements TabSheet.Sel
 	
 	protected I18nManager i18nManager;
 	protected Map<String,Component> tabCache = new HashMap<String, Component>();
-	
+	private transient Logger logger = LoggerFactory.getLogger(getClass());
 	private boolean forceLazLoad = true;
 	
 	public AbstractTabViewPage() {
@@ -145,12 +147,12 @@ public class AbstractTabViewPage extends CustomComponent implements TabSheet.Sel
 		if( c instanceof  TabLayLoadComponent ){
 			TabLayLoadComponent s = (TabLayLoadComponent)c;
 			if(forceLazLoad && s.isLazyload() && !s.isStartInit()){//没有进行初始化
-				//System.out.println("laz init...");
+				logger.debug("laz init...");
 				s.startInit();
 				s.setStartInit(true);//设置已经初始化完成了
 			}
 	     }
-		//System.out.println("tab:" + c);
+		logger.debug("tab:" + c);
 	}
 
 	public Map<String, Component> getTabCache() {

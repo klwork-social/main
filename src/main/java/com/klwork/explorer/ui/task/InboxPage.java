@@ -32,7 +32,7 @@ public class InboxPage extends TaskPage {
   private static final long serialVersionUID = 1L;
   
   public InboxPage() {
-	  System.out.println("inboxpage init .....");
+	  logger.info("inboxpage init .....");
   }
   
   /**

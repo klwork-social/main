@@ -22,17 +22,18 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.shiro.SecurityUtils;
+import org.slf4j.MDC;
 
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.ViewToolManager;
-import com.klwork.explorer.security.LoggedInUser;
 import com.klwork.explorer.security.LoginHandler;
 
 /**
  * The Class MessageFilter.
  */
 public class MessageFilter implements Filter {
-
+	private transient Logger logger = LoggerFactory.getLogger(getClass());
 	public void doFilter(ServletRequest req, ServletResponse res,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
@@ -43,6 +44,13 @@ public class MessageFilter implements Filter {
 		request.setAttribute("requestURL", requestURL);*/
 		
 		LoginHandler.resetUser();
+		if(LoginHandler.getUser() != null){
+			MDC.put("userId",LoginHandler.getUser().getId());
+			logger.debug("设置MDC" + LoginHandler.getUser().getId());
+		}else {
+			MDC.put("userId","");
+		}
+		
 		chain.doFilter(req, res);
 	}
 

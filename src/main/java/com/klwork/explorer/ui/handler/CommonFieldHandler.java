@@ -49,7 +49,7 @@ public class CommonFieldHandler {
 
 	public static DateField createDateField(String caption,
 			boolean useSecondResolution) {
-		System.out.println(Locale.getDefault());
+		//System.out.println(Locale.getDefault());
 		DateField f = new DateField();
 		//f.setLocale(Locale.US);
 		if (StringTool.judgeBlank(caption)) {

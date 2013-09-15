@@ -2,12 +2,12 @@
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- log by method is not fast. remove it later -->
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}/%method %msg%n
+			<pattern>%date [%thread] %-5level [user:%X{userId}]%logger{80}|%L - %msg%n
 			</pattern>
 		</encoder>
 	</appender>
 
-    <logger name="com.klwork" level="INFO"/>
+    <logger name="com.klwork" level="DEBUG"/>
 
     <root level="INFO">
 		<appender-ref ref="STDOUT" />

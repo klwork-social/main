@@ -30,6 +30,7 @@ public class TasksView extends VerticalLayout implements View,PushUpdateInterfac
 	public static final String NAME = "tasks";
 	protected I18nManager i18nManager;
 	TaskMainPage mainPage = null;
+	private String parameter;
 	
 	public TasksView() {
 		this.i18nManager = ViewToolManager.getI18nManager();
@@ -38,7 +39,7 @@ public class TasksView extends VerticalLayout implements View,PushUpdateInterfac
 	@Override
 	public void attach() {
 		super.attach();
-		initUi();
+		//initUi();
 	}
 	
 
@@ -46,7 +47,7 @@ public class TasksView extends VerticalLayout implements View,PushUpdateInterfac
     public void initUi() {
     	setSizeFull();
         addStyleName("reports");
-        mainPage = new TaskMainPage();
+        mainPage = new TaskMainPage(parameter);
 		addComponent(mainPage);
 		setExpandRatio(mainPage, 1.0f);
        
@@ -55,7 +56,9 @@ public class TasksView extends VerticalLayout implements View,PushUpdateInterfac
 	@Override
 	public void enter(ViewChangeEvent event) {
 		View v = event.getNewView();
+		parameter = event.getParameters();
 		((DashboardUI)UI.getCurrent()).setCurrentView(v);
+		initUi();
 	}
 
 	@Override
