@@ -74,13 +74,15 @@ public class CommonFieldHandler {
 		if (StringTool.judgeBlank(caption)) {
 			s.setCaption(caption);
 		}
+		int index = 0;
 		for (String p : data.keySet()) {
 			String title = data.get(p);
 			Item i = s.addItem(p);
 			s.setItemCaption(p, title);
-			if(p.equals(defaultValue)){
+			if(index == 0 || p.equals(defaultValue)){
 				firstItemId = p;
 			}
+			index++;
 		}
 		
 		// Select first element

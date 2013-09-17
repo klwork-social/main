@@ -38,6 +38,9 @@ public class SocialServiceTest extends BaseTxWebTests {
 	SocialMainService socialService;
 	
 	@Autowired
+	SocialEvernoteService socialEvernoteService;
+	
+	@Autowired
 	public SocialUserAccountService socialUserAccountService;
 	
 	@Test
@@ -94,5 +97,10 @@ public class SocialServiceTest extends BaseTxWebTests {
 		TimelineParameter pBroadcastTime = new TimelineParameter(oAuth);
 		pBroadcastTime.pagetime = webFetchTime;
 		socialTencentService.myWeiboToDb(ac, oAuth,pBroadcastTime);
+	}
+	
+	@Test
+	public void testEnernote() {
+		socialEvernoteService.queryEvernoteRequestTokenInfo();
 	}
 }

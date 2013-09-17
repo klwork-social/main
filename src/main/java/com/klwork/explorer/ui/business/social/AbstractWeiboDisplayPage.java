@@ -10,6 +10,7 @@ import org.vaadin.cssinject.CSSInject;
 import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserWeibo;
+import com.klwork.business.domain.service.SocialEvernoteService;
 import com.klwork.business.domain.service.SocialUserWeiboService;
 import com.klwork.business.domain.service.infs.AbstractSocialService;
 import com.klwork.common.utils.StringDateUtil;
@@ -29,7 +30,6 @@ import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -40,12 +40,11 @@ import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
-import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -68,7 +67,8 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 	int weiboType = 0;
 
 	SocialUserAccount socialUserAccount;
-
+	
+	
 	public AbstractWeiboDisplayPage(SocialUserAccount socialUserAccount,
 			int type) {
 		super(true);
@@ -766,6 +766,21 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 					addButton.addStyleName(Reindeer.BUTTON_LINK);
 					addComponent(addButton);
 					setComponentAlignment(addButton, Alignment.BOTTOM_LEFT);
+					setExpandRatio(addButton, 1);
+					
+					Button weiboSaveToNote = new Button("保存到笔记本");
+					weiboSaveToNote.addStyleName(Reindeer.BUTTON_LINK);
+					addComponent(weiboSaveToNote);
+					
+					weiboSaveToNote.addClickListener(new ClickListener() {
+						public void buttonClick(ClickEvent event) {
+							WeiboPopupWindow t = new SaveToNotePopupWindow(
+									userWeibo, socialUserAccount, AbstractWeiboDisplayPage.this);
+							ViewToolManager.showPopupWindow(t);
+						}
+					});
+					
+					setComponentAlignment(weiboSaveToNote, Alignment.BOTTOM_LEFT);
 				}
 			};
 			grid.addComponent(thirdLayout, 2, 0);

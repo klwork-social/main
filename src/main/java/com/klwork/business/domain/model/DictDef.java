@@ -181,7 +181,7 @@ public class DictDef implements Serializable
 	/**
 	 * 从代码得到数据值
 	 * @param code
-	 * @return
+	 * @return value
 	 */
 	public static String dict(String code){
 		DictDef def  = queryDictDefByCode(code);
@@ -194,7 +194,7 @@ public class DictDef implements Serializable
 	/**
 	 * 从代码得到数据值
 	 * @param code
-	 * @return
+	 * @return value
 	 */
 	public static int dictInt(String code){
 		String dict = dict(code);

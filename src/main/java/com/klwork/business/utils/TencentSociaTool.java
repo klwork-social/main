@@ -19,9 +19,9 @@ public class TencentSociaTool {
 		return JSONObject.fromObject(reponseJsonStr).get("data");
 	}
 	
-	public static String generateAuthorizationURL(){
+	public static String generateAuthorizationURL(String state){
 		OAuthV2 oAuth = getQQAuthV2();
-		String url = OAuthV2Client.generateAuthorizationURL(oAuth);
+		String url = OAuthV2Client.generateAuthorizationURL(oAuth) + "&state=" + state;
 		return url;
 	}
 

@@ -28,6 +28,10 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
+/**
+ * 账号所属团队授权
+ * @author ww
+ */
 public class AccountAuthorityPopupWindow extends PopupWindow {
 	protected transient I18nManager i18nManager;
 	public transient SocialUseAuthorityListService socialUseAuthorityListService;

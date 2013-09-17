@@ -128,6 +128,8 @@ public class DictDefRepository extends
 		insertData(dictDef);
 		dictDef = new DictDef("101", "tencent", "2", "腾讯", "1");
 		insertData(dictDef);
+		dictDef = new DictDef("102", "evernote", "2", "evernote", "2");
+		insertData(dictDef);
 		
 		dictDef = new DictDef("110", "followersCount", "3", "粉丝数", "followersCount");
 		insertData(dictDef);

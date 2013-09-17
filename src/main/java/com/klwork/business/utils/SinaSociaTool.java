@@ -120,7 +120,7 @@ public class SinaSociaTool {
 		return WeiboContentTransLate.transLateall(text, "blue");
 	}
 
-	public static String generateAuthorizationURL() {
+	public static String generateAuthorizationURL(String state) {
 		String clientId = SocialConfig.getString("client_id");
 		String clinetSecret = SocialConfig.getString("clinet_secret");
 		String redirectUrl = SocialConfig.getString("go_back");
@@ -129,7 +129,10 @@ public class SinaSociaTool {
 		// r = "http://127.0.0.1/ks/user/weibo-login";
 		String r = UriUtility.encode(redirectUrl, "utf-8");
 		String url = "https://api.weibo.com/oauth2/authorize?response_type=code&client_id="
-				+ clientId + "&redirect_uri=" + r + "&state=SinaWeiBo";
+				+ clientId + "&redirect_uri=" + r + "&state=" + state;
+		if("reset-oauth".equals(state)){
+			url += "&forcelogin=true";
+		}
 		return url;
 	}
 

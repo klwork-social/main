@@ -32,9 +32,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import weibo4j.model.WeiboException;
-
 import com.klwork.business.domain.model.DictDef;
+import com.klwork.business.domain.service.SocialEvernoteService;
 import com.klwork.business.domain.service.SocialMainService;
 import com.klwork.business.domain.service.SocialSinaService;
 import com.klwork.business.domain.service.SocialTencentService;
@@ -45,7 +44,7 @@ import com.klwork.business.utils.TencentSociaTool;
 import com.klwork.common.DataBaseParameters;
 import com.klwork.common.SystemConstants;
 import com.klwork.common.dto.vo.AjaxResult;
-import com.klwork.common.exception.ApplicationException;
+import com.klwork.explorer.security.LoginHandler;
 
 /**
  * The Class LoginController.
@@ -70,6 +69,9 @@ public class LoginController {
 
 	@Autowired
 	SocialMainService socialService;
+	
+	@Autowired
+	SocialEvernoteService socialEvernoteService;
 
 	/**
 	 * 进入到普通登录页面
@@ -138,8 +140,7 @@ public class LoginController {
 			 */
 		}
 		
-		String index = request.getContextPath() + "/";
-		response.sendRedirect(index);
+		goAuthorizeSuccessUrl(request, response);
 	}
 
 	/**
@@ -154,27 +155,56 @@ public class LoginController {
 	@RequestMapping(value = "weibo-login")
 	public ModelAndView weiboLogin(HttpServletRequest request,
 			HttpServletResponse response, String code) throws IOException {
+		ModelMap retMap = new ModelMap();
+		
 		Map thirdUserMap = socialSinaService.queryUserInfoByCode(code, null, null);
 		request.getSession().setAttribute(
 				SystemConstants.SESSION_THIRD_USER_MAP, thirdUserMap);
 		request.getSession().setAttribute(
 				SystemConstants.SESSION_THIRD_LOGIN_TYPE,
 				DataBaseParameters.SINA);
-
+		if(checkResetOauth(request)){//后台进行测试
+			String userId = (String) request.getSession().getAttribute(SystemConstants.COOKIE_USER_ID);
+			org.activiti.engine.identity.User u = identityService
+					.createUserQuery().userId(userId)
+					.singleResult();
+			saveSocialInfo(request,u);
+			return new ModelAndView("updateOauthSuccess", retMap);
+		}
 		org.activiti.engine.identity.User user = socialSinaService
 				.handlerUserAuthorize(thirdUserMap);
 		if (user != null) {// 以前已经登录过
 			userService.doLogin(user);
-			String index = request.getContextPath() + "/";
-			response.sendRedirect(index);
+			goAuthorizeSuccessUrl(request, response);
 		} else {// 生成一个用户放到前台
 			user = socialSinaService.initUserByThirdUser(thirdUserMap);
 		}
-		ModelMap retMap = new ModelMap();
+		
 		retMap.put("user", user);
 		return new ModelAndView("oauthPage", retMap);
 	}
 
+	public void goAuthorizeSuccessUrl(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String index = request.getContextPath() + "/";
+		if(checkResetOauth(request)){
+			index = request.getContextPath() + "/user/updateOauthSuccess";
+		}
+		response.sendRedirect(index);
+	}
+
+	public boolean checkResetOauth(HttpServletRequest request) {
+		String state = queryWeiboState(request);
+		return "reset-oauth".equals(state);
+	}
+	
+	@RequestMapping(value = "updateOauthSuccess")
+	public ModelAndView updateOauthSuccess(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		ModelMap retMap = new ModelMap();
+		return new ModelAndView("updateOauthSuccess", retMap);
+	}
+	
 	/**
 	 * 腾讯微博的回调
 	 * 
@@ -189,7 +219,7 @@ public class LoginController {
 	public ModelAndView qqLogin(HttpServletRequest request,
 			HttpServletResponse response, String code, String openid,
 			String openkey) throws IOException {
-
+		ModelMap retMap = new ModelMap();
 		Map thirdUserMap = socialTencentService.queryUserInfoByCode(code,
 				openid, openkey);
 		request.getSession().setAttribute(
@@ -197,18 +227,25 @@ public class LoginController {
 		request.getSession().setAttribute(
 				SystemConstants.SESSION_THIRD_LOGIN_TYPE,
 				DataBaseParameters.TENCENT);
-
+		
+		if(checkResetOauth(request)){//后台进行测试,添加完毕直接进行测试
+			String userId = (String) request.getSession().getAttribute(SystemConstants.COOKIE_USER_ID);
+			org.activiti.engine.identity.User u = identityService
+					.createUserQuery().userId(userId)
+					.singleResult();
+			saveSocialInfo(request,u);
+			return new ModelAndView("updateOauthSuccess", retMap);
+		}
 		org.activiti.engine.identity.User user = socialTencentService
 				.handlerUserAuthorize(thirdUserMap);
 		if (user != null) {// 以前已经登录过
 			userService.doLogin(user);
 			afterLoginSuccess(user.getId());
-			String index = request.getContextPath() + "/";
-			response.sendRedirect(index);
+			goAuthorizeSuccessUrl(request, response);
 		} else {// 生成一个用户放到前台
 			user = socialTencentService.initUserByThirdUser(thirdUserMap);
 		}
-		ModelMap retMap = new ModelMap();
+		
 		retMap.put("user", user);
 		return new ModelAndView("oauthPage", retMap);
 	}
@@ -245,36 +282,38 @@ public class LoginController {
 	public AjaxResult bindSubmit(HttpServletRequest request,
 			HttpServletResponse response, String bindName, String bindPassword)
 			throws IOException {
-		// org.activiti.engine.identity.User user =
-		// socialTencentService.handlerUserAuthorize(code,openid,openkey);
 		AjaxResult result = new AjaxResult(false);
-		HashMap thirdUserMap = (HashMap) request.getSession().getAttribute(
-				SystemConstants.SESSION_THIRD_USER_MAP);
-		String type = (String) request.getSession().getAttribute(
-				SystemConstants.SESSION_THIRD_LOGIN_TYPE + "");
-		// String ten = DataBaseParameters.TENCENT + "";
 		if (identityService.checkPassword(bindName, bindPassword)) {
 			User user = identityService.createUserQuery().userId(bindName)
 					.singleResult();
-			if (DataBaseParameters.TENCENT.equals(type.toString())) {
-				socialTencentService.addTencentSocialInfo(user, thirdUserMap);
-			} else {
-				socialSinaService.addSinaSocialInfo(user, thirdUserMap);
-			}
-
+			saveSocialInfo(request, user);
 			userService.doLogin(user);
 			afterLoginSuccess(user.getId());
 			result = new AjaxResult(true);
-			/*
-			 * String index = request.getContextPath() + "/";
-			 * response.sendRedirect(index);
-			 */
 		} else {
 			result = new AjaxResult(false, "用户名密码不正确");
 		}
 
 		return result;
 
+	}
+	
+	/**
+	 * 保存新的账号数据
+	 * @param request
+	 * @param user
+	 */
+	public void saveSocialInfo(HttpServletRequest request, User user) {
+		String type = (String) request.getSession().getAttribute(
+				SystemConstants.SESSION_THIRD_LOGIN_TYPE + "");
+		HashMap thirdUserMap = (HashMap) request.getSession().getAttribute(
+				SystemConstants.SESSION_THIRD_USER_MAP);
+		if (DataBaseParameters.TENCENT.equals(type.toString())) {
+			socialTencentService.addTencentSocialInfo(user, thirdUserMap);
+		} 
+		if (DataBaseParameters.SINA.equals(type.toString())) {
+			socialSinaService.addSinaSocialInfo(user, thirdUserMap);
+		}
 	}
 
 	/**
@@ -317,7 +356,7 @@ public class LoginController {
 	}
 	
 	private void afterLoginSuccess(String userId) {
-		socialService.handleUserWeibo(userId);
+		//socialService.handleUserWeibo(userId);
 	}
 
 	/**
@@ -329,15 +368,57 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "oauth", method = RequestMethod.GET)
 	public String oauthPage(HttpServletRequest request, String type) {
+		String state = queryWeiboState(request);
+		if(request.getParameter("userId") != null){
+			request.getSession().setAttribute(SystemConstants.COOKIE_USER_ID, request.getParameter("userId"));
+		}
 		String url = "";
 		if (DictDef.dict("tencent").equals(type)) {// tencent
-			url = TencentSociaTool.generateAuthorizationURL();
-		} else {// sina
-			url = SinaSociaTool.generateAuthorizationURL();
+			url = TencentSociaTool.generateAuthorizationURL(state);
+		}
+		if (DictDef.dict("sina").equals(type)) {// sina
+			url = SinaSociaTool.generateAuthorizationURL(state);
+		}
+		
+		if (DictDef.dict("evernote").equals(type)) {// evernote
+			Map map = socialEvernoteService.queryEvernoteRequestTokenInfo();
+			request.getSession().setAttribute(
+					SystemConstants.SESSION_THIRD_USER_MAP, map);
+			url = (String)map.get("authorizationUrl");
 		}
 		return "redirect:" + url;
 	}
-
+	
+	/**
+	 * 回调后返回的url,后面跟的标示性参数
+	 * @param request
+	 * @return
+	 */
+	public String queryWeiboState(HttpServletRequest request) {
+		String state = "";
+		if(request.getParameter("state") != null){
+			state = (String)request.getParameter("state");
+		}
+		return state;
+	}
+	
+	
+	
+	/**
+	 * evernote的回调
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "evernote")
+	public ModelAndView evernote(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		ModelMap retMap = new ModelMap();
+		socialEvernoteService.handlerEvernoteAccessToken(request);
+		return new ModelAndView("vdiskPage", retMap);
+	}
+	
 	@RequestMapping(value = "testCurrentData")
 	@ResponseBody
 	public HashMap testCurrentData(HttpServletRequest request,

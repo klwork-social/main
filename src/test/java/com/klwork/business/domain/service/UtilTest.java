@@ -12,8 +12,8 @@ public class UtilTest extends BaseTxWebTests {
 
 	@Test
 	public void testGenUrl() {
-		String url = SinaSociaTool.generateAuthorizationURL();
-		System.out.println(url);
+		/*String url = SinaSociaTool.generateAuthorizationURL();
+		System.out.println(url);*/
 	}
 	
 	

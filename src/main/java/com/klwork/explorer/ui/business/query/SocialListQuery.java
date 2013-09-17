@@ -29,6 +29,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
+import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -38,12 +39,15 @@ import com.vaadin.ui.themes.Reindeer;
 
 public class SocialListQuery extends AbstractLazyLoadingQuery {
 
-	SocialUserAccountService saService;
-	SocialAccountList socialAccountList;
-	public SocialListQuery(SocialAccountList socialAccountList) {
+	private SocialUserAccountService saService;
+	private SocialAccountList socialAccountList;
+	private Integer type;
+	
+	public SocialListQuery(SocialAccountList socialAccountList,Integer type) {
 		saService = (SocialUserAccountService) SpringApplicationContextUtil
 				.getContext().getBean("socialUserAccountService");
 		this.socialAccountList = socialAccountList;
+		this.type = type;
 	}
 
 	@Override
@@ -55,6 +59,7 @@ public class SocialListQuery extends AbstractLazyLoadingQuery {
 	private SocialUserAccountQuery createQuery() {
 		String userId = LoginHandler.getLoggedInUser().getId();
 		SocialUserAccountQuery q = new SocialUserAccountQuery();
+		q.setType(type);
 		q.setOwnUser(userId);
 		return q;
 	}
@@ -87,6 +92,7 @@ public class SocialListQuery extends AbstractLazyLoadingQuery {
 		throw new UnsupportedOperationException();
 	}
 
+
 	class SocialAccountItem extends PropertysetItem {
 		private static final long serialVersionUID = 5248557445646101303L;
 		private SocialUserAccount account;
@@ -105,7 +111,8 @@ public class SocialListQuery extends AbstractLazyLoadingQuery {
 			
 			addItemProperty("name", new ObjectProperty<String>(sc.getName(), String.class));
 			addItemProperty("url", new ObjectProperty<String>(sc.getUrl(), String.class));
-			DictDef v = DictDef.dictValue(DictDef.dict("social_type"), sc.getType()+"");
+			Integer scType = sc.getType();
+			DictDef v = DictDef.dictValue(DictDef.dict("social_type"), scType+"");
 			addItemProperty("type", new ObjectProperty<String>(v.getName(), String.class));
 			
 			HorizontalLayout buttonLayout = new HorizontalLayout();
@@ -122,7 +129,19 @@ public class SocialListQuery extends AbstractLazyLoadingQuery {
 			});
 			buttonLayout.addComponent(permitButton);
 			
-			Button editButton  = new Button("查看微博");
+			Button authorButton  = new Button("重新授权");
+			authorButton.addStyleName(Reindeer.BUTTON_LINK);
+			authorButton.addClickListener(new ClickListener() {
+				public void buttonClick(ClickEvent event) {
+					//socialAccountList.openReAuthorityBrowserWindow(opener);
+				}
+			});
+			
+			//浏览器打开窗口和button关联
+			socialAccountList.initButtonByBrowWindow(scType, authorButton);
+			buttonLayout.addComponent(authorButton);
+			
+			Button editButton  = new Button("微博管理");
 			editButton.addStyleName(Reindeer.BUTTON_LINK);
 			editButton.addClickListener(new ClickListener() {
 				public void buttonClick(ClickEvent event) {
