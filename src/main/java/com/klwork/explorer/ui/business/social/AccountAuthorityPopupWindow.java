@@ -145,8 +145,8 @@ public class AccountAuthorityPopupWindow extends PopupWindow {
 	private void handleSubmit() {
 		String teamId = (String)userGroupComboBox.getValue();
 		Collection perimt = (Collection)permitOptionGroup.getValue();
-		String entityType = DictDef.dict("user_account_info_type");
-		String groupType = DictDef.dict("team_type_weibo_permit");
+		String entityType = DictDef.dict("user_account_info_type");//1
+		String groupType = DictDef.dict("team_type_weibo_permit");//0
 		resourcesAssignManagerService.addAccountPermit(sc,teamId, perimt,entityType,groupType);
 	}
 }

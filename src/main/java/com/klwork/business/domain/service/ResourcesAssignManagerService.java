@@ -13,6 +13,7 @@ import com.klwork.common.dto.vo.ViewPage;
 import com.klwork.common.utils.StringDateUtil;
 import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.ui.business.social.AccountAuthorityPopupWindow;
+import com.klwork.business.domain.model.Project;
 import com.klwork.business.domain.model.ResourcesAssignManager;
 import com.klwork.business.domain.model.ResourcesAssignManagerQuery;
 import com.klwork.business.domain.model.SocialUseAuthorityList;
@@ -120,6 +121,22 @@ public class ResourcesAssignManagerService {
 			}
 		}else {
 			deleteResourcesAssignManager(sc.getId(),entityType,type);
+		}
+	}
+	
+	public void addProjectPlanPermit(Project pj,String teamId, Collection perimt,String entityType, String type) {
+		if(StringTool.judgeBlank(teamId)){
+			ResourcesAssignManager re = addResourcesAssignManager(pj.getId(),teamId,entityType,type);
+			socialUseAuthorityListService.deleteSocialUseAuthorityListByReId(re.getId());
+			for (Iterator iterator = perimt.iterator(); iterator.hasNext();) {
+				String permitId = (String) iterator.next();
+				SocialUseAuthorityList auth = new SocialUseAuthorityList();
+				auth.setKey(permitId);
+				auth.setManagerGroupId(re.getId());
+				socialUseAuthorityListService.createSocialUseAuthorityList(auth);
+			}
+		}else {
+			deleteResourcesAssignManager(pj.getId(),entityType,type);
 		}
 	}
 }
