@@ -123,6 +123,10 @@ public class DictDefRepository extends
 		dictDef = new DictDef("17", "outsourcing_type", "-1", "外包分类", "17");
 		insertData(dictDef);
 		
+		dictDef = new DictDef("18", "project_plan_authority", "-1", "项目计划的权限", "18");
+		insertData(dictDef);
+		
+		
 		insertData(dictDef);
 		dictDef = new DictDef("100", "sina", "2", "新浪", "0");
 		insertData(dictDef);
@@ -311,6 +315,13 @@ public class DictDefRepository extends
 		dictDef = new DictDef("606", "out_art_design ", "17", "美工设计", "1");
 		insertData(dictDef);
 		dictDef = new DictDef("607", "out_system_develop", "17", "系统开发", "2");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("700", "project_authority_update", "18", "修改", "0");
+		insertData(dictDef);
+		dictDef = new DictDef("701", "project_authority_move", "18", "移动", "1");
+		insertData(dictDef);
+		dictDef = new DictDef("702", "project_authority_delete", "18", "删除", "2");
 		insertData(dictDef);
 		
 	}

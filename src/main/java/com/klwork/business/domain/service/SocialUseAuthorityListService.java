@@ -1,5 +1,6 @@
 package com.klwork.business.domain.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.klwork.common.dto.vo.ViewPage;
+import com.klwork.common.utils.StringDateUtil;
 import com.klwork.business.domain.model.SocialUseAuthorityList;
 import com.klwork.business.domain.model.SocialUseAuthorityListQuery;
 import com.klwork.business.domain.repository.SocialUseAuthorityListRepository;
@@ -26,6 +28,8 @@ public class SocialUseAuthorityListService {
 
 	public void createSocialUseAuthorityList(SocialUseAuthorityList socialUseAuthorityList) {
 		socialUseAuthorityList.setId(rep.getNextId());
+		Date now = StringDateUtil.now();
+		socialUseAuthorityList.setLastUpdate(now);
 		rep.insert(socialUseAuthorityList);
 	}
 

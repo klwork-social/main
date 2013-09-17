@@ -20,6 +20,7 @@ import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.base.AbstractTabViewPage;
 import com.klwork.explorer.ui.business.query.ProjectListQuery;
+import com.klwork.explorer.ui.business.social.AccountAuthorityPopupWindow;
 import com.klwork.explorer.ui.custom.ConfirmationDialogPopupWindow;
 import com.klwork.explorer.ui.custom.DetailPanel;
 import com.klwork.explorer.ui.event.ConfirmationEvent;
@@ -291,6 +292,19 @@ public class ProjectList extends DetailPanel {
 			});
 			buttonLayout.addComponent(deleteIcon);
 			
+			Button permitButton  = new Button("权限分配");
+			permitButton.addStyleName(Reindeer.BUTTON_LINK);
+			permitButton.addClickListener(new ClickListener() {
+				@SuppressWarnings("unused")
+				public void buttonClick(ClickEvent event) {
+					Item item = source.getItem(itemId);
+					String id = (String) item.getItemProperty("id").getValue();
+					Project project = projectService.findProjectById(id);
+					openAuthorityWindow(project);
+				}
+			});
+			buttonLayout.addComponent(permitButton);
+			
 			editButton = new Button("项目计划");
 			editButton.addStyleName(Reindeer.BUTTON_LINK);
 			editButton.addClickListener(new ClickListener() {
@@ -427,5 +441,12 @@ public class ProjectList extends DetailPanel {
 				openEdit();
 			}
 		}
+	}
+	
+	//弹开todoList权限分配页面
+	public void openAuthorityWindow(Project project){
+		ProjectAuthorityPopupWindow t = new ProjectAuthorityPopupWindow(project);
+		ViewToolManager.showPopupWindow(t);
+		
 	}
 }
