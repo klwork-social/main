@@ -25,14 +25,27 @@ public class BusinessComponetHelp {
 	 * @return
 	 */
 	public ComboBox getUserOfTeamComboBox() {
-		Map<String, String> groupsMap = teamService.queryTeamMapOfUser(LoginHandler
-				.getLoggedInUser().getId());
-		groupsMap.put("", i18nManager
-				.getMessage(Messages.SELECT_DEFAULT));
+		Map<String, String> groupsMap = getUserOfMyMap();
 		//"用户组"
 		return CommonFieldHandler.createComBox(i18nManager
 				.getMessage(Messages.TEAM_SELECT), groupsMap, "null");
 		
+	}
+
+	public Map<String, String> getUserOfMyMap() {
+		Map<String, String> groupsMap = teamService.queryTeamMapOfUser(LoginHandler
+				.getLoggedInUser().getId());
+		groupsMap.put("", i18nManager
+				.getMessage(Messages.SELECT_DEFAULT));
+		return groupsMap;
+	}
+	
+	public Map<String, String> getUserOfMyInMap() {
+		Map<String, String> groupsMap = teamService.queryTeamMapOfUserIn(LoginHandler
+				.getLoggedInUser().getId());
+		groupsMap.put("", i18nManager
+				.getMessage(Messages.SELECT_DEFAULT));
+		return groupsMap;
 	}
 	
 	/**
@@ -40,10 +53,7 @@ public class BusinessComponetHelp {
 	 * @return
 	 */
 	public ComboBox getUserOfTeamComboBox(String caption,String defaultValue) {
-		Map<String, String> groupsMap = teamService.queryTeamMapOfUser(LoginHandler
-				.getLoggedInUser().getId());
-		groupsMap.put("", i18nManager
-				.getMessage(Messages.SELECT_DEFAULT));
+		Map<String, String> groupsMap = getUserOfMyMap();
 		//"用户组"
 		return CommonFieldHandler.createComBox(caption, groupsMap,defaultValue);
 		

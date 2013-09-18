@@ -68,6 +68,17 @@ public class CommonFieldHandler {
 	public static ComboBox createComBox(String caption,
 			Map<String, String> data, Object defaultValue) {
 		ComboBox s = new ComboBox();
+		return initComboBoxByData(caption, data, defaultValue, s);
+	}
+	
+	public static ComboBox updateComBoxData(ComboBox comboBox,String caption,
+			Map<String, String> data, Object defaultValue) {
+		comboBox.removeAllItems();
+		return initComboBoxByData(caption, data, defaultValue, comboBox);
+	}
+
+	public static ComboBox initComboBoxByData(String caption,
+			Map<String, String> data, Object defaultValue, ComboBox s) {
 		s.setNullSelectionAllowed(false);
 		//s.setImmediate(true);
 		Object firstItemId = null;
@@ -212,6 +223,29 @@ public class CommonFieldHandler {
 			String p = dictDef.getValue();
 			Item i = group.addItem(p);
 			group.setItemCaption(p, dictDef.getName());
+		}
+		return group;
+	}
+	
+	/**
+	 * 
+	 * @param list
+	 * @param caption
+	 * @param mut true为checkbox, false为radio
+	 * @return
+	 */
+	public static OptionGroup createCheckBoxs(List<DictDef> list,String caption,boolean mut,String defaultValue) {
+		OptionGroup group = new OptionGroup(caption);
+		group.setMultiSelect(mut);
+		group.setStyleName("horizontal");
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			DictDef dictDef = (DictDef) iterator.next();
+			String p = dictDef.getValue();
+			Item i = group.addItem(p);
+			group.setItemCaption(p, dictDef.getName());
+			if(p.equals(defaultValue)){
+				group.select(p);
+			}
 		}
 		return group;
 	}

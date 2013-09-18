@@ -21,8 +21,10 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.identity.User;
+import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
 
+import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.service.TeamService;
 import com.klwork.common.utils.StringTool;
 import com.klwork.common.utils.spring.SpringApplicationContextUtil;
@@ -35,6 +37,7 @@ import com.klwork.explorer.ui.handler.BusinessComponetHelp;
 import com.klwork.explorer.ui.handler.CommonFieldHandler;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -46,6 +49,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
@@ -70,9 +74,13 @@ public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 	ComboBox userGroupComboBox;
 	ComboBox userComboBox;
 	protected Button createTaskButton;
-	
+
 	BusinessComponetHelp help = new BusinessComponetHelp();
-	
+	// 我的team数据
+	private Map<String, String> teamsOfMyMap;
+	// 我参与的team数据
+	private Map<String, String> teamsMyInMap;
+
 	public NewTaskPopupWindow() {
 		this.taskService = ProcessEngines.getDefaultProcessEngine()
 				.getTaskService();
@@ -81,14 +89,18 @@ public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 				.getBean("teamService");
 		identityService = ProcessEngines.getDefaultProcessEngine()
 				.getIdentityService();
-		 //addStyleName(ExplorerLayout.THEME);
+		// addStyleName(ExplorerLayout.THEME);
+		String userId = LoginHandler.getLoggedInUser().getId();
+		teamsOfMyMap = help.getUserOfMyMap();
+		teamsMyInMap = help.getUserOfMyInMap();
+
 	}
 
 	@Override
 	protected void intPopWindowCustom() {
 		setCaption(i18nManager.getMessage(Messages.TASK_NEW));
-		setWidth(460, Unit.PIXELS);
-		setHeight(380, Unit.PIXELS);
+		setWidth(560, Unit.PIXELS);
+		setHeight(480, Unit.PIXELS);
 	}
 
 	@Override
@@ -115,40 +127,71 @@ public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 
 		// priority
 		priorityComboBox = new PriorityComboBox(i18nManager);
+		priorityComboBox.setCaption("优先级");
 		// form.addField("priority", priorityComboBox);
 		getForm().addComponent(priorityComboBox);
-		userGroupComboBox = help.getUserOfTeamComboBox();
-		//userGroupComboBox.
-		userGroupComboBox.addValueChangeListener(new com.vaadin.data.Property.ValueChangeListener() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -3864934875844211279L;
+
+		List<DictDef> list = DictDef.queryDictsByType(DictDef
+				.dict("user_team_type"));
+		OptionGroup g = CommonFieldHandler.createCheckBoxs(list, "团队类型", false,
+				"0");
+		g.setImmediate(true);
+		g.addValueChangeListener(new ValueChangeListener() {
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				Object o  = event.getProperty().getValue();
-				changeUserSelect(o.toString());
+				Object value = event.getProperty().getValue();
+				if ("0".equals(value)) {
+					CommonFieldHandler.updateComBoxData(userGroupComboBox,
+							i18nManager.getMessage(Messages.TEAM_SELECT),
+							teamsOfMyMap, "");
+				} else {
+					CommonFieldHandler.updateComBoxData(userGroupComboBox,
+							i18nManager.getMessage(Messages.TEAM_SELECT),
+							teamsMyInMap, "");
+				}
+				// System.out.println(value);
 			}
-			
+
 		});
+		getForm().addComponent(g);
+
+		// 用户组
+		userGroupComboBox = help.getUserOfTeamComboBox();
+		// userGroupComboBox.
+		userGroupComboBox
+				.addValueChangeListener(new com.vaadin.data.Property.ValueChangeListener() {
+					/**
+			 * 
+			 */
+					private static final long serialVersionUID = -3864934875844211279L;
+
+					@Override
+					public void valueChange(ValueChangeEvent event) {
+						Object o = event.getProperty().getValue();
+						if (StringTool.judgeBlank(o)) {
+							changeUserSelect(o.toString());
+						}
+					}
+
+				});
 		getForm().addComponent(userGroupComboBox);
-		
+
+		// 用户
 		Map<String, String> usersMap = new HashMap();
-		usersMap.put("", i18nManager
-				.getMessage(Messages.SELECT_DEFAULT));
-		userComboBox = CommonFieldHandler.createComBox(i18nManager
-				.getMessage(Messages.TEAM_MEMBER_SELECT), usersMap, "");
+		usersMap.put("", i18nManager.getMessage(Messages.SELECT_DEFAULT));
+		userComboBox = CommonFieldHandler.createComBox(
+				i18nManager.getMessage(Messages.TEAM_MEMBER_SELECT), usersMap,
+				"");
 		getForm().addComponent(userComboBox);
-		
+
 		initCreateTaskButton();
 		initEnterKeyListener();
 	}
 
-
-	
 	/**
 	 * 重新改变用户的选择
+	 * 
 	 * @param groupId
 	 */
 	protected void changeUserSelect(String groupId) {
@@ -164,6 +207,7 @@ public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 
 	protected void initCreateTaskButton() {
 		HorizontalLayout buttonLayout = new HorizontalLayout();
+		buttonLayout.setMargin(true);
 		buttonLayout.setWidth(100, Unit.PERCENTAGE);
 		form.addComponent(buttonLayout);
 
@@ -203,26 +247,33 @@ public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 			task.setDescription(descriptionArea.getValue().toString());
 			task.setDueDate((Date) dueDateField.getValue());
 			task.setPriority(priorityComboBox.getPriority());
-			//是否是组的任务
+			task.setOwner(LoginHandler.getLoggedInUser().getId());
+			// 是否是组的任务
 			boolean addGroupLink = false;
+			boolean addUserTaskLink = false;// 直接到人的任务
+
 			Object userGroupId = userGroupComboBox.getValue();
-			if(StringTool.judgeBlank(userGroupId)){
+			if (StringTool.judgeBlank(userGroupId)) {// 用户组，进行了选择
 				Object userId = userComboBox.getValue();
-				if(StringTool.judgeBlank(userId)){//用户不为空
-					//taskService .addUserIdentityLink( task.getId(), userId.toString(), role);
-					task.setOwner(userId.toString());
-				}else {
+				if (StringTool.judgeBlank(userId)) {// 用户不为空
+					addUserTaskLink = true;
+				} else {
 					addGroupLink = true;
 				}
-			}else {
+			} else {// 什么都没有进行选择
 				task.setOwner(LoginHandler.getLoggedInUser().getId());
 			}
 			taskService.saveTask(task);
-			
-			if(addGroupLink){
-				taskService.addCandidateGroup( task.getId(), userGroupId.toString());
+
+			if (addGroupLink) {
+				taskService.addCandidateGroup(task.getId(),
+						userGroupId.toString());
 			}
-			// close popup and navigate to new group
+			if (addUserTaskLink) {//指定任务的办理人
+				String factUserId = userComboBox
+						.getValue().toString();
+				taskService.addUserIdentityLink(task.getId(), factUserId, IdentityLinkType.ASSIGNEE);
+			}
 			close();
 			ViewToolManager.getMainView().showTasksPage(task.getId());
 

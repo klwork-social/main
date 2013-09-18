@@ -259,7 +259,7 @@ public class DashboardUI extends UI implements ErrorHandler{
         viewNameToMenuButton.put("/" + view, b);
         
         view = "team";
-        b = createViewButton(view,i18nManager.getMessage(Messages.ORGANIZATION_TEAM_MANAGER));
+        b = createViewButton(view,i18nManager.getMessage(Messages.TEAM_GROUP_TABLE_TITLE));
         menuLayout.addComponent(b);
         viewNameToMenuButton.put("/" + view, b);
         

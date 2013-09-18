@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.klwork.business.domain.model.EntityDictionary;
 import com.klwork.business.domain.model.Team;
 import com.klwork.business.domain.model.TeamQuery;
 import com.klwork.business.domain.service.TeamService;
@@ -26,22 +27,22 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 
 /**
- * 查询用户创建的的团队
+ * 查询用户所在组的用户
  * @author ww
  */
-public class TeamListQuery extends AbstractLazyLoadingQuery {
+public class UserInTeamListQuery extends AbstractLazyLoadingQuery {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1647959665934595909L;
 	TeamService teamService;
-	private String ownUser;
+	private String inUserId;
 	private String type;
 
-	public TeamListQuery(String userId,String type) {
+	public UserInTeamListQuery(String userId,String type) {
 		teamService = (TeamService) SpringApplicationContextUtil
 				.getContext().getBean("teamService");
-		this.ownUser = userId;
+		this.inUserId = userId;
 		this.type = type;
 	}
 
@@ -50,13 +51,12 @@ public class TeamListQuery extends AbstractLazyLoadingQuery {
 		TeamQuery q = createQuery();
 		return teamService.count(q);
 	}
-	
-	
+
 	private TeamQuery createQuery() {
 		TeamQuery q = new TeamQuery();
 		//需求发布中
-		q.setOwnUser(ownUser);
-		q.setType(type);
+		q.setInUser(inUserId);
+		q.setType(type);//普通组成员
 		return q;
 	}
 

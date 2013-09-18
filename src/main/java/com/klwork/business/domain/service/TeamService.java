@@ -73,6 +73,24 @@ public class TeamService {
 	}
 	
 	/**
+	 * 查询用户参与的团队
+	 * @param userId
+	 * @return map
+	 */
+	public Map<String, String> queryTeamMapOfUserIn(String userId) {
+		Map<String, String> map = new HashMap<String, String>();
+		List<Team> list = queryUserInTeams(userId);
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			Team team = (Team) iterator.next();
+			if(team.getOwnUser().equals(userId)){//不包含自己的
+				continue;
+			}
+			map.put(team.getId(), team.getName() + "(" + team.getOwnUser() + ")");
+		}
+		return map;
+	}
+	
+	/**
 	 * 查询用户创建的团队
 	 * @param userId
 	 * @return

@@ -74,6 +74,7 @@ public abstract class AbstractFormPoputWindow extends PopupWindow {
 	 */
 	protected void initForm() {
 		form = new FormLayout();
+		form.setMargin(true);
 		form.addStyleName(ExplorerLayout.THEME);
 		form.setSizeFull();
 		//form.setValidationVisibleOnCommit(true);

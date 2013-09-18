@@ -126,6 +126,9 @@ public class DictDefRepository extends
 		dictDef = new DictDef("18", "project_plan_authority", "-1", "项目计划的权限", "18");
 		insertData(dictDef);
 		
+		dictDef = new DictDef("19", "user_team_type", "-1", "团队类型", "19");
+		insertData(dictDef);
+		
 		
 		insertData(dictDef);
 		dictDef = new DictDef("100", "sina", "2", "新浪", "0");
@@ -324,6 +327,12 @@ public class DictDefRepository extends
 		dictDef = new DictDef("701", "project_authority_move", "18", "移动", "1");
 		insertData(dictDef);
 		dictDef = new DictDef("702", "project_authority_delete", "18", "删除", "2");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("705", "team_my_create", "19", "我的团队", "0");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("706", "team_my_in", "19", "我参与的团队", "1");
 		insertData(dictDef);
 		
 	}
