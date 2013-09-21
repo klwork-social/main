@@ -49,6 +49,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
@@ -274,8 +275,11 @@ public class NewTaskPopupWindow extends AbstractFormPoputWindow {
 						.getValue().toString();
 				taskService.addUserIdentityLink(task.getId(), factUserId, IdentityLinkType.ASSIGNEE);
 			}
+			//
+			Notification.show("任务创建成功!", Notification.Type.HUMANIZED_MESSAGE);
 			close();
-			ViewToolManager.getMainView().showTasksPage(task.getId());
+			ViewToolManager.showTasksPage(task.getId());
+			
 
 		} catch (InvalidValueException e) {
 			// Do nothing: the Form component will render the errormsgs

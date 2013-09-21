@@ -53,7 +53,7 @@ public class ClaimTaskClickListener implements ClickListener {
       //WW_TODO 任务的签收和认领
       taskService.claim(taskId, LoginHandler.getLoggedInUser().getId());
       notificationManager.showInformationNotification(Messages.TASK_CLAIM_SUCCESS);
-      ViewToolManager.getMainView().showInboxPage(taskId);
+      ViewToolManager.showInboxPage(taskId);
     } catch(ActivitiException ae) {
       notificationManager.showErrorNotification(Messages.TASK_CLAIM_FAILED, ae.getMessage());
     }

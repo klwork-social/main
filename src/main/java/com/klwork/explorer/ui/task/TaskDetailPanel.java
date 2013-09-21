@@ -26,6 +26,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 
 import com.klwork.business.domain.service.TeamService;
+import com.klwork.business.domain.service.UserDataStatisticService;
 import com.klwork.common.utils.StringTool;
 import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 import com.klwork.explorer.I18nManager;
@@ -34,9 +35,6 @@ import com.klwork.explorer.NotificationManager;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
-import com.klwork.explorer.ui.business.social.AbstractWeiboDisplayPage;
-import com.klwork.explorer.ui.business.social.TransmitPopupWindow;
-import com.klwork.explorer.ui.business.social.WeiboPopupWindow;
 import com.klwork.explorer.ui.custom.DetailPanel;
 import com.klwork.explorer.ui.custom.PrettyTimeLabel;
 import com.klwork.explorer.ui.event.SubmitEvent;
@@ -55,7 +53,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Embedded;
@@ -86,6 +83,7 @@ public class TaskDetailPanel extends DetailPanel {
   protected transient FormService formService;
   protected transient RepositoryService repositoryService;
   protected transient TeamService teamService;
+  protected transient UserDataStatisticService userDataStatisticService;
   protected I18nManager i18nManager;
   protected NotificationManager notificationManager;
   
@@ -110,6 +108,9 @@ public class TaskDetailPanel extends DetailPanel {
     this.repositoryService = ProcessEngines.getDefaultProcessEngine().getRepositoryService();
     teamService = (TeamService) SpringApplicationContextUtil.getContext()
 			.getBean("teamService");
+    userDataStatisticService = (UserDataStatisticService) SpringApplicationContextUtil.getContext()
+	.getBean("userDataStatisticService");
+    
     this.i18nManager = ViewToolManager.getI18nManager();
     this.notificationManager = ViewToolManager.getNotificationManager();
     if( task != null && task instanceof TaskEntity && task.getProcessDefinitionId() != null){
@@ -397,6 +398,7 @@ protected void initCreateTime(HorizontalLayout propertiesLayout) {
               Map<String, Object> properties = (Map<String, Object>)event.getData();
               System.out.println(properties);
               taskService.complete(task.getId(), properties);
+//              userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
               notificationManager.showInformationNotification(Messages.TASK_COMPLETED, task.getName());
               taskPage.refreshSelectNext();
             }
@@ -426,6 +428,7 @@ protected void initCreateTime(HorizontalLayout propertiesLayout) {
           //流程变量，也提交来了
           Map<String, String> properties = event.getFormProperties();
           formService.submitTaskFormData(task.getId(), properties);
+          userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
           notificationManager.showInformationNotification(Messages.TASK_COMPLETED, task.getName());
           taskPage.refreshSelectNext();
         }
@@ -511,9 +514,10 @@ protected void initCreateTime(HorizontalLayout propertiesLayout) {
      .taskCandidateUser(userId)
      .taskId(task.getId())
      .count() == 1; 
-   	List<String> groups = teamService.queryTeamsOfUser(userId);
+   //如果用户在这个组里面，就可以领取任务
+   	List<String> teams = teamService.queryUserInTeamIds(userId);
     boolean groupCandidate =  taskService.createTaskQuery()
-    		.taskCandidateGroupIn(groups)
+    		.taskCandidateGroupIn(teams)
     	     .taskId(task.getId())
     	     .count() == 1; 
     return userCandidate || groupCandidate;
@@ -526,13 +530,15 @@ protected void initCreateTime(HorizontalLayout propertiesLayout) {
   }
   
   public void notifyPeopleInvolvedChanged() {
+	  userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
     involvedPeople.refreshPeopleGrid();
     taskPage.getTaskEventPanel().refreshTaskEvents();
   }
   
   public void notifyAssigneeChanged() {
+	 userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
     if (LoginHandler.getLoggedInUser().getId().equals(task.getAssignee())) { // switch view to inbox if assignee is current user
-      //viewManager.showInboxPage(task.getId());
+    	ViewToolManager.showInboxPage(task.getId());
     } else {
      involvedPeople.refreshAssignee();
       taskPage.getTaskEventPanel().refreshTaskEvents();
@@ -540,10 +546,11 @@ protected void initCreateTime(HorizontalLayout propertiesLayout) {
   }
   
   public void notifyOwnerChanged() {
+	  userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
     if (LoginHandler.getLoggedInUser().getId().equals(task.getOwner())) { // switch view to tasks if owner is current user
-      //viewManager.showTasksPage(task.getId());
+    	ViewToolManager.showTasksPage(task.getId());
     } else {
-     involvedPeople.refreshOwner();
+      involvedPeople.refreshOwner();//
       taskPage.getTaskEventPanel().refreshTaskEvents();
     }
   }

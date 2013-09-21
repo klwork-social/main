@@ -1,12 +1,13 @@
 package com.klwork.explorer.ui.main.views;
 
 import java.util.List;
-import java.util.Random;
 
 import com.klwork.business.domain.model.UserDataStatistic;
 import com.klwork.business.domain.service.TeamService;
 import com.klwork.business.domain.service.UserDataStatisticService;
 import com.klwork.common.utils.StringTool;
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoggedInUser;
@@ -16,12 +17,9 @@ import com.klwork.explorer.ui.base.AbstractTabViewPage;
 import com.klwork.explorer.ui.task.InboxPage;
 import com.klwork.explorer.ui.task.InvolvedPage;
 import com.klwork.explorer.ui.task.NewTaskPopupWindow;
+import com.klwork.explorer.ui.task.TaskPage;
 import com.klwork.explorer.ui.task.TasksPage;
 import com.klwork.explorer.ui.task.TeamTaskPage;
-import com.klwork.explorer.ui.task.data.InboxListQuery;
-import com.klwork.explorer.ui.task.data.InvolvedListQuery;
-import com.klwork.explorer.ui.task.data.TasksListQuery;
-import com.klwork.explorer.ui.task.data.TeamTaskListQuery;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -39,6 +37,7 @@ public class TaskMainPage extends AbstractTabViewPage {
 	private UserDataStatistic cUserDataStatistic;
 	private String parameter;
 	private UserDataStatisticService userDataStatisticService;
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
 	public TaskMainPage(String parameter) {
 		super();
@@ -64,12 +63,12 @@ public class TaskMainPage extends AbstractTabViewPage {
 		 cUserDataStatistic = userDataStatisticService.queryUserTaskStatistic(userId);
 		
 		//代办
-		InboxPage inboxPage = new InboxPage();
+		InboxPage inboxPage = new InboxPage(queryTaskIdFromParam());
 		todoTab = addTab(inboxPage, "todoTask", queryTodoTabCaption());
 		setDefaultTab("todoTask",cUserDataStatistic.getTodoTaskTotal(), inboxPage);
 
 		//String myTaskTitle = "我的任务";
-		TasksPage taskPage = new TasksPage();
+		TasksPage taskPage = new TasksPage(queryTaskIdFromParam());
 		LoggedInUser user = LoginHandler.getLoggedInUser();
 		myTab = addTab(taskPage, "myTask",
 				queryMyTabCaption());
@@ -134,7 +133,7 @@ public class TaskMainPage extends AbstractTabViewPage {
 	}
 
 	public boolean paramMatching(String sign) {
-		return StringTool.judgeBlank(parameter) && sign.equals(parameter);
+		return StringTool.judgeBlank(parameter) && (parameter.indexOf(sign) == 0);
 	}
 
 	private String currentTableTitle(long inboxCount, String tabTitle) {
@@ -165,10 +164,38 @@ public class TaskMainPage extends AbstractTabViewPage {
 	
 	//更新
 	public void reflashUIByPush() {
-		todoTab.setCaption(queryTodoTabCaption());
-		myTab.setCaption(queryMyTabCaption());
-		teamTab.setCaption(queryTeamTabCaption());
+		updateTodoTab();
+		updateMyTab();
+		updateTeamTab();
+		updateInvolvedTab();
+	}
+
+
+	public void updateInvolvedTab() {
 		involvedTab.setCaption(queryInvolvedTabCaption());
+		TaskPage taskpage = (TaskPage)getTabCache().get("involvedTab");
+		taskpage.refreshTableContent();
+	}
+
+
+	public void updateTeamTab() {
+		teamTab.setCaption(queryTeamTabCaption());
+		TaskPage taskpage = (TaskPage)getTabCache().get("teamTask");
+		taskpage.refreshTableContent();
+	}
+
+
+	public void updateMyTab() {
+		myTab.setCaption(queryMyTabCaption());
+		TaskPage taskpage = (TaskPage)getTabCache().get("myTask");
+		taskpage.refreshTableContent();
+	}
+
+
+	public void updateTodoTab() {
+		todoTab.setCaption(queryTodoTabCaption());
+		TaskPage taskpage = (TaskPage)getTabCache().get("todoTask");
+		taskpage.refreshTableContent();
 	}
 
 	/**
@@ -181,10 +208,33 @@ public class TaskMainPage extends AbstractTabViewPage {
 		PushDataResult r = new PushDataResult();
 		r.setNeedUpdate(false);
 		if(!newStatis.equals(cUserDataStatistic)){
+			logger.debug("PushData进行数据更新");
 			r.setNeedUpdate(true);
-			cUserDataStatistic = newStatis;
+			
+		}else {
+			logger.debug("PushData数据已经是最新的");
 		}
+		cUserDataStatistic = newStatis;
 		return r;
 	}
-
+	
+	/**
+	 * 从参数中取任务id
+	 * @return
+	 */
+	public String queryTaskIdFromParam() {
+		String retTaskId = null;
+		if(StringTool.judgeBlank(parameter) ){
+			 String[] tokenArray = parameter.split("\\?");
+			 if (tokenArray.length < 2) {
+		            return null;
+		        }else {
+		        	 String userIdStr = tokenArray[1];
+					if (userIdStr.startsWith("taskid=")){
+		        		 retTaskId = userIdStr.substring(userIdStr.indexOf('=')+1, userIdStr.length());
+		             }
+		        }
+		}
+		return retTaskId;
+	}
 }

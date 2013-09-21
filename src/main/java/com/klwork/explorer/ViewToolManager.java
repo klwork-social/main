@@ -127,4 +127,12 @@ public class ViewToolManager {
 		return r;
 	}
 
+	public static void showInboxPage(String taskId) {
+		ViewToolManager.navigateTo("tasks" + "/todoTask" + "?taskid=" + taskId);
+	}
+
+	public static void showTasksPage(String taskId) {
+		ViewToolManager.navigateTo("tasks" + "/myTask" + "?taskid=" + taskId);
+	}
+
 }

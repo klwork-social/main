@@ -166,6 +166,11 @@ public abstract class TaskPage extends AbstractTablePage {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public void refreshTableContent() {
+		logger.debug("task table的内容重新加载...");
+		refreshSelectNext();
+	}
   
   //protected abstract UriFragment getUriFragment(String taskId);
   

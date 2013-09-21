@@ -157,6 +157,10 @@ public class TaskEventsPanel extends Panel {
 
 	protected void addTaskEventPicture(final org.activiti.engine.task.Event taskEvent,
 			GridLayout eventGrid) {
+		if(taskEvent
+				.getUserId() == null){
+			return;
+		}
 		final Picture userPicture = identityService.getUserPicture(taskEvent
 				.getUserId());
 		Embedded authorPicture = null;

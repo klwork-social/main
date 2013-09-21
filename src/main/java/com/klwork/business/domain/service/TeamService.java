@@ -213,7 +213,7 @@ public class TeamService {
 	}
 	
 	/**
-	 * 查询用户创建的团队
+	 * 查询用户所在的团队
 	 * @param userId
 	 * @return 团队的id集合
 	 */

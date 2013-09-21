@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
@@ -75,7 +77,8 @@ import com.vaadin.ui.VerticalLayout;
 @Push
 public class DashboardUI extends UI implements ErrorHandler{
 
-
+	protected Logger logger = LoggerFactory.getLogger(getClass());
+	
     private static final long serialVersionUID = 1L;
     @Autowired
     protected I18nManager i18nManager;
@@ -472,12 +475,14 @@ public class DashboardUI extends UI implements ErrorHandler{
 			try {
 				// Update the data for a while
 				while (true) {
-					Thread.sleep(5000);
+					Thread.sleep(10000);
 					 final View cView = getCurrentView();
 					 PushDataResult r = null;
 					 if( cView !=null && cView instanceof PushUpdateInterface){
 						 PushUpdateInterface in = ((PushUpdateInterface)cView);
-						 if(!queryViewName().equals(in.getViewName())){//不是当前视图
+						 logger.debug("queryFactViewName:" + queryViewName() + "-----" + in.getViewName());
+						 if(!checkQueryView(in)){//不是当前视图
+							 logger.debug("不是当前视图");
 								 continue;
 						 }
 						  r = in.getPushData();
@@ -503,6 +508,13 @@ public class DashboardUI extends UI implements ErrorHandler{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}
+
+		public boolean checkQueryView(PushUpdateInterface in) {
+			if(queryViewName().indexOf(in.getViewName()) == 0){
+				return true;
+			}
+			return false;
 		}
 	}
 

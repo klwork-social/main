@@ -328,6 +328,18 @@ public class UserDataStatistic implements Serializable
 			return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return "UserDataStatistic [userId=" + userId + ", todoTaskTotal="
+				+ todoTaskTotal + ", overdueTodoTaskTotal="
+				+ overdueTodoTaskTotal + ", myTaskTotal=" + myTaskTotal
+				+ ", overdueMyTaskTotal=" + overdueMyTaskTotal
+				+ ", teamTaskTotal=" + teamTaskTotal
+				+ ", overdueTeamTaskTotal=" + overdueTeamTaskTotal
+				+ ", involvedTaskTotal=" + involvedTaskTotal
+				+ ", overdueInvolvedTaskTotal=" + overdueInvolvedTaskTotal
+				+ ", dirty=" + dirty + "]";
+	}
 	
 	
 }
