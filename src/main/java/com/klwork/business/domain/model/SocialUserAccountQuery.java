@@ -51,7 +51,10 @@ public class SocialUserAccountQuery extends QueryParameter{
 	
 	private List teams;
 	
-
+	//
+	private String key;
+	private String keyValue;
+	
 	/**
 	 * 
 	 *
@@ -169,7 +172,7 @@ public class SocialUserAccountQuery extends QueryParameter{
 	public List getTeams() {
 		return teams;
 	}
-
+	
 	public void setTeams(List<String> teams) {
 		if(teams == null || teams.isEmpty()){
 			teams = new ArrayList<String>();
@@ -177,4 +180,22 @@ public class SocialUserAccountQuery extends QueryParameter{
 		}
 		this.teams = teams;
 	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public String getKeyValue() {
+		return keyValue;
+	}
+
+	public void setKeyValue(String keyValue) {
+		this.keyValue = keyValue;
+	}
+	
+	
 }

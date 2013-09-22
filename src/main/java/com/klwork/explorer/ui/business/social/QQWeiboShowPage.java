@@ -10,7 +10,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
-public class QQWeiboShowPage extends AbstractTabViewPage{
+public class QQWeiboShowPage extends AbstractTabViewPage implements WeiboShowPage{
 	
 	SocialUserAccount socialUserAccount;
 	public QQWeiboShowPage(SocialUserAccount socialUserAccount, AbstractTabViewPage mainPage) {

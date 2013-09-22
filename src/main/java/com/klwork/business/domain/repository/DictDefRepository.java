@@ -198,6 +198,8 @@ public class DictDefRepository extends
 		
 		dictDef = new DictDef("238", "account_data_lock", "3", "帐号数据锁定", "account_data_lock");
 		insertData(dictDef);
+		dictDef = new DictDef("239", "account_tab_open", "3", "帐号默认打开", "account_tab_open");
+		insertData(dictDef);
 		
 		insertData(dictDef);
 		

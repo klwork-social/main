@@ -10,7 +10,6 @@ import org.vaadin.cssinject.CSSInject;
 import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.model.SocialUserAccount;
 import com.klwork.business.domain.model.SocialUserWeibo;
-import com.klwork.business.domain.service.SocialEvernoteService;
 import com.klwork.business.domain.service.SocialUserWeiboService;
 import com.klwork.business.domain.service.infs.AbstractSocialService;
 import com.klwork.common.utils.StringDateUtil;
@@ -18,6 +17,7 @@ import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.data.LazyLoadingContainer;
 import com.klwork.explorer.data.LazyLoadingQuery;
+import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.business.query.SocialUserWeiboTableQuery;
 import com.klwork.explorer.ui.custom.ConfirmationDialogPopupWindow;
 import com.klwork.explorer.ui.custom.DetailPanel;
@@ -42,6 +42,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
+import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.Command;
+import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.UI;
@@ -762,7 +765,28 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 					setSpacing(true);
 					setMargin(true);
 					setSizeFull();
-					Button addButton = new Button("生成任务");
+					MenuBar profileMenu = new MenuBar();
+					profileMenu.addStyleName(ExplorerLayout.STYLE_HEADER_PROFILE_BOX);
+					MenuItem rootItem = profileMenu.addItem("操作",Images.BULLET_2, null);
+					rootItem.setDescription("展开操作项");
+					rootItem.setStyleName(ExplorerLayout.STYLE_HEADER_PROFILE_MENU);
+					
+					rootItem.addItem("生成任务", new Command() {
+						public void menuSelected(MenuItem selectedItem) {
+						}
+					});
+					
+					rootItem.addItem("保存到笔记本", new Command() {
+						public void menuSelected(MenuItem selectedItem) {
+							WeiboPopupWindow t = new SaveToNotePopupWindow(
+									userWeibo, socialUserAccount, AbstractWeiboDisplayPage.this);
+							ViewToolManager.showPopupWindow(t);
+						}
+					});
+					addComponent(profileMenu);
+					setComponentAlignment(profileMenu, Alignment.TOP_CENTER);
+					
+					/*Button addButton = new Button("生成任务");
 					addButton.addStyleName(Reindeer.BUTTON_LINK);
 					addComponent(addButton);
 					setComponentAlignment(addButton, Alignment.BOTTOM_LEFT);
@@ -780,7 +804,7 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 						}
 					});
 					
-					setComponentAlignment(weiboSaveToNote, Alignment.BOTTOM_LEFT);
+					setComponentAlignment(weiboSaveToNote, Alignment.BOTTOM_LEFT);*/
 				}
 			};
 			grid.addComponent(thirdLayout, 2, 0);

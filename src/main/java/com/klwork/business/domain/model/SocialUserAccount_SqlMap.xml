@@ -118,6 +118,9 @@ sqlMapConfig:
     <if test="teams != null"><!-- entity_type_ = 1表示社交账号-->
       inner join resources_assign_manager R on R.entity_id_ = U.ID_ and R.entity_type_ = '1'
     </if>
+    <if test="key != null"><!-- entity_type_ = 1表示社交账号-->
+      inner join social_user_account_info i on i.account_id_ = U.ID_
+    </if>
     <where>
         <if test="weiboUid != null">
         AND U.weibo_uid_ = #{weiboUid}
@@ -136,6 +139,9 @@ sqlMapConfig:
     </if>
     <if test="type != null">
         AND U.type_ = #{type}
+    </if>
+     <if test="key != null">
+        AND i.value_ = #{keyValue} AND i.key_ =  #{key}
     </if>
      <if test="teams != null &amp;&amp; teams.size() &gt; 0">
             and R.team_id_ IN

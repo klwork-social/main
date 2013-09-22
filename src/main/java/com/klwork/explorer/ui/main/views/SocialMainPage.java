@@ -1,20 +1,35 @@
 package com.klwork.explorer.ui.main.views;
 
+import java.util.Iterator;
+import java.util.List;
+
+import org.mortbay.log.Log;
+
 import com.klwork.business.domain.model.SocialUserAccount;
+import com.klwork.business.domain.model.SocialUserAccountQuery;
+import com.klwork.business.domain.service.SocialUserAccountInfoService;
 import com.klwork.business.domain.service.SocialUserAccountService;
 import com.klwork.explorer.ViewToolManager;
+import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.base.AbstractTabViewPage;
 import com.klwork.explorer.ui.business.social.QQWeiboShowPage;
 import com.klwork.explorer.ui.business.social.SinaWeiboShowPage;
 import com.klwork.explorer.ui.business.social.SocialAccountList;
 import com.klwork.explorer.ui.business.social.TeamSocialAccountList;
 import com.klwork.explorer.ui.business.social.WeiboSendMainPage;
+import com.klwork.explorer.ui.business.social.WeiboShowPage;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.CloseHandler;
+import com.vaadin.ui.TabSheet.Tab;
 
 public class SocialMainPage extends AbstractTabViewPage{
 	SocialUserAccountService saService;
+	SocialUserAccountInfoService socialUserAccountInfoService;
 	public SocialMainPage(){
 		super();
 		saService = ViewToolManager.getBean("socialUserAccountService");
+		socialUserAccountInfoService = ViewToolManager.getBean("socialUserAccountInfoService");
 	}
 	
 	@Override
@@ -25,16 +40,53 @@ public class SocialMainPage extends AbstractTabViewPage{
 		//打开默认的微博
 		openDefaultWeibo();
 	}
+	
+	//进行默认打开
 	public void openDefaultWeibo() {
-		//SocialUserAccount sc = saService.findSocialUserAccountById("3501");
-		//openWeiboTab(sc);
+		SocialUserAccountQuery query = new SocialUserAccountQuery();
+		query.setOwnUser(LoginHandler. getLoggedInUser().getId());
+		query.setKey("account_tab_open");
+		query.setKeyValue("1");
+		List<SocialUserAccount> list = saService.findSocialUserAccountByQueryCriteria(query , null);
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			SocialUserAccount socialUserAccount = (SocialUserAccount) iterator
+					.next();
+			openWeiboTab(socialUserAccount);
+		}
 	}
 	
 	public void openWeiboTab(SocialUserAccount socialUserAccount) {
 		if(socialUserAccount.getType() == 0){//新浪微博
-			addTabSpecial(new SinaWeiboShowPage(socialUserAccount,this), "新浪_" + socialUserAccount.getUserScreenName());
+			addTabSpecial(new SinaWeiboShowPage(socialUserAccount,this), "新浪_" + socialUserAccount.getUserScreenName(),socialUserAccount.getId());
 		}else {
-			addTabSpecial(new QQWeiboShowPage(socialUserAccount,this), "腾讯_" +  socialUserAccount.getUserScreenName());
+			addTabSpecial(new QQWeiboShowPage(socialUserAccount,this), "腾讯_" +  socialUserAccount.getUserScreenName(),socialUserAccount.getId());
 		}
+		//打开一个微博时进行记录
+		socialUserAccountInfoService.setSocialUserAccountInfo(socialUserAccount, "account_tab_open", "1");//打开状态
+	}
+	
+	@Override
+	public CloseHandler currentCloseHandler() {
+		return new CloseHandler() {
+			private static final long serialVersionUID = -1764556772862038086L;
+
+			@Override
+			public void onTabClose(TabSheet tabsheet, Component tabContent) {
+				
+				Tab addTab = tabsheet.getTab(tabContent);
+				if(tabContent instanceof  WeiboShowPage){
+					String accountId = queryTabKey(tabContent);
+					SocialUserAccount s = new SocialUserAccount();
+					s.setId(accountId);
+					socialUserAccountInfoService.setSocialUserAccountInfo(s, "account_tab_open", "0");//关闭状态
+					Log.debug("当前关闭：" + accountId);
+				}
+				String name = addTab.getCaption();
+				if(getTabCache().get(name) != null){
+					getTabCache().remove(name);
+				}
+				tabsheet.removeComponent(tabContent);
+			}
+		};
 	}
 }
