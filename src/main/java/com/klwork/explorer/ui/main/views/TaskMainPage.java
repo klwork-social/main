@@ -14,6 +14,7 @@ import com.klwork.explorer.security.LoggedInUser;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.base.AbstractTabViewPage;
+import com.klwork.explorer.ui.task.ArchivedPage;
 import com.klwork.explorer.ui.task.InboxPage;
 import com.klwork.explorer.ui.task.InvolvedPage;
 import com.klwork.explorer.ui.task.NewTaskPopupWindow;
@@ -88,6 +89,10 @@ public class TaskMainPage extends AbstractTabViewPage {
 				queryInvolvedTabCaption());
 		setDefaultTab("involvedTask",cUserDataStatistic.getInvolvedTaskTotal(), involvedPage);
 		
+		//历史任务
+		ArchivedPage archivedPage = new ArchivedPage();
+		 involvedTab = addTab(archivedPage, "archivedTask",
+					queryArchivedTabCaption());
 		// 新增任务
 		initAddButton();
 
@@ -99,6 +104,12 @@ public class TaskMainPage extends AbstractTabViewPage {
 		// t.setCaption("2");
 		// css.setStyles(".v-tabsheet-tabitemcell-tab-myTask .v-captiontext {color: #f00; }");
 	}
+
+	private String queryArchivedTabCaption() {
+		String involvedTitle = "历史任务";
+		return involvedTitle;
+	}
+
 
 	public String queryInvolvedTabCaption() {
 		String involvedTitle = "参与任务";

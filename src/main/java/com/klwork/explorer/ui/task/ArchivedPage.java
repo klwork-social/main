@@ -48,7 +48,7 @@ public class ArchivedPage extends TaskPage {
   protected Component createDetailComponent(String id) {
     HistoryService historyService = ProcessEngines.getDefaultProcessEngine().getHistoryService();
     HistoricTaskInstance historicTaskInstance = historyService.createHistoricTaskInstanceQuery().taskId(id).singleResult();
-    taskEventPanel.setTaskId(historicTaskInstance.getId());
+   // taskEventPanel.setTaskId(historicTaskInstance.getId());
     return new HistoricTaskDetailPanel(historicTaskInstance, this);
   }
 

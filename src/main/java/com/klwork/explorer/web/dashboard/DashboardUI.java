@@ -13,8 +13,6 @@ package com.klwork.explorer.web.dashboard;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -24,6 +22,7 @@ import com.klwork.common.utils.logging.Logger;
 import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
+import com.klwork.explorer.MyDefaultErrorHandler;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoggedInUser;
 import com.klwork.explorer.security.LoginHandler;
@@ -42,7 +41,6 @@ import com.vaadin.annotations.Title;
 import com.vaadin.event.Transferable;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
@@ -351,7 +349,7 @@ public class DashboardUI extends UI implements ErrorHandler{
 
             // Cleanup view. Now Vaadin ignores errors and always shows the view.  :-(
             // since beta10
-            setContent(null);
+            //setContent(null);
             return;
         }
 
@@ -380,8 +378,7 @@ public class DashboardUI extends UI implements ErrorHandler{
             Notification.show(exception.getMessage(), Notification.Type.ERROR_MESSAGE);
             return;
         }
-
-        DefaultErrorHandler.doDefault(event);
+        MyDefaultErrorHandler.doDefault(event);
     }
 
 	public void initProfileButton(final LoggedInUser user,VerticalLayout layout) {

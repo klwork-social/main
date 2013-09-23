@@ -199,6 +199,8 @@ public interface Messages {
   String EVENT_DEFAULT = "event_default";
   String EVENT_TITLE = "event_title";
   
+  String EVENT_COMPLETE_TASK = "event_complete_task";
+  
   // Process menu
   String PROCESS_MENU_MY_INSTANCES = "process_menu_my_instances";
   String PROCESS_MENU_DEPLOYED_DEFINITIONS = "process_menu_deployed_definitions";

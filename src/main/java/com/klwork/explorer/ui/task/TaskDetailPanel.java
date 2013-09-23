@@ -63,501 +63,538 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-
 /**
  * The central panel on the task page, showing all the details of a task.
  * 
  * @author Joram Barrez
  */
 public class TaskDetailPanel extends DetailPanel {
-  
-  private static final long serialVersionUID = 1L;
 
-  protected Task task;
-  
-  //protected TaskEntity taskEntity;
-  TaskDefinition taskDefinition;
-  
-  // Services
-  protected transient TaskService taskService;
-  protected transient FormService formService;
-  protected transient RepositoryService repositoryService;
-  protected transient TeamService teamService;
-  protected transient UserDataStatisticService userDataStatisticService;
-  protected I18nManager i18nManager;
-  protected NotificationManager notificationManager;
-  
-  // UI
-  protected TaskPage taskPage;
-  protected VerticalLayout centralLayout;
-  protected FormPropertiesForm taskForm;
-  protected TaskInvolvedPeopleComponent involvedPeople;
-  protected SubTaskComponent subTaskComponent;
-  protected TaskRelatedContentComponent relatedContent;
-  protected Button completeButton;
-  protected Button claimButton;
-  protected  GridLayout eventGrid;
-  private boolean showEvent = false;
-  
-  public TaskDetailPanel(Task task, TaskPage taskPage) {
-	showEvent = taskPage.isShowEvents();
-    this.task = task;
-    this.taskPage = taskPage;
-    this.taskService = ProcessEngines.getDefaultProcessEngine().getTaskService();
-    this.formService = ProcessEngines.getDefaultProcessEngine().getFormService();
-    this.repositoryService = ProcessEngines.getDefaultProcessEngine().getRepositoryService();
-    teamService = (TeamService) SpringApplicationContextUtil.getContext()
-			.getBean("teamService");
-    userDataStatisticService = (UserDataStatisticService) SpringApplicationContextUtil.getContext()
-	.getBean("userDataStatisticService");
-    
-    this.i18nManager = ViewToolManager.getI18nManager();
-    this.notificationManager = ViewToolManager.getNotificationManager();
-    if( task != null && task instanceof TaskEntity && task.getProcessDefinitionId() != null){
-    	taskDefinition = taskService.queryTaskDefinition(task);
-    }
-  }
- 
-  
-  @Override
-  protected void initUI() {
-    setSizeFull();
-    addStyleName("social");
-    addStyleName(Reindeer.LAYOUT_WHITE);
-    
-    // Central panel: all task data
-    this.centralLayout = new VerticalLayout();
-    centralLayout.setMargin(true);
-    setDetailContainer(centralLayout);
-    
-    initHeader();
-    if(judgeInnerTask()){
-	    //时间描写和优先级描叙
-	    initDescriptionAndClaimButton();
-	    //任务属于流程
-	    initProcessLink();
-    }
-    if(judgeInnerTask()){//非外部任务
-	    //当前任务为某个任务的子任务
-	    initParentTaskLink();
-	    //任务参与者
-	    initPeopleDetails();
-	    //子任务
-	    //initSubTasks();
-    
-    //关联的任务的内容
-    initRelatedContent();
-    }
-    //任务的orm
-    initTaskForm();
-    
-    initTasksEvent();
-  }
+	private static final long serialVersionUID = 1L;
 
+	protected Task task;
 
+	// protected TaskEntity taskEntity;
+	TaskDefinition taskDefinition;
 
+	// Services
+	protected transient TaskService taskService;
+	protected transient FormService formService;
+	protected transient RepositoryService repositoryService;
+	protected transient TeamService teamService;
+	protected transient UserDataStatisticService userDataStatisticService;
+	protected I18nManager i18nManager;
+	protected NotificationManager notificationManager;
 
-public boolean judgeInnerTask() {
-	if(taskDefinition == null)
-		return true;
-	return taskDefinition !=null && (!"out".equals(taskDefinition.getInType()));
-}
-  
-  protected void initHeader() {
-    GridLayout taskDetails = new GridLayout(2, 2);
-    taskDetails.setWidth(100, Unit.PERCENTAGE);
-    taskDetails.addStyleName(ExplorerLayout.STYLE_TITLE_BLOCK);
-    taskDetails.setSpacing(true);
-    taskDetails.setMargin(new MarginInfo(false, false, true, false));
-    taskDetails.setColumnExpandRatio(1, 1.0f);
-    centralLayout.addComponent(taskDetails);
-    
-    // Add image
-    Embedded image = new Embedded(null, Images.TASK_50);
-    //占据两行
-    taskDetails.addComponent(image, 0, 0, 0, 1);
-    
-    // Add task name
-    Label nameLabel = new Label(task.getName());
-    nameLabel.addStyleName(Reindeer.LABEL_H2);
-    taskDetails.addComponent(nameLabel, 1, 0);
-    
-    /*Label nameLabel2 = new Label(task.getId());
-    nameLabel2.addStyleName(Reindeer.LABEL_H2);
-    taskDetails.addComponent(nameLabel2, 2, 0);
-    taskDetails.setComponentAlignment(nameLabel2, Alignment.MIDDLE_RIGHT);*/
+	// UI
+	protected TaskPage taskPage;
+	protected VerticalLayout centralLayout;
+	protected FormPropertiesForm taskForm;
+	protected TaskInvolvedPeopleComponent involvedPeople;
+	protected SubTaskComponent subTaskComponent;
+	protected TaskRelatedContentComponent relatedContent;
+	protected Button completeButton;
+	protected Button claimButton;
+	protected GridLayout eventGrid;
+	private boolean showEvent = false;
 
-    // Properties
-    HorizontalLayout propertiesLayout = new HorizontalLayout();//满了，往下排
-    propertiesLayout.setSpacing(true);
-    taskDetails.addComponent(propertiesLayout);
-    
-    propertiesLayout.addComponent(new DueDateComponent(task, i18nManager, taskService));
-    propertiesLayout.addComponent(new PriorityComponent(task, i18nManager, taskService));
-    //创建于多少之前
-    initCreateTime(propertiesLayout);
-    initTaskNo(propertiesLayout);
-    //initShowEvent(propertiesLayout);
-  }
-  
-  private void initTaskNo(HorizontalLayout propertiesLayout) {
-	  Label nameLabel2 = new Label("任务编号:" + task.getId());
-	  //nameLabel2.addStyleName(Reindeer.LABEL_SMALL);
-	  propertiesLayout.addComponent(nameLabel2);
-  }
+	public TaskDetailPanel(Task task, TaskPage taskPage) {
+		showEvent = taskPage.isShowEvents();
+		this.task = task;
+		this.taskPage = taskPage;
+		this.taskService = ProcessEngines.getDefaultProcessEngine()
+				.getTaskService();
+		this.formService = ProcessEngines.getDefaultProcessEngine()
+				.getFormService();
+		this.repositoryService = ProcessEngines.getDefaultProcessEngine()
+				.getRepositoryService();
+		teamService = (TeamService) SpringApplicationContextUtil.getContext()
+				.getBean("teamService");
+		userDataStatisticService = (UserDataStatisticService) SpringApplicationContextUtil
+				.getContext().getBean("userDataStatisticService");
 
-private String getShowEventButtonTitle() {
-	  if(showEvent)
-		  return "-隐藏任务处理历史";
-	  return "+任务处理历史";
-  }
-  private void initShowEvent(HorizontalLayout propertiesLayout) {
-	final Button updateSave = new Button(getShowEventButtonTitle());
-	updateSave.addStyleName(Reindeer.BUTTON_LINK);
-	updateSave.addStyleName(Reindeer.BUTTON_LINK);
-	updateSave.addStyleName("wb_text");
-	updateSave.addStyleName("wb_name");
+		this.i18nManager = ViewToolManager.getI18nManager();
+		this.notificationManager = ViewToolManager.getNotificationManager();
+		if (task != null && task instanceof TaskEntity
+				&& task.getProcessDefinitionId() != null) {
+			taskDefinition = taskService.queryTaskDefinition(task);
+		}
+	}
+
+	@Override
+	protected void initUI() {
+		setSizeFull();
+		addStyleName("social");
+		addStyleName(Reindeer.LAYOUT_WHITE);
+
+		// Central panel: all task data
+		this.centralLayout = new VerticalLayout();
+		centralLayout.setMargin(true);
+		setDetailContainer(centralLayout);
+
+		initHeader();
+		if (judgeInnerTask()) {
+			// 描叙和领取按钮
+			initDescriptionAndClaimButton();
+			// 任务属于流程
+			initProcessLink();
+		}
+		if (judgeInnerTask()) {// 非外部任务
+			// 当前任务为某个任务的子任务
+			initParentTaskLink();
+			// 任务参与者
+			initPeopleDetails();
+			// 子任务
+			// initSubTasks();
+
+			// 关联的任务的内容
+			initRelatedContent();
+		}
+		// 任务的orm
+		initTaskForm();
+
+		initTasksEvent();
+	}
+
+	public boolean judgeInnerTask() {
+		if (taskDefinition == null)
+			return true;
+		return taskDefinition != null
+				&& (!"out".equals(taskDefinition.getInType()));
+	}
+
+	protected void initHeader() {
+		GridLayout taskDetails = new GridLayout(2, 2);
+		taskDetails.setWidth(100, Unit.PERCENTAGE);
+		taskDetails.addStyleName(ExplorerLayout.STYLE_TITLE_BLOCK);
+		taskDetails.setSpacing(true);
+		taskDetails.setMargin(new MarginInfo(false, false, true, false));
+		taskDetails.setColumnExpandRatio(1, 1.0f);
+		centralLayout.addComponent(taskDetails);
+
+		// Add image
+		Embedded image = new Embedded(null, Images.TASK_50);
+		// 占据两行
+		taskDetails.addComponent(image, 0, 0, 0, 1);
+
+		// Add task name
+		Label nameLabel = new Label(task.getName());
+		nameLabel.addStyleName(Reindeer.LABEL_H2);
+		taskDetails.addComponent(nameLabel, 1, 0);
+
+		/*
+		 * Label nameLabel2 = new Label(task.getId());
+		 * nameLabel2.addStyleName(Reindeer.LABEL_H2);
+		 * taskDetails.addComponent(nameLabel2, 2, 0);
+		 * taskDetails.setComponentAlignment(nameLabel2,
+		 * Alignment.MIDDLE_RIGHT);
+		 */
+
+		// Properties
+		HorizontalLayout propertiesLayout = new HorizontalLayout();// 满了，往下排
+		propertiesLayout.setSpacing(true);
+		taskDetails.addComponent(propertiesLayout);
+
+		propertiesLayout.addComponent(new DueDateComponent(task, i18nManager,
+				taskService));
+		propertiesLayout.addComponent(new PriorityComponent(task, i18nManager,
+				taskService));
+		// 创建于多少之前
+		initCreateTime(propertiesLayout);
+		initTaskNo(propertiesLayout);
+		// initShowEvent(propertiesLayout);
+	}
+
+	private void initTaskNo(HorizontalLayout propertiesLayout) {
+		Label nameLabel2 = new Label("任务编号:" + task.getId());
+		// nameLabel2.addStyleName(Reindeer.LABEL_SMALL);
+		propertiesLayout.addComponent(nameLabel2);
+	}
+
+	private String getShowEventButtonTitle() {
+		if (showEvent)
+			return "-隐藏任务处理历史";
+		return "+任务处理历史";
+	}
+
+	private void initShowEvent(HorizontalLayout propertiesLayout) {
+		final Button updateSave = new Button(getShowEventButtonTitle());
+		updateSave.addStyleName(Reindeer.BUTTON_LINK);
+		updateSave.addStyleName(Reindeer.BUTTON_LINK);
+		updateSave.addStyleName("wb_text");
+		updateSave.addStyleName("wb_name");
 		updateSave.addClickListener(new ClickListener() {
 			@SuppressWarnings("unchecked")
 			public void buttonClick(ClickEvent event) {
 				showEvent = !showEvent;
-				//taskPage.setEventHiden(showEvent);
+				// taskPage.setEventHiden(showEvent);
 				eventGrid.setVisible(showEvent);
 				updateSave.setCaption(getShowEventButtonTitle());
-				
+
 			}
+		});
+		propertiesLayout.addComponent(updateSave);
+		propertiesLayout.setComponentAlignment(updateSave,
+				Alignment.BOTTOM_RIGHT);
+	}
+
+	protected void initCreateTime(HorizontalLayout propertiesLayout) {
+		PrettyTimeLabel createLabel = new PrettyTimeLabel(
+				i18nManager.getMessage(Messages.TASK_CREATED_SHORT),
+				task.getCreateTime(), "", true);
+		createLabel.addStyleName(ExplorerLayout.STYLE_TASK_HEADER_CREATE_TIME);
+		propertiesLayout.addComponent(createLabel);
+	}
+
+	protected void initDescriptionAndClaimButton() {
+		HorizontalLayout layout = new HorizontalLayout();
+		layout.addStyleName(ExplorerLayout.STYLE_DETAIL_BLOCK);
+		layout.setWidth(100, Unit.PERCENTAGE);
+		layout.setSpacing(true);
+		centralLayout.addComponent(layout);
+
+		initClaimButton(layout);
+		initDescription(layout);
+	}
+
+	protected void initClaimButton(HorizontalLayout layout) {
+		// 任务的指定人不是当前人，candidateUser为当前人
+		if (!isCurrentUserAssignee() && canUserClaimTask()) {
+			claimButton = new Button(
+					i18nManager.getMessage(Messages.TASK_CLAIM));
+			claimButton.addClickListener(new ClaimTaskClickListener(task
+					.getId(), taskService));
+			layout.addComponent(claimButton);
+			layout.setComponentAlignment(claimButton, Alignment.MIDDLE_LEFT);
+
 		}
-			);
-	  propertiesLayout.addComponent(updateSave);
-	  propertiesLayout.setComponentAlignment(updateSave, Alignment.BOTTOM_RIGHT);
-  }
+	}
 
-protected void initCreateTime(HorizontalLayout propertiesLayout) {
-    PrettyTimeLabel createLabel = new PrettyTimeLabel(
-            i18nManager.getMessage(Messages.TASK_CREATED_SHORT), task.getCreateTime(), "", true);
-    createLabel.addStyleName(ExplorerLayout.STYLE_TASK_HEADER_CREATE_TIME);
-    propertiesLayout.addComponent(createLabel);
-  }
-  
-  protected void initDescriptionAndClaimButton() {
-    HorizontalLayout layout = new HorizontalLayout();
-    layout.addStyleName(ExplorerLayout.STYLE_DETAIL_BLOCK);
-    layout.setWidth(100, Unit.PERCENTAGE);
-    layout.setSpacing(true);
-    centralLayout.addComponent(layout);
-    
-    initClaimButton(layout);
-    initDescription(layout);
-  }
+	protected void initDescription(HorizontalLayout layout) {
+		final CssLayout descriptionLayout = new CssLayout();
+		descriptionLayout.setWidth(100, Unit.PERCENTAGE);
+		layout.addComponent(descriptionLayout);
+		layout.setExpandRatio(descriptionLayout, 1.0f);
+		layout.setComponentAlignment(descriptionLayout, Alignment.MIDDLE_LEFT);
 
-  protected void initClaimButton(HorizontalLayout layout) {
-	  //任务的指定人不是当前人，candidateUser为当前人
-    if(!isCurrentUserAssignee() && canUserClaimTask()) {
-      claimButton = new Button(i18nManager.getMessage(Messages.TASK_CLAIM));
-      claimButton.addClickListener(new ClaimTaskClickListener(task.getId(), taskService));
-      layout.addComponent(claimButton);
-      layout.setComponentAlignment(claimButton, Alignment.MIDDLE_LEFT);
-      
-    }
-  }
+		String descriptionText = null;
+		if (task.getDescription() != null && !"".equals(task.getDescription())) {
+			descriptionText = task.getDescription();
+		} else {// 此任务没有描述的
+			descriptionText = i18nManager
+					.getMessage(Messages.TASK_NO_DESCRIPTION);
+		}
+		final Label descriptionLabel = new Label(descriptionText);
+		descriptionLabel.addStyleName(ExplorerLayout.STYLE_CLICKABLE);
+		descriptionLayout.addComponent(descriptionLabel);
 
-  protected void initDescription(HorizontalLayout layout) {
-    final CssLayout descriptionLayout = new CssLayout();
-    descriptionLayout.setWidth(100, Unit.PERCENTAGE);
-    layout.addComponent(descriptionLayout);
-    layout.setExpandRatio(descriptionLayout, 1.0f);
-    layout.setComponentAlignment(descriptionLayout, Alignment.MIDDLE_LEFT);
+		descriptionLayout.addLayoutClickListener(new LayoutClickListener() {
+			public void layoutClick(LayoutClickEvent event) {
+				if (event.getClickedComponent() != null
+						&& event.getClickedComponent().equals(descriptionLabel)) {
+					// layout for textarea + ok button
+					final VerticalLayout editLayout = new VerticalLayout();
+					editLayout.setSpacing(true);
 
-    String descriptionText = null;
-    if (task.getDescription() != null && !"".equals(task.getDescription())) {
-      descriptionText = task.getDescription();
-    } else {//此任务没有描述的
-      descriptionText = i18nManager.getMessage(Messages.TASK_NO_DESCRIPTION);
-    }
-    final Label descriptionLabel = new Label(descriptionText);
-    descriptionLabel.addStyleName(ExplorerLayout.STYLE_CLICKABLE);
-    descriptionLayout.addComponent(descriptionLabel);
-    
-    descriptionLayout.addLayoutClickListener(new LayoutClickListener() {
-      public void layoutClick(LayoutClickEvent event) {
-        if (event.getClickedComponent() != null && event.getClickedComponent().equals(descriptionLabel)) {
-          // layout for textarea + ok button
-          final VerticalLayout editLayout = new VerticalLayout();
-          editLayout.setSpacing(true);
-          
-          // textarea
-          final TextArea descriptionTextArea = new TextArea();
-          //设置为空时的显示类容
-          descriptionTextArea.setNullRepresentation("");
-          descriptionTextArea.setWidth(100, Unit.PERCENTAGE);
-          descriptionTextArea.setValue(task.getDescription());
-          editLayout.addComponent(descriptionTextArea);
-          
-          // ok button
-          Button okButton = new Button(i18nManager.getMessage(Messages.BUTTON_SAVE));
-          editLayout.addComponent(okButton);
-          editLayout.setComponentAlignment(okButton, Alignment.BOTTOM_RIGHT);
-          
-          // replace
-          descriptionLayout.replaceComponent(descriptionLabel, editLayout);
-          
-          // When OK is clicked -> update task data + ui
-          okButton.addClickListener(new ClickListener() {
-            public void buttonClick(ClickEvent event) {
-              // Update data
-              task.setDescription(descriptionTextArea.getValue().toString());
-              taskService.saveTask(task);
-              
-              // Update UI
-              descriptionLabel.setValue(task.getDescription());
-              descriptionLayout.replaceComponent(editLayout, descriptionLabel);
-            }
-          });
-        }
-      }
-    });
-  }
+					// textarea
+					final TextArea descriptionTextArea = new TextArea();
+					// 设置为空时的显示类容
+					descriptionTextArea.setNullRepresentation("");
+					descriptionTextArea.setWidth(100, Unit.PERCENTAGE);
+					descriptionTextArea.setValue(task.getDescription());
+					editLayout.addComponent(descriptionTextArea);
 
-  protected void initProcessLink() {
-    if(task.getProcessInstanceId() != null) {
-      ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-        .processDefinitionId(task.getProcessDefinitionId())
-        .singleResult();
-      
-      Button showProcessInstanceButton = new Button(i18nManager.getMessage(
-        Messages.TASK_PART_OF_PROCESS, getProcessDisplayName(processDefinition)));
-      showProcessInstanceButton.addStyleName(Reindeer.BUTTON_LINK);
-      showProcessInstanceButton.addClickListener(new ClickListener() {
-        public void buttonClick(ClickEvent event) {
-          //viewManager.showMyProcessInstancesPage(task.getProcessInstanceId());
-        }
-      });
-     
-      centralLayout.addComponent(showProcessInstanceButton);
-      addEmptySpace(centralLayout);
-    }
-  }
-  
-  protected String getProcessDisplayName(ProcessDefinition processDefinition) {
-    if(processDefinition.getName() != null) {
-      return processDefinition.getName();
-    } else {
-      return processDefinition.getKey();
-    }
-  }
-  
-  protected void initParentTaskLink() {
-    if (task.getParentTaskId() != null) {
-      final Task parentTask = taskService.createTaskQuery()
-        .taskId(task.getParentTaskId()).singleResult();
-      
-      Button showParentTaskButton = new Button(i18nManager.getMessage(
-              Messages.TASK_SUBTASK_OF_PARENT_TASK, parentTask.getName()));
-      showParentTaskButton.addStyleName(Reindeer.BUTTON_LINK);
-      showParentTaskButton.addClickListener(new ClickListener() {
-        public void buttonClick(ClickEvent event) {
-          //viewManager.showTaskPage(parentTask.getId());
-        }
-      });
-      
-      centralLayout.addComponent(showParentTaskButton);
-      addEmptySpace(centralLayout);
-    }
-  }
-  
-  protected void initPeopleDetails() {
-   involvedPeople = new TaskInvolvedPeopleComponent(task, this);
-    centralLayout.addComponent(involvedPeople);
-  }
-  
-  
-  protected void initSubTasks() {
-   subTaskComponent = new SubTaskComponent(task);
-    centralLayout.addComponent(subTaskComponent);
-  }
-  
-  protected void initRelatedContent() {
-    relatedContent = new TaskRelatedContentComponent(task, this);
-    centralLayout.addComponent(relatedContent);
-  }
-  
-  protected void initTaskForm() {
-    // Check if task requires a form
-	  //task.getT
-    TaskFormData formData = formService.getTaskFormData(task.getId());
-    
-    if(formData != null && StringTool.judgeBlank(formData.getFormKey())){
-    	TaskForm c = TaskFormFactory.create(formData.getFormKey(),task);
-    	centralLayout.addComponent(c);
-    	c.addListener(new SubmitEventListener() {
-            private static final long serialVersionUID = -3893467157397686736L;
-            
-            @Override
-			protected void submitted(SubmitEvent event) {
-              //流程变量，也提交来了
-              Map<String, Object> properties = (Map<String, Object>)event.getData();
-              System.out.println(properties);
-              taskService.complete(task.getId(), properties);
-//              userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
-              notificationManager.showInformationNotification(Messages.TASK_COMPLETED, task.getName());
-              taskPage.refreshSelectNext();
-            }
-          
+					// ok button
+					Button okButton = new Button(i18nManager
+							.getMessage(Messages.BUTTON_SAVE));
+					editLayout.addComponent(okButton);
+					editLayout.setComponentAlignment(okButton,
+							Alignment.BOTTOM_RIGHT);
 
-			@Override
-			protected void cancelled(SubmitEvent event) {
-				 taskForm.clear();
+					// replace
+					descriptionLayout.replaceComponent(descriptionLabel,
+							editLayout);
+
+					// When OK is clicked -> update task data + ui
+					okButton.addClickListener(new ClickListener() {
+						public void buttonClick(ClickEvent event) {
+							// Update data
+							task.setDescription(descriptionTextArea.getValue()
+									.toString());
+							taskService.saveTask(task);
+
+							// Update UI
+							descriptionLabel.setValue(task.getDescription());
+							descriptionLayout.replaceComponent(editLayout,
+									descriptionLabel);
+						}
+					});
+				}
 			}
-          });
-    	
-    	return;
-    }
-    //formService.getS
-    if(formData != null && formData.getFormProperties() != null && formData.getFormProperties().size() > 0) {
-      taskForm = new FormPropertiesForm();
-      taskForm.setSubmitButtonCaption(i18nManager.getMessage(Messages.TASK_COMPLETE));
-      taskForm.setCancelButtonCaption(i18nManager.getMessage(Messages.TASK_RESET_FORM));
-      taskForm.setFormHelp(i18nManager.getMessage(Messages.TASK_FORM_HELP));
-      taskForm.setFormProperties(formData.getFormProperties());
-      //WW_TODO 任务form监听器
-      taskForm.addListener(new FormPropertiesEventListener() {
-        private static final long serialVersionUID = -3893467157397686736L;
-        
-        @Override
-        protected void handleFormSubmit(FormPropertiesEvent event) {
-          //流程变量，也提交来了
-          Map<String, String> properties = event.getFormProperties();
-          formService.submitTaskFormData(task.getId(), properties);
-          userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
-          notificationManager.showInformationNotification(Messages.TASK_COMPLETED, task.getName());
-          taskPage.refreshSelectNext();
-        }
-        
-        @Override
-        protected void handleFormCancel(FormPropertiesEvent event) {
-          // Clear the form values 
-          taskForm.clear();
-        }
-      });
-      // Only if current user is task's assignee
-      taskForm.setEnabled(isCurrentUserAssignee());
-      
-      // Add component to page
-      centralLayout.addComponent(taskForm);
-    } else {
-      // Just add a button to complete the task
-      // TODO: perhaps move to a better place
-      
-      CssLayout buttonLayout = new CssLayout();
-      buttonLayout.addStyleName(ExplorerLayout.STYLE_DETAIL_BLOCK);
-      buttonLayout.setWidth(100, Unit.PERCENTAGE);
-      centralLayout.addComponent(buttonLayout);
-      
-      completeButton = new Button(i18nManager.getMessage(Messages.TASK_COMPLETE));
-      
-      completeButton.addClickListener(new ClickListener() {
-        
-        private static final long serialVersionUID = 1L;
+		});
+	}
 
-        public void buttonClick(ClickEvent event) {
-          // If no owner, make assignee owner (will go into archived then)
-          if (task.getOwner() == null) {
-            task.setOwner(task.getAssignee());
-            taskService.setOwner(task.getId(), task.getAssignee());
-          }
-          
-          taskService.complete(task.getId());     
-          notificationManager.showInformationNotification(Messages.TASK_COMPLETED, task.getName());
-          taskPage.refreshSelectNext();
-        }
-      });
-      
-      completeButton.setEnabled(isCurrentUserAssignee() || isCurrentUserOwner());
-      buttonLayout.addComponent(completeButton);
-    }
-  }
-  
-  private void initTasksEvent() {
-	  HorizontalLayout head = new HorizontalLayout();
-	  head.setSizeFull();
-	 
-	  centralLayout.addComponent(head);
-	  //Button eButton = new Button("任务处理历史");
-	 
-	  initShowEvent(head);
-	  
-	  eventGrid = new GridLayout(1, 2);
-	  eventGrid.setVisible(false);
-	  centralLayout.addComponent(eventGrid);
-	 // centralLayout.setExpandRatio(eventGrid, 0);
-	  TaskEventsPanel taskEventPanel = new TaskEventsPanel();
-	  taskEventPanel.setTaskId(task.getId());
-	  eventGrid.addComponent(CommonFieldHandler.getSpacer());
-	  eventGrid.addComponent(taskEventPanel);
-	  eventGrid.setSizeFull();
-	  //eventGrid.setColumnExpandRatio(1, 0f);
-  }
+	protected void initProcessLink() {
+		if (task.getProcessInstanceId() != null) {
+			ProcessDefinition processDefinition = repositoryService
+					.createProcessDefinitionQuery()
+					.processDefinitionId(task.getProcessDefinitionId())
+					.singleResult();
 
-  protected boolean isCurrentUserAssignee() {
-    String currentUser = LoginHandler.getLoggedInUser().getId();
-    return currentUser.equals(task.getAssignee());
-  }
-  
-  protected boolean isCurrentUserOwner() {
-    String currentUser = LoginHandler.getLoggedInUser().getId();
-    return currentUser.equals(task.getOwner());
-  }
-  
-  protected boolean canUserClaimTask() {
-   String userId = LoginHandler.getLoggedInUser().getId();
-   boolean userCandidate =  taskService.createTaskQuery()
-     .taskCandidateUser(userId)
-     .taskId(task.getId())
-     .count() == 1; 
-   //如果用户在这个组里面，就可以领取任务
-   	List<String> teams = teamService.queryUserInTeamIds(userId);
-    boolean groupCandidate =  taskService.createTaskQuery()
-    		.taskCandidateGroupIn(teams)
-    	     .taskId(task.getId())
-    	     .count() == 1; 
-    return userCandidate || groupCandidate;
-  }
-  
-  protected void addEmptySpace(ComponentContainer container) {
-    Label emptySpace = new Label("&nbsp;", ContentMode.HTML);
-    emptySpace.setSizeUndefined();
-    container.addComponent(emptySpace);
-  }
-  
-  public void notifyPeopleInvolvedChanged() {
-	  userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
-    involvedPeople.refreshPeopleGrid();
-    taskPage.getTaskEventPanel().refreshTaskEvents();
-  }
-  
-  public void notifyAssigneeChanged() {
-	 userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
-    if (LoginHandler.getLoggedInUser().getId().equals(task.getAssignee())) { // switch view to inbox if assignee is current user
-    	ViewToolManager.showInboxPage(task.getId());
-    } else {
-     involvedPeople.refreshAssignee();
-      taskPage.getTaskEventPanel().refreshTaskEvents();
-    }
-  }
-  
-  public void notifyOwnerChanged() {
-	  userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
-    if (LoginHandler.getLoggedInUser().getId().equals(task.getOwner())) { // switch view to tasks if owner is current user
-    	ViewToolManager.showTasksPage(task.getId());
-    } else {
-      involvedPeople.refreshOwner();//
-      taskPage.getTaskEventPanel().refreshTaskEvents();
-    }
-  }
-  
-  public void notifyRelatedContentChanged() {
-    relatedContent.refreshTaskAttachments();
-    taskPage.getTaskEventPanel().refreshTaskEvents();
-  }
-  
+			Button showProcessInstanceButton = new Button(
+					i18nManager.getMessage(Messages.TASK_PART_OF_PROCESS,
+							getProcessDisplayName(processDefinition)));
+			showProcessInstanceButton.addStyleName(Reindeer.BUTTON_LINK);
+			showProcessInstanceButton.addClickListener(new ClickListener() {
+				public void buttonClick(ClickEvent event) {
+					// viewManager.showMyProcessInstancesPage(task.getProcessInstanceId());
+				}
+			});
+
+			centralLayout.addComponent(showProcessInstanceButton);
+			addEmptySpace(centralLayout);
+		}
+	}
+
+	protected String getProcessDisplayName(ProcessDefinition processDefinition) {
+		if (processDefinition.getName() != null) {
+			return processDefinition.getName();
+		} else {
+			return processDefinition.getKey();
+		}
+	}
+
+	protected void initParentTaskLink() {
+		if (task.getParentTaskId() != null) {
+			final Task parentTask = taskService.createTaskQuery()
+					.taskId(task.getParentTaskId()).singleResult();
+
+			Button showParentTaskButton = new Button(i18nManager.getMessage(
+					Messages.TASK_SUBTASK_OF_PARENT_TASK, parentTask.getName()));
+			showParentTaskButton.addStyleName(Reindeer.BUTTON_LINK);
+			showParentTaskButton.addClickListener(new ClickListener() {
+				public void buttonClick(ClickEvent event) {
+					// viewManager.showTaskPage(parentTask.getId());
+				}
+			});
+
+			centralLayout.addComponent(showParentTaskButton);
+			addEmptySpace(centralLayout);
+		}
+	}
+
+	protected void initPeopleDetails() {
+		involvedPeople = new TaskInvolvedPeopleComponent(task, this);
+		centralLayout.addComponent(involvedPeople);
+	}
+
+	protected void initSubTasks() {
+		subTaskComponent = new SubTaskComponent(task);
+		centralLayout.addComponent(subTaskComponent);
+	}
+
+	protected void initRelatedContent() {
+		relatedContent = new TaskRelatedContentComponent(task, this);
+		centralLayout.addComponent(relatedContent);
+	}
+
+	protected void initTaskForm() {
+		// Check if task requires a form
+		// task.getT
+		TaskFormData formData = formService.getTaskFormData(task.getId());
+
+		if (formData != null && StringTool.judgeBlank(formData.getFormKey())) {
+			TaskForm c = TaskFormFactory.create(formData.getFormKey(), task);
+			centralLayout.addComponent(c);
+			c.addListener(new SubmitEventListener() {
+				private static final long serialVersionUID = -3893467157397686736L;
+
+				@Override
+				protected void submitted(SubmitEvent event) {
+					// 流程变量，也提交来了
+					Map<String, Object> properties = (Map<String, Object>) event
+							.getData();
+					System.out.println(properties);
+					taskService.complete(task.getId(), properties);
+					// userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
+					notificationManager.showInformationNotification(
+							Messages.TASK_COMPLETED, task.getName());
+					taskPage.refreshSelectNext();
+				}
+
+				@Override
+				protected void cancelled(SubmitEvent event) {
+					taskForm.clear();
+				}
+			});
+
+			return;
+		}
+		// formService.getS
+		if (formData != null && formData.getFormProperties() != null
+				&& formData.getFormProperties().size() > 0) {
+			taskForm = new FormPropertiesForm();
+			taskForm.setSubmitButtonCaption(i18nManager
+					.getMessage(Messages.TASK_COMPLETE));
+			taskForm.setCancelButtonCaption(i18nManager
+					.getMessage(Messages.TASK_RESET_FORM));
+			taskForm.setFormHelp(i18nManager
+					.getMessage(Messages.TASK_FORM_HELP));
+			taskForm.setFormProperties(formData.getFormProperties());
+			// WW_TODO 任务form监听器
+			taskForm.addListener(new FormPropertiesEventListener() {
+				private static final long serialVersionUID = -3893467157397686736L;
+
+				@Override
+				protected void handleFormSubmit(FormPropertiesEvent event) {
+					// 流程变量，也提交来了
+					Map<String, String> properties = event.getFormProperties();
+					formService.submitTaskFormData(task.getId(), properties);
+					userDataStatisticService.saveUserTaskStatistic(LoginHandler
+							.getLoggedInUser().getId());
+					notificationManager.showInformationNotification(
+							Messages.TASK_COMPLETED, task.getName());
+					taskPage.refreshSelectNext();
+				}
+
+				@Override
+				protected void handleFormCancel(FormPropertiesEvent event) {
+					// Clear the form values
+					taskForm.clear();
+				}
+			});
+			// Only if current user is task's assignee
+			taskForm.setEnabled(isCurrentUserAssignee());
+
+			// Add component to page
+			centralLayout.addComponent(taskForm);
+		} else {
+			// Just add a button to complete the task
+			// TODO: perhaps move to a better place
+
+			CssLayout buttonLayout = new CssLayout();
+			buttonLayout.addStyleName(ExplorerLayout.STYLE_DETAIL_BLOCK);
+			buttonLayout.setWidth(100, Unit.PERCENTAGE);
+			centralLayout.addComponent(buttonLayout);
+
+			completeButton = new Button(
+					i18nManager.getMessage(Messages.TASK_COMPLETE));
+
+			completeButton.addClickListener(new ClickListener() {
+
+				private static final long serialVersionUID = 1L;
+
+				public void buttonClick(ClickEvent event) {
+					// If no owner, make assignee owner (will go into archived
+					// then)
+					if (task.getOwner() == null) {
+						task.setOwner(task.getAssignee());
+						taskService.setOwner(task.getId(), task.getAssignee());
+					}
+
+					taskService.complete(task.getId());
+					notificationManager.showInformationNotification(
+							Messages.TASK_COMPLETED, task.getName());
+					taskPage.refreshSelectNext();
+				}
+			});
+
+			completeButton.setEnabled(isCurrentUserAssignee()
+					|| isCurrentUserOwner());
+			buttonLayout.addComponent(completeButton);
+		}
+	}
+
+	private void initTasksEvent() {
+		HorizontalLayout head = new HorizontalLayout();
+		head.setSizeFull();
+
+		centralLayout.addComponent(head);
+		// Button eButton = new Button("任务处理历史");
+
+		initShowEvent(head);
+
+		eventGrid = new GridLayout(1, 2);
+		eventGrid.setVisible(false);
+		centralLayout.addComponent(eventGrid);
+		// centralLayout.setExpandRatio(eventGrid, 0);
+		TaskEventsPanel taskEventPanel = new TaskEventsPanel();
+		taskEventPanel.setTaskId(task.getId());
+		eventGrid.addComponent(CommonFieldHandler.getSpacer());
+		eventGrid.addComponent(taskEventPanel);
+		eventGrid.setSizeFull();
+		// eventGrid.setColumnExpandRatio(1, 0f);
+	}
+
+	protected boolean isCurrentUserAssignee() {
+		String currentUser = LoginHandler.getLoggedInUser().getId();
+		return currentUser.equals(task.getAssignee());
+	}
+
+	protected boolean isCurrentUserOwner() {
+		String currentUser = LoginHandler.getLoggedInUser().getId();
+		return currentUser.equals(task.getOwner());
+	}
+
+	protected boolean canUserClaimTask() {
+		String userId = LoginHandler.getLoggedInUser().getId();
+		boolean userCandidate = taskService.createTaskQuery()
+				.taskCandidateUser(userId).taskId(task.getId()).count() == 1;
+		// 如果用户在这个组里面，就可以领取任务
+		List<String> teams = teamService.queryUserInTeamIds(userId);
+		boolean groupCandidate = taskService.createTaskQuery()
+				.taskCandidateGroupIn(teams).taskId(task.getId()).count() == 1;
+		return userCandidate || groupCandidate;
+	}
+
+	protected void addEmptySpace(ComponentContainer container) {
+		Label emptySpace = new Label("&nbsp;", ContentMode.HTML);
+		emptySpace.setSizeUndefined();
+		container.addComponent(emptySpace);
+	}
+
+	public void notifyPeopleInvolvedChanged() {
+		userDataStatisticService.saveUserTaskStatistic(LoginHandler
+				.getLoggedInUser().getId());
+		involvedPeople.refreshPeopleGrid();
+		taskPage.getTaskEventPanel().refreshTaskEvents();
+	}
+
+	public void notifyAssigneeChanged() {
+		userDataStatisticService.saveUserTaskStatistic(LoginHandler
+				.getLoggedInUser().getId());
+		if (LoginHandler.getLoggedInUser().getId().equals(task.getAssignee())) { // switch
+																					// view
+																					// to
+																					// inbox
+																					// if
+																					// assignee
+																					// is
+																					// current
+																					// user
+			ViewToolManager.showInboxPage(task.getId());
+		} else {
+			involvedPeople.refreshAssignee();
+			taskPage.getTaskEventPanel().refreshTaskEvents();
+		}
+	}
+
+	public void notifyOwnerChanged() {
+		//进行统计数据的更新
+		userDataStatisticService.saveUserTaskStatistic(LoginHandler
+				.getLoggedInUser().getId());
+		if (LoginHandler.getLoggedInUser().getId().equals(task.getOwner())) {
+			//跳转到我的任务界面
+			ViewToolManager.showTasksPage(task.getId());
+		} else {
+			involvedPeople.refreshOwner();//
+			taskPage.getTaskEventPanel().refreshTaskEvents();
+		}
+	}
+
+	public void notifyRelatedContentChanged() {
+		relatedContent.refreshTaskAttachments();
+		taskPage.getTaskEventPanel().refreshTaskEvents();
+	}
+
 }

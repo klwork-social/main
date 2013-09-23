@@ -196,8 +196,10 @@ public class ProcessInstanceEventsPanel extends Panel {
 		layout.addComponent(text);
 
 		// Time
-		Label time = new Label(new HumanTime(i18nManager).format(taskEvent
-				.getTime()));
+		String human = new HumanTime(i18nManager).format(taskEvent
+				.getTime());
+		
+		Label time = new Label(human + "(" + ")");
 		time.setSizeUndefined();
 		time.addStyleName(ExplorerLayout.STYLE_TASK_EVENT_TIME);
 		layout.addComponent(time);

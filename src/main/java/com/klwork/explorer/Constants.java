@@ -35,8 +35,8 @@ public class Constants {
   public static final String SECURITY_ROLE_ADMIN = "admin";
   
   // Date formatting
-  public static final String DEFAULT_DATE_FORMAT = "dd-MM-yyyy";
-  public static final String DEFAULT_TIME_FORMAT = "dd-MM-yyyy hh:mm:ss";
+  public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+  public static final String DEFAULT_TIME_FORMAT = "yyyy-MM-dd hh:mm:ss";
   
   public static final DateFormat DEFAULT_DATE_FORMATTER = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
   public static final DateFormat DEFAULT_TIME_FORMATTER = new SimpleDateFormat(DEFAULT_TIME_FORMAT);

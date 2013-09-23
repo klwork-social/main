@@ -23,6 +23,7 @@ import org.activiti.engine.identity.Picture;
 import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 
+import com.klwork.common.utils.StringDateUtil;
 import com.klwork.explorer.Constants;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
@@ -68,6 +69,8 @@ public class TaskEventsPanel extends Panel {
 	protected VerticalLayout pMainContent;
 	protected String taskId;
 	protected String processInstanceId;
+	
+	boolean readOnly = false;
 
 	// protected Task task;
 
@@ -76,17 +79,14 @@ public class TaskEventsPanel extends Panel {
 	protected GridLayout eventGrid;
 
 	public TaskEventsPanel() {
+		this(false);
+	}
+	
+
+	public void initUI() {
 		addStyleName(ExplorerLayout.THEME);
 		pMainContent = new VerticalLayout();
 		this.setContent(pMainContent);
-		this.taskService = ProcessEngines.getDefaultProcessEngine()
-				.getTaskService();
-		this.identityService = ProcessEngines.getDefaultProcessEngine()
-				.getIdentityService();
-		this.i18nManager = ViewToolManager.getI18nManager();
-
-		this.taskEventTextResolver = new TaskEventTextResolver();
-
 		pMainContent.setSpacing(true);
 		pMainContent.setMargin(true);
 		setHeight(100, Unit.PERCENTAGE);
@@ -94,10 +94,25 @@ public class TaskEventsPanel extends Panel {
 		addStyleName(ExplorerLayout.STYLE_TASK_EVENT_PANEL);
 
 		addTitle();
-		addInputField();
+		if(!readOnly){//只读的情况下不显示操作按钮
+			addInputField();
+		}
+		
 		initEventGrid();
 		addTaskEvents();
 	}
+	public TaskEventsPanel(boolean readOnly) {
+		this.readOnly = readOnly;
+		this.taskService = ProcessEngines.getDefaultProcessEngine()
+				.getTaskService();
+		this.identityService = ProcessEngines.getDefaultProcessEngine()
+				.getIdentityService();
+		this.i18nManager = ViewToolManager.getI18nManager();
+
+		this.taskEventTextResolver = new TaskEventTextResolver();
+		initUI();
+	}
+
 
 	public void refreshTaskEvents() {
 		eventGrid.removeAllComponents();
@@ -204,8 +219,10 @@ public class TaskEventsPanel extends Panel {
 		layout.addComponent(text);
 
 		// Time
-		Label time = new Label(new HumanTime(i18nManager).format(taskEvent
-				.getTime()));
+		String humFormat = new HumanTime(i18nManager).format(taskEvent
+				.getTime() );
+		Label time = new Label(humFormat + " (" + StringDateUtil.dateToString(taskEvent
+				.getTime(), 4) + ")");
 		time.setSizeUndefined();
 		time.addStyleName(ExplorerLayout.STYLE_TASK_EVENT_TIME);
 		layout.addComponent(time);

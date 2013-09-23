@@ -82,7 +82,9 @@ public class TaskEventTextResolver implements Serializable {
       text = i18nManager.getMessage(Messages.EVENT_DELETE_ATTACHMENT, eventAuthor, event.getMessage());
     } else if (Event.ACTION_ADD_COMMENT.equals(event.getAction())) {
       text = i18nManager.getMessage(Messages.EVENT_COMMENT, eventAuthor, event.getMessage());
-    } else { // default: just show the message
+    } else if (Event.ACTION_COMPLETE_TASK.equals(event.getAction())) {//任务完成
+        text = i18nManager.getMessage(Messages.EVENT_COMPLETE_TASK, eventAuthor);
+      } else { // default: just show the message
       text += i18nManager.getMessage(Messages.EVENT_DEFAULT, eventAuthor, event.getMessage());
     }
     //text = "hello,baidu";
