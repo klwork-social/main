@@ -1,14 +1,8 @@
 package com.klwork.explorer.ui.business.project;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.activiti.engine.impl.persistence.entity.UserEntity;
-
-import com.google.gwt.user.client.ui.Widget;
 import com.klwork.business.domain.model.Project;
 import com.klwork.business.domain.service.ProjectService;
 import com.klwork.explorer.I18nManager;
@@ -20,7 +14,6 @@ import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.base.AbstractTabViewPage;
 import com.klwork.explorer.ui.business.query.ProjectListQuery;
-import com.klwork.explorer.ui.business.social.AccountAuthorityPopupWindow;
 import com.klwork.explorer.ui.custom.ConfirmationDialogPopupWindow;
 import com.klwork.explorer.ui.custom.DetailPanel;
 import com.klwork.explorer.ui.event.ConfirmationEvent;
@@ -29,6 +22,7 @@ import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.event.SubmitEventListener;
 import com.klwork.explorer.ui.handler.BinderHandler;
 import com.klwork.explorer.ui.handler.TableFieldCache;
+import com.klwork.explorer.ui.main.views.TodoListMainPage;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -82,7 +76,6 @@ public class ProjectList extends DetailPanel {
 		this.mainPage = tabPage;
 		projectService = ViewToolManager.getBean("projectService");
 		String userId = LoginHandler.getLoggedInUser().getId();
-		System.out.println();
 	}
 
 	/*
@@ -420,7 +413,8 @@ public class ProjectList extends DetailPanel {
 	}
 
 	public void selectedHandle(String id, String name) {
-		mainPage.addTabSpecial(new ProjectTreeTable(id,mainPage), name);
+		Project project = projectService.findProjectById(id);
+		((TodoListMainPage) mainPage).openProject(project);
 	}
 
 	// Keyboard navigation

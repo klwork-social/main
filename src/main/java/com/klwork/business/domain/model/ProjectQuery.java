@@ -34,6 +34,10 @@ public class ProjectQuery extends QueryParameter {
 	private String ownuser;
 
 	private String name;
+	
+	//
+	private String key;
+	private String keyValue;
 
 	public String getOwnuser() {
 		return ownuser;
@@ -82,5 +86,23 @@ public class ProjectQuery extends QueryParameter {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public String getKeyValue() {
+		return keyValue;
+	}
+
+	public void setKeyValue(String keyValue) {
+		this.keyValue = keyValue;
+	}
+	
+	
 
 }

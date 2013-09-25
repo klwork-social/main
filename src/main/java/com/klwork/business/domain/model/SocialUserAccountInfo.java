@@ -29,6 +29,12 @@ public class SocialUserAccountInfo implements Serializable
 	 *  
 	 */
 	private String accountId;
+	
+	/**
+	 *  
+	 */
+	private String entityId;
+	
 	/**
 	 *  
 	 */
@@ -257,5 +263,22 @@ public class SocialUserAccountInfo implements Serializable
 	 */	
 	public java.util.Date getLastUpdate(){
 		return lastUpdate;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @param entityId
+	 */
+	public void setEntityId(String entityId){
+		this.entityId = entityId;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getEntityId(){
+		return entityId;
 	}
 }

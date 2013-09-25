@@ -74,6 +74,9 @@ sqlMapConfig:
   
 	<sql id="selectProjectByQueryCriteriaSql">
     from project U
+    <if test="key != null"><!-- entity_type_ = 1表示社交账号-->
+      inner join social_user_account_info i on i.entity_id_ = U.id and i.type_ = '2'
+    </if>
 		<where>
 			<if test="id != null">
         AND U.id = #{id}
@@ -93,6 +96,9 @@ sqlMapConfig:
 			<if test="name != null">
         AND U.name = #{name}
 			</if>
+			<if test="key != null">
+        AND i.value_ = #{keyValue} AND i.key_ =  #{key}
+    </if>
 		</where>
 	</sql>
   

@@ -28,6 +28,7 @@ sqlMapConfig:
     	id_,
 	user_id_,
 	account_id_,
+	entity_id_,
 	type_,
 	key_,
 	value_type_,
@@ -42,6 +43,7 @@ sqlMapConfig:
       		#{id,jdbcType=VARCHAR},
  		#{userId,jdbcType=VARCHAR},
  		#{accountId,jdbcType=VARCHAR},
+ 		#{entityId,jdbcType=VARCHAR},
  		#{type,jdbcType=VARCHAR},
  		#{key,jdbcType=VARCHAR},
  		#{valueType,jdbcType=INTEGER},
@@ -62,6 +64,9 @@ sqlMapConfig:
 </if>
 <if test="accountId != null">
  account_id_ = #{accountId,jdbcType=VARCHAR},
+</if>
+<if test="entityId != null">
+ entity_id_ = #{entityId,jdbcType=VARCHAR},
 </if>
 <if test="type != null">
  type_ = #{type,jdbcType=VARCHAR},
@@ -128,6 +133,9 @@ sqlMapConfig:
     <if test="accountId != null">
         AND U.account_id_ = #{accountId}
     </if>
+     <if test="entityId != null">
+        AND U.entity_id_ = #{entityId}
+    </if>
     <if test="type != null">
         AND U.type_ = #{type}
     </if>
@@ -147,6 +155,7 @@ sqlMapConfig:
 	<result property="id" column="id_" />
 	<result property="userId" column="user_id_" />
 	<result property="accountId" column="account_id_" />
+	<result property="entityId" column="entity_id_" />
 	<result property="type" column="type_" />
 	<result property="key" column="key_" />
 	<result property="valueType" column="value_type_" />

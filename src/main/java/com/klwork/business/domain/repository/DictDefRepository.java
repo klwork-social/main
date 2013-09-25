@@ -267,6 +267,8 @@ public class DictDefRepository extends
 		insertData(dictDef);
 		dictDef = new DictDef("291", "user_account_info_type", "8", "用户帐号信息", "1");
 		insertData(dictDef);
+		dictDef = new DictDef("292", "todo_project_type", "8", "todolist信息", "2");
+		insertData(dictDef);
 		
 		dictDef = new DictDef("295", "user_last_logged_time", "9", "用户登录最后时间", "user_last_logged_time");
 		insertData(dictDef);

@@ -41,7 +41,7 @@ public class SocialUserAccountInfoService {
 
 	private SocialUserAccountInfo queryExist(SocialUserAccountInfo socialUserAccountInfo) {
 		SocialUserAccountInfoQuery query = new SocialUserAccountInfoQuery();
-		query.setKey(socialUserAccountInfo.getKey()).setAccountId(socialUserAccountInfo.getAccountId()).setType(socialUserAccountInfo.getType()).setUserId(socialUserAccountInfo.getUserId());
+		query.setKey(socialUserAccountInfo.getKey()).setAccountId(socialUserAccountInfo.getAccountId()).setType(socialUserAccountInfo.getType()).setUserId(socialUserAccountInfo.getUserId()).setEntityId(socialUserAccountInfo.getEntityId());
 		List<SocialUserAccountInfo> infos =  findSocialUserAccountInfoByQueryCriteria(query,null);
 		if(infos != null && infos.size() > 0){
 			return infos.get(0);
@@ -107,6 +107,23 @@ public class SocialUserAccountInfoService {
 	    info.setKey( key );//
 	    info.setAccountId(socialUserAccount.getId());
 	    info.setType(DictDef.dict( "user_account_info_type")); //帐号类型
+		info.setValue(value);
+	    info.setValueString(value);
+	    info.setValueType(DictDef. dictInt("string"));
+	    createSocialUserAccountInfo(info);
+	}
+	
+	/**
+	 * 设置用户帐号信息
+	 * @param socialUserAccount
+	 * @param key
+	 * @param value
+	 */
+	public void setEntityInfo(String entityId, String entityType,String key, String value) {
+		SocialUserAccountInfo info = new SocialUserAccountInfo();
+	    info.setKey( key );//
+	    info.setEntityId(entityId);
+	    info.setType(entityType); //帐号类型
 		info.setValue(value);
 	    info.setValueString(value);
 	    info.setValueType(DictDef. dictInt("string"));

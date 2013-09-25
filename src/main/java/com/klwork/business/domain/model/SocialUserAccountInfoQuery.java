@@ -21,6 +21,11 @@ public class SocialUserAccountInfoQuery extends QueryParameter{
  	/**
 	 *  
 	 */
+	private String entityId;
+ 	
+ 	/**
+	 *  
+	 */
 	private String userId;
 	
 	/**
@@ -97,6 +102,25 @@ public class SocialUserAccountInfoQuery extends QueryParameter{
 	 */	
 	public String getType(){
 		return type;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @param entityId
+	 */
+	public SocialUserAccountInfoQuery setEntityId(String entityId){
+		this.entityId = entityId;
+		return this;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getEntityId(){
+		return entityId;
 	}
 	
 	/**
