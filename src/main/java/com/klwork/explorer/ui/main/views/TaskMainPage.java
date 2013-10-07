@@ -18,7 +18,7 @@ import com.klwork.explorer.ui.task.ArchivedPage;
 import com.klwork.explorer.ui.task.InboxPage;
 import com.klwork.explorer.ui.task.InvolvedPage;
 import com.klwork.explorer.ui.task.NewTaskPopupWindow;
-import com.klwork.explorer.ui.task.TaskPage;
+import com.klwork.explorer.ui.task.AbstractTaskPage;
 import com.klwork.explorer.ui.task.TasksPage;
 import com.klwork.explorer.ui.task.TeamTaskPage;
 import com.vaadin.ui.Button;
@@ -184,28 +184,28 @@ public class TaskMainPage extends AbstractTabViewPage {
 
 	public void updateInvolvedTab() {
 		involvedTab.setCaption(queryInvolvedTabCaption());
-		TaskPage taskpage = (TaskPage)getTabCache().get("involvedTab");
+		AbstractTaskPage taskpage = (AbstractTaskPage)getTabCache().get("involvedTab");
 		taskpage.refreshTableContent();
 	}
 
 
 	public void updateTeamTab() {
 		teamTab.setCaption(queryTeamTabCaption());
-		TaskPage taskpage = (TaskPage)getTabCache().get("teamTask");
+		AbstractTaskPage taskpage = (AbstractTaskPage)getTabCache().get("teamTask");
 		taskpage.refreshTableContent();
 	}
 
 
 	public void updateMyTab() {
 		myTab.setCaption(queryMyTabCaption());
-		TaskPage taskpage = (TaskPage)getTabCache().get("myTask");
+		AbstractTaskPage taskpage = (AbstractTaskPage)getTabCache().get("myTask");
 		taskpage.refreshTableContent();
 	}
 
 
 	public void updateTodoTab() {
 		todoTab.setCaption(queryTodoTabCaption());
-		TaskPage taskpage = (TaskPage)getTabCache().get("todoTask");
+		AbstractTaskPage taskpage = (AbstractTaskPage)getTabCache().get("todoTask");
 		taskpage.refreshTableContent();
 	}
 

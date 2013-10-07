@@ -22,9 +22,11 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -224,8 +226,12 @@ public class DashboardView extends VerticalLayout implements View {
         t.setSortEnabled(false);
         t.setColumnAlignment("Revenue", Align.RIGHT);
         t.setRowHeaderMode(RowHeaderMode.INDEX);
+        
+        BrowserFrame browser = new BrowserFrame("Browser",
+        		new ExternalResource("http://www.baidu.com"));
+        browser.setSizeFull();
 
-        row.addComponent(createPanel(t));
+        row.addComponent(createPanel(browser));
 
         //row.addComponent(createPanel(new TopSixTheatersChart()));
 

@@ -45,7 +45,7 @@ import com.vaadin.ui.VerticalLayout;
 
 
 /**
- * Component for a {@link TaskPage} that displays all people involved with the task.
+ * Component for a {@link AbstractTaskPage} that displays all people involved with the task.
  * 
  * @author Joram Barrez
  */

@@ -22,7 +22,7 @@ import com.klwork.explorer.ui.task.data.QueuedListQuery;
  * 
  * @author Joram Barrez
  */
-public class QueuedPage extends TaskPage {
+public class QueuedPage extends AbstractTaskPage {
 
   private static final long serialVersionUID = 1L;
   

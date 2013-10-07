@@ -355,7 +355,7 @@ public class DictDefRepository extends
 		dictDef = new DictDef("801", "outsourcing_checker", "22", "审核人", "outsourcing_checker");
 		insertData(dictDef);
 		
-		dictDef = new DictDef("805", "flow_type_outsourcing", "23", "外包流程", "0");
+		dictDef = new DictDef("805", "flow_type_crowdsourcing", "23", "外包流程", "0");
 		insertData(dictDef);
 		dictDef = new DictDef("806", "flow_type_gather", "23", "收集类流程", "1");
 		insertData(dictDef);

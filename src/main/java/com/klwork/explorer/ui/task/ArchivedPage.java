@@ -25,7 +25,7 @@ import com.vaadin.ui.Component;
  * 
  * @author Joram Barrez
  */
-public class ArchivedPage extends TaskPage {
+public class ArchivedPage extends AbstractTaskPage {
   
   private static final long serialVersionUID = 1L;
   

@@ -20,7 +20,7 @@ import com.klwork.explorer.ui.task.data.TeamTaskListQuery;
 /**
  * The Class TeamTaskPage.
  */
-public class TeamTaskPage extends TaskPage {
+public class TeamTaskPage extends AbstractTaskPage {
 
 	private static final long serialVersionUID = -1635789211009588682L;
 	private List<String> candidateGroups;

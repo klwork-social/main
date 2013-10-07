@@ -25,7 +25,7 @@ import com.klwork.explorer.ui.task.data.InvolvedListQuery;
  * 
  * @author Joram Barrez
  */
-public class InvolvedPage extends TaskPage {
+public class InvolvedPage extends AbstractTaskPage {
   
   private static final long serialVersionUID = 1L;
   

@@ -18,12 +18,11 @@ import com.vaadin.ui.Table;
 
 
 /**
- * Superclass for all pages that have a table on the left side of the page.
  * 
- * @author Joram Barrez
- * @author Frederik Heremans
+ * @author ww
+ *
  */
-public abstract class AbstractTablePage extends AbstractTaskMainPage {
+public abstract class AbstractTablePage extends AbstractMainGridPage {
 
   private static final long serialVersionUID = 1L;
   

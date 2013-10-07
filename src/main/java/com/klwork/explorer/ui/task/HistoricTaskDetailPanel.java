@@ -71,7 +71,7 @@ public class HistoricTaskDetailPanel extends DetailPanel {
 	protected AttachmentRendererManager attachmentRendererManager;
 
 	// UI
-	protected TaskPage taskPage;
+	protected AbstractTaskPage taskPage;
 	protected VerticalLayout centralLayout;
 	protected VerticalLayout peopleLayout;
 	protected GridLayout peopleGrid;
@@ -83,7 +83,7 @@ public class HistoricTaskDetailPanel extends DetailPanel {
 	private boolean showEvent = true;
 
 	public HistoricTaskDetailPanel(HistoricTaskInstance historicTask,
-			TaskPage taskPage) {
+			AbstractTaskPage taskPage) {
 		this.historicTask = historicTask;
 		this.taskPage = taskPage;
 

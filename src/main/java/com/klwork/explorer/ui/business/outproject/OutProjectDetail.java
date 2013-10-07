@@ -48,6 +48,7 @@ public class OutProjectDetail extends DetailPanel {
 
 	@Override
 	protected void initUI() {
+		super.initUI();
 		setSizeFull();
 		//addStyleName(Reindeer.PANEL_LIGHT);
 		addStyleName("social");

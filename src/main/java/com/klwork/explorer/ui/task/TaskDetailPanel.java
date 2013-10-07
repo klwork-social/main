@@ -89,7 +89,7 @@ public class TaskDetailPanel extends DetailPanel {
 	protected NotificationManager notificationManager;
 
 	// UI
-	protected TaskPage taskPage;
+	protected AbstractTaskPage taskPage;
 	protected VerticalLayout centralLayout;
 	protected FormPropertiesForm taskForm;
 	protected TaskInvolvedPeopleComponent involvedPeople;
@@ -102,8 +102,8 @@ public class TaskDetailPanel extends DetailPanel {
 	
 	TaskFormData formData;
 
-	public TaskDetailPanel(Task task, TaskPage taskPage) {
-		showEvent = taskPage.isShowEvents();
+	public TaskDetailPanel(Task task, AbstractTaskPage taskPage) {
+		//showEvent = taskPage.isShowEvents();
 		this.task = task;
 		this.taskPage = taskPage;
 		this.taskService = ProcessEngines.getDefaultProcessEngine()
@@ -433,7 +433,7 @@ public class TaskDetailPanel extends DetailPanel {
 					// userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
 					notificationManager.showInformationNotification(
 							Messages.TASK_COMPLETED, task.getName());
-					taskPage.refreshSelectNext();
+					refreshSelectNext();
 				}
 
 				@Override
@@ -468,7 +468,7 @@ public class TaskDetailPanel extends DetailPanel {
 							.getLoggedInUser().getId());
 					notificationManager.showInformationNotification(
 							Messages.TASK_COMPLETED, task.getName());
-					taskPage.refreshSelectNext();
+					refreshSelectNext();
 				}
 
 				@Override
@@ -509,7 +509,7 @@ public class TaskDetailPanel extends DetailPanel {
 					taskService.complete(task.getId());
 					notificationManager.showInformationNotification(
 							Messages.TASK_COMPLETED, task.getName());
-					taskPage.refreshSelectNext();
+					refreshSelectNext();
 				}
 			});
 
@@ -575,25 +575,23 @@ public class TaskDetailPanel extends DetailPanel {
 		userDataStatisticService.saveUserTaskStatistic(LoginHandler
 				.getLoggedInUser().getId());
 		involvedPeople.refreshPeopleGrid();
-		taskPage.getTaskEventPanel().refreshTaskEvents();
+		refreshTaskPageEvents();
+	}
+
+	public void refreshTaskPageEvents() {
+		if(taskPage != null && taskPage.getTaskEventPanel() != null){
+			taskPage.getTaskEventPanel().refreshTaskEvents();
+		}
 	}
 
 	public void notifyAssigneeChanged() {
 		userDataStatisticService.saveUserTaskStatistic(LoginHandler
 				.getLoggedInUser().getId());
-		if (LoginHandler.getLoggedInUser().getId().equals(task.getAssignee())) { // switch
-																					// view
-																					// to
-																					// inbox
-																					// if
-																					// assignee
-																					// is
-																					// current
-																					// user
+		if (LoginHandler.getLoggedInUser().getId().equals(task.getAssignee())) {
 			ViewToolManager.showInboxPage(task.getId());
 		} else {
 			involvedPeople.refreshAssignee();
-			taskPage.getTaskEventPanel().refreshTaskEvents();
+			refreshTaskPageEvents();
 		}
 	}
 
@@ -606,13 +604,19 @@ public class TaskDetailPanel extends DetailPanel {
 			ViewToolManager.showTasksPage(task.getId());
 		} else {
 			involvedPeople.refreshOwner();//
-			taskPage.getTaskEventPanel().refreshTaskEvents();
+			refreshTaskPageEvents();
 		}
 	}
 
 	public void notifyRelatedContentChanged() {
 		relatedContent.refreshTaskAttachments();
-		taskPage.getTaskEventPanel().refreshTaskEvents();
+		refreshTaskPageEvents();
+	}
+
+	public void refreshSelectNext() {
+		if(taskPage != null){
+			taskPage.refreshSelectNext();
+		}
 	}
 
 }

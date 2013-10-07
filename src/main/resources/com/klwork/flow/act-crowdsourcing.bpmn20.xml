@@ -4,7 +4,7 @@
 	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
 	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema"
 	expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/klwork">
-	<process id="klwork-crowdsourcing-act" name="klwork-crowdsourcing-act"
+	<process id="crowdsourcing-flow" name="crowdsourcing-flow"
 		isExecutable="true">
 		<startEvent id="start1" activiti:initiator="applyUserId"></startEvent>
 		<sequenceFlow id="flow1" sourceRef="start1" targetRef="publishNeed"></sequenceFlow>

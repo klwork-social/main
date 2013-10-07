@@ -36,19 +36,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-/**
- * A popup window that is used to select people. Two possible modes: -
- * multiselect: displays two tables that allow to select users from the left
- * table to the table on the right - non-multiselect: one table where only one
- * user can be chosen from.
- * 
- * {@link SubmitEventListener} can be attached to listen to completion of the
- * selection. The selected user(s) can be retrieved using
- * {@link #getSelectedUserId()} ,{@link #getSelectedUserIds()} and
- * {@link #getSelectedUserRole(String)}.
- * 
- * @author Joram Barrez
- */
+
 public class NewProjectWindow extends PopupWindow {
 
 	private static final long serialVersionUID = 2288670048774518133L;

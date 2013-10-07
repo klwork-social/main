@@ -10,6 +10,7 @@
 		<property name="filterChainDefinitions">
 			<value>
 				/site/** = anon
+				/html/** = anon
                 /user/** = anon
                 /logout/ = logout
                 /** = authc, roles[user]

@@ -22,6 +22,7 @@ import com.klwork.business.domain.model.OutsourcingProjectQuery;
 import com.klwork.business.domain.model.Project;
 import com.klwork.business.domain.service.OutsourcingProjectService;
 import com.klwork.common.dto.vo.ViewPage;
+import com.klwork.common.utils.StringTool;
 import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 import com.klwork.explorer.data.AbstractLazyLoadingQuery;
 import com.vaadin.data.Item;
@@ -69,6 +70,9 @@ public class PublicProjectListQuery extends AbstractLazyLoadingQuery {
 		List<OutsourcingProject> ps = projectService.findOutsourcingProjectByQueryCriteria(q, page);
 		for (Iterator iterator = ps.iterator(); iterator.hasNext();) {
 			OutsourcingProject project = (OutsourcingProject) iterator.next();
+			if(!StringTool.judgeBlank(project.getName())){
+				project.setName("未知");
+	    	}
 			BeanItem<OutsourcingProject> projectItem = new BeanItem<OutsourcingProject>(project);
 			//items.add(new OutsourcingProjectListItem(project));
 			items.add(projectItem);

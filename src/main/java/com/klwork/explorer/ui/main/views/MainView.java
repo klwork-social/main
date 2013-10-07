@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.ViewManager;
-import com.klwork.explorer.ui.base.AbstractTaskMainPage;
+import com.klwork.explorer.ui.base.AbstractMainGridPage;
 import com.klwork.explorer.ui.business.organization.OrganizationMainPage;
 import com.klwork.explorer.ui.business.organization.OrganizationMemberMainPage;
 import com.klwork.explorer.ui.business.outproject.PublicProjectListPage;
@@ -70,11 +70,11 @@ public class MainView extends Panel implements View {
 		// this.
 	}
 
-	protected AbstractTaskMainPage currentPage;
+	protected AbstractMainGridPage currentPage;
 
 	// Helper
 
-	protected void switchView(AbstractTaskMainPage page, String mainMenuActive,
+	protected void switchView(AbstractMainGridPage page, String mainMenuActive,
 			String subMenuActive) {
 		currentPage = page;
 		// 高亮选择的主菜单
@@ -83,15 +83,9 @@ public class MainView extends Panel implements View {
 		mainLayout.setMainContent(page);
 
 		// 高亮子菜单
-		if (subMenuActive != null && page.getToolBar() != null) {
-			page.getToolBar().setActiveEntry(subMenuActive); // Must be set
-																// AFTER adding
-																// page to
-																// window
-																// (toolbar will
-																// be created in
-																// atach())
-		}
+		/*if (subMenuActive != null && page.getToolBar() != null) {
+			page.getToolBar().setActiveEntry(subMenuActive);
+		}*/
 	}
 
 	protected void switchMainContent(com.vaadin.ui.Component page) {

@@ -48,11 +48,8 @@ public class AbstractTabPage extends CustomComponent {
 			return tabSheet.addTab(c, caption);
 		}catch(Exception e){
 			e.printStackTrace();
-			Panel p = new Panel();
-			p.setContent(new Label(e.getMessage()));
-			return tabSheet.addTab(p, caption);
 		}
-		
+		return null;
 	}
 	
 	public Tab addTab(Component c) {

@@ -7,6 +7,7 @@ import org.activiti.engine.history.HistoricTaskInstance;
 
 import com.klwork.business.domain.model.OutsourcingProject;
 import com.klwork.business.domain.model.Team;
+import com.klwork.business.domain.service.OutsourcingProjectService;
 import com.klwork.business.domain.service.TeamMembershipService;
 import com.klwork.business.domain.service.TeamService;
 import com.klwork.explorer.I18nManager;
@@ -28,13 +29,14 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-public class ProjectOfMyPublishRight extends AbstractTabPage {
+public class ProjectManagerAddInDetail extends AbstractTabPage {
 
 	protected Team team;
 	protected TeamService teamService;
 	protected transient IdentityService identityService;
 	protected transient TeamMembershipService teamMembershipService;
 	protected transient  HistoryService historyService;
+	protected transient OutsourcingProjectService outsourcingProjectService;
 	
 	protected I18nManager i18nManager;
 	protected VerticalLayout panelLayout;
@@ -46,33 +48,37 @@ public class ProjectOfMyPublishRight extends AbstractTabPage {
 	protected HorizontalLayout membersLayout;
 	protected Table membersTable;
 	protected Label noMembersTable;
-	protected ProjectOfMyPublishMainPage mainPage;
 	HistoricTaskInstance historicTaskInstance;
 	private OutsourcingProject relateOutSourceingProject;
-
-	public ProjectOfMyPublishRight(ProjectOfMyPublishMainPage projectOfMyPublishMainPage,Object parameter) {
+	
+	
+	
+	public ProjectManagerAddInDetail(String id) {
 		identityService = ProcessEngines.getDefaultProcessEngine()
 				.getIdentityService();
 		historyService = ProcessEngines.getDefaultProcessEngine().getHistoryService();
+		
+		outsourcingProjectService = ViewToolManager
+				.getBean("outsourcingProjectService");
 		i18nManager = ViewToolManager.getI18nManager();
-		mainPage = projectOfMyPublishMainPage;
-		if(parameter != null){
-			relateOutSourceingProject = (OutsourcingProject)parameter;
+		if(id != null){
+			relateOutSourceingProject = outsourcingProjectService.findOutsourcingProjectById(id);
 			historicTaskInstance = historyService.createHistoricTaskInstanceQuery().processInstanceId(relateOutSourceingProject.getProcInstId()).taskDefinitionKey("publishNeed").singleResult();
 		}
 	}
 	
+
 	@Override
 	public void initTabData() {
 		OutProjectDetail detial = new OutProjectDetail(historicTaskInstance);
 		addTab(detial, i18nManager.getMessage(Messages.OUTPROJECT_PAGE_DETAIL));
 		TaskEventsPanel taskEventPanel = new TaskEventsPanel();
 		// 只查询流程的留言
-		taskEventPanel.setProcessInstanceId(historicTaskInstance.getProcessInstanceId());
-		addTab(taskEventPanel, i18nManager.getMessage(Messages.OUTPROJECT_PAGE_COMMENT));
+		//taskEventPanel.setProcessInstanceId(historicTaskInstance.getProcessInstanceId());
+		//addTab(taskEventPanel, i18nManager.getMessage(Messages.OUTPROJECT_PAGE_COMMENT));
 		//
 		addTab(new WinnersListPage(relateOutSourceingProject), i18nManager.getMessage(Messages.OUTPROJECT_PAGE_WINNERLIST));
-		addTab(new OutProjectAnalysisPage(), i18nManager.getMessage(Messages.OUTPROJECT_PAGE_STATUS));
+		//addTab(new OutProjectAnalysisPage(), i18nManager.getMessage(Messages.OUTPROJECT_PAGE_STATUS));
 		
 	}
 
