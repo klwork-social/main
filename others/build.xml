@@ -80,6 +80,7 @@
 		<pathelement location="${classes}" />
 		<fileset dir="${WEB-INF/lib}">
 			<include name="**/*.jar" />
+			<exclude name="**/ant-*1.6*.jar" />
 		</fileset>
 	</path>
 	<target name="SassCompile" description="SassCompile">
