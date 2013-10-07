@@ -127,8 +127,10 @@ public class UploadWorkTaskContentComponent extends VerticalLayout implements
 	protected Button getAddButton() {
 		// Add content button
 		Button addRelatedContentButton = new Button();
+		addRelatedContentButton.setCaption("上传作品");
+		
 		//新增附件
-		addRelatedContentButton.addStyleName(ExplorerLayout.STYLE_ADD);
+		//addRelatedContentButton.addStyleName(ExplorerLayout.STYLE_ADD);
 		addRelatedContentButton
 				.addClickListener(new com.vaadin.ui.Button.ClickListener() {
 					private static final long serialVersionUID = 1L;

@@ -40,6 +40,7 @@ import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
+import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.MenuBar;
@@ -98,12 +99,23 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 		centralLayout = new VerticalLayout();
 		centralLayout.setMargin(true);
 		setDetailContainer(centralLayout);
+		 getMainPanel().setScrollTop(15);
+		 
+		/*Button scrollButton = new Button("scroll");
+		scrollButton.addClickListener(new Button.ClickListener() {
+		    public void buttonClick(ClickEvent event) {
+		        // Print the current page
+		        JavaScript.getCurrent().execute("VSA_initScrollbars();");
+		    }
+		});
+		centralLayout.addComponent(scrollButton);*/
 
 		/*
 		 * // 增加一个分隔线 addDetailComponent(CommonFieldHandler.getSpacer());
 		 */
 
 		Table listTable = new Table();
+		listTable.addStyleName(ExplorerLayout.STYLE_SCROLLABLE);
 		listTable.addStyleName(ExplorerLayout.STYLE_TASK_LIST);
 		listTable.addStyleName("my-no-scroll");
 		listTable.setWidth(100, Unit.PERCENTAGE);
@@ -113,26 +125,22 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 
 		LazyLoadingQuery lazyLoadingQuery = new SocialUserWeiboTableQuery(
 				socialUserAccount, weiboType);
+		int batchSize = 20;
 		LazyLoadingContainer listContainer = new LazyLoadingContainer(
-				lazyLoadingQuery, 10);
+				lazyLoadingQuery, batchSize);
 		listTable.setContainerDataSource(listContainer);
-		if (lazyLoadingQuery.size() < 10) {
-			listTable.setPageLength(listContainer.size());
-			int pageLength = listContainer.size()/2;
-			listTable.setPageLength(pageLength);
-			//listTable.setSizeFull();
-			//listTable.setSizeUndefined();
-			//listTable.removeStyleName("my-no-scroll");
+		if (lazyLoadingQuery.size() < batchSize) {
+			listTable.setPageLength(0);
 		} else {
-			listTable.setPageLength(10);
+			listTable.setPageLength(batchSize);
 		}
 
 		listTable.addGeneratedColumn("", new SocialHeadColumnGenerator());
 		TableHandler.setTableNoHead(listTable);
 		listTable.setImmediate(false);
 		listTable.setSelectable(false);
-
 		CSSInject css = new CSSInject(UI.getCurrent());
+		//JavaScript.getCurrent().execute(script)
 		css.setStyles(".wb_image_css .scale-image{background-repeat: no-repeat; }");
 		//css.setStyles(".v-panel-content.v-scrollable {overflow-y:hidden}");
 		//css.setStyles(".v-scrollable.v-table-body-wrapper.v-table-body {overflow-y:scroll}");

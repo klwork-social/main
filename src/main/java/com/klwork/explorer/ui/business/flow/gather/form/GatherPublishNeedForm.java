@@ -1,6 +1,5 @@
-package com.klwork.explorer.ui.business.flow.act;
+package com.klwork.explorer.ui.business.flow.gather.form;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +20,8 @@ import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
+import com.klwork.explorer.ui.business.flow.act.ChangeCheckerListener;
+import com.klwork.explorer.ui.business.flow.act.MyTaskRelatedContentComponent;
 import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.form.FormPropertiesComponent;
 import com.klwork.explorer.ui.form.FormPropertiesEvent;
@@ -46,7 +47,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
-public class PublishNeedForm extends com.klwork.explorer.ui.task.TaskForm {
+public class GatherPublishNeedForm extends com.klwork.explorer.ui.task.TaskForm {
 
 	private static final long serialVersionUID = -3197331726904715949L;
 	
@@ -72,7 +73,7 @@ public class PublishNeedForm extends com.klwork.explorer.ui.task.TaskForm {
 	protected ComboBox scoreTeamComboBox;
 	protected FieldGroup fieldGroup = new FieldGroup();
 
-	public PublishNeedForm(Task task) {
+	public GatherPublishNeedForm(Task task) {
 		setTask(task);
 		formService = ProcessEngines.getDefaultProcessEngine().getFormService();
 		runtimeService = ProcessEngines.getDefaultProcessEngine()
@@ -160,7 +161,7 @@ public class PublishNeedForm extends com.klwork.explorer.ui.task.TaskForm {
 					}
 
 					// 通知外边的调用任务,任务相关信息已经保存
-					fireEvent(new SubmitEvent(PublishNeedForm.this,
+					fireEvent(new SubmitEvent(GatherPublishNeedForm.this,
 							SubmitEvent.SUBMITTED, formProperties));
 					submitFormButton.setComponentError(null);
 				} catch (InvalidValueException ive) {
@@ -174,7 +175,7 @@ public class PublishNeedForm extends com.klwork.explorer.ui.task.TaskForm {
 			private static final long serialVersionUID = -8980500491522472381L;
 
 			public void buttonClick(ClickEvent event) {
-				fireEvent(new FormPropertiesEvent(PublishNeedForm.this,
+				fireEvent(new FormPropertiesEvent(GatherPublishNeedForm.this,
 						FormPropertiesEvent.TYPE_CANCEL));
 				submitFormButton.setComponentError(null);
 			}
@@ -293,12 +294,8 @@ public class PublishNeedForm extends com.klwork.explorer.ui.task.TaskForm {
 		taskDetails.addComponent(checkerLabel, 0, 9);
 		initLabelOfGrid(taskDetails, checkerLabel);
 		
-		//需求审核人
-		UserDetailsComponent u = createCheckerComponent();
-		taskDetails.addComponent(u, 1, 9);
-		
-		Label scoreLabel = new Label("作品审核组:");
-		taskDetails.addComponent(scoreLabel, 2, 9);
+		Label scoreLabel = new Label("文件审核组:");
+		taskDetails.addComponent(scoreLabel, 1, 9);
 		initLabelOfGrid(taskDetails, scoreLabel);
 		
 		BusinessComponetHelp help = new BusinessComponetHelp();
@@ -386,25 +383,6 @@ public class PublishNeedForm extends com.klwork.explorer.ui.task.TaskForm {
 		return null;
 	}
 	
-	public void notifyCheckerChanged() {
-		taskDetails.removeComponent(1, 9);
-		taskDetails.addComponent(createCheckerComponent(), 1, 9);
-	}
-
-	protected UserDetailsComponent createCheckerComponent() {
-		boolean hasCheck = false;
-		identityLinkChecker = queryAuditorOfInstance();
-		// 无所属人
-		String roleMessage = (identityLinkChecker != null) ? "审核人" : "无审核人";
-		String userId = (identityLinkChecker != null) ? identityLinkChecker.getUserId(): null;
-		String buttonCaption = (identityLinkChecker != null) ? "重新指定":"指定";
-		UserDetailsComponent involvedDetails = new UserDetailsComponent(
-				userId,
-				roleMessage, buttonCaption,
-				new ChangeCheckerListener(identityLinkChecker, getTask(), this));
-		
-		return involvedDetails;
-	}
 
 	public void initLabelOfGrid(GridLayout taskDetails, Label nameLabel) {
 		nameLabel.addStyleName(ExplorerLayout.STYLE_PROFILE_FIELD);

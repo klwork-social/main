@@ -12,6 +12,7 @@
  */
 package com.klwork.explorer.ui.base;
 
+import com.klwork.explorer.ui.handler.TableHandler;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Table;
 
@@ -53,32 +54,11 @@ public abstract class AbstractTablePage extends AbstractTaskMainPage {
    * (useful when element of the list is deleted)
    */
   public void refreshSelectNext() {
-    Integer pageIndex = (Integer) table.getCurrentPageFirstItemId();
-    Integer selectedIndex = (Integer) table.getValue();
-    table.removeAllItems();
-    
-    // Remove all items
-    table.getContainerDataSource().removeAllItems();
-    
-    // Try to select the next one in the list
-    Integer max = table.getContainerDataSource().size();
-    if (max != 0) {
-      if(pageIndex > max) {
-        pageIndex = max -1;
-      }
-      if(selectedIndex > max) {
-        selectedIndex = max -1;
-      }
-      table.setCurrentPageFirstItemIndex(pageIndex);
-      selectElement(selectedIndex);
-    }
+	  TableHandler.refreshSelectNext(table);
   }
   
   public void selectElement(int index) {
-    if (table.getContainerDataSource().size() > index) {
-      table.select(index);
-      table.setCurrentPageFirstItemId(index);
-    }
+	  TableHandler.selectElement(table, index);
   }
   
 }

@@ -1,5 +1,7 @@
 package com.klwork.explorer.ui.base;
 
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.ViewToolManager;
 import com.vaadin.ui.CustomComponent;
@@ -12,12 +14,16 @@ public  class BaseCustomComponent extends CustomComponent implements TabLayLoadC
 	private boolean lazyload = false;
 	
 	protected transient I18nManager i18nManager;
+	private transient Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Override
 	public void attach() {
 		super.attach();
 		if (!startInit && !lazyload) {
+			logger.debug("attach .... startInit execute...");
 			startInit();
+		}else {
+			logger.debug("attach .... lazyload...");
 		}
 	}
 	

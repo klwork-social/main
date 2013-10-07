@@ -35,7 +35,7 @@ import com.klwork.explorer.security.LoginHandler;
 public class ActCrowdSourcingTest extends AbstractKlworkTestCase {
 	// 测试主要流程
 	@Deployment(resources = { "act-crowdsourcing-test.bpmn20.xml" })
-	public void testMaiFlow() {
+	public void testMainFlow() {
 		ProjectManagerService  projectManagerService = ViewToolManager
 				.getBean("projectManagerService");
 		// 测试部署的文件

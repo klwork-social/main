@@ -33,25 +33,27 @@ public  class TableHandler {
 	 * @param table
 	 */
 	public static void refreshSelectNext(Table table) {
-	    Integer pageIndex = (Integer) table.getCurrentPageFirstItemId();
-	    Integer selectedIndex = (Integer) table.getValue();
+		Integer cFirstItemId = (Integer) table.getCurrentPageFirstItemId();
+	    Integer selectedIndex = (Integer) table.getValue();//当前选中的索引
 	    table.removeAllItems();
 	    
 	    // Remove all items
 	    table.getContainerDataSource().removeAllItems();
 	    
 	    // Try to select the next one in the list
-	    Integer max = table.getContainerDataSource().size();
+	    Integer max = table.getContainerDataSource().size();//查询数据库的总数
 	    if (max != 0) {
-	      if(pageIndex > max) {
-	        pageIndex = max -1;
+	      if(cFirstItemId > max) {
+	        cFirstItemId = max -1;
 	      }
 	      if(selectedIndex > max) {
 	        selectedIndex = max -1;
 	      }
-	      
-	      table.setCurrentPageFirstItemIndex(pageIndex);
-	      selectElement(table,pageIndex);
+	      table.setCurrentPageFirstItemIndex(cFirstItemId);
+	      selectElement(table,selectedIndex);
+	    } else {
+	      table.refreshRowCache();
+	      table.setCurrentPageFirstItemIndex(0);
 	    }
 	  }
 	

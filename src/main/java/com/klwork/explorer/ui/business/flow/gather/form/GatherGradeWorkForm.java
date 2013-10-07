@@ -1,4 +1,4 @@
-package com.klwork.explorer.ui.business.flow.act;
+package com.klwork.explorer.ui.business.flow.gather.form;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +13,7 @@ import com.klwork.business.domain.service.ProjectParticipantService;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
+import com.klwork.explorer.ui.business.flow.act.UploadWorkTaskContentComponent;
 import com.klwork.explorer.ui.event.SubmitEvent;
 import com.klwork.explorer.ui.form.FormPropertiesEvent;
 import com.klwork.explorer.ui.handler.BinderHandler;
@@ -30,7 +31,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
-public class GradeWorkForm extends PublishNeedForm {
+public class GatherGradeWorkForm extends GatherPublishNeedForm {
 
 	protected  ProjectParticipantService projectParticipantService;
 	protected  RuntimeService runtimeService;
@@ -42,7 +43,7 @@ public class GradeWorkForm extends PublishNeedForm {
 	private FieldGroup gradefieldGroup = new FieldGroup();
 	private ProjectParticipant projectScoreParticipant;
 	
-	public GradeWorkForm(Task task) {
+	public GatherGradeWorkForm(Task task) {
 		super(task);
 		this.projectParticipantService = ViewToolManager
 				.getBean("projectParticipantService");
@@ -177,7 +178,7 @@ public class GradeWorkForm extends PublishNeedForm {
 					
 
 					// 通知外边的调用任务,任务相关信息已经保存
-					fireEvent(new SubmitEvent(GradeWorkForm.this,
+					fireEvent(new SubmitEvent(GatherGradeWorkForm.this,
 							SubmitEvent.SUBMITTED, formProperties));
 					submitFormButton.setComponentError(null);
 				} catch (InvalidValueException ive) {
@@ -192,7 +193,7 @@ public class GradeWorkForm extends PublishNeedForm {
 			private static final long serialVersionUID = -8980500491522472381L;
 
 			public void buttonClick(ClickEvent event) {
-				fireEvent(new FormPropertiesEvent(GradeWorkForm.this,
+				fireEvent(new FormPropertiesEvent(GatherGradeWorkForm.this,
 						FormPropertiesEvent.TYPE_CANCEL));
 				submitFormButton.setComponentError(null);
 			}

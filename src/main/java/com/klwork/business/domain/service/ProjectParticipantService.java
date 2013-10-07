@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.klwork.common.dto.vo.ViewPage;
 import com.klwork.common.utils.StringDateUtil;
+import com.klwork.business.domain.model.EntityDictionary;
 import com.klwork.business.domain.model.OutsourcingProject;
 import com.klwork.business.domain.model.OutsourcingProjectQuery;
 import com.klwork.business.domain.model.ProjectParticipant;
@@ -25,7 +26,7 @@ import com.klwork.business.domain.repository.ProjectParticipantRepository;
 public class ProjectParticipantService {
 	@Autowired
 	private ProjectParticipantRepository rep;
-	
+
 	@Autowired
 	OutsourcingProjectService outsourcingProjectService;
 
@@ -35,11 +36,11 @@ public class ProjectParticipantService {
 		projectParticipant.setLastUpdate(lastUpdate);
 		rep.insert(projectParticipant);
 	}
-	
-	
-	
-	/*public void deleteProjectParticipant(ProjectParticipant projectParticipant) {
-	}*/
+
+	/*
+	 * public void deleteProjectParticipant(ProjectParticipant
+	 * projectParticipant) { }
+	 */
 
 	public int updateProjectParticipant(ProjectParticipant projectParticipant) {
 		Date lastUpdate = StringDateUtil.now();
@@ -63,7 +64,8 @@ public class ProjectParticipantService {
 	public boolean checkExistParticipant(String outPrgId, String userId,
 			String participantsType) {
 		ProjectParticipantQuery query = new ProjectParticipantQuery();
-		query.setOutPrgId(outPrgId).setUserId(userId).setParticipantsType(participantsType);
+		query.setOutPrgId(outPrgId).setUserId(userId)
+				.setParticipantsType(participantsType);
 		ProjectParticipant r = findOneByQuery(query);
 		if (r == null)
 			return false;
@@ -78,32 +80,51 @@ public class ProjectParticipantService {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 为一个项目增加指定的参与人
+	 * 
 	 * @param project
 	 * @param userId
-	 * @param participantsTypeUser
+	 * @param participantsType
+	 *            参与者类型
 	 */
-	public void addProjectParticipantByParam(OutsourcingProject project,
-			String userId, String participantsTypeUser,String taskId) {
-		//if (!checkExistParticipant(project.getId(), userId, participantsTypeUser)) {//不存在就新增
-			ProjectParticipant p = new ProjectParticipant();
-			p.setOutPrgId(project.getId());
-			p.setUserId(userId);
-			p.setParticipantsType(participantsTypeUser);
-			p.setProcInstId(project.getProcInstId());
-			p.setAssessedTaskId(taskId);
-			createProjectParticipant(p);
-		//}
-	}
-
-	public void addProjectParticipantByParam(String outsourcingProjectId,
-			String userId, String participantsTypeScorer,String taskId) {
-		OutsourcingProject p = outsourcingProjectService.findOutsourcingProjectById(outsourcingProjectId);
-		this.addProjectParticipantByParam(p, userId, participantsTypeScorer,taskId);
+	public void createProjectParticipantByParam(OutsourcingProject project,
+			String userId, String participantsType, String taskId) {
+		ProjectParticipant p = newProjectParticipantByParam(project, userId,
+				participantsType, taskId);
+		createProjectParticipant(p);
 	}
 	
+
+
+	/**
+	 * 生成一个参与者对象
+	 * 
+	 * @param project
+	 * @param userId
+	 *            当前用户id
+	 * @param participantsType
+	 *            参与类型
+	 * @param taskId
+	 *            当前任务id
+	 * @return
+	 */
+	public ProjectParticipant newProjectParticipantByParam(
+			OutsourcingProject project, String userId, String participantsType,
+			String taskId) {
+		ProjectParticipant p = new ProjectParticipant();
+		p.setOutPrgId(project.getId());
+		p.setUserId(userId);
+		p.setIsWinner(false);// 默认没有评分
+		p.setScore(0.0);//
+		p.setHandleStatus(EntityDictionary.PARTICIPANTS_STATUS_START);// 刚刚参与
+		p.setParticipantsType(participantsType);
+		p.setProcInstId(project.getProcInstId());
+		p.setCurrentTaskId(taskId);
+		return p;
+	}
+
 	public double queryDistributeBonusTotal(String outsourcingProjectId) {
 		return rep.distributeBonusTotal(outsourcingProjectId);
 	}

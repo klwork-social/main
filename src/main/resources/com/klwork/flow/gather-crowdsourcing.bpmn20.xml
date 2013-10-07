@@ -3,39 +3,24 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn"
 	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
 	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema"
-	expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/klwork">
-	<process id="klwork-crowdsourcing-act" name="klwork-crowdsourcing-act"
+	expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.klwork.com">
+	<process id="klwork-gather-act" name="klwork-gather-act"
 		isExecutable="true">
 		<startEvent id="start1" activiti:initiator="applyUserId"></startEvent>
 		<sequenceFlow id="flow1" sourceRef="start1" targetRef="publishNeed"></sequenceFlow>
 
 		<userTask id="publishNeed" name="发布需求" activiti:assignee="${applyUserId}"
-			activiti:formKey="crowdsourcing-publishNeed-form" activiti:inType="out">
+			activiti:formKey="gather-publishNeed-form" activiti:inType="out">
 		</userTask>
 		<sequenceFlow id="publishNeed-createApplication"
 			sourceRef="publishNeed" targetRef="createApplication"></sequenceFlow>
 
 		<serviceTask id="createApplication"
-			activiti:class="com.klwork.explorer.ui.business.flow.act.CreateApplicationTask" />
-		<sequenceFlow id="createApplication-preAudit" sourceRef="createApplication"
-			targetRef="preAudit">
-			<conditionExpression xsi:type="tFormalExpression"><![CDATA[${goPreAudit == true}]]></conditionExpression>
-		</sequenceFlow>
-
-		<userTask id="preAudit" name="初步审核" activiti:assignee="${checker}" activiti:formKey="crowdsourcing-needCheck-form" activiti:inType="out">
-		</userTask>
-		<sequenceFlow id="preAudit-preAudit" sourceRef="preAudit"
-			targetRef="preCheckGateway"></sequenceFlow>
-
-
-		<exclusiveGateway id="preCheckGateway"></exclusiveGateway>
-		<sequenceFlow id="preCheckGateway-publishNeed" name="不通过"
-			sourceRef="preCheckGateway" targetRef="publishNeed">
-			<conditionExpression xsi:type="tFormalExpression"><![CDATA[${needPreChecked == false}]]></conditionExpression>
-		</sequenceFlow>
-		<sequenceFlow id="preCheckGateway-postedNeedAct" name="审核通过"
-			sourceRef="preCheckGateway" targetRef="uploadWork">
-			<conditionExpression xsi:type="tFormalExpression"><![CDATA[${needPreChecked == true}]]></conditionExpression>
+			activiti:class="com.klwork.explorer.ui.business.flow.gather.CreateGatherApplicationTask" />
+	
+		<!-- 进入到子流程流程 -->
+		<sequenceFlow id="createApplication-uploadWork" sourceRef="createApplication"
+			targetRef="uploadWork">
 		</sequenceFlow>
 
 		<subProcess id="uploadWork" name="作品上传流程"
@@ -48,18 +33,10 @@
 				</completionCondition>
 			</multiInstanceLoopCharacteristics>
 			<startEvent id="uploadWorkStart"></startEvent>
-			<sequenceFlow id="uploadWorkStart-claimTask" sourceRef="uploadWorkStart"
-				targetRef="claimTask"></sequenceFlow>
-
-			<scriptTask id="claimTask" name="认领任务确认" scriptFormat="groovy">
-				<script>
-					out:println "任务处理人:";
-				</script>
-			</scriptTask>
-			<sequenceFlow id="claimTask-uploadOwnWork" sourceRef="claimTask"
+			<sequenceFlow id="uploadWorkStart-uploadOwnWork" sourceRef="uploadWorkStart"
 				targetRef="uploadOwnWork"></sequenceFlow>
 
-			<userTask id="uploadOwnWork" name="上传作品" activiti:formKey="crowdsourcing-uploadWork-form" activiti:inType="out">
+			<userTask id="uploadOwnWork" name="上传作品" activiti:formKey="gather-uploadWork-form" activiti:inType="out">
 				<extensionElements>
 					<activiti:taskListener event="create"
 						class="com.klwork.explorer.ui.business.flow.act.ActTaskAssignmentListener" />
@@ -69,7 +46,7 @@
 				targetRef="checkWork"></sequenceFlow>
 
 			<serviceTask id="checkWork" name="系统检查作品"
-				activiti:class="com.klwork.explorer.ui.business.flow.act.WorkCheckService"></serviceTask>
+				activiti:class="com.klwork.explorer.ui.business.flow.gather.UploadCheckService"></serviceTask>
 			<sequenceFlow id="checkWork-checkValidGateway"
 				sourceRef="checkWork" targetRef="checkValidGateway"></sequenceFlow>
 
@@ -84,12 +61,12 @@
 			</sequenceFlow>
 
 			<serviceTask id="currentReviewWork" name="生成评审任务"
-				activiti:class="com.klwork.explorer.ui.business.flow.act.CurrentReviewService"></serviceTask>
+				activiti:class="com.klwork.explorer.ui.business.flow.gather.UploadFileReviewService"></serviceTask>
 			<sequenceFlow id="currentReviewWork-gradeWorks"
 				sourceRef="currentReviewWork" targetRef="gradeWorks"></sequenceFlow>
 
-			<userTask id="gradeWorks" name="评审人进行推荐和评分"
-				activiti:assignee="${reviewer}" activiti:formKey="crowdsourcing-gradeWork-form" activiti:inType="out">
+			<userTask id="gradeWorks" name="评审作品，进行备注操作"
+				activiti:candidateGroups="${gradeTeam}" activiti:formKey="gather-gradeWork-form" activiti:inType="out">
 			</userTask>
 
 			<sequenceFlow id="gradeWorks-uploadWorkEnd" sourceRef="gradeWorks"
@@ -98,21 +75,17 @@
 		</subProcess>
 		<sequenceFlow id="uploadWork-pubWinningList" sourceRef="uploadWork"
 			targetRef="pubWinningList"></sequenceFlow>
-
-		<userTask id="pubWinningList" name="公布获奖名单"
-			activiti:candidateGroups="management" activiti:formKey="crowdsourcing-determineVictor-form" activiti:inType="out"></userTask>
+		
+		<!-- 可以进行邮件模板的设置 -->
+		<userTask id="pubWinningList" name="选择合适的用户名单"
+			activiti:assignee="${applyUserId}" activiti:formKey="gather-determineVictor-form" activiti:inType="out"></userTask>
 		<sequenceFlow id="pubWinningList-messageVictor"
 			sourceRef="pubWinningList" targetRef="messageVictor"></sequenceFlow>
 
-		<serviceTask id="messageVictor" name="通知用户领奖"
-			activiti:class="com.klwork.explorer.ui.business.flow.act.MessageVictorTask"></serviceTask>
+		<serviceTask id="messageVictor" name="通知选择用户"
+			activiti:class="com.klwork.explorer.ui.business.flow.gather.MessageSelectedPeopleTask"></serviceTask>
 		<sequenceFlow id="messageVictor-end" sourceRef="messageVictor"
 			targetRef="end"></sequenceFlow>
 		<endEvent id="end"></endEvent>
-
-		<serviceTask id="dealWithOverdue" name="系统处理时间到期"
-			activiti:class="com.klwork.explorer.ui.business.flow.act.DateOverService"></serviceTask>
-		<sequenceFlow id="dealWithOverdue-gradeWorks" sourceRef="dealWithOverdue"
-			targetRef="pubWinningList"></sequenceFlow>
 	</process>
 </definitions>

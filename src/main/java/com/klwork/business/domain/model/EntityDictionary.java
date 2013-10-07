@@ -18,12 +18,15 @@ public interface EntityDictionary {
 	public static final String PARTICIPANTS_TYPE_USER = "0";// 参与的普通用户
 
 	public static final String PARTICIPANTS_TYPE_SCORER = "1";// 评分者
+	
+	// 参与任务状态
+	public static final String PARTICIPANTS_STATUS_START = "0";// 刚刚参与
 
 	// 参与任务状态
-	public static final String PARTICIPANTS_STATUS_UPLOADED = "0";// 已经上传
-
+	public static final String PARTICIPANTS_STATUS_UPLOADED = "1";// 已经上传
+	
 	// 参与任务状态
-	public static final String PARTICIPANTS_STATUS_SCORED = "1";// 已经评分
+	public static final String PARTICIPANTS_STATUS_SCORED = "2";// 已经评分
 
 	// 用户组类型
 	public static final String TEAM_GROUP_TYPE_COMM = "0";// 用户组普通
@@ -36,4 +39,5 @@ public interface EntityDictionary {
 	public static final String CLAIM_USER_ID = "claimUserId";
 	public static final String CHECKER_USER_ID = "checker";
 	public static final String NEED_PRE_CHECKED = "needPreChecked";// 需求审核
+	public static final String GRADE_TEAM = "gradeTeam";
 }

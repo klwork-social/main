@@ -25,6 +25,7 @@ public class OutProjectPublishQuery extends PublicProjectListQuery {
 	private String status = null;
 	private String participant = null;
 	private String participantType = null;
+	private String type = null;
 	
 	
 
@@ -69,6 +70,9 @@ public class OutProjectPublishQuery extends PublicProjectListQuery {
 	@Override
 	protected OutsourcingProjectQuery createQuery() {
 		OutsourcingProjectQuery q = new OutsourcingProjectQuery();
+		if(type != null){
+			q.setType(type);
+		}
 		q.setOwnUser(userId);
 		if(status != null){
 			// 需求发布中

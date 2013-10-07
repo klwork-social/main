@@ -103,8 +103,16 @@ public class CommonFieldHandler {
 		return s;
 	}
 	
+	/**
+	 * 通过数据字典创建下拉框
+	 * @param caption
+	 * @param data
+	 * @param defaultValue
+	 * @param type 默认以数据库字典的value作为,如果type为1，则为code
+	 * @return
+	 */
 	public static ComboBox createComBox(String caption,
-			List<DictDef> data, Object defaultValue) {
+			List<DictDef> data, Object defaultValue,String type) {
 		ComboBox s = new ComboBox();
 		s.setNullSelectionAllowed(false);
 		//s.setImmediate(true);
@@ -114,10 +122,13 @@ public class CommonFieldHandler {
 		}
 		
 		for (DictDef def : data) {
-			String itemId = def.getCode();
+			String itemId = def.getValue();
+			if("1".equals(type)){
+				itemId = def.getCode();
+			}
 			Item i = s.addItem(itemId);
 			s.setItemCaption(itemId, def.getName());
-			if(def.getCode().equals(defaultValue)){//default以code为准
+			if(itemId.equals(defaultValue)){
 				firstItemId = itemId;
 			}
 		}

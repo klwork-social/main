@@ -65,6 +65,12 @@ public class OutsourcingProject implements Serializable
 	 *  
 	 */
 	private String type;
+	
+	/**
+	 *  
+	 */
+	private String flowType;
+	
 	/**
 	 *  
 	 */
@@ -298,4 +304,35 @@ public class OutsourcingProject implements Serializable
 	public String getPictureId(){
 		return pictureId;
 	}
+	
+	/**
+	 * 
+	 *
+	 * @param flowType
+	 */
+	public void setFlowType(String flowType){
+		this.flowType = flowType;
+	}
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getFlowType(){
+		return flowType;
+	}
+	
+	@Override
+	public String toString() {
+		return "OutsourcingProject [creationDate=" + creationDate
+				+ ", ownUser=" + ownUser + ", lastUpdate=" + lastUpdate
+				+ ", description=" + description + ", relatedTodo="
+				+ relatedTodo + ", name=" + name + ", companyName="
+				+ companyName + ", bounty=" + bounty + ", prgStatus="
+				+ prgStatus + ", deadline=" + deadline + ", type=" + type
+				+ ", procInstId=" + procInstId + ", pictureId=" + pictureId
+				+ "]";
+	}
+	
+	
 }

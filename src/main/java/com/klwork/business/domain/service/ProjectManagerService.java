@@ -12,6 +12,7 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.model.EntityDictionary;
 import com.klwork.business.domain.model.OutsourcingProject;
 import com.klwork.business.domain.model.OutsourcingProjectQuery;
@@ -19,7 +20,6 @@ import com.klwork.business.domain.model.ProjectParticipant;
 import com.klwork.business.domain.model.ProjectParticipantQuery;
 import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.security.LoginHandler;
-import com.klwork.explorer.ui.business.flow.act.PublishNeedForm;
 
 /**
  * 
@@ -41,6 +41,9 @@ public class ProjectManagerService {
 
 	@Autowired
 	TaskService taskService;
+	
+	@Autowired
+	SocialUserAccountInfoService socialUserAccountInfoService;
 
 	/**
 	 * 查询任务的审核人
@@ -64,11 +67,12 @@ public class ProjectManagerService {
 	 * 
 	 * @param outsourcingProject
 	 * @param task
+	 * @param sTeam 
 	 * @return
 	 */
 	public Map<String, Object> submitPublishNeed(
 			OutsourcingProject outsourcingProject, Task task,
-			IdentityLink identityLinkChecker) {
+			IdentityLink identityLinkChecker, String sTeam) {
 		String processInstanceId = task.getProcessInstanceId();
 		Map<String, Object> formProperties;
 		// IdentityLink identityLinkChecker =
@@ -84,11 +88,20 @@ public class ProjectManagerService {
 
 		outsourcingProject.setProcInstId(processInstanceId);
 		outsourcingProject.setOwnUser(task.getAssignee());
+		System.out.println(outsourcingProject);
+		
 		outsourcingProjectService.updateOutsourcingProject(outsourcingProject);
-
+		
+		//保存审核组
+		socialUserAccountInfoService.setEntityInfo(outsourcingProject.getId(), DictDef.dict( "outsourcing_project_type" ),"outsourcing_score_group" , sTeam );
+		
+		
 		// 设置审核人
 		String checker = (identityLinkChecker != null) ? identityLinkChecker
 				.getUserId() : "";
+		socialUserAccountInfoService.setEntityInfo(outsourcingProject.getId(), DictDef.dict( "outsourcing_project_type" ),"outsourcing_checker" , checker );
+				
+		formProperties.put(EntityDictionary.GRADE_TEAM, sTeam);
 		formProperties.put(EntityDictionary.CHECKER_USER_ID, checker);
 		formProperties.put(EntityDictionary.OUTSOURCING_PROJECT_ID,
 				outsourcingProject.getId());
@@ -121,6 +134,25 @@ public class ProjectManagerService {
 		outsourcingProjectService.createOutsourcingProject(outsourcingProject);
 		return processInstance;
 	}
+	
+	/**
+	 * 开始一个流程,并关联todoId
+	 * 
+	 * @param todoId
+	 * @param processKey
+	 * @return
+	 */
+	public ProcessInstance startProcessInstance(
+			String processKey) {
+		ProcessInstance processInstance = runtimeService
+				.startProcessInstanceByKey(processKey);
+		// 新建一个业务对象
+		OutsourcingProject outsourcingProject = new OutsourcingProject();
+		outsourcingProject.setProcInstId(processInstance.getId());
+		outsourcingProject.setOwnUser(LoginHandler.getLoggedInUser().getId());
+		outsourcingProjectService.createOutsourcingProject(outsourcingProject);
+		return processInstance;
+	}
 
 	/**
 	 * 提交审核
@@ -148,37 +180,35 @@ public class ProjectManagerService {
 		return formProperties;
 	}
 
-	/**
-	 * 增加一个新的参与人
-	 * 
-	 * @param outsourcingProjectId
-	 * @param userId
-	 */
-	public void addNewParticipate(String outsourcingProjectId, String userId) {
-		String participantsTypeUser = EntityDictionary.PARTICIPANTS_TYPE_USER;
-		projectParticipantService.addProjectParticipantByParam(
-				outsourcingProjectId, userId, participantsTypeUser, null);
-	}
+
 
 	/**
+	 * 
 	 * 参与项目
 	 * 
 	 * @param project
 	 */
 	public void participateProject(OutsourcingProject project) {
-		// WW_TODO 参与到本项目1
+		// WW_TODO 参与到本项目
 		// 当前用户
 		String userId = LoginHandler.getLoggedInUser().getId();
-
 		// 开始一个新的子流程
 		Map<String, String> formProperties = new HashMap<String, String>();
-		/*
-		 * formProperties.put(EntityDictionary.OUTSOURCING_PROJECT_ID,
-		 * project.getId());
-		 */
+		//把参与用户id,保存到流程变量中
 		formProperties.put(EntityDictionary.CLAIM_USER_ID, userId);
+		//
+		//开启一个子流程
 		taskService.currentNewInstanceByKey(project.getProcInstId(),
 				"uploadWork", formProperties);
+		//构建项目的普通参与人
+		createNewUserParticipate(project, userId);
+	}
+
+	public void createNewUserParticipate(OutsourcingProject project,
+			String userId) {
+		String participantsTypeUser = EntityDictionary.PARTICIPANTS_TYPE_USER;
+		projectParticipantService.createProjectParticipantByParam(
+				project, userId, participantsTypeUser, null);
 	}
 
 	/**
@@ -198,29 +228,66 @@ public class ProjectManagerService {
 		// 把任务id传给下一个流程
 		String cTaskId = task.getId();
 		formProperties.put(EntityDictionary.UP_LOADTASK_ID, cTaskId);
-		// 保存附件
-		updateParticipantSubmitStatus(outsourcingProject, task);
+		
+		// 更新参与者的状态
+		updateParticipantSubmitStatus(outsourcingProject, task,EntityDictionary.PARTICIPANTS_STATUS_UPLOADED);
 		return formProperties;
 	}
-
+	
+	/**
+	 * 更新参与者的状态
+	 * 每个流程中，在普通参与只有一个(用户只能参与一次)，先查询出来，然后进行状态的更新
+	 * @param outsourcingProject
+	 * @param task
+	 * @param status 状态标示
+	 */
 	private void updateParticipantSubmitStatus(
-			OutsourcingProject outsourcingProject, Task task) {
+			OutsourcingProject outsourcingProject, Task task, String status) {
 		String userId = LoginHandler.getLoggedInUser().getId();
-		String participantsType = EntityDictionary.PARTICIPANTS_TYPE_USER;
-		ProjectParticipantQuery query = new ProjectParticipantQuery();
-		// 每个用户，在普通用户,只有一个(没个用户只能参与一次)
-		query.setOutPrgId(outsourcingProject.getId()).setUserId(userId)
-				.setParticipantsType(participantsType)
-				.setProcInstId(task.getProcessInstanceId());
-		ProjectParticipant old = projectParticipantService
-				.findOneByQuery(query);
+		//String processInstanceId = task.getProcessInstanceId();
+		
+		ProjectParticipant old = queryUserParticipant(outsourcingProject,
+				userId,null);
 
 		ProjectParticipant n = new ProjectParticipant();
 		n.setId(old.getId());
+		//当前关联的任务
 		n.setCurrentTaskId(task.getId());
-		n.setHandleStatus(EntityDictionary.PARTICIPANTS_STATUS_UPLOADED);
+		
+		//参与任务状态
+		n.setHandleStatus(status);
 		projectParticipantService.updateProjectParticipant(n);
 	}
+	
+	/**
+	 * 
+	 * 查询出指定条件的普通参与者
+	 * @param outsourcingProject
+	 * @param userId
+	 * @param processInstanceId
+	 * @param handleStatus 状态标示
+	 * @return
+	 */
+	public ProjectParticipant queryUserParticipant(
+			OutsourcingProject outsourcingProject, String userId,String handleStatus) {
+		String participantsType = EntityDictionary.PARTICIPANTS_TYPE_USER;
+		ProjectParticipantQuery query = new ProjectParticipantQuery();
+		query.setOutPrgId(outsourcingProject.getId())
+				.setParticipantsType(participantsType)
+				.setProcInstId(outsourcingProject.getProcInstId());
+		if(StringTool.judgeBlank(userId)){
+			query.setUserId(userId);
+		}
+		if(StringTool.judgeBlank(handleStatus)){
+			query.setHandleStatus(handleStatus);
+		}
+		ProjectParticipant old = projectParticipantService
+				.findOneByQuery(query);
+		return old;
+	}
+	
+	
+    
 
 	/**
 	 * 提交作品打分
@@ -261,7 +328,13 @@ public class ProjectManagerService {
 		return new OutsourcingProject();
 	}
 	
-	//查询任务评分者
+	/**
+	 * 查询任务评分者
+	 * 从当前的任务得到执行id,然后得到上传作品任务id
+	 * 查询此任务的类型为评分者的参与者
+	 * @param task
+	 * @return
+	 */
 	public ProjectParticipant queryProjectScoreOfTask(Task task) {
 		OutsourcingProject outsourcingProject = getRelateOutSourceingProject(task);
 		String userId = LoginHandler.getLoggedInUser().getId();
@@ -277,5 +350,25 @@ public class ProjectManagerService {
 				.setParticipantsType(participantsType).setAssessedTaskId(assessedTaskId.toString()).setProcInstId(task.getProcessInstanceId());
 		ProjectParticipant r = projectParticipantService.findOneByQuery(query);
 		return r;
+	}
+	
+	
+	/**
+	 * 
+	 * @param project
+	 * @param userId
+	 * @param participantsType
+	 * @param taskId
+	 * @param assTaskId
+	 */
+	public void createProjectParticipantByParamInclueAssTask(OutsourcingProject project,
+			String userId, String participantsType, String taskId,String assTaskId) {
+		ProjectParticipant projectScoreParticipant = projectParticipantService.newProjectParticipantByParam(project, userId, EntityDictionary.PARTICIPANTS_TYPE_SCORER, taskId);
+		//查询以前的关联的
+		ProjectParticipant history = queryUserParticipant(project, null,null);
+		projectScoreParticipant.setScoreUserId(history.getUserId());//被评用户id
+		projectScoreParticipant.setAssessedTaskId(assTaskId);
+		//
+		projectParticipantService.createProjectParticipant(projectScoreParticipant);
 	}
 }

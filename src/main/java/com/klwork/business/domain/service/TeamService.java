@@ -224,6 +224,9 @@ public class TeamService {
 			Team team = (Team) iterator.next();
 			ret.add(team.getId());
 		}
+		if(ret.isEmpty()){
+			ret.add("-99");
+		}
 		return ret;
 	}
 }

@@ -13,7 +13,7 @@ public class OutsourcingProjectQuery extends QueryParameter{
  	private static final long serialVersionUID = 1L;
  	
  	public OutsourcingProjectQuery() {
- 	
+ 		
  	}
  	
  	/**
@@ -51,6 +51,11 @@ public class OutsourcingProjectQuery extends QueryParameter{
 	
 	//参与的类型
 	private String participantType;
+	
+	/**
+	 *  
+	 */
+	private String flowType;
 	
 
 	/**
@@ -183,5 +188,22 @@ public class OutsourcingProjectQuery extends QueryParameter{
 		this.participantType = participantType;
 	}
 	
+	/**
+	 * 
+	 *
+	 * @param flowType
+	 */
+	public OutsourcingProjectQuery setFlowType(String flowType){
+		this.flowType = flowType;
+		return this;
+	}
 	
+	/**
+	 * 
+	 *
+	 * @return
+	 */	
+	public String getFlowType(){
+		return flowType;
+	}
 }

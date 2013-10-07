@@ -34,10 +34,15 @@ public class PublicProjectListQuery extends AbstractLazyLoadingQuery {
 	 */
 	private static final long serialVersionUID = -1647959665934595909L;
 	OutsourcingProjectService projectService;
-
+	private String type = null;
 	public PublicProjectListQuery() {
 		projectService = (OutsourcingProjectService) SpringApplicationContextUtil
 				.getContext().getBean("outsourcingProjectService");
+	}
+
+	public PublicProjectListQuery(String type) {
+		this();
+		this.type = type;
 	}
 
 	@Override
@@ -48,6 +53,7 @@ public class PublicProjectListQuery extends AbstractLazyLoadingQuery {
 
 	protected OutsourcingProjectQuery createQuery() {
 		OutsourcingProjectQuery q = new OutsourcingProjectQuery();
+		q.setType(type);
 		//需求发布中
 		q.setPrgStatus(EntityDictionary.OUTSOURCING_STATUS_PUBLISHED);
 		return q;

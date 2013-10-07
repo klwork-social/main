@@ -2,6 +2,8 @@ package com.klwork.explorer.ui.base;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 
@@ -42,7 +44,15 @@ public class AbstractTabPage extends CustomComponent {
 	}
 	
 	public Tab addTab(Component c, String caption) {
-		return tabSheet.addTab(c, caption);
+		try{
+			return tabSheet.addTab(c, caption);
+		}catch(Exception e){
+			e.printStackTrace();
+			Panel p = new Panel();
+			p.setContent(new Label(e.getMessage()));
+			return tabSheet.addTab(p, caption);
+		}
+		
 	}
 	
 	public Tab addTab(Component c) {

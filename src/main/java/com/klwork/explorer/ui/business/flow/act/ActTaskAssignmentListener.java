@@ -17,13 +17,17 @@ import org.activiti.engine.delegate.TaskListener;
 
 import com.klwork.business.domain.model.EntityDictionary;
 import com.klwork.business.domain.model.OutsourcingProject;
+import com.klwork.business.domain.model.ProjectParticipant;
 import com.klwork.business.domain.service.OutsourcingProjectService;
 import com.klwork.business.domain.service.ProjectManagerService;
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.ui.business.flow.ExecutionHandler;
 
 /**
- * @author Frederik Heremans
+ * @author ww
+ * 上传作品任务创建时触发
  */
 public class ActTaskAssignmentListener implements TaskListener {
 
@@ -33,24 +37,29 @@ public class ActTaskAssignmentListener implements TaskListener {
 	private static ProjectManagerService projectManagerService = ViewToolManager
 			.getBean("projectManagerService");
 	
+	protected static Logger logger = LoggerFactory.getLogger(ActTaskAssignmentListener.class);
+	
 	public void notify(DelegateTask delegateTask) {
 		delegateTask.setDescription("TaskAssignmentListener is listening: "
 				+ delegateTask.getAssignee());
 		String userId = ExecutionHandler.getVar(delegateTask,EntityDictionary.CLAIM_USER_ID);
 		String outsourcingProjectId = ExecutionHandler.getVar(delegateTask,EntityDictionary.OUTSOURCING_PROJECT_ID);
 		
-		if (userId != null) {
-			System.out.println("外部claimUserId:" + userId);
+		if (userId != null) {//流程变量中有userId
+			logger.debug("外部claimUserId:" + userId);
 			delegateTask.setAssignee((String) userId);
 		} else {
 			OutsourcingProject p = outsourcingProjectService.findOutsourcingProjectById(outsourcingProjectId);
-			if(p != null){
-				System.out.println("项目参与人:" + p.getOwnUser());
+			if(p != null){//没有使用默认项目的创建人
+				logger.debug("项目参与人:" + p.getOwnUser());
 				delegateTask.setAssignee(p.getOwnUser());
 				userId = p.getOwnUser();
+				//默认的流程用户没有参与者
+				projectManagerService.createNewUserParticipate(p, userId);
 			}
 		}
-		projectManagerService.addNewParticipate(outsourcingProjectId, userId);
+		
+		
 		saveAuthToVariable(delegateTask, userId.toString());
 	}
 

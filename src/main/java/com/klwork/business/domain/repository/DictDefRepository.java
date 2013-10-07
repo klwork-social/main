@@ -129,6 +129,10 @@ public class DictDefRepository extends
 		dictDef = new DictDef("19", "user_team_type", "-1", "团队类型", "19");
 		insertData(dictDef);
 		
+		dictDef = new DictDef("22", "outsourcing_project_ext_info", "-1", "外包项目扩张信息", "22");
+		insertData(dictDef);
+		dictDef = new DictDef("23", "flow_type", "-1", "流程分类", "23");
+		insertData(dictDef);
 		
 		insertData(dictDef);
 		dictDef = new DictDef("100", "sina", "2", "新浪", "0");
@@ -201,6 +205,7 @@ public class DictDefRepository extends
 		dictDef = new DictDef("239", "account_tab_open", "3", "帐号默认打开", "account_tab_open");
 		insertData(dictDef);
 		
+		
 		insertData(dictDef);
 		
 		dictDef = new DictDef("250", "expiredTime", "4", "token过期时间", "expiredTime");
@@ -269,6 +274,9 @@ public class DictDefRepository extends
 		insertData(dictDef);
 		dictDef = new DictDef("292", "todo_project_type", "8", "todolist信息", "2");
 		insertData(dictDef);
+		dictDef = new DictDef("293", "outsourcing_project_type", "8", "外包项目的其他信息", "3");
+		insertData(dictDef);
+		
 		
 		dictDef = new DictDef("295", "user_last_logged_time", "9", "用户登录最后时间", "user_last_logged_time");
 		insertData(dictDef);
@@ -323,7 +331,9 @@ public class DictDefRepository extends
 		insertData(dictDef);
 		dictDef = new DictDef("606", "out_art_design ", "17", "美工设计", "1");
 		insertData(dictDef);
-		dictDef = new DictDef("607", "out_system_develop", "17", "系统开发", "2");
+		dictDef = new DictDef("607", "out_open_project", "17", "开放项目", "2");
+		insertData(dictDef);
+		dictDef = new DictDef("608", "out_other_project", "17", "其它项目", "3");
 		insertData(dictDef);
 		
 		dictDef = new DictDef("700", "project_authority_update", "18", "修改", "0");
@@ -337,6 +347,17 @@ public class DictDefRepository extends
 		insertData(dictDef);
 		
 		dictDef = new DictDef("706", "team_my_in", "19", "我参与的团队", "1");
+		insertData(dictDef);
+		
+		
+		dictDef = new DictDef("800", "outsourcing_score_group", "22", "评分组", "outsourcing_score_group");
+		insertData(dictDef);
+		dictDef = new DictDef("801", "outsourcing_checker", "22", "审核人", "outsourcing_checker");
+		insertData(dictDef);
+		
+		dictDef = new DictDef("805", "flow_type_outsourcing", "23", "外包流程", "0");
+		insertData(dictDef);
+		dictDef = new DictDef("806", "flow_type_gather", "23", "收集类流程", "1");
 		insertData(dictDef);
 		
 	}

@@ -580,7 +580,7 @@ public class HistoryManager extends AbstractManager {
   /**
    * 完成任务
    * @param taskId
-   * @param userId
+   * @param loginUserId
    * @param groupId
    * @param type
    */

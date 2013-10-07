@@ -35,6 +35,7 @@ import com.klwork.explorer.NotificationManager;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
+import com.klwork.explorer.ui.business.service.TaskFormHandleService;
 import com.klwork.explorer.ui.custom.DetailPanel;
 import com.klwork.explorer.ui.custom.PrettyTimeLabel;
 import com.klwork.explorer.ui.event.SubmitEvent;
@@ -45,6 +46,7 @@ import com.klwork.explorer.ui.form.FormPropertiesForm;
 import com.klwork.explorer.ui.handler.CommonFieldHandler;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.klwork.explorer.ui.task.listener.ClaimTaskClickListener;
+import com.klwork.explorer.ui.task.listener.ScoreClaimTaskClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.shared.ui.MarginInfo;
@@ -97,6 +99,8 @@ public class TaskDetailPanel extends DetailPanel {
 	protected Button claimButton;
 	protected GridLayout eventGrid;
 	private boolean showEvent = false;
+	
+	TaskFormData formData;
 
 	public TaskDetailPanel(Task task, TaskPage taskPage) {
 		showEvent = taskPage.isShowEvents();
@@ -123,6 +127,8 @@ public class TaskDetailPanel extends DetailPanel {
 
 	@Override
 	protected void initUI() {
+		formData = formService.getTaskFormData(task.getId());
+		
 		setSizeFull();
 		addStyleName("social");
 		addStyleName(Reindeer.LAYOUT_WHITE);
@@ -133,9 +139,9 @@ public class TaskDetailPanel extends DetailPanel {
 		setDetailContainer(centralLayout);
 
 		initHeader();
+		// 描叙和领取按钮
+		initDescriptionAndClaimButton();
 		if (judgeInnerTask()) {
-			// 描叙和领取按钮
-			initDescriptionAndClaimButton();
 			// 任务属于流程
 			initProcessLink();
 		}
@@ -256,14 +262,19 @@ public class TaskDetailPanel extends DetailPanel {
 		initClaimButton(layout);
 		initDescription(layout);
 	}
+	
 
 	protected void initClaimButton(HorizontalLayout layout) {
 		// 任务的指定人不是当前人，candidateUser为当前人
 		if (!isCurrentUserAssignee() && canUserClaimTask()) {
 			claimButton = new Button(
 					i18nManager.getMessage(Messages.TASK_CLAIM));
-			claimButton.addClickListener(new ClaimTaskClickListener(task
+			if(judgeInnerTask()){
+				claimButton.addClickListener(new ClaimTaskClickListener(task
 					.getId(), taskService));
+			}else {//外部的任务
+				claimButton.addClickListener(new ScoreClaimTaskClickListener(task, taskService,formData));
+			}
 			layout.addComponent(claimButton);
 			layout.setComponentAlignment(claimButton, Alignment.MIDDLE_LEFT);
 
@@ -401,10 +412,13 @@ public class TaskDetailPanel extends DetailPanel {
 	protected void initTaskForm() {
 		// Check if task requires a form
 		// task.getT
-		TaskFormData formData = formService.getTaskFormData(task.getId());
+		
 
-		if (formData != null && StringTool.judgeBlank(formData.getFormKey())) {
-			TaskForm c = TaskFormFactory.create(formData.getFormKey(), task);
+		if (isCustomForm(formData)) {//自定义form
+			//TaskForm c = TaskFormFactory.create(formData.getFormKey(), task);
+			TaskFormHandleService formHandleService = ViewToolManager.getBean(formData.getFormKey());
+			TaskForm c = formHandleService.create(task);
+			
 			centralLayout.addComponent(c);
 			c.addListener(new SubmitEventListener() {
 				private static final long serialVersionUID = -3893467157397686736L;
@@ -414,7 +428,7 @@ public class TaskDetailPanel extends DetailPanel {
 					// 流程变量，也提交来了
 					Map<String, Object> properties = (Map<String, Object>) event
 							.getData();
-					System.out.println(properties);
+					//System.out.println(properties);
 					taskService.complete(task.getId(), properties);
 					// userDataStatisticService.saveUserTaskStatistic(LoginHandler.getLoggedInUser().getId());
 					notificationManager.showInformationNotification(
@@ -503,6 +517,10 @@ public class TaskDetailPanel extends DetailPanel {
 					|| isCurrentUserOwner());
 			buttonLayout.addComponent(completeButton);
 		}
+	}
+
+	public boolean isCustomForm(TaskFormData formData) {
+		return formData != null && StringTool.judgeBlank(formData.getFormKey());
 	}
 
 	private void initTasksEvent() {

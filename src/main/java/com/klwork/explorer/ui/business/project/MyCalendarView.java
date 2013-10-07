@@ -541,7 +541,7 @@ public class MyCalendarView extends Panel {
     private ComboBox createStyleNameComboBox() {
     	List<DictDef> list = DictDef.queryDictsByType(DictDef
 				.dict("color"));
-        ComboBox s = CommonFieldHandler.createComBox("颜色", list, "blue");
+        ComboBox s = CommonFieldHandler.createComBox("颜色", list, "blue","1");
         return s;
     }
 

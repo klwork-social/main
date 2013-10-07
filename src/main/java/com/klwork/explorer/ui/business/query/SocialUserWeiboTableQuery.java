@@ -23,6 +23,8 @@ import com.klwork.business.domain.model.SocialUserWeiboQuery;
 import com.klwork.business.domain.service.SocialUserAccountInfoService;
 import com.klwork.business.domain.service.SocialUserWeiboService;
 import com.klwork.common.dto.vo.ViewPage;
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 import com.klwork.explorer.data.AbstractLazyLoadingQuery;
 import com.vaadin.data.Item;
@@ -38,7 +40,7 @@ public class SocialUserWeiboTableQuery extends AbstractLazyLoadingQuery {
 	private SocialUserAccount socialUserAccount;
 	private int weiboType = 0;
 	
-
+	private transient Logger logger = LoggerFactory.getLogger(getClass());
 
 	public SocialUserWeiboTableQuery(SocialUserAccount socialUserAccount,
 			int type) {
@@ -74,11 +76,13 @@ public class SocialUserWeiboTableQuery extends AbstractLazyLoadingQuery {
 
 	@Override
 	public List<Item> loadItems(int start, int count) {
+		logger.debug("查询记录(" + start + "-- " + count + ")");
 		List<Item> items = new ArrayList<Item>();
 		ViewPage<SocialUserWeibo> page = new ViewPage();
 		page.setStart(start);
 		page.setPageSize(count);
 		SocialUserWeiboQuery q = createQuery();
+		
 		List<SocialUserWeibo> ps = socialUserWeiboService.findSocialUserWeiboByQueryCriteria(q, page);
 		for (Iterator iterator = ps.iterator(); iterator.hasNext();) {
 			SocialUserWeibo weibo = (SocialUserWeibo) iterator.next();

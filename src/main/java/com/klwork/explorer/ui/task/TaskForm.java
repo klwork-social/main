@@ -19,6 +19,7 @@ public abstract class TaskForm extends VerticalLayout {
 
 	@Override
 	public void attach() {
+		super.attach();
 		initUi();
 	}
 

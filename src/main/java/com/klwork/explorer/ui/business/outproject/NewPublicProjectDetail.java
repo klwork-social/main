@@ -1,9 +1,16 @@
 package com.klwork.explorer.ui.business.outproject;
 
 import java.util.HashMap;
+import java.util.List;
+
+import org.activiti.engine.ProcessEngines;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Task;
 
 import com.klwork.business.domain.model.DictDef;
+import com.klwork.business.domain.model.EntityDictionary;
 import com.klwork.business.domain.model.OutsourcingProject;
+import com.klwork.business.domain.model.ProjectParticipant;
 import com.klwork.business.domain.service.ProjectManagerService;
 import com.klwork.business.domain.service.TeamService;
 import com.klwork.common.utils.spring.SpringApplicationContextUtil;
@@ -11,6 +18,7 @@ import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.data.LazyLoadingContainer;
 import com.klwork.explorer.data.LazyLoadingQuery;
+import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.base.AbstractVCustomComponent;
 import com.klwork.explorer.ui.business.project.NewProjectWindow;
 import com.klwork.explorer.ui.business.query.PublicProjectListQuery;
@@ -41,16 +49,19 @@ public class NewPublicProjectDetail extends AbstractVCustomComponent {
 	private static final long serialVersionUID = 7916755916967574384L;
 	protected I18nManager i18nManager;
 	protected transient ProjectManagerService projectManagerService;
+	protected transient TaskService taskService;
 
 	final HashMap<Object, HashMap<Object, Field>> fields = new HashMap<Object, HashMap<Object, Field>>();
 	FieldGroup fieldGroup = new FieldGroup();
 	Table listTable;
 	VerticalLayout tableLayout;
 	TeamService teamService;
-	OutsourcingProject outsourcingProject;
 	private DictDef dictDef;
-
+	String loginUserId = null;
 	public NewPublicProjectDetail(DictDef def) {
+		loginUserId = LoginHandler.getLoggedInUser().getId();
+		this.taskService = ProcessEngines.getDefaultProcessEngine()
+				.getTaskService();
 		this.i18nManager = ViewToolManager.getI18nManager();
 		teamService = (TeamService) SpringApplicationContextUtil.getContext()
 				.getBean("teamService");
@@ -105,7 +116,8 @@ public class NewPublicProjectDetail extends AbstractVCustomComponent {
 				listTable.setWidth(100, Unit.PERCENTAGE);
 				listTable.setHeight(100, Unit.PERCENTAGE);
 
-				LazyLoadingQuery lazyLoadingQuery = new PublicProjectListQuery();
+				LazyLoadingQuery lazyLoadingQuery = new PublicProjectListQuery(dictDef.getValue());
+				
 				LazyLoadingContainer listContainer = new LazyLoadingContainer(
 						lazyLoadingQuery, 10);
 				listTable.setContainerDataSource(listContainer);
@@ -138,6 +150,10 @@ public class NewPublicProjectDetail extends AbstractVCustomComponent {
 
 	public GridLayout initSecondGrid(final Table source, final Object itemId,
 			final OutsourcingProject project) {
+		
+		final ProjectParticipant currentPart = projectManagerService.queryUserParticipant(project,
+				loginUserId,null);
+		
 		GridLayout secondGrid = new GridLayout(2, 3);
 		secondGrid.setSizeFull();
 		secondGrid.setMargin(true);
@@ -182,13 +198,19 @@ public class NewPublicProjectDetail extends AbstractVCustomComponent {
 			    setMargin(true);
 				String caption = "加入";
 				Button addButton = new Button(caption);
+				addButton.setDisableOnClick(true);
+				
+				if(currentPart != null){//已经加入过了允许在加入
+					addButton.setEnabled(false);
+				}
 				initLinkButton(addButton);
 
 				addButton.addClickListener(new ClickListener() {
 					public void buttonClick(ClickEvent event) {
+						//加入成功后，弹出任务的填写页面
 						projectManagerService
 								.participateProject(project);
-						// noticeNewTask(project.getProcInstId());
+						noticeAddSucess(project.getProcInstId());
 					}
 
 				});
@@ -203,6 +225,11 @@ public class NewPublicProjectDetail extends AbstractVCustomComponent {
 				//setSpacing(true);
 				Button pubInWorkButton = new Button("提交作品");
 				initLinkButton(pubInWorkButton);
+				pubInWorkButton.setEnabled(false);
+				//参与成功,则可以进行提交作品操作
+				if(currentPart != null && EntityDictionary.PARTICIPANTS_STATUS_START.equals(currentPart.getHandleStatus())){
+					pubInWorkButton.setEnabled(true);
+				}
 
 				pubInWorkButton.addStyleName(Reindeer.BUTTON_SMALL);
 				// editButton.setDisableOnClick(true);
@@ -299,6 +326,19 @@ public class NewPublicProjectDetail extends AbstractVCustomComponent {
 				}
 			}, 0, 1,1,1);
 			return grid;
+		}
+	}
+	public void noticeAddSucess(String processInstanceId) {
+		//查询当前流程的，这个用户的任务，是否存在，如果有进行添加
+		List<Task> loggedInUsersTasks = taskService.createTaskQuery()
+				.taskAssignee(LoginHandler.getLoggedInUser().getId())
+				.processInstanceId(processInstanceId).list();
+		if (loggedInUsersTasks.size() > 0) {
+			String message = "参与成功，您可以进行作品的提交";
+			Notification.show(message, Notification.Type.HUMANIZED_MESSAGE);
+		}else {
+			String message = "参与失败，请等待处理...";
+			Notification.show(message, Notification.Type.HUMANIZED_MESSAGE);
 		}
 	}
 }

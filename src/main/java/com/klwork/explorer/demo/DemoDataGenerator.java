@@ -159,18 +159,20 @@ protected void initProcessDefinitions() {
     if (deploymentList == null || deploymentList.size() == 0) {
     	DeploymentBuilder s = repositoryService.createDeployment()
         .name(crowdsourcingName)
-        .addClasspathResource("com/klwork/flow/act/act-crowdsourcing.bpmn20.xml");
+        .addClasspathResource("com/klwork/flow/act-crowdsourcing.bpmn20.xml")
+    	.addClasspathResource("com/klwork/flow/gather-crowdsourcing.bpmn20.xml");
         s.deploy();
         
     }else {
-    	if(false){
+    	if(true){
 	    	Deployment t = deploymentList.get(0);
 	    	repositoryService.deleteDeployment(t.getId(), true);
 	    	DeploymentBuilder s = repositoryService.createDeployment()
 	    	        .name(crowdsourcingName)
-	    	        .addClasspathResource("com/klwork/flow/act/act-crowdsourcing.bpmn20.xml");
+	    	               .addClasspathResource("com/klwork/flow/act-crowdsourcing.bpmn20.xml")
+	    	               .addClasspathResource("com/klwork/flow/gather-crowdsourcing.bpmn20.xml");
 	    	Deployment dt = s.deploy();
-	    	System.out.println("部署id" + dt.getId() + "-------------" +  "  部署name" + dt.getName());
+	    	//System.out.println("部署id" + dt.getId() + "-------------" +  "  部署name" + dt.getName());
     	}
     }
     

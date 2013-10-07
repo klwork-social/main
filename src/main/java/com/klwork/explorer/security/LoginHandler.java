@@ -31,7 +31,8 @@ public class LoginHandler {
 			}
 			return u;
 		} else {
-			return null;
+			LoggedInUser u = loginHandler_currentUser.get();
+			return u;
 		}
 	}
 

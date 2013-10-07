@@ -13,6 +13,8 @@
 
 package com.klwork.explorer.ui.custom;
 
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.ui.base.TabLayLoadComponent;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.vaadin.shared.ui.MarginInfo;
@@ -43,12 +45,16 @@ public class DetailPanel extends VerticalLayout implements TabLayLoadComponent {
 	private boolean startInit = false;
 	//是否延迟加载
 	private boolean lazyload = false;
+	private transient Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Override
 	public void attach() {
 		super.attach();
 		if (!startInit && !lazyload) {
+			logger.debug("attach .... startInit execute...");
 			startInit();
+		}else {
+			logger.debug("attach .... lazyload...");
 		}
 	}
 
@@ -174,5 +180,10 @@ public class DetailPanel extends VerticalLayout implements TabLayLoadComponent {
 	public void setLazyload(boolean lazyload) {
 		this.lazyload = lazyload;
 	}
+
+	public void setMainPanel(Panel mainPanel) {
+		this.mainPanel = mainPanel;
+	}
+	
 	
 }

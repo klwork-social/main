@@ -180,12 +180,11 @@ public class AbstractTabViewPage extends CustomComponent implements
 		if (c instanceof TabLayLoadComponent) {
 			TabLayLoadComponent s = (TabLayLoadComponent) c;
 			if (forceLazLoad && s.isLazyload() && !s.isStartInit()) {// 没有进行初始化
-				logger.debug("laz init...");
+				logger.debug("tab进行切换，执行startInit--------" + c.toString());
 				s.startInit();
 				s.setStartInit(true);// 设置已经初始化完成了
 			}
 		}
-		logger.debug("tab:" + c);
 	}
 
 	public Map<String, Component> getTabCache() {

@@ -34,7 +34,7 @@ public class TodoService {
 	private MyCalendarEventService myCalendarEventService;
 	
 	public void createTodo(Todo todo) {
-		saveTodoCalendar(todo);
+		saveTodoAssociatedCalendar(todo);
 		rep.insert(todo);
 	}
 
@@ -47,13 +47,17 @@ public class TodoService {
 	}
 
 	public int updateTodo(Todo todo) {
-		saveTodoCalendar(todo);
+		saveTodoAssociatedCalendar(todo);
 		Date now = StringDateUtil.now();
 		todo.setLastUpdate(now);
 		return rep.update(todo);
 	}
-
-	private void saveTodoCalendar(Todo todo) {
+	
+	/**
+	 * 保存todolist项关联的日程
+	 * @param todo
+	 */
+	private void saveTodoAssociatedCalendar(Todo todo) {
 		if(todo.getRelatedCalendar() && todo.getStartDate() != null && todo.getCompletionDate() != null){
 			MyCalendarEvent myCalendarEvent = queryRelatedEvent(todo);
 			if(myCalendarEvent == null){

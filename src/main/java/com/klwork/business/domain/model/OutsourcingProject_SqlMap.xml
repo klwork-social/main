@@ -40,7 +40,8 @@ sqlMapConfig:
 	deadline_,
 	type_,
 	proc_inst_id_,
-	picture_id_
+	picture_id_,
+	flow_type_
 	)
     values (
       		#{id,jdbcType=VARCHAR},
@@ -56,7 +57,8 @@ sqlMapConfig:
  		#{deadline,jdbcType=TIMESTAMP},
  		#{type,jdbcType=CHAR},
  		#{procInstId,jdbcType=VARCHAR},
-    	#{pictureId,jdbcType=VARCHAR}
+    	#{pictureId,jdbcType=VARCHAR},
+    	#{flowType,jdbcType=CHAR}
     	)
   </insert>
   
@@ -99,6 +101,9 @@ sqlMapConfig:
 </if>
 <if test="pictureId != null">
  picture_id_ = #{pictureId,jdbcType=VARCHAR},
+</if>
+<if test="flowType != null">
+ flow_type_ = #{flowType,jdbcType=CHAR},
 </if>
 <if test="lastUpdate != null">
  last_update_ = #{lastUpdate,jdbcType=TIMESTAMP}
@@ -158,6 +163,9 @@ sqlMapConfig:
     <if test="participant != null">
     AND PART.user_id_ = #{participant}
     </if>
+     <if test="flowType != null">
+        AND U.flow_type_ = #{flowType}
+    </if>
     </where>
   </sql>
   
@@ -176,5 +184,6 @@ sqlMapConfig:
 	<result property="type" column="type_" />
 	<result property="procInstId" column="proc_inst_id_" />
 	<result property="pictureId" column="picture_id_" />
+	<result property="flowType" column="flow_type_" />
 </resultMap>
 </mapper>
