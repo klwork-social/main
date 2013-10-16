@@ -14,6 +14,7 @@ import weibo4j.http.AccessToken;
 import weibo4j.model.User;
 
 import com.klwork.common.SystemConstants;
+import com.klwork.common.dao.QueryParameter;
 import com.klwork.common.dto.vo.ViewPage;
 import com.klwork.common.utils.ReflectionUtils;
 import com.klwork.common.utils.StringDateUtil;
@@ -46,16 +47,34 @@ public class SocialUserAccountService {
 	public SocialUserAccountInfoService socialUserAccountInfoService;
 
 	public void createSocialUserAccount(SocialUserAccount socialUserAccount) {
-		socialUserAccount.setId(rep.getNextId());
-		Date lastUpdate = StringDateUtil.now();
-		socialUserAccount.setLastUpdate(lastUpdate);
-		rep.insert(socialUserAccount);
+		SocialUserAccount s = queryExist(socialUserAccount);
+		if(s == null){
+			socialUserAccount.setId(rep.getNextId());
+			Date lastUpdate = StringDateUtil.now();
+			socialUserAccount.setLastUpdate(lastUpdate);
+			rep.insert(socialUserAccount);
+		}else {
+			socialUserAccount.setId(s.getId());
+			updateSocialUserAccount(socialUserAccount);
+		}
 	}
 
 	/*public void deleteSocialUserAccount(SocialUserAccount socialUserAccount) {
 	}*/
 
+	private SocialUserAccount queryExist(SocialUserAccount socialUserAccount) {
+		SocialUserAccountQuery sQuery = new SocialUserAccountQuery();
+		sQuery.setOwnUser(socialUserAccount.getOwnUser()).setWeiboUid(socialUserAccount.getWeiboUid()).setType(socialUserAccount.getType());
+		List<SocialUserAccount> list = rep.findSocialUserAccountByQueryCriteria(sQuery , null);
+		if(list != null && list.size() > 0){
+			return list.get(0);
+		}
+		return null;
+	}
+
 	public int updateSocialUserAccount(SocialUserAccount socialUserAccount) {
+		Date lastUpdate = StringDateUtil.now();
+		socialUserAccount.setLastUpdate(lastUpdate);
 		return rep.update(socialUserAccount);
 	}
 

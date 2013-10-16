@@ -65,9 +65,31 @@ public class SocialUserAccountInfoService {
 		return rep.find(id);
 	}
 	
+	/**
+	 * 查询账号的附件信息
+	 * @param key
+	 * @param accountId
+	 * @return
+	 */
 	public SocialUserAccountInfo findAccountOfInfoByKey(String key,String accountId) {
 		SocialUserAccountInfoQuery query = new SocialUserAccountInfoQuery();
 		query.setKey(key).setAccountId(accountId);
+		List<SocialUserAccountInfo> list = findSocialUserAccountInfoByQueryCriteria(query,null);
+		if(list != null && list.size() > 0){
+			return list.get(0);
+		}
+		return null;
+	}
+	
+	/**
+	 * 查询用户的附加信息
+	 * @param key
+	 * @param userId
+	 * @return
+	 */
+	public SocialUserAccountInfo findUserOfInfoByKey(String key,String userId) {
+		SocialUserAccountInfoQuery query = new SocialUserAccountInfoQuery();
+		query.setKey(key).setUserId(userId);
 		List<SocialUserAccountInfo> list = findSocialUserAccountInfoByQueryCriteria(query,null);
 		if(list != null && list.size() > 0){
 			return list.get(0);
@@ -107,6 +129,23 @@ public class SocialUserAccountInfoService {
 	    info.setKey( key );//
 	    info.setAccountId(socialUserAccount.getId());
 	    info.setType(DictDef.dict( "user_account_info_type")); //帐号类型
+		info.setValue(value);
+	    info.setValueString(value);
+	    info.setValueType(DictDef. dictInt("string"));
+	    createSocialUserAccountInfo(info);
+	}
+	
+	/**
+	 * 设置用户信息
+	 * @param socialUserAccount
+	 * @param key
+	 * @param value
+	 */
+	public void setSocialUserInfo(String userId, String key, String value) {
+		SocialUserAccountInfo info = new SocialUserAccountInfo();
+	    info.setKey( key );//
+	    info.setUserId(userId);
+	    info.setType(DictDef.dict( "user_info_type")); //用户类型
 		info.setValue(value);
 	    info.setValueString(value);
 	    info.setValueType(DictDef. dictInt("string"));

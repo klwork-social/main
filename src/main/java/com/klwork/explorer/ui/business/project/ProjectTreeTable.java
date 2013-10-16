@@ -30,6 +30,7 @@ import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.Images;
 import com.klwork.explorer.ui.base.AbstractTabViewPage;
+import com.klwork.explorer.ui.business.social.WeiboSendPopupWindow;
 import com.klwork.explorer.ui.custom.ConfirmationDialogPopupWindow;
 import com.klwork.explorer.ui.custom.DetailPanel;
 import com.klwork.explorer.ui.event.ConfirmationEvent;
@@ -108,7 +109,7 @@ public class ProjectTreeTable extends DetailPanel {
 
 	public ProjectTreeTable(String prgId, AbstractTabViewPage projectMain) {
 		super(true);
-		System.out.println("ProjectTreeTable 初始化");
+		//System.out.println("ProjectTreeTable 初始化");
 		this.i18nManager = ViewToolManager.getI18nManager();
 		this.mainPage = projectMain;
 		this.projectId = prgId;
@@ -201,7 +202,7 @@ public class ProjectTreeTable extends DetailPanel {
 		addButton.setCaption("快速新加");
 		headerLayout.addComponent(addButton);
 		headerLayout.setComponentAlignment(addButton, Alignment.MIDDLE_LEFT);
-		headerLayout.setExpandRatio(addButton, 0.4f);
+		//headerLayout.setExpandRatio(addButton, 0.4f);
 		headerLayout.setSpacing(true);
 		addButton.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = -8050449471041932066L;
@@ -219,6 +220,19 @@ public class ProjectTreeTable extends DetailPanel {
 				}
 			}
 		});
+		
+		Button shareWeiboButton = new Button();
+	    shareWeiboButton.setCaption("分享到微博");
+	    headerLayout.addComponent(shareWeiboButton);
+	    headerLayout.setComponentAlignment(shareWeiboButton, Alignment.MIDDLE_LEFT);
+	    headerLayout.setExpandRatio(shareWeiboButton, 0.4f);
+	    
+	    shareWeiboButton.addClickListener(new ClickListener() {
+	      public void buttonClick(ClickEvent event) {
+	    	  TodoSharePopupWindow newWeiboPopupWindow = new TodoSharePopupWindow(projectId);
+	        ViewToolManager.showPopupWindow(newWeiboPopupWindow);
+	      }
+	    });
 	}
 
 	private void initMain() {

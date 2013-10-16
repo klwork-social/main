@@ -13,14 +13,18 @@
 package com.klwork.explorer.ui.business.query;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.model.SocialUserAccount;
+import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.business.domain.model.SocialUserAccountQuery;
+import com.klwork.business.domain.service.SocialUserAccountInfoService;
 import com.klwork.business.domain.service.SocialUserAccountService;
 import com.klwork.common.dto.vo.ViewPage;
+import com.klwork.common.utils.StringDateUtil;
 import com.klwork.common.utils.spring.SpringApplicationContextUtil;
 import com.klwork.explorer.data.AbstractLazyLoadingQuery;
 import com.klwork.explorer.security.LoginHandler;
@@ -29,7 +33,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
-import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -41,11 +44,15 @@ public class SocialListQuery extends AbstractLazyLoadingQuery {
 
 	private SocialUserAccountService saService;
 	private SocialAccountList socialAccountList;
+	private SocialUserAccountInfoService socialUserAccountInfoService;
 	private Integer type;
 	
 	public SocialListQuery(SocialAccountList socialAccountList,Integer type) {
 		saService = (SocialUserAccountService) SpringApplicationContextUtil
 				.getContext().getBean("socialUserAccountService");
+		socialUserAccountInfoService = (SocialUserAccountInfoService) SpringApplicationContextUtil
+				.getContext().getBean("socialUserAccountInfoService");
+		
 		this.socialAccountList = socialAccountList;
 		this.type = type;
 	}
@@ -92,6 +99,41 @@ public class SocialListQuery extends AbstractLazyLoadingQuery {
 		throw new UnsupportedOperationException();
 	}
 
+	//初始化重新授权button
+	public void initReAuthorButton(SocialUserAccount sc, HorizontalLayout buttonLayout) {
+		if(checkExpried(sc)){//经过授权，但是没有过期
+			Integer scType = sc.getType();
+			Button authorButton  = new Button("更新授权");
+			authorButton.setDescription("账号的授权时间已过，需要重新授权");
+			authorButton.addStyleName(Reindeer.BUTTON_LINK);
+			authorButton.addClickListener(new ClickListener() {
+				public void buttonClick(ClickEvent event) {
+					//socialAccountList.openReAuthorityBrowserWindow(opener);
+				}
+			});
+			
+			//浏览器打开窗口和button关联
+			socialAccountList.initButtonByBrowWindow(scType, authorButton);
+			buttonLayout.addComponent(authorButton);
+		}
+	}
+	
+	/**
+	 * true为过期
+	 * @param sc
+	 * @return
+	 */
+	public boolean checkExpried(SocialUserAccount sc) {
+		SocialUserAccountInfo expried = socialUserAccountInfoService.findAccountOfInfoByKey("expiredTime", sc.getId());
+		if(expried !=null){
+			Date d = expried.getValueDate();
+			if(d!= null && StringDateUtil.compareDate(StringDateUtil.now(),d) > 0){//没有过期
+				return false;
+			}
+		}
+		return true;
+	}
+
 
 	class SocialAccountItem extends PropertysetItem {
 		private static final long serialVersionUID = 5248557445646101303L;
@@ -129,17 +171,7 @@ public class SocialListQuery extends AbstractLazyLoadingQuery {
 			});
 			buttonLayout.addComponent(permitButton);
 			
-			Button authorButton  = new Button("重新授权");
-			authorButton.addStyleName(Reindeer.BUTTON_LINK);
-			authorButton.addClickListener(new ClickListener() {
-				public void buttonClick(ClickEvent event) {
-					//socialAccountList.openReAuthorityBrowserWindow(opener);
-				}
-			});
-			
-			//浏览器打开窗口和button关联
-			socialAccountList.initButtonByBrowWindow(scType, authorButton);
-			buttonLayout.addComponent(authorButton);
+			initReAuthorButton(sc, buttonLayout);
 			
 			Button editButton  = new Button("微博管理");
 			editButton.addStyleName(Reindeer.BUTTON_LINK);

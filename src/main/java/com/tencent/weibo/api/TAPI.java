@@ -253,45 +253,38 @@ public class TAPI extends BasicAPI{
 	 */
 	public String addPic(OAuth oAuth, String format, String content,
 			String clientip, String picpath) throws Exception {
-		return this.addPic(oAuth, format, content, clientip, "", "", picpath, "");
+		return this.addPic(new AddPicParameter(oAuth, format, content, clientip, "", "",
+				picpath, ""));
 	}
 
 	/**
 	 * 发表一条带图片的微博
+	 * @param parameterObject TODO
 	 * 
-	 * @param oAuth
-	 * @param format 返回数据的格式 是（json或xml）
-	 * @param content  微博内容
-	 * @param clientip 用户IP(以分析用户所在地)
-	 * @param jing 经度（可以填空）
-	 * @param wei 纬度（可以填空）
-	 * @param picpath 可以是本地图片路径 或 网络地址
-	 * @param syncflag  微博同步到空间分享标记（可选，0-同步，1-不同步，默认为0）  
 	 * @return
 	 * @throws Exception
      * @see <a href="http://wiki.open.t.qq.com/index.php/%E5%BE%AE%E5%8D%9A%E7%9B%B8%E5%85%B3/%E5%8F%91%E8%A1%A8%E4%B8%80%E6%9D%A1%E5%B8%A6%E5%9B%BE%E7%89%87%E7%9A%84%E5%BE%AE%E5%8D%9A">腾讯微博开放平台上关于此条API的文档1-本地图片</a>
      * @see <a href="http://wiki.open.t.qq.com/index.php/%E5%BE%AE%E5%8D%9A%E7%9B%B8%E5%85%B3/%E7%94%A8%E5%9B%BE%E7%89%87URL%E5%8F%91%E8%A1%A8%E5%B8%A6%E5%9B%BE%E7%89%87%E7%9A%84%E5%BE%AE%E5%8D%9A">腾讯微博开放平台上关于此条API的文档2-网络图片</a>
 	 */
-	public String addPic(OAuth oAuth, String format, String content,
-			String clientip, String jing, String wei, String picpath,String syncflag)
+	public String addPic(AddPicParameter parameterObject)
 			throws Exception {
 		QArrayList paramsList = new QArrayList();
-		paramsList.add(new BasicNameValuePair("format", format));
-		paramsList.add(new BasicNameValuePair("content", content));
-		paramsList.add(new BasicNameValuePair("clientip", clientip));
-		paramsList.add(new BasicNameValuePair("jing", jing));
-		paramsList.add(new BasicNameValuePair("wei", wei));
-        paramsList.add(new BasicNameValuePair("syncflag", syncflag));
+		paramsList.add(new BasicNameValuePair("format", parameterObject.format));
+		paramsList.add(new BasicNameValuePair("content", parameterObject.content));
+		paramsList.add(new BasicNameValuePair("clientip", parameterObject.clientip));
+		paramsList.add(new BasicNameValuePair("jing", parameterObject.jing));
+		paramsList.add(new BasicNameValuePair("wei", parameterObject.wei));
+        paramsList.add(new BasicNameValuePair("syncflag", parameterObject.syncflag));
 		
-		if(new File(picpath).exists()){
+		if(new File(parameterObject.picpath).exists()){
 			//
 			QArrayList pic = new QArrayList();
-			pic.add(new BasicNameValuePair("pic", picpath));
+			pic.add(new BasicNameValuePair("pic", parameterObject.picpath));
 			return requestAPI.postFile(tAddPicUrl, paramsList, pic,
-					oAuth);
+					parameterObject.oAuth);
 		}else{
-			paramsList.add(new BasicNameValuePair("pic_url", picpath));
-			return requestAPI.postContent(tAddPicUrlUrl, paramsList, oAuth);
+			paramsList.add(new BasicNameValuePair("pic_url", parameterObject.picpath));
+			return requestAPI.postContent(tAddPicUrlUrl, paramsList, parameterObject.oAuth);
 		}
 		
 	}

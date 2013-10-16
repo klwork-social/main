@@ -18,12 +18,14 @@ import org.springframework.context.annotation.Scope;
 import com.klwork.explorer.ui.business.project.ProjectMainPage;
 import com.klwork.explorer.ui.mainlayout.ExplorerLayout;
 import com.klwork.explorer.web.VaadinView;
+import com.klwork.explorer.web.dashboard.DashboardUI;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.UI;
 
 /**
  * The Class SocialView.
@@ -33,17 +35,36 @@ import com.vaadin.ui.TabSheet;
 @Theme(ExplorerLayout.THEME)
 @VaadinView(value = SocialView.NAME, cached = false)
 @PreserveOnRefresh
-public class SocialView extends HorizontalLayout implements View {
+public class SocialView extends HorizontalLayout implements View,PushUpdateInterface {
 	
 	public static final String NAME = "social";
     private TabSheet editors;
-    SocialMainPage page = null;
+    SocialMainPage mainPage = null;
     @Override
     public void enter(ViewChangeEvent event) {
-        setSizeFull();
-        if(page == null){
-        	page = new SocialMainPage();
-			addComponent(page);
-        }
+    	View v = event.getNewView();
+		((DashboardUI)UI.getCurrent()).setCurrentView(v);
+        initUI();
     }
+	public void initUI() {
+		setSizeFull();
+        if(mainPage == null){
+        	mainPage = new SocialMainPage();
+			addComponent(mainPage);
+        }
+	}
+    @Override
+	public PushDataResult getPushData() {
+		return mainPage.getPushData();
+	}
+
+	@Override
+	public void reflashUIByPush() {
+		mainPage.reflashUIByPush();
+	}
+
+	@Override
+	public String getViewName() {
+		return NAME;
+	}
 }

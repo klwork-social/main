@@ -65,13 +65,34 @@ public class SocialMainService {
 		}
 	}
 	
-	
+	/**
+	 * 给每个微博账号发布内容
+	 * @param list
+	 * @param value
+	 * @param type
+	 */
 	public void sendWeibo(Collection list, String value, String type) {
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			String accountId = (String) iterator.next();
 			SocialUserAccount socialUserAccount = socialUserAccountService.findSocialUserAccountById(accountId);
 			AbstractSocialService service =AbstractSocialService.querySocialClass(socialUserAccount.getType() + "");
 			service.sendWeibo(socialUserAccount,value,type);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param list
+	 * @param content  微薄内容
+	 * @param imageUrl 图片路径
+	 * @param type
+	 */
+	public void sendWeiboAndImage(Collection list, String content,String imageUrl, String type)  {
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			String accountId = (String) iterator.next();
+			SocialUserAccount socialUserAccount = socialUserAccountService.findSocialUserAccountById(accountId);
+			AbstractSocialService service =AbstractSocialService.querySocialClass(socialUserAccount.getType() + "");
+			service.sendWeiboAndImage(socialUserAccount,content,imageUrl,type);
 		}
 	}
 

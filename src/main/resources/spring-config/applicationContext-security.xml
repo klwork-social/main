@@ -12,6 +12,7 @@
 				/site/** = anon
 				/html/** = anon
                 /user/** = anon
+                /out/** = anon
                 /logout/ = logout
                 /** = authc, roles[user]
 			</value>

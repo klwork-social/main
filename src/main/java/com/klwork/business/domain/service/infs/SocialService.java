@@ -70,6 +70,17 @@ public interface SocialService {
 	public void sendWeibo(SocialUserAccount socialUserAccount, String value,
 			String type);
 	
+	
+	/**
+	 * 发送微博
+	 * @param socialUserAccount
+	 * @param value
+	 * @param type
+	 * @param type2 
+	 */
+	public void sendWeiboAndImage(SocialUserAccount socialUserAccount, String value, String imageUrl,
+			String type);
+	
 	/**
 	 * 转发微博
 	 * @param weiboForwardSend

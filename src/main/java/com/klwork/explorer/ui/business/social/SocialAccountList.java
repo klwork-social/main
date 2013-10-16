@@ -60,6 +60,8 @@ public class SocialAccountList extends DetailPanel {
 	protected Button addButton;
 	BrowserWindowOpener opener = null;
 	
+	private int currentType = DictDef.dictInt("sina");
+	
 	public SocialAccountList(AbstractTabViewPage tabPage) {
 		super(false);
 		this.i18nManager = ViewToolManager.getI18nManager();
@@ -132,6 +134,7 @@ public class SocialAccountList extends DetailPanel {
 	}
 
 	public void initProjectsTable(int type) {
+		currentType = type;
 		listTable = new Table();
 		listTable.setWidth(100, Unit.PERCENTAGE);
 		listTable.setHeight(400, Unit.PIXELS);
@@ -296,11 +299,25 @@ public class SocialAccountList extends DetailPanel {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			listLayout.removeAllComponents();
-			initProjectsTable(type);
+			reflashProjectTable(type);
 			resetButtonByBrowWindow(type, addButton);
 		}
 
+	}
+	
+	/**
+	 * 重新加载table
+	 */
+	public void reflashTable() {
+		reflashProjectTable(currentType);
+	}
+
+	/**
+	 * 重新加载table
+	 */
+	public void reflashProjectTable(int type) {
+		listLayout.removeAllComponents();
+		initProjectsTable(type);
 	}
 
 }

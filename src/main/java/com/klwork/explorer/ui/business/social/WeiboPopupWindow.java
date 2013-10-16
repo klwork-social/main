@@ -17,7 +17,6 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
@@ -27,6 +26,14 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
 public class WeiboPopupWindow extends PopupWindow {
+	public boolean isSendAsImage() {
+		return sendAsImage;
+	}
+
+	public void setSendAsImage(boolean sendAsImage) {
+		this.sendAsImage = sendAsImage;
+	}
+
 	//表情窗口
 	private Window factWindows;
 	private VerticalLayout mainLayout;
@@ -36,6 +43,8 @@ public class WeiboPopupWindow extends PopupWindow {
 	private String weiboType;
 	private int faceWidth = 400;
 	private int faceHeight = 280;
+	//标示微薄以图片的形式发送，fase为普通发送
+	private boolean sendAsImage = false;
 	
 	private transient AbstractSocialService socialService;
 	
@@ -223,18 +232,20 @@ public class WeiboPopupWindow extends PopupWindow {
 	}
 	
 	public String getPassInputTitle(int count) {
-		return "已经超过<span class=\"number\">" + count + " </span>字";
+		return "已经超过<span class=\"number\">" + count + " </span>字, 微薄内容将以图片的形式发送";
 	}
 
 	public void handlerTextChange(String s) {
 		int totalChineseWords = StringTool.totalChineseWords(s);
 		int count = 140 - totalChineseWords;
-		if(count >= 0){
+		if(count >= 0){//没有超过
 			inputFontField
 			.setValue(getInputTitle(count));
-		}else {
+			sendAsImage = false;
+		}else {//超过字数
 			inputFontField
 			.setValue(getPassInputTitle(-count));
+			sendAsImage = true;
 		}
 	}
 }

@@ -2,6 +2,7 @@ package com.klwork.business.domain.model;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 
@@ -113,6 +114,8 @@ public class Todo implements Serializable
 	 *  
 	 */
 	private String assignedTeam;
+	
+	private List<Todo> childs;
 	
 	/**
 	 * 
@@ -489,4 +492,17 @@ public class Todo implements Serializable
 	public void setAssignedTeam(String assignedTeam) {
 		this.assignedTeam = assignedTeam;
 	}
+	public List<Todo> getChilds() {
+		return childs;
+	}
+	public void setChilds(List<Todo> childs) {
+		this.childs = childs;
+	}
+	@Override
+	public String toString() {
+		return "Todo [id=" + id + ", pid=" + pid + ", isContainer="
+				+ isContainer + ", name=" + name + "]";
+	}
+	
+	
 }

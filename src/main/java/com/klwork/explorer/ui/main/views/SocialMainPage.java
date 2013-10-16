@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.mortbay.log.Log;
 
+import com.klwork.business.domain.model.DictDef;
 import com.klwork.business.domain.model.SocialUserAccount;
+import com.klwork.business.domain.model.SocialUserAccountInfo;
 import com.klwork.business.domain.model.SocialUserAccountQuery;
 import com.klwork.business.domain.service.SocialUserAccountInfoService;
 import com.klwork.business.domain.service.SocialUserAccountService;
+import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.base.AbstractTabViewPage;
@@ -26,6 +29,9 @@ import com.vaadin.ui.TabSheet.Tab;
 public class SocialMainPage extends AbstractTabViewPage{
 	SocialUserAccountService saService;
 	SocialUserAccountInfoService socialUserAccountInfoService;
+	
+	private SocialAccountList socialAccountList = null;
+	
 	public SocialMainPage(){
 		super();
 		saService = ViewToolManager.getBean("socialUserAccountService");
@@ -34,7 +40,8 @@ public class SocialMainPage extends AbstractTabViewPage{
 	
 	@Override
 	public void initTabData() {
-		addTab(new SocialAccountList(this),"社交账号管理");
+		socialAccountList = new SocialAccountList(this);
+		addTab(socialAccountList,"社交账号管理");
 		addTab(new TeamSocialAccountList(this),"团队账号");
 		addTab(new WeiboSendMainPage(),"微博发送管理");
 		//打开默认的微博
@@ -88,5 +95,23 @@ public class SocialMainPage extends AbstractTabViewPage{
 				tabsheet.removeComponent(tabContent);
 			}
 		};
+	}
+	
+	//查询用户记录表数据
+	public PushDataResult getPushData() {
+		SocialUserAccountInfo lock = socialUserAccountInfoService
+				.findUserOfInfoByKey(DictDef.dict("user_third_account_dirty"),
+						LoginHandler. getLoggedInUser().getId());
+		PushDataResult r = new PushDataResult();
+		r.setNeedUpdate(false);
+		if(lock != null && StringTool.parseBoolean(lock.getValue())){
+			r.setNeedUpdate(true);
+		}
+		return r;
+	}
+
+	public void reflashUIByPush() {
+		socialAccountList.reflashTable();
+		socialUserAccountInfoService.setEntityInfo(LoginHandler. getLoggedInUser().getId(),DictDef.dict("user_info_type"), "user_third_account_dirty", "0");
 	}
 }

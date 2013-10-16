@@ -138,7 +138,7 @@ public class Favorite extends Weibo{
 	/**
 	 * 获取当前登录用户的收藏标签列表
 	 * 
-	 * @param page
+	 * @param mainPage
 	 * @return list of the favorite tags
 	 * @throws WeiboException
 	 *             when Weibo service or network is unavailable

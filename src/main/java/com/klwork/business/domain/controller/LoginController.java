@@ -23,6 +23,7 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.mortbay.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -37,6 +38,7 @@ import com.klwork.business.domain.service.SocialEvernoteService;
 import com.klwork.business.domain.service.SocialMainService;
 import com.klwork.business.domain.service.SocialSinaService;
 import com.klwork.business.domain.service.SocialTencentService;
+import com.klwork.business.domain.service.SocialUserAccountInfoService;
 import com.klwork.business.domain.service.SocialUserAccountService;
 import com.klwork.business.domain.service.UserService;
 import com.klwork.business.utils.SinaSociaTool;
@@ -44,6 +46,8 @@ import com.klwork.business.utils.TencentSociaTool;
 import com.klwork.common.DataBaseParameters;
 import com.klwork.common.SystemConstants;
 import com.klwork.common.dto.vo.AjaxResult;
+import com.klwork.common.utils.logging.Logger;
+import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.security.LoginHandler;
 
 /**
@@ -52,6 +56,8 @@ import com.klwork.explorer.security.LoginHandler;
 @Controller
 @RequestMapping("*")
 public class LoginController {
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	private SocialSinaService socialSinaService;
 
@@ -72,6 +78,9 @@ public class LoginController {
 	
 	@Autowired
 	SocialEvernoteService socialEvernoteService;
+	
+	@Autowired
+	SocialUserAccountInfoService socialUserAccountInfoService;
 
 	/**
 	 * 进入到普通登录页面
@@ -163,12 +172,14 @@ public class LoginController {
 		request.getSession().setAttribute(
 				SystemConstants.SESSION_THIRD_LOGIN_TYPE,
 				DataBaseParameters.SINA);
-		if(checkResetOauth(request)){//后台进行测试
+		if(checkResetOauth(request)){//后台进行手动授权操作
 			String userId = (String) request.getSession().getAttribute(SystemConstants.COOKIE_USER_ID);
 			org.activiti.engine.identity.User u = identityService
 					.createUserQuery().userId(userId)
 					.singleResult();
 			saveSocialInfo(request,u);
+			setSocialUserDirty(userId);
+			
 			return new ModelAndView("updateOauthSuccess", retMap);
 		}
 		org.activiti.engine.identity.User user = socialSinaService
@@ -183,6 +194,15 @@ public class LoginController {
 		retMap.put("user", user);
 		return new ModelAndView("oauthPage", retMap);
 	}
+	
+	/**
+	 * 设置用户的账号需要重新刷新
+	 * @param userId
+	 */
+	private void setSocialUserDirty(String userId) {
+		socialUserAccountInfoService.setSocialUserInfo(userId, "user_third_account_dirty", "1");//第三方账号信息已经有更新
+	}
+	
 
 	public void goAuthorizeSuccessUrl(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
@@ -356,7 +376,7 @@ public class LoginController {
 	}
 	
 	private void afterLoginSuccess(String userId) {
-		//socialService.handleUserWeibo(userId);
+		socialService.handleUserWeibo(userId);
 	}
 
 	/**
@@ -369,6 +389,7 @@ public class LoginController {
 	@RequestMapping(value = "oauth", method = RequestMethod.GET)
 	public String oauthPage(HttpServletRequest request, String type) {
 		String state = queryWeiboState(request);
+		logger.debug("oauth " + request.getParameter("userId") + "-----" + type);
 		if(request.getParameter("userId") != null){
 			request.getSession().setAttribute(SystemConstants.COOKIE_USER_ID, request.getParameter("userId"));
 		}

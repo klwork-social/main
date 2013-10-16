@@ -280,6 +280,8 @@ public class DictDefRepository extends
 		
 		dictDef = new DictDef("295", "user_last_logged_time", "9", "用户登录最后时间", "user_last_logged_time");
 		insertData(dictDef);
+		dictDef = new DictDef("296", "user_third_account_dirty", "9", "第三方账号信息已经有更新", "user_third_account_dirty");
+		insertData(dictDef);
 		
 		
 		

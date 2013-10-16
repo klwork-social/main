@@ -1040,4 +1040,24 @@ public class StringTool {
 		}
 		return lengh/2;
 	}
+	
+	public static StringBuilder getSplitString(String str, String splitStr,int number) {
+		StringBuilder buffer =  new StringBuilder(str.length() + (int)number);
+		double a = str.length();
+		double times = Math.ceil(a / number);
+		for (int i = 0; i < (int) times; i++) {
+			int last = (int) times - 1;
+			if (i < last) {
+				int start = (int) (number * i);
+				int end = (int) (number * (i + 1));
+				buffer.append((str.substring(start, end)));
+				buffer.append(splitStr);
+			} else {
+				int start = (int) (number * i);
+				buffer.append((str.substring(start)));
+				buffer.append(splitStr);
+			}
+		}
+		return buffer;
+	}
 }

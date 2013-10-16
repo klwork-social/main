@@ -83,4 +83,8 @@ public class SocialUserWeiboService {
 		SocialUserWeibo r = rep.getOnlyOne(list);
 		return r;
 	}
+
+	public String currentKey() {
+		return rep.getNextId();
+	}
 }

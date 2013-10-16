@@ -1,10 +1,11 @@
 package com.klwork.business.utils;
 
+import java.io.IOException;
 import java.util.List;
 
 import weibo4j.Comments;
 import weibo4j.Timeline;
-import weibo4j.Weibo;
+import weibo4j.http.ImageItem;
 import weibo4j.model.Comment;
 import weibo4j.model.CommentWapper;
 import weibo4j.model.Paging;
@@ -14,6 +15,7 @@ import weibo4j.model.WeiboException;
 import weibo4j.util.WeiboContentTransLate;
 
 import com.klwork.business.domain.model.WeiboForwardSend;
+import com.klwork.common.utils.FileUtil;
 import com.klwork.common.utils.UriUtility;
 
 public class SinaSociaTool {
@@ -224,6 +226,29 @@ public class SinaSociaTool {
 		
 	}
 	
+	
+	/**
+	 * 发送微博
+	 * @param text
+	 * @param assessToken
+	 * @return
+	 */
+	public static int sendWeiboAndImage(String text, String imageUrl, String assessToken) {
+		try {
+			Timeline timeline = new Timeline();
+			timeline.client.setToken(assessToken);
+			byte[] content= FileUtil.readFileImage(imageUrl);
+			ImageItem pic=new ImageItem("pic",content);
+			Status status = timeline.UploadStatus(text,pic);
+		} catch (WeiboException e) {
+			e.printStackTrace();
+			return 0;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return 1;
+		
+	}
 	/**
 	 * 
 	 *  获取当前登录用户所接收到的评论列表

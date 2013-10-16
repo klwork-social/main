@@ -42,6 +42,7 @@ import com.klwork.common.utils.logging.Logger;
 import com.klwork.common.utils.logging.LoggerFactory;
 import com.klwork.explorer.ui.util.ImageUtil;
 import com.tencent.weibo.api.AddParameter;
+import com.tencent.weibo.api.AddPicParameter;
 import com.tencent.weibo.api.StatusesAPI;
 import com.tencent.weibo.api.TAPI;
 import com.tencent.weibo.api.TimelineParameter;
@@ -676,6 +677,24 @@ public class SocialTencentService extends AbstractSocialService {
 		TAPI tAPI=new TAPI(oAuth.getOauthVersion());//根据oAuth配置对应的连接管理器
 		try {
 			String response=tAPI.add(new AddParameter(oAuth, text));
+			 ret = 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(ret == 1){
+			saveSendWeiboRecord(socialUserAccount, text, type);
+		}
+	}
+	
+	@Override
+	public void sendWeiboAndImage(SocialUserAccount socialUserAccount, String text, String imageUrl,
+			String type) {
+		String accountId = socialUserAccount.getId();
+		OAuthV2 oAuth = queryAccountToken(accountId);
+		int ret = 0;
+		TAPI tAPI=new TAPI(oAuth.getOauthVersion());//根据oAuth配置对应的连接管理器
+		try {
+			String response=tAPI.addPic(new AddPicParameter(oAuth, text,imageUrl));
 			 ret = 1;
 		} catch (Exception e) {
 			e.printStackTrace();

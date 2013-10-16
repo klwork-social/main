@@ -124,7 +124,7 @@ public class DashboardUI extends UI implements ErrorHandler{
        // buildLoginView(false);
         buildMainView();
         //进行push线程的初始化
-      //  new PushThread().start();
+        new PushThread().start();
     }
 
     private void buildMainView() {
@@ -466,7 +466,7 @@ public class DashboardUI extends UI implements ErrorHandler{
 		int count = 0;
 		public PushThread() {
 		}
-
+		
 		@Override
 		public void run() {
 			try {

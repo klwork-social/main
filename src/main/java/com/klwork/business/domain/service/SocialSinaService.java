@@ -857,6 +857,16 @@ public class SocialSinaService extends AbstractSocialService {
 			saveSendWeiboRecord(socialUserAccount, text, type);
 		}
 	}
+	
+	@Override
+	public void sendWeiboAndImage(SocialUserAccount socialUserAccount, String text,String imageUrl,
+			String type) {
+		String assessToken = findAccessTokenByAccout(socialUserAccount.getId());
+		int ret = SinaSociaTool.sendWeiboAndImage(text,imageUrl, assessToken);
+		if (ret == 1) {
+			saveSendWeiboRecord(socialUserAccount, text,  type);
+		}
+	}
 
 	public List<Map<String, String>> queryFaces() {
 		return DataProvider.getFacesList();
