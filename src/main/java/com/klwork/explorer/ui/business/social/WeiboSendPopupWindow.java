@@ -226,7 +226,7 @@ public class WeiboSendPopupWindow extends WeiboPopupWindow {
 			String imageUrlString = currentWeiboToImage(key, fcontent.toString());
 			
 			//微薄的内容保留50个字
-			String contnet = weiboContentTA.getValue().substring(0, 50)
+			String contnet = weiboContentTA.getValue().substring(0, 100)
 					+ "......";
 			socialMainService.sendWeiboAndImage(qu, contnet, imageUrlString,
 					"0");
