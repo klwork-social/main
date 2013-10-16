@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>klwork</title>
+<#include "/commonHeader.xhtml"/>
+<style type="text/css">
+<!--
+*{padding:0px;margin:0px;}
+body{background:#fff;}
+.t{height:82px;padding-left:90px;background:url(${ctxPath}/site/images/t_bg.jpg) no-repeat;margin:22px 0 0 32px;}
+.t h1{font-family:'Microsoft YaHei';font-size:30px;padding-top:10px;}
+.t_p1{height:14px;line-height:14px;width:100%;}
+.t_p1 span{display:block;float:left;margin-right:18px;font-size:12px;font-family:'Microsoft YaHei';padding-top:4px;color:#666;}
+.color1{color:#f00;}
+.color2{color:#60f;}
+.color3{color:#0f3;}
+.c{margin-left:87px;background:url(${ctxPath}/site/images/bg.gif) repeat-y 0 0;margin-top:18px;padding-bottom:30px;}
+.c_h,.c_h2{background:url(${ctxPath}/site/images/t_li_bg.gif) no-repeat left top;padding-left:47px;width:100%;padding-bottom:15px;}
+.c_h2{background:url(${ctxPath}/site/images/t_li_bg2.gif) no-repeat left top;padding-left:47px;width:100%;padding-bottom:15px;position:relative;}
+.t_p2{font-size:16px;font-family:'Microsoft YaHei';}
+.add{display:block;position:absolute;left:-7px;top:3px;}
+.c_r{margin-left:81px;background:url(${ctxPath}/site/images/bg.gif) repeat-y 0 0;padding-top:8px;}
+.c_c{background:#999;color:#fff;width:477px;padding:10px 15px;font-size:12px;line-height:20px;position:relative;margin-top:20px;border-bottom:1px solid #bdbaba}
+.c_dot{width:16px;height:8px;position:absolute;left:22px;top:-8px;background:url(${ctxPath}/site/images/dot.gif) no-repeat;display:block;}
+-->
+</style>
+</head>
+
+<body>
+	  <#macro buildNode childs>  
+        <#if childs?? && childs?size gt 0> 
+            <div class="c_r">
+            <#list childs as child>  
+                <#if child.childs?? && child.childs?size gt 0> 
+                	    <div class="c_h2">
+					<img src="${ctxPath}/site/images/minus.jpg" class="add"/>
+					<p class="t_p2">${(child.name)?if_exists}</p>
+					<p class="t_p1"><span>优先级（<font class="color1">高</font>）</span><span>截止时间：2013-10-28</span></p>
+					</div><!--c_h2 end-->
+	                <@buildNode childs=child.childs />  
+	            <#else> 
+	            	<div class="c_h2">
+					<p class="t_p2">${(child.name)?if_exists}</p>
+					<p class="t_p1"><span>优先级（<font class="color1">高</font>）</span><span>截止时间：2013-10-28</span></p>
+					<#if child.description??> 
+					<div class="c_c">
+					<div class="c_dot"></div>
+					${(child.description)?if_exists}
+					</div><!--c_c end-->
+					</#if>
+					</div><!--c_h2 end-->    
+                </#if> 
+            </#list>
+            </div>
+        </#if>  
+    </#macro>  
+    
+<div class="t">
+<h1>最近看书计划</h1>
+<p class="t_p1"><span>优先级（<font class="color1">高</font>）</span><span>截止时间：2013-10-28</span></p>
+</div><!--t end-->
+
+ 
+<div class="c">
+	
+	 <#assign depth = 1 />  
+<#list todoList as typeDomain>
+  <#if typeDomain.childs?? && typeDomain.childs?size gt 0>
+    <div class="c_h2">
+<img src="${ctxPath}/site/images/minus.jpg" class="add"/>
+<p class="t_p2">${(typeDomain.name)?if_exists}</p>
+<p class="t_p1"><span>优先级（<font class="color1">高</font>）</span><span>截止时间：2013-10-28</span></p>
+</div><!--c_h2 end-->
+ <@buildNode childs=typeDomain.childs />
+ 
+<#else> <!--没有子节点-->
+<div class="c_h">
+<p class="t_p2"> ${(typeDomain.name)?if_exists}</p>
+<p class="t_p1"><span>优先级（<font class="color2">中</font>）</span><span>截止时间：2013-10-28</span></p>
+</div><!--c_h end-->
+</#if>
+</#list>
+</div><!--c end-->
+
+</body>
+</html>

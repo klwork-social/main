@@ -73,6 +73,10 @@
 		<servlet-name>SpringDispatcherServlet</servlet-name>
 		<url-pattern>/html/*</url-pattern>
 	</servlet-mapping>
+			<servlet-mapping>
+		<servlet-name>SpringDispatcherServlet</servlet-name>
+		<url-pattern>/out/*</url-pattern>
+	</servlet-mapping>
 	<!-- Static mapping -->
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
