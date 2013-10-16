@@ -139,9 +139,9 @@ public abstract class AbstractWeiboDisplayPage extends DetailPanel {
 		TableHandler.setTableNoHead(listTable);
 		listTable.setImmediate(false);
 		listTable.setSelectable(false);
-		CSSInject css = new CSSInject(UI.getCurrent());
+		//CSSInject css = new CSSInject(UI.getCurrent());
 		//JavaScript.getCurrent().execute(script)
-		css.setStyles(".wb_image_css .scale-image{background-repeat: no-repeat; }");
+		//css.setStyles(".wb_image_css .scale-image{background-repeat: no-repeat; }");
 		//css.setStyles(".v-panel-content.v-scrollable {overflow-y:hidden}");
 		//css.setStyles(".v-scrollable.v-table-body-wrapper.v-table-body {overflow-y:scroll}");
 	}

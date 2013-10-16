@@ -166,7 +166,13 @@ public class SocialEvernoteService {
 			User u = userStore.getUser();
 			saveUserToDb(u, accessToken, localUserId);
 			logger.debug(u.toString());
-		} catch (EDAMUserException | EDAMSystemException | TException e) {
+		} catch (EDAMUserException e) {
+			e.printStackTrace();
+		} catch (EDAMSystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

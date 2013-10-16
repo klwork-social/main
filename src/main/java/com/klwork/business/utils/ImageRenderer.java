@@ -18,9 +18,6 @@
  * Created on 5.2.2009, 12:00:02 by burgetr
  */
 package com.klwork.business.utils;
-
-import gui.ava.html.image.generator.HtmlImageGenerator;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -369,7 +366,7 @@ public class ImageRenderer
                 System.exit(0);
             }
             
-            String outFile = "d:/opt/good.png";
+            String outFile = "e:/opt/good.png";
 			FileOutputStream os = new FileOutputStream(outFile);
             
             ImageRenderer r = new ImageRenderer();
@@ -399,7 +396,6 @@ public class ImageRenderer
         	e.printStackTrace();
             System.err.println("Error: " + e.getMessage());
         }
-        
     }
     
     
@@ -410,11 +406,11 @@ public class ImageRenderer
 		StringBuffer b = FileUtil.getContetByFreemarker(ImageRenderer.class,
 				"weiboImageContent.xhtml", pathPrefix, root);
 		System.out.println(b);
-		HtmlImageGenerator imageGenerator = new HtmlImageGenerator();
+		/*HtmlImageGenerator imageGenerator = new HtmlImageGenerator();
 		String htmlstr = b.toString();
 		imageGenerator.loadHtml(htmlstr);
 		imageGenerator.getBufferedImage();
 		 String relativePath = HtmlTranslateImageTool.currentFilePathByKey("weibo","11345",".png");
-		imageGenerator.saveAsImage(relativePath);
+		imageGenerator.saveAsImage(relativePath);*/
     }
 }
