@@ -1,6 +1,7 @@
 package com.klwork.business.utils;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import weibo4j.Comments;
@@ -238,8 +239,9 @@ public class SinaSociaTool {
 			Timeline timeline = new Timeline();
 			timeline.client.setToken(assessToken);
 			byte[] content= FileUtil.readFileImage(imageUrl);
+			String factText = URLEncoder.encode(text, "UTF-8");
 			ImageItem pic=new ImageItem("pic",content);
-			Status status = timeline.UploadStatus(text,pic);
+			Status status = timeline.UploadStatus(factText,pic);
 		} catch (WeiboException e) {
 			e.printStackTrace();
 			return 0;
