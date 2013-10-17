@@ -13,6 +13,7 @@ import com.klwork.business.domain.service.SocialUserAccountInfoService;
 import com.klwork.explorer.ViewToolManager;
 import com.klwork.explorer.security.LoginHandler;
 import com.klwork.explorer.ui.base.AbstractTabViewPage;
+import com.klwork.explorer.ui.base.TabLayLoadComponent;
 import com.klwork.explorer.ui.business.project.MyCalendarView;
 import com.klwork.explorer.ui.business.project.ProjectList;
 import com.klwork.explorer.ui.business.project.ProjectTreeTable;
@@ -20,6 +21,7 @@ import com.klwork.explorer.ui.business.social.WeiboShowPage;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.CloseHandler;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.Tab;
 
 public class TodoListMainPage extends AbstractTabViewPage{
@@ -67,7 +69,7 @@ public class TodoListMainPage extends AbstractTabViewPage{
 			public void onTabClose(TabSheet tabsheet, Component tabContent) {
 				
 				Tab addTab = tabsheet.getTab(tabContent);
-				if(tabContent instanceof  WeiboShowPage){
+				if(tabContent instanceof  ProjectTreeTable){
 					String projectId = queryTabKey(tabContent);
 					socialUserAccountInfoService.setEntityInfo(projectId,DictDef.dict("todo_project_type"), "account_tab_open", "0");//关闭状态
 					Log.debug("当前关闭：" + projectId);
@@ -80,4 +82,18 @@ public class TodoListMainPage extends AbstractTabViewPage{
 			}
 		};
 	}
+	
+	@Override
+	public void selectedTabChange(SelectedTabChangeEvent event) {
+		final TabSheet source = (TabSheet) event.getSource();
+		Component c = source.getSelectedTab();
+		if (c instanceof TabLayLoadComponent) {
+			TabLayLoadComponent s = (TabLayLoadComponent) c;
+			if (forceLazLoad && s.isLazyload() && !s.isStartInit()) {// 没有进行初始化
+				logger.debug("tab进行切换，执行startInit--------" + c.toString());
+				s.startInit();
+				s.setStartInit(true);// 设置已经初始化完成了
+			}
+		}
+	} 
 }
