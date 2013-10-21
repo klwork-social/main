@@ -22,8 +22,8 @@ public class AbstractTabViewPage extends CustomComponent implements
 
 	protected I18nManager i18nManager;
 	protected Map<String, Component> tabCache = new HashMap<String, Component>();
-	private transient Logger logger = LoggerFactory.getLogger(getClass());
-	private boolean forceLazLoad = true;
+	protected transient Logger logger = LoggerFactory.getLogger(getClass());
+	protected boolean forceLazLoad = true;
 
 	public AbstractTabViewPage() {
 		this.i18nManager = ViewToolManager.getI18nManager();
