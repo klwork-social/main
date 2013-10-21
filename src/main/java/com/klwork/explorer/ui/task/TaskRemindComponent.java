@@ -77,7 +77,6 @@ public class TaskRemindComponent extends AbstractVCustomComponent {
 
 
 	public TaskRemindComponent() {
-		 setCaption("任务提醒");
 		 String userId = LoginHandler.getLoggedInUser().getId();
 		 userDataStatisticService = ViewToolManager.getBean("userDataStatisticService");
 		 cUserDataStatistic = userDataStatisticService.queryUserTaskStatistic(userId);
@@ -86,6 +85,7 @@ public class TaskRemindComponent extends AbstractVCustomComponent {
 
 	@Override
 	protected void initUi() {
+		setCaption("任务提醒");
 		getMainLayout().setMargin(true);
 		
 		Table t = new Table() {

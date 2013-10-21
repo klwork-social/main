@@ -142,5 +142,27 @@
     where PROC_INST_ID_ = #{parameter,jdbcType=BINARY}
     order by TIME_ desc
   </select>
-
+  
+ 
+  <select id="selectEventByQueryCriteria" parameterType="org.activiti.engine.impl.EventQueryImpl" resultMap="commentResultMap_postgres">
+  	${limitBefore}
+    select RES.* ${limitBetween}
+    <include refid="selectEventByQueryCriteriaSql" />
+    ${orderBy}
+    ${limitAfter}
+  </select>
+  
+ 
+  
+   <select id="selectEventCountByQueryCriteria" parameterType="org.activiti.engine.impl.EventQueryImpl" resultType="long">
+    select count(RES.ID_)
+    <include refid="selectEventByQueryCriteriaSql" />
+  </select>
+  
+  <sql id="selectEventByQueryCriteriaSql">
+    from ${prefix}ACT_HI_COMMENT RES 
+    <where>
+    </where>
+  </sql>
+  
 </mapper>

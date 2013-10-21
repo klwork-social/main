@@ -444,6 +444,12 @@ public interface TaskService {
    */
   void currentNewInstanceByKey(String processInstanceId, String activitId,
 			Map<String, String> formProperties);	
-  
   TaskDefinition queryTaskDefinition(Task task);
+  
+  /**
+   * 查询所有产生的事件
+   * @return
+   */
+  List<org.activiti.engine.task.Event> getAllEvents(int firstResult, int maxResults);
+  
 }

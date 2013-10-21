@@ -10,23 +10,20 @@
 
 package com.klwork.explorer.ui.main.views;
 
-import java.text.DecimalFormat;
-
 import org.springframework.context.annotation.Scope;
 
+import com.klwork.explorer.ui.business.outproject.OutProjectRemindComponent;
 import com.klwork.explorer.ui.task.TaskRemindComponent;
+import com.klwork.explorer.ui.user.UserActionRemindComponent;
 import com.klwork.explorer.web.VaadinView;
-import com.vaadin.data.Property;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -37,8 +34,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.Align;
-import com.vaadin.ui.Table.RowHeaderMode;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -56,12 +51,51 @@ public class DashboardView extends VerticalLayout implements View {
         setSizeFull();
         addStyleName("dashboard-view");
 
-        HorizontalLayout top = new HorizontalLayout();
+        initTop();
+        
+        //下面的,提醒or布局
+        HorizontalLayout row = new HorizontalLayout();
+        row.setSizeFull();
+        row.setMargin(new MarginInfo(true, true, false, true));
+        row.setSpacing(true);
+        addComponent(row);
+        setExpandRatio(row, 0.5f);
+        //任务提醒
+        row.addComponent(createPanel(new TaskRemindComponent()));
+        
+        //通知
+        TextArea notes = new TextArea("Notes2");
+        notes.setValue("Remember to:\n· Zoom in and out in the Sales view\n· Filter the transactions and drag a set of them to the Reports tab\n· Create a new report\n· Change the schedule of the movie theater");
+        notes.setSizeFull();
+        CssLayout panel = createPanel(notes);
+        panel.addStyleName("notes");
+        row.addComponent(panel);
+        
+        //
+        row = new HorizontalLayout();
+        //setExpandRatio(row, 1.0f);
+        row.setMargin(true);
+        row.setSizeFull();
+        row.setSpacing(true);
+        
+        //项目提醒
+        row.addComponent(createPanel(new OutProjectRemindComponent()));
+        //setExpandRatio(row, 2);
+        //活动
+        row.addComponent(createPanel(new UserActionRemindComponent()));
+        addComponent(row);
+        setExpandRatio(row, 0.5f);
+        //row.addComponent(createPanel(new TopSixTheatersChart()));
+
+    }
+
+	private void initTop() {
+		HorizontalLayout top = new HorizontalLayout();
         top.setWidth("100%");
         top.setSpacing(true);
         top.addStyleName("toolbar");
         addComponent(top);
-        final Label title = new Label("我的面板");
+        final Label title = new Label("我的工作台");
         title.setSizeUndefined();
         title.addStyleName("h1");
         top.addComponent(title);
@@ -122,7 +156,7 @@ public class DashboardView extends VerticalLayout implements View {
                 getUI().addWindow(w);
 
                 w.setContent(new VerticalLayout() {
-                    TextField name = new TextField("Dashboard Name");
+                    TextField name = new TextField("工作台名称");
                     {
                         addComponent(new FormLayout() {
                             {
@@ -176,66 +210,7 @@ public class DashboardView extends VerticalLayout implements View {
             }
         });
         top.setComponentAlignment(edit, Alignment.MIDDLE_LEFT);
-        
-        //下面的布局
-        HorizontalLayout row = new HorizontalLayout();
-        row.setSizeFull();
-        row.setMargin(new MarginInfo(true, true, false, true));
-        row.setSpacing(true);
-        addComponent(row);
-        setExpandRatio(row, 1.5f);
-        //任务提醒
-        row.addComponent(createPanel(new TaskRemindComponent()));
-
-        TextArea notes = new TextArea("Notes");
-        notes.setValue("Remember to:\n· Zoom in and out in the Sales view\n· Filter the transactions and drag a set of them to the Reports tab\n· Create a new report\n· Change the schedule of the movie theater");
-        notes.setSizeFull();
-        CssLayout panel = createPanel(notes);
-        panel.addStyleName("notes");
-        row.addComponent(panel);
-
-        row = new HorizontalLayout();
-        row.setMargin(true);
-        row.setSizeFull();
-        row.setSpacing(true);
-        addComponent(row);
-        setExpandRatio(row, 2);
-
-        t = new Table() {
-            @Override
-            protected String formatPropertyValue(Object rowId, Object colId,
-                    Property<?> property) {
-                if (colId.equals("Revenue")) {
-                    if (property != null && property.getValue() != null) {
-                        Double r = (Double) property.getValue();
-                        String ret = new DecimalFormat("#.##").format(r);
-                        return "$" + ret;
-                    } else {
-                        return "";
-                    }
-                }
-                return super.formatPropertyValue(rowId, colId, property);
-            }
-        };
-        t.setCaption("Top 10 Titles by Revenue");
-
-        t.setWidth("100%");
-        t.setPageLength(0);
-        t.addStyleName("plain");
-        t.addStyleName("borderless");
-        t.setSortEnabled(false);
-        t.setColumnAlignment("Revenue", Align.RIGHT);
-        t.setRowHeaderMode(RowHeaderMode.INDEX);
-        
-        BrowserFrame browser = new BrowserFrame("Browser",
-        		new ExternalResource("http://www.baidu.com"));
-        browser.setSizeFull();
-
-        row.addComponent(createPanel(browser));
-
-        //row.addComponent(createPanel(new TopSixTheatersChart()));
-
-    }
+	}
 
     private CssLayout createPanel(Component content) {
         CssLayout panel = new CssLayout();
