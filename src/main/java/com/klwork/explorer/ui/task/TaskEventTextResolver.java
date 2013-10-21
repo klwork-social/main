@@ -21,6 +21,7 @@ import org.activiti.engine.identity.User;
 import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Event;
 
+import com.klwork.common.utils.StringTool;
 import com.klwork.explorer.I18nManager;
 import com.klwork.explorer.Messages;
 import com.klwork.explorer.ViewToolManager;
@@ -47,6 +48,10 @@ public class TaskEventTextResolver implements Serializable {
   
   public Label resolveText(Event event) {
 	  IdentityService identityService = ProcessEngines.getDefaultProcessEngine().getIdentityService();
+	  if(!StringTool.judgeBlank(event.getUserId())){//用户id没有那里来的
+		  String s = i18nManager.getMessage(Messages.EVENT_DEFAULT, "未知", event.getMessage());
+		 return new Label(s, ContentMode.HTML);
+	  }
 	  User user = identityService.createUserQuery().userId(event.getUserId()).singleResult();
     
    // User user = LoginHandler.findUser(event.getUserId());
